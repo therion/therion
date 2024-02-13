@@ -33,7 +33,9 @@ set xth(encoding_system) [encoding system]
 xth_about_hide
 
 wm deiconify $xth(gui,main)
-xth_app_normalize
+if {$xth(gui,init_app_normalized)} {
+  xth_app_normalize
+}
 
 foreach xapp $xth(app,list) {
   catch {

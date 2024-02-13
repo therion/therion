@@ -81,8 +81,10 @@ toplevel $xth(gui,main)
 wm withdraw $xth(gui,main)
 wm protocol $xth(gui,main) WM_DELETE_WINDOW "xth_exit"
 wm title $xth(gui,main) $xth(prj,name)
-wm geometry $xth(gui,main) [format "%dx%d+0+0" [lindex $xth(gui,minsize) 0] \
-  [lindex $xth(gui,minsize) 1]]
+if {$xth(gui,init_app_normalized)} {
+  wm geometry $xth(gui,main) [format "%dx%d+0+0" [lindex $xth(gui,minsize) 0] \
+    [lindex $xth(gui,minsize) 1]]
+}
 wm minsize $xth(gui,main) [lindex $xth(gui,minsize) 0] \
   [lindex $xth(gui,minsize) 1]
 update idletasks
