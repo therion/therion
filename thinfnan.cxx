@@ -32,3 +32,23 @@ void thnan_update(double & oval, double uval)
   if (thisnan(oval))
     oval = uval;
 }
+
+bool thapproximately_equal(double a, double b, double epsilon)
+{
+    return fabs(a - b) <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool thessentially_equal(double a, double b, double epsilon)
+{
+    return fabs(a - b) <= ( (fabs(a) > fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool thdefinitely_greater_than(double a, double b, double epsilon)
+{
+    return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool thdefinitely_less_than(double a, double b, double epsilon)
+{
+    return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}

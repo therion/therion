@@ -4,7 +4,7 @@ jobs:
   ubuntu:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install dependencies
         run: |
           sudo apt -qq update
@@ -21,13 +21,13 @@ jobs:
   mac:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install dependencies
         run: |
           # brew update  # commented out because of conflicting python versions
           brew tap homebrew/core
           rm /usr/local/bin/2to3
-          brew install wxwidgets vtk proj fmt pkgconfig
+          brew install wxwidgets vtk proj fmt
       - name: compile therion
         run: |
           make config-macosx
@@ -38,7 +38,7 @@ jobs:
   # mxe-i686:
   #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #     - name: install dependencies
   #       run: |
   #         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
@@ -56,7 +56,7 @@ jobs:
   # mxe-x86_64:
   #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #     - name: install dependencies
   #       run: |
   #         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
@@ -82,7 +82,7 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}

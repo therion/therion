@@ -10,7 +10,7 @@ jobs:
           - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: ""                                                }
           - { os: ubuntu-22.04, toolchain: gcc.cmake,              args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install dependencies
         run: |
           sudo apt -qq update
@@ -35,7 +35,7 @@ jobs:
       - name: Run samples
         if: matrix.toolchain == 'clang-sanitizers.cmake'
         run: cmake --build build -t samples-verify-crc
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: matrix.toolchain == 'clang-sanitizers.cmake' && always()
         with:
           name: samples-${{ matrix.os }}-${{ matrix.toolchain }}
@@ -47,15 +47,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13]
+        os: [macos-12, macos-13, macos-14]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install dependencies
         run: |
-          # brew update  # try to comment out in case of package problems
-          brew tap homebrew/core
-          rm /usr/local/bin/2to3
-          brew install wxwidgets vtk proj xquartz ninja basictex fmt pkgconfig catch2
+          find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
+          brew unlink python && brew link --overwrite python
+          brew update  # try to comment out in case of package problems
+          brew install wxwidgets vtk proj xquartz ninja basictex fmt catch2
       - name: Configure CMake
         run: |
           mkdir build && cd build && cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
@@ -68,13 +68,13 @@ jobs:
           sudo tlmgr install collection-langcyrillic
           sudo tlmgr install collection-langczechslovak
           cmake --build build -t samples-build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: samples-${{ matrix.os }}
           path: build/samples/
       - name: Install
-        run: cmake --build build -t install
+        run: sudo cmake --build build -t install
 
   Windows:
     runs-on: windows-latest
@@ -90,7 +90,7 @@ jobs:
       THDIR: d:/a/therion
       PROJ_LIB: d:/a/therion/proj-lib
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.config.msystem }}
@@ -105,7 +105,7 @@ jobs:
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
           mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' build/innosetup.ini),proj-datumgrid}/. ../proj-lib
           cmake --build build -t samples-build -- -j 4
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: samples-windows-${{ matrix.config.msystem }}
@@ -120,7 +120,7 @@ jobs:
   #         - { os: ubuntu-20.04, osname: focal, pkg: i686,   cmd: i686,   wine-pkg: wine32, wine: wine }
   #         - { os: ubuntu-20.04, osname: focal, pkg: x86-64, cmd: x86_64, wine-pkg: wine64, wine: wine64-stable }
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #     - name: install dependencies
   #       run: |
   #         sudo dpkg --add-architecture i386
