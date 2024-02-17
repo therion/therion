@@ -115,7 +115,7 @@ thattr_obj * thattr::get_object(long user_id)
 }
 
 
-thattr_obj * thattr::insert_object(long user_id)
+thattr_obj * thattr::insert_object(thdataobject * data, long user_id)
 {
   thattr_obj tmp, * r;
   r = NULL;
@@ -124,6 +124,7 @@ thattr_obj * thattr::insert_object(long user_id)
   }
   if (r == NULL) {
     tmp.m_id = this->m_num_objects++;
+    tmp.m_data = data;
     tmp.m_parent = this;
     r = &(*this->m_obj_list.insert(this->m_obj_list.end(), tmp));
     this->m_obj_map[tmp.m_id] = r;

@@ -558,7 +558,7 @@ void thdb1d::scan_data()
             this->station_vec[ssi->station.id-1].explored = ssi->explored;
             this->station_vec[ssi->station.id-1].flags |= ssi->flags;            
             // set station attributes
-            this->m_station_attr.insert_object((long) ssi->station.id);
+            this->m_station_attr.insert_object(nullptr, (long) ssi->station.id);
             thdatass_attr_map::iterator ami;
             for(ami = ssi->attr.begin(); ami != ssi->attr.end(); ami++) {
               this->m_station_attr.insert_attribute(ami->first.c_str(), ami->second);
