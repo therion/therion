@@ -2706,7 +2706,8 @@ thdb3ddata * thdb1d::get_3d() {
         station_in[id] = this->d3_data.insert_vertex( \
           this->station_vec[id].x, \
           this->station_vec[id].y, \
-          this->station_vec[id].z); \
+          this->station_vec[id].z, \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2725,11 +2726,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_data.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st]);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st]);
+      fc->insert_vertex(station_in[last_st], *tlegs);
       
       // tu vygeneruje LRUD obalku
       
@@ -2922,7 +2923,8 @@ thdb3ddata * thdb1d::get_3d() {
         station_in[id] = this->d3_surface.insert_vertex( \
           this->station_vec[id].x, \
           this->station_vec[id].y, \
-          this->station_vec[id].z); \
+          this->station_vec[id].z, \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2936,11 +2938,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_surface.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st]);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st]);
+      fc->insert_vertex(station_in[last_st], *tlegs);
     }
   }
   
@@ -2953,7 +2955,8 @@ thdb3ddata * thdb1d::get_3d() {
         station_in[id] = this->d3_splay.insert_vertex( \
           this->station_vec[id].x, \
           this->station_vec[id].y, \
-          this->station_vec[id].z); \
+          this->station_vec[id].z, \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2967,11 +2970,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_splay.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st]);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st]);
+      fc->insert_vertex(station_in[last_st], *tlegs);
     }
   }
 

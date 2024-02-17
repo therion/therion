@@ -29,6 +29,7 @@
 #ifndef thdb3d_h
 #define thdb3d_h
 
+#include <any>
 #include <list>
 #include <stdio.h>
 #include "loch/lxMath.h"
@@ -71,6 +72,7 @@ struct thdb3dnm {
 struct thdb3dvx {
   unsigned long id;
   double x, y, z;
+  std::any data;
   thdb3dnm * normal;
   thdb3dvx * next;
   thdb3dvx() : id(0), x(0.0), y(0.0), z(0.0), 
@@ -83,6 +85,7 @@ struct thdb3dvx {
 
 
 struct thdb3dfx {
+  std::any data;
   thdb3dnm * normal;
   thdb3dvx * vertex;
   thdb3dfx * next;
@@ -103,7 +106,7 @@ struct thdb3dfc {
   thdb3dfc() : type(THDB3DFC_TRIANGLES), nvx(0), firstfx(NULL), lastfx(NULL),
     next(NULL) {}
   
-  thdb3dfx * insert_vertex(thdb3dvx * vx = nullptr);
+  thdb3dfx * insert_vertex(thdb3dvx * vx = nullptr, std::any dt = {});
   
 };
 
@@ -128,8 +131,8 @@ struct thdb3ddata {
     
   thdb3dfc * insert_face(int type);
   
-  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz);
-  thdb3dvx * insert_vertex(lxVec v);
+  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz, std::any dt = {});
+  thdb3dvx * insert_vertex(lxVec v, std::any dt = {});
   
   void export_thm(FILE * out);
   void export_vrml(FILE * out);

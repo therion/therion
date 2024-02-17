@@ -87,12 +87,12 @@ thdb3dfc * thdb3ddata::insert_face(int type) {
   return face;
 }
 
-thdb3dvx * thdb3ddata::insert_vertex(lxVec v) {
-  return this->insert_vertex(v.x, v.y, v.z);
+thdb3dvx * thdb3ddata::insert_vertex(lxVec v, std::any dt) {
+  return this->insert_vertex(v.x, v.y, v.z, std::move(dt));
 }
 
 
-thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz) {
+thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz, std::any dt) {
   thdb3dvx * vertex;
   vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));
   vertex->id = this->nvertices;
@@ -100,6 +100,7 @@ thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz) {
   vertex->y = vxy;
   vertex->z = vxz;
   this->limits.update(vxx, vxy, vxz);
+  vertex->data = std::move(dt);
   this->nvertices++;
   if (this->lastvx == NULL) {
     this->firstvx = vertex;
@@ -111,7 +112,7 @@ thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz) {
   return vertex;
 }
 
-thdb3dfx * thdb3dfc::insert_vertex(thdb3dvx * vx) {
+thdb3dfx * thdb3dfc::insert_vertex(thdb3dvx * vx, std::any dt) {
   thdb3dfx * fx;
   fx = &(*thdatabase3d.face_vertex_list.insert(thdatabase3d.face_vertex_list.end(),thdb3dfx()));
   this->nvx++;
@@ -123,6 +124,7 @@ thdb3dfx * thdb3dfc::insert_vertex(thdb3dvx * vx) {
     this->lastfx = fx;
   }
   fx->vertex = vx;
+  fx->data = std::move(dt);
   return fx;
 }
 
