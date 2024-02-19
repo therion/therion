@@ -386,7 +386,7 @@ void lxData::Rebuild()
 		  tmpDbl = sh_it->m_tLRUD;
 		  td[0] = tmpDbl[0]; td[1] = tmpDbl[1]; td[2] = tmpDbl[2]; td[3] = tmpDbl[3];
 		  lrud.SetVThreshold(sh_it->m_threshold);
-		  lrud.InsertShot(fc, tc, fd, td, NULL);
+		  lrud.InsertShot(fc, tc, fd, td);
 		}
     }
   }

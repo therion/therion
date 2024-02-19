@@ -102,14 +102,13 @@ void lxFileData::Clear()
   this->m_data.clear();
 }
 
-void lxFileData::Copy(lxFileSizeT size, const void * src)
+void lxFileData::Copy(lxFileSizeT size, const uint8_t * data)
 {
-  auto data = static_cast<const uint8_t*>(src);
   this->m_data.assign(data, data + size);
 }
 
 
-const void * lxFileData::GetData(lxFileDataPtr ptr)
+const uint8_t * lxFileData::GetData(lxFileDataPtr ptr)
 {
   if (ptr.m_size <= 1)
     return NULL;
@@ -151,7 +150,7 @@ lxFileDataPtr lxFileData::AppendStr(const char * str)
   strln = strlen(str);
   if (strln == 0)
     return res;
-  return this->AppendData(str, strln + 1);
+  return this->AppendData(reinterpret_cast<const uint8_t*>(str), strln + 1);
 }
 
 
@@ -174,18 +173,17 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
   data.insert(data.begin(), std::istreambuf_iterator<char>(file), {});
   lxassert(data.size() == file_size);
 
-  return this->AppendData(data.data(), data.size());
+  return this->AppendData(reinterpret_cast<const uint8_t*>(data.data()), data.size());
 }
 
 
 
-lxFileDataPtr lxFileData::AppendData(const void * data, lxFileSizeT size)
+lxFileDataPtr lxFileData::AppendData(const uint8_t * src, lxFileSizeT size)
 {
   lxFileDataPtr res;
   res.m_position = this->m_data.size();
   res.m_size = size;
 
-  auto src = static_cast<const uint8_t *>(data);
   this->m_data.insert(this->m_data.end(), src, src + size);
 
   return res;

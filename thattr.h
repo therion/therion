@@ -117,13 +117,13 @@ struct thattr_obj {
   size_t m_id = 0,  ///< Internal ID.
     m_tree_level;  ///< Tree level of object, if table has tree structure.
   const char * m_tree_node_id;  ///< Tree node id.
-  void * m_data;  ///< User defined data.
+  class thdataobject * m_data = nullptr; ///< User defined data.
   thattr_id2attr_map m_attributes;  ///< Map of attributes.
   thattr_attr * m_last_attribute; ///< Last attribute set for given object.
 
   struct thattr * m_parent = nullptr;  ///< Parent attribute class.
 
-  thattr_obj() : m_user_id(-1), m_tree_level(0), m_tree_node_id(""), m_data(NULL), m_last_attribute(NULL) {}
+  thattr_obj() : m_user_id(-1), m_tree_level(0), m_tree_node_id(""), m_last_attribute(NULL) {}
 
   void set_tree_level(size_t level);
 
@@ -159,7 +159,7 @@ struct thattr {
   thattr_field * get_field(const char * name, bool ins = false);
 
   thattr_obj * m_obj_last;  ///< Last inserted object.
-  thattr_obj * insert_object(void * data, long user_id = -1);
+  thattr_obj * insert_object(thdataobject * data, long user_id = -1);
   thattr_obj * get_object();  ///< Return last inserted object.
   thattr_obj * get_object(long user_id);
   
