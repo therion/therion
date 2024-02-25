@@ -1384,6 +1384,13 @@ void thpoint::check_extra()
   }
 }
 
+thdate * thpoint::get_date()
+{
+  if (this->type == TT_POINT_TYPE_DATE) {
+    return (thdate *) this->text;
+  }
+  return nullptr;
+}
 
 
 

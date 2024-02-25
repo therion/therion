@@ -738,6 +738,13 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
 }
 
 
+static void fprint_quoted_string(FILE * stream, const char * text) {
+  if (!strchr(text, '"')) {
+    fprintf(stream, "\"%s\"", text);
+  } else {
+    fprintf(stream, "[%s]", text);
+  }
+}
 
 void thexpmap::export_th2(class thdb2dprj * prj)
 {
@@ -882,7 +889,31 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 #define objname(obj) (obj)->get_name(), (strlen((obj)->fsptr->get_full_name()) > 0 ? "." : ""), (obj)->fsptr->get_full_name()
 
       // export scrap itself
-      fprintf(pltf,"scrap %s%s%s\n\n", objname(scrap));
+      fprintf(pltf,"scrap %s%s%s -projection %s -scale [%g 2.54 m]",
+              objname(scrap), this->projstr, this->layout->scale * 1e4);
+
+      for (auto & [author, date] : scrap->author_map) {
+        auto fullname = author.name.get_n1() + std::string("/") + author.name.get_n2();
+        fprintf(pltf, " -author %s ", date.get_str(TT_DATE_FMT_THERION));
+        fprint_quoted_string(pltf, fullname.c_str());
+      }
+
+      for (auto & [copyright, date] : scrap->copyright_map) {
+        fprintf(pltf, " -copyright %s ", date.get_str(TT_DATE_FMT_THERION));
+        fprint_quoted_string(pltf, copyright.name);
+      }
+
+      if (const char * title; (title = scrap->get_title()) && title[0]) {
+        fprintf(pltf, " -title ");
+        fprint_quoted_string(pltf, title);
+      }
+
+      switch (scrap->d3) {
+        case TT_FALSE: fprintf(pltf, " -walls off"); break;
+        case TT_TRUE: fprintf(pltf, " -walls on"); break;
+      }
+
+      fprintf(pltf,"\n\n");
     
       // export scrap objects
       th2ddataobject * so;
@@ -909,6 +940,90 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               }
               if (strlen(pt->name) > 0) {
                 fprintf(pltf," -id %s%s%s", objname(pt));
+              }
+              if (pt->align != TT_POINT_ALIGN_C) {
+                fprintf(pltf, " -align %s", thmatch_string(pt->align, thtt_point_aligns));
+              }
+              if (!(pt->tags & TT_2DOBJ_TAG_CLIP_AUTO)) {
+                if ((pt->tags & TT_2DOBJ_TAG_CLIP_ON)) {
+                  fprintf(pltf, " -clip on");
+                } else {
+                  fprintf(pltf, " -clip off");
+                }
+              }
+              if (!isnan(pt->orient)) {
+                fprintf(pltf, " -orientation %.1f", pt->orient);
+              }
+              switch (pt->place) {
+                case TT_2DOBJ_PLACE_BOTTOM: fprintf(pltf, " -place bottom"); break;
+                case TT_2DOBJ_PLACE_TOP: fprintf(pltf, " -place top"); break;
+              }
+              switch (pt->scale) {
+                case TT_2DOBJ_SCALE_XS: fprintf(pltf, " -scale xs"); break;
+                case TT_2DOBJ_SCALE_S: fprintf(pltf, " -scale s"); break;
+                case TT_2DOBJ_SCALE_L: fprintf(pltf, " -scale l"); break;
+                case TT_2DOBJ_SCALE_XL: fprintf(pltf, " -scale xl"); break;
+                case TT_2DOBJ_SCALE_NUMERIC: fprintf(pltf, " -scale %f", pt->scale_numeric); break;
+              }
+              if (pt->text) {
+                // attention: pt->text is reinterpret_cast<>'ed for some point types!
+                switch (pt->type) {
+                  case TT_POINT_TYPE_SECTION:
+                    fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
+                    break;
+                  case TT_POINT_TYPE_LABEL:
+                  case TT_POINT_TYPE_REMARK:
+                  case TT_POINT_TYPE_STATION_NAME:
+                  case TT_POINT_TYPE_CONTINUATION:
+                    fprintf(pltf, " -text ");
+                    fprint_quoted_string(pltf, pt->text);
+                    break;
+                }
+              }
+              if (auto date = pt->get_date()) {
+                fprintf(pltf, " -value %s", date->get_str(TT_DATE_FMT_THERION));
+              }
+
+              auto xsize = pt->xsize;
+
+              switch (pt->type) {
+                case TT_POINT_TYPE_ALTITUDE:
+                  fprintf(pltf, " -value [fix %g]", xsize);
+                  break;
+                case TT_POINT_TYPE_CONTINUATION:
+                  if (!isnan(xsize)) {
+                    fprintf(pltf, " -explored %g", xsize);
+                  }
+                  break;
+                case TT_POINT_TYPE_DIMENSIONS:
+                  fprintf(pltf, " -value [%g %g]", xsize, pt->ysize);
+                  break;
+                case TT_POINT_TYPE_PASSAGE_HEIGHT:
+                  if (isnan(xsize)) {
+                    xsize = pt->ysize;
+                  } else if (!isnan(pt->ysize)) {
+                    fprintf(pltf, " -value [+%g -%g]", xsize, pt->ysize);
+                    break;
+                  }
+                  [[fallthrough]];
+                case TT_POINT_TYPE_HEIGHT:
+                  if ((pt->tags & TT_POINT_TAG_HEIGHT_N)) {
+                    fprintf(pltf, " -value -%g", xsize);
+                  } else if ((pt->tags & TT_POINT_TAG_HEIGHT_P)) {
+                    fprintf(pltf, " -value +%g", xsize);
+                  } else {
+                    fprintf(pltf, " -value %g", xsize);
+                  }
+                  if ((pt->tags &
+                       (TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_PQ |
+                        TT_POINT_TAG_HEIGHT_UQ))) {
+                    fprintf(pltf, "?");
+                  }
+                  break;
+              }
+
+              if (!(pt->tags & TT_2DOBJ_TAG_VISIBILITY_ON)) {
+                fprintf(pltf, " -visibility off");
               }
               fprintf(pltf,"\n\n");
             }
@@ -959,6 +1074,13 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   lsubtype = ln->first_point->subtype;
                 }
               }
+              if (!(ln->tags & TT_2DOBJ_TAG_CLIP_AUTO)) {
+                if ((ln->tags & TT_2DOBJ_TAG_CLIP_ON)) {
+                  fprintf(pltf, " -clip on");
+                } else {
+                  fprintf(pltf, " -clip off");
+                }
+              }
               if (ln->closed != TT_AUTO) {
                 if (ln->closed == TT_TRUE) {
                   fprintf(pltf," -close on");
@@ -966,11 +1088,28 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   fprintf(pltf," -close off");
                 }
               }
+
+              if ((ln->tags & TT_LINE_TAG_DIRECTION_BEGIN)) {
+                if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
+                  fprintf(pltf, " -direction both");
+                } else {
+                  fprintf(pltf, " -direction begin");
+                }
+              } else if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
+                fprintf(pltf, " -direction end");
+              } else if ((ln->tags & TT_LINE_TAG_DIRECTION_POINT)) {
+                fprintf(pltf, " -direction point");
+              }
+
               if (ln->outline != loutline) {
                 fprintf(pltf," -outline %s", thmatch_string(ln->outline,thtt_line_outlines));
               }
               if (strlen(ln->name) > 0) {
                 fprintf(pltf," -id %s%s%s", objname(ln));
+              }
+              if (ln->text) {
+                fprintf(pltf, " -text ");
+                fprint_quoted_string(pltf, ln->text);
               }
               fprintf(pltf,"\n");
               thdb2dlp * lpt = ln->first_point;
@@ -998,7 +1137,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   lsubtype = lpt->subtype;
                 }
                 if ((lpt->tags & TT_LINEPT_TAG_ALTITUDE) != 0) {
-                  // TODO: altitude tags and others
+                  fprintf(pltf,"    altitude [fix %g]\n", lpt->rsize);
                 }
                 lpt = lpt->nextlp;
               }
