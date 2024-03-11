@@ -351,6 +351,7 @@ enum {
   TT_LAYOUT_CODE_SYMBOL_SHOW,
   TT_LAYOUT_CODE_SYMBOL_COLOR,
   TT_LAYOUT_CODE_MAP_ITEM,
+  TT_LAYOUT_CODE_COPY,
 };
 
 
@@ -466,19 +467,6 @@ static const thstok thtt_layout_ccrit[] = {
   {"scraps", TT_LAYOUT_CCRIT_SCRAP},
   {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
   {NULL, TT_LAYOUT_CCRIT_UNKNOWN}
-};
-
-
-
-class thlayout_copy_src {
-
-  public:
-  
-  const char * srcn;
-  thlayout * srcptr;
-  class thlayout_copy_src * next_src;
-  thlayout_copy_src () : srcn(NULL), srcptr(NULL), next_src(NULL) {};
-  
 };
 
 
@@ -603,8 +591,8 @@ class thlayout : public thdataobject {
   double min_symbol_scale, font_setup[5] = {};
 
   
-  thlayoutln * first_line, * last_line;
-  thlayoutln *get_last_line() { return last_line; }
+  thlayoutln_list lines;
+  thlayoutln *get_last_line() { return &lines.back(); }
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
     map_header_bg, sketches, color_labels;
@@ -630,8 +618,6 @@ class thlayout : public thdataobject {
     def_font_setup, def_min_symbol_scale, def_color_model, def_carto_lens, def_copy_lens,
 	def_color_profile_rgb, def_color_profile_cmyk, def_color_profile_gray, def_smooth_shading;
     
-  
-  thlayout_copy_src * first_copy_src, * last_copy_src;
   
   /**
    * Standard constructor.
@@ -782,12 +768,6 @@ class thlayout : public thdataobject {
    
 
 };
-
-/**
- * Copy src list.
- */
- 
-extern std::list <thlayout_copy_src> thlayout_copy_src_list;
 
 #endif
 

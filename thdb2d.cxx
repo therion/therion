@@ -420,12 +420,6 @@ thscraplo * thdb2d::insert_scraplo()
   return &(* this->scraplo_list.insert(this->scraplo_list.end(),dumm));
 }
 
-thlayoutln * thdb2d::insert_layoutln()
-{
-  thlayoutln dumm;
-  return &(* this->layoutln_list.insert(this->layoutln_list.end(),dumm));
-}
-
 thscrapen * thdb2d::insert_scrapen()
 {
   thscrapen dumm;
