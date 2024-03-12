@@ -604,6 +604,7 @@ class thlayout : public thdataobject {
 
   
   thlayoutln * first_line, * last_line;
+  thlayoutln *get_last_line() { return last_line; }
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
     map_header_bg, sketches, color_labels;

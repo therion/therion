@@ -460,30 +460,30 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             ththrow("unknown option -- {}", *args);
           }
           thencode(&(this->db->buff_enc), *args, argenc);
-          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
-          this->last_line->code = this->ccode;
-          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
+          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->code = this->ccode;
+          last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
             if (!th_is_keyword(*args))
               ththrow("invalid keyword -- {}", args[0]);
             thencode(&(this->db->buff_enc), *args, argenc);
-            this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+            last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           }
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
           break;
         case TT_LAYOUT_SYMBOL_ASSIGN:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          if (!thsymbolset_assign[this->last_line->smid])
+          if (!thsymbolset_assign[last_line->smid])
             ththrow("symbol can not be assigned -- {} {}", args[0], args[1]);
           if (!th_is_keyword(args[2]))
             ththrow("invalid keyword -- {}", args[2]);
           thencode(&(this->db->buff_enc), args[2], argenc);
-          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
+          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
           break;
 //        case TT_LAYOUT_MAP_ITEM:
 //          this->last_line->smid = thmatch_token(args[0],thtt_layout_mapitem);
@@ -496,23 +496,23 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 //          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
 //          break;
         case TT_LAYOUT_SYMBOL_HIDE:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
           break;
         case TT_LAYOUT_SYMBOL_SHOW:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
           break;
         case TT_LAYOUT_SYMBOL_COLOR:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->sclr.parse(args[2]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
+          last_line->sclr.parse(args[2]);
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
           break;
       }
       break;
@@ -1435,25 +1435,25 @@ void thlayout::self_print_library() {
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
-              thprintf("\tplayout->last_line->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;
           }
         }
