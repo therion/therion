@@ -1121,7 +1121,7 @@ void thdb2d::log_distortions() {
         i++;
       }
       
-      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist >= s2->maxdist; });
+      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist > s2->maxdist; });
       thlog.printf("\n\n###################### scrap distortions #######################\n");
       thlog.printf(" PROJECTION: %s%s%s\n", 
         thmatch_string(prj->type,thtt_2dproj), 
