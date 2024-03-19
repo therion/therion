@@ -108,6 +108,8 @@ Therion uses following data types:
     tag is displayed on the output.
     If no match is found, everything before any occurrence of
     |<lang:ZZ>| tag is displayed.
+* {\it subtype} = a sequence of |A-Z|, |a-z| and |_-| characters
+    (not starting with `|-|').
 * {\it units} = length units supported:
            meter[s], centimeter[s], inch[es], feet[s], yard[s]
            (also m, cm, in, ft, yd).
@@ -859,7 +861,7 @@ Point is a command for drawing a point map symbol.
 
 
 \options
-  * |subtype <keyword>| = determines the object's subtype. The following
+  * |subtype <subtype>| = determines the object's subtype. The following
     subtypes for given types are supported:
 
     {\it station:}\[if station subtype is not specified, Therion reads it from centreline,
@@ -1075,7 +1077,7 @@ respectively.
     The |direction| and |gradient| options are only accepted as a |[LINE DATA]| 
     command option when set to |point|. Otherwise they are accepted as a |line| 
     command option.
-       * |subtype <keyword>| = determines line subtype. The following
+       * |subtype <subtype>| = determines line subtype. The following
          subtypes are supported for given types:
 
          {\it wall:} |invisible|, |bedrock| (default), |sand|, |clay|,
