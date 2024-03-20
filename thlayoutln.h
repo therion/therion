@@ -42,8 +42,6 @@ class thlayoutln {
   
   char code;
  
-  thlayoutln * next_line;
-    
   const char * line;
 
   thlayout_color sclr; ///< Symbol color.

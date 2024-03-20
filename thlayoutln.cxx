@@ -29,7 +29,6 @@
 #include "thlayout.h"
 
 thlayoutln::thlayoutln() {
-  this->next_line = NULL;
   this->line = NULL;
   this->smid = 0;
   this->path = "";
