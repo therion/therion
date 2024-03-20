@@ -21,7 +21,7 @@ xtherion:
 
 infrastructure:
  * initial implementation of a devcontainer [#532]
- * CI environments: fixes, macOS 13 added [#546, #551]
+ * CI environments: fixes, macOS 14 added [#546, #551]
 
 --------------------------------------------------------------------------------
 
