@@ -124,7 +124,7 @@ jobs:
           URL="https://uploads.github.com/repos/${{ github.repository }}/releases/${URL}/assets{?name,label}"
           echo "URL=$URL" >> $GITHUB_ENV
       - name: Download binaries
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: therion-setup-msys2-${{ needs.Windows_installer.outputs.THID }}
       - name: Upload installer
