@@ -355,4 +355,3 @@ def a_u (expr p) =
     T:=identity;
     thfill p withcolor red;
 enddef;
-
