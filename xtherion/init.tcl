@@ -27,18 +27,10 @@
 
 package require BWidget
 
-if {[catch {set imgver [package require Img]}]} {
-  set xth(gui,imgfiletypes) {
-	   { {Pictures} {.gif .pnm .ppm .xvi .GIF .PNM .PPM .XVI} }
-	   { {PocketTopo therion export} {.txt .TXT} }
-	   { {All Files}               * }
-	 } 
-} else {
-  set xth(gui,imgfiletypes) {
-	   { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm .xvi .PNG .JPEG .JPG .GIF .PNM .PPM .XVI} }
-	   { {PocketTopo therion export} {.txt .TXT} }
-	   { {All Files}                                               * }
-	 } 
+set xth(gui,imgfiletypes) {
+  { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm .xvi .PNG .JPEG .JPG .GIF .PNM .PPM .XVI} }
+  { {PocketTopo Therion Export} {.txt .TXT} }
+  { {All Files} * }
 }
 
 # read xtherion.ini file from THERION directory
