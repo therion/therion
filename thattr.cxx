@@ -115,7 +115,7 @@ thattr_obj * thattr::get_object(long user_id)
 }
 
 
-thattr_obj * thattr::insert_object(void * data, long user_id)
+thattr_obj * thattr::insert_object(thdataobject * data, long user_id)
 {
   thattr_obj tmp, * r;
   r = NULL;

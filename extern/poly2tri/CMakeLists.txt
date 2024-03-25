@@ -1,4 +1,4 @@
-add_library(poly2tri 
+add_library(poly2tri STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/common/shapes.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/common/shapes.h
     ${CMAKE_CURRENT_SOURCE_DIR}/common/utils.h
@@ -11,5 +11,6 @@ add_library(poly2tri
     ${CMAKE_CURRENT_SOURCE_DIR}/sweep/sweep.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/sweep/sweep.h)
 
+target_compile_definitions(poly2tri PUBLIC P2T_STATIC_EXPORTS)
 target_link_libraries(poly2tri PRIVATE disable-warnings)
 set_target_properties(poly2tri PROPERTIES CXX_CLANG_TIDY "")

@@ -26,7 +26,6 @@
  */
 
 #include "therion.h"
-#include "thexception.h"
 #include "thproj.h"
 #include "thlogfile.h"
 #include "thcs.h"

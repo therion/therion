@@ -35,9 +35,9 @@
  
 class thperson {
 
-  const char * n1,  ///< First name.
-    * n2,  ///< Second name.
-    * nn;  ///< Identification string.
+  const char * n1 = {},  ///< First name.
+    * n2 = {},  ///< Second name.
+    * nn = {};  ///< Identification string.
     
   void reset();  ///< Reset person names.
   

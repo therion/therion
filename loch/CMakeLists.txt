@@ -4,11 +4,6 @@ endif()
 
 set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
 
-# extern library img
-add_library(img img.h img.c)
-target_compile_definitions(img PUBLIC IMG_API_VERSION=1)
-target_link_libraries(img PRIVATE disable-warnings)
-
 # library common with therion
 add_library(common-utils STATIC icase.h icase.cxx lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
 target_compile_definitions(common-utils PUBLIC $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN> PRIVATE ${LOCH_DEFINITIONS})
@@ -19,18 +14,18 @@ if (NOT BUILD_LOCH)
 endif()
 
 # Tiled Rendering library
-add_library(tr lxTR.h lxTR.c)
+add_library(tr lxTR.h lxTR.cxx)
 target_compile_definitions(tr PUBLIC ${LOCH_DEFINITIONS})
 target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU 
                          PRIVATE enable-warnings)
 
 # multiplatform rendering library
 if (WIN32)
-    add_library(R2 lxR2D.h lxR2D.c)
+    add_library(R2 lxR2D.h lxR2D.cxx)
     target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
     target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
 elseif(${THPLATFORM} STREQUAL LINUX)
-    add_library(R2 lxR2P.h lxR2P.c)
+    add_library(R2 lxR2P.h lxR2P.cxx)
     target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
     target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
 else()

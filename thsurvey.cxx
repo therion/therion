@@ -31,7 +31,6 @@
 #include "thdate.h"
 #include "thtfangle.h"
 #include "thinfnan.h"
-#include "thdata.h"
 #include "thdatabase.h"
 
 thsurvey::thsurvey()
@@ -342,7 +341,7 @@ thsurvey * thsurvey_get_entrance_fs(thsurvey * s) {
 	o = s->foptr;
 	while (o != NULL) {
 		if (o->get_class_id() == TT_SURVEY_CMD) {
-			s = (thsurvey *)o;
+			s = dynamic_cast<thsurvey*>(o);
 			if (!s->entrance.is_empty()) return s;
 			s = thsurvey_get_entrance_fs(s);
 			if (s != NULL) return s;

@@ -35,7 +35,6 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <iomanip>
 
 #include <cstring>
 #include <cstdio>
@@ -49,6 +48,7 @@
 #include "thtexfonts.h"
 #include "therion.h"
 #include "thdouble.h"
+#include "thexception.h"
 
 #define IOerr(F) fmt::format("Can't open file {}!\n", (F)).c_str()
 

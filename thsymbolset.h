@@ -47,8 +47,8 @@ struct thsymbolset_usym {
  
 struct thsymbolset {
   
-  bool assigned[thsymbolset_size],        ///< definovane symboly
-    used[thsymbolset_size];               ///< pouzite symboly
+  bool assigned[thsymbolset_size] = {},        ///< definovane symboly
+    used[thsymbolset_size] = {};               ///< pouzite symboly
   thlayout_color color[thsymbolset_size];    ///< Symbol colors.
   int color_model; ///< Output color model.
   

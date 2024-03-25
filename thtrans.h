@@ -201,7 +201,7 @@ struct thlintrans {
   thmat2 m_fmat;           //!< forward matrix
   thmat2 m_bmat;           //!< backward matrix
   thvec2 m_shift;
-  double m_rot, m_scale;
+  double m_rot = {}, m_scale = {};
 
   thlintrans_pt_list m_initpts;
 
@@ -267,7 +267,7 @@ struct thmorphtrans {
 struct thmorph2trans {
   
   struct thmorph2trans_members * m;
-  double m_eps;
+  double m_eps = {};
 
   thmorph2trans();
   ~thmorph2trans();

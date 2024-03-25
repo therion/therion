@@ -81,20 +81,6 @@ void thlogfile::close_file()
   }
 }
   
-
-
-void thlogfile::vprintf(const char *format, va_list *args)
-{
-  if (this->is_logging) {
-    if (!this->is_open)
-      this->open_file();
-    if (this->is_open) {
-      if (vfprintf(this->fileh, format, *args) < 0)
-				this->log_error();
-		}
-  }
-}
-
 void thlogfile::set_file_name(char *fname)
 {
   size_t fnl = strlen(fname);
@@ -142,15 +128,6 @@ FILE * thlogfile::get_fileh()
     this->open_file();
   return this->fileh;
 }
-
-void thlogfile::printf(const char * format, ...)
-{
-  va_list args;
-  va_start(args, format);
-	this->vprintf(format, &args);
-  va_end(args);
-}
-
 
 void thlogfile::log_error() {
 	this->close_file();

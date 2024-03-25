@@ -26,19 +26,11 @@
  */
  
 #include "thdb2d.h"
-#include "thexception.h"
 #include "thdatabase.h"
 #include "thparse.h"
-#include "thtfangle.h"
-#include "tharea.h"
 #include "thmap.h"
-#include "thjoin.h"
-#include "thpoint.h"
-#include "thline.h"
 #include "thscrap.h"
 #include "thsurvey.h"
-#include "thlogfile.h"
-#include <math.h>
 #include "thlayout.h"
 #include "thconfig.h"
 #include <list>
@@ -121,14 +113,14 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
     if (mode == TT_MAPITEM_NORMAL) {
       if (((mi->type != TT_MAPITEM_NORMAL) || (!map->is_basic)) && 
         ((mi->type == TT_MAPITEM_NORMAL) || (level == 0))) {
-          this->insert_basic_maps(fmap,(thmap *)mi->object,mi->type,level+1, shift.add(mi->m_shift));
+          this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object),mi->type,level+1, shift.add(mi->m_shift));
       }
       if ((mi->type == TT_MAPITEM_NORMAL) && (mi->m_shift.is_active()) && (mi->m_shift.m_preview != TT_MAPITEM_NONE)) {
-        this->insert_basic_maps(fmap,(thmap *)mi->object, mi->m_shift.m_preview, level+1, shift);
+        this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object), mi->m_shift.m_preview, level+1, shift);
       }
     } else {
       if ((mi->type == TT_MAPITEM_NORMAL) && (!map->is_basic))
-        this->insert_basic_maps(fmap,(thmap *)mi->object,mode,level+1, shift);
+        this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object),mode,level+1, shift);
     }
     mi = mi->next_item;
   }
@@ -152,7 +144,7 @@ bool thdb2d_compscrap(const thscrap * e1, const thscrap * e2)
     return false;
   if (thisnan(e2->z))
     return true;
-  return e1->z >= e2->z;
+  return e1->z > e2->z;
 }
 
 
@@ -188,10 +180,10 @@ thdb2dxm * thdb2d::insert_maps(thdb2dxm * selection,thdb2dxm * insert_after, thm
     while (mi != NULL) {
       if (mi->type == TT_MAPITEM_NORMAL) {
         if (cxm == NULL)
-          selection = this->insert_maps(selection,insert_after,(thmap *) mi->object,
+          selection = this->insert_maps(selection,insert_after,dynamic_cast<thmap*>(mi->object),
             selection_level, level+1, title_level, map_level);
         else 
-          selection = this->insert_maps(selection,cxm,(thmap *) mi->object,
+          selection = this->insert_maps(selection,cxm,dynamic_cast<thmap*>(mi->object),
             selection_level, level+1, title_level, map_level);
       }
       mi = mi->next_item;
@@ -297,12 +289,12 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
   while (ii != thcfg.selector.data.end()) {
     if ((!ii->unselect) && (ii->optr != NULL) && thcfg.use_maps &&
         (ii->optr->get_class_id() == TT_MAP_CMD) &&
-        (((thmap*)(ii->optr))->projection_id == prj->id)) {
-      selection = this->insert_maps(selection,cxm,(thmap*)(ii->optr),
+        dynamic_cast<thmap*>(ii->optr)->projection_id == prj->id) {
+      selection = this->insert_maps(selection,cxm,dynamic_cast<thmap*>(ii->optr),
         ii->number,0,
         ((ii->map_level >= 0) && (ii->chapter_level > ii->map_level) ? ii->map_level : ii->chapter_level),ii->map_level);
-      prj->stat.scanmap((thmap*)(ii->optr));  
-      prj->stat.addstat(&(((thmap*)(ii->optr))->stat));
+      prj->stat.scanmap(dynamic_cast<thmap*>(ii->optr));  
+      prj->stat.addstat(&dynamic_cast<thmap*>(ii->optr)->stat);
       // set selection color
       lxm = selection;
       while (lxm != NULL) {
@@ -324,17 +316,17 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
     while (obi != this->db->object_list.end()) {
       if (((*obi)->get_class_id() == TT_MAP_CMD) &&
 		  thcfg.use_maps &&
-          (((thmap*)(*obi).get())->projection_id == prj->id) &&
-          (((thmap*)(*obi).get())->is_basic) &&
-          (((thmap*)(*obi).get())->fsptr != NULL) &&
-          (((thmap*)(*obi).get())->fsptr->is_selected())) {
-        prj->stat.scanmap((thmap*)(*obi).get());  
-        prj->stat.addstat(&(((thmap*)(*obi).get())->stat));
+          (dynamic_cast<thmap*>(obi->get())->projection_id == prj->id) &&
+          (dynamic_cast<thmap*>(obi->get())->is_basic) &&
+          (dynamic_cast<thmap*>(obi->get())->fsptr != NULL) &&
+          (dynamic_cast<thmap*>(obi->get())->fsptr->is_selected())) {
+        prj->stat.scanmap(dynamic_cast<thmap*>(obi->get()));  
+        prj->stat.addstat(&dynamic_cast<thmap*>(obi->get())->stat);
         cxm = this->insert_xm();
-        cxm->selection_color = ((thmap*)(*obi).get())->fsptr->selected_color;
+        cxm->selection_color = dynamic_cast<thmap*>(obi->get())->fsptr->selected_color;
         cxm->title = false;
         cxm->expand = true;
-        cxm->map = (thmap*)(*obi).get();
+        cxm->map = dynamic_cast<thmap*>(obi->get());
         cxm->map->calc_z();
         nmaps++;
         if (selection == NULL) {
@@ -405,9 +397,9 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       obi = this->db->object_list.begin();
       while (obi != this->db->object_list.end()) {
         if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
-            (((thscrap*)(*obi).get())->proj->id == prj->id) &&
-            (((thscrap*)(*obi).get())->fsptr != NULL) &&
-            (((thscrap*)(*obi).get())->fsptr->is_selected())) {
+            (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id) &&
+            (dynamic_cast<thscrap*>(obi->get())->fsptr != NULL) &&
+            (dynamic_cast<thscrap*>(obi->get())->fsptr->is_selected())) {
           nscraps++;
         }
         obi++;
@@ -455,9 +447,9 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       obi = this->db->object_list.begin();
       while (obi != this->db->object_list.end()) {
         if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
-            (((thscrap*)(*obi).get())->proj->id == prj->id) &&
-            (((thscrap*)(*obi).get())->fsptr != NULL) &&
-            (((thscrap*)(*obi).get())->fsptr->is_selected())) {
+            (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id) &&
+            (dynamic_cast<thscrap*>(obi->get())->fsptr != NULL) &&
+            (dynamic_cast<thscrap*>(obi->get())->fsptr->is_selected())) {
           xcitem = thdb.db2d.insert_map_item();          
           if (mapp->first_item == NULL) {
             mapp->first_item = xcitem;
@@ -471,7 +463,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
           xcitem->source = thdb.csrc;
           xcitem->psurvey = NULL;
           xcitem->type = TT_MAPITEM_NORMAL;
-          xcitem->object = (thscrap*)(*obi).get();
+          xcitem->object = obi->get();
           nscraps++;
         }
         obi++;
@@ -483,7 +475,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
         std::vector<thscrap*> sss(nscraps);
         xcitem = mapp->first_item; //->next_item;
         for(iscr = 0; iscr < nscraps; iscr++) {
-          sss[iscr] = (thscrap *) xcitem->object;
+          sss[iscr] = dynamic_cast<thscrap*>(xcitem->object);
           xcitem = xcitem->next_item;
         }
         std::sort(sss.begin(), sss.end(), thdb2d_compscrap);
@@ -592,7 +584,7 @@ void thdb2d::reset_selection() {
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_MAP_CMD:
-        ((thmap *)(*obi).get())->selection_mode = TT_MAPITEM_UNKNOWN;
+        dynamic_cast<thmap*>(obi->get())->selection_mode = TT_MAPITEM_UNKNOWN;
         break;
 //      case TT_SCRAP_CMD:
 //        ((thscrap *)(*obi))->selection_mode = TT_MAPITEM_UNKNOWN;
@@ -620,7 +612,7 @@ const char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
     while (o != NULL) {
       while ((o != NULL) && (o->get_class_id() != TT_SURVEY_CMD))
         o = o->nsptr;
-      ss = (thsurvey *) o;
+      ss = dynamic_cast<thsurvey*>(o);
       if (ss != NULL) {
         tmpname = thdb2dscan_survey_title(ss, tmpmin);
 //        printf("SCAN %s: %d\n", ss->name, tmpmin);
@@ -646,7 +638,7 @@ const char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
     
     while ((o != NULL) && (o->get_class_id() != TT_SURVEY_CMD))
       o = o->nsptr;
-    s = (thsurvey *) o;
+    s = dynamic_cast<thsurvey*>(o);
     
   }
   
@@ -662,9 +654,9 @@ double thdb2d::get_projection_entrance_altitude(thdb2dprj * prj) {
 	  while (ii != thcfg.selector.data.end()) {
 	    if ((!ii->unselect) && (ii->optr != NULL) &&
 	        (ii->optr->get_class_id() == TT_MAP_CMD) &&
-	        (((thmap*)(ii->optr))->projection_id == prj->id)) {
+	        (dynamic_cast<thmap*>(ii->optr)->projection_id == prj->id)) {
 	      if (entrance.is_empty()) {
-	    	  entrance = ((thmap*)(ii->optr))->fsptr->get_entrance();
+	    	  entrance = dynamic_cast<thmap*>(ii->optr)->fsptr->get_entrance();
 	      }
 	    }
 	    ii++;
@@ -674,7 +666,7 @@ double thdb2d::get_projection_entrance_altitude(thdb2dprj * prj) {
 		  auto obi = this->db->object_list.begin();
 		  while (obi != this->db->object_list.end()) {
 			  if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-			        cs = (thsurvey *)(*obi).get();
+			        cs = dynamic_cast<thsurvey*>(obi->get());
 			        if (entrance.is_empty()) {
 				        if (cs->is_selected()) entrance = cs->get_entrance();
 			        }
@@ -686,7 +678,7 @@ double thdb2d::get_projection_entrance_altitude(thdb2dprj * prj) {
 		  auto obi = this->db->object_list.begin();
 		  while (obi != this->db->object_list.end()) {
 			  if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-			        cs = (thsurvey *)(*obi).get();
+			        cs = dynamic_cast<thsurvey*>(obi->get());
 			        if (entrance.is_empty()) {
 				        entrance = cs->get_entrance();
 			        }
@@ -712,14 +704,14 @@ const char * thdb2d::get_projection_title(thdb2dprj * prj) {
   while (ii != thcfg.selector.data.end()) {
     if ((!ii->unselect) && (ii->optr != NULL) && 
         (ii->optr->get_class_id() == TT_MAP_CMD) &&
-        (((thmap*)(ii->optr))->projection_id == prj->id)) {
+        (dynamic_cast<thmap*>(ii->optr)->projection_id == prj->id)) {
       nmaps++;
       if (nmaps > 1) {
         rv = NULL;
         break;
       }
-      if (strlen(((thmap*)(ii->optr))->title) > 0) {
-        rv = ((thmap*)(ii->optr))->title;
+      if (strlen(dynamic_cast<thmap*>(ii->optr)->title) > 0) {
+        rv = dynamic_cast<thmap*>(ii->optr)->title;
       } 
       //else {
       //  rv = ((thmap*)(ii->optr))->name;
@@ -736,7 +728,7 @@ const char * thdb2d::get_projection_title(thdb2dprj * prj) {
   thdb_object_list_type::iterator obi = this->db->object_list.begin(), obi2;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      ((thsurvey*)(*obi).get())->num1 = 0;
+      dynamic_cast<thsurvey*>(obi->get())->num1 = 0;
     }
     obi++;
   }
@@ -744,18 +736,18 @@ const char * thdb2d::get_projection_title(thdb2dprj * prj) {
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
-        (((thscrap*)(*obi).get())->proj->id == prj->id) && 
-        (((thscrap*)(*obi).get())->exported)) {
-      if (((thscrap*)(*obi).get())->fsptr != NULL) {
-        ((thscrap*)(*obi).get())->fsptr->num1++;
-      } else if (((thscrap*)(*obi).get())->centerline_survey != NULL) {
-        ((thscrap*)(*obi).get())->centerline_survey->num1++;
+        (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id) && 
+        (dynamic_cast<thscrap*>(obi->get())->exported)) {
+      if (dynamic_cast<thscrap*>(obi->get())->fsptr != NULL) {
+        dynamic_cast<thscrap*>(obi->get())->fsptr->num1++;
+      } else if (dynamic_cast<thscrap*>(obi->get())->centerline_survey != NULL) {
+        dynamic_cast<thscrap*>(obi->get())->centerline_survey->num1++;
       } else {
         // prejde vsetky oznacene a da im num1 = 1
         obi2 = this->db->object_list.begin();
         while (obi2 != this->db->object_list.end()) {
           if (((*obi2)->get_class_id() == TT_SURVEY_CMD) && ((*obi2)->selected)) {
-            ((thsurvey*)(*obi2).get())->num1 = 1;
+            dynamic_cast<thsurvey*>(obi2->get())->num1 = 1;
           }
           obi2++;
         }

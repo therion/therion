@@ -47,8 +47,7 @@
 #include "thconfig.h"
 #include "thtrans.h"
 #include "loch/lxMath.h"
-#include "thcs.h"
-#include "thgeomag.h"
+#include "thcsdata.h"
 #include "thgeomagdata.h"
 #include "QuickHull.hpp"
 
@@ -130,7 +129,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       if (dp->date.is_defined()) {
         double syear, eyear;
         syear = dp->date.get_start_year();
@@ -163,7 +162,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       bool dpdeclindef;
       double dpdeclin;
 
@@ -220,8 +219,8 @@ void thdb1d::scan_data()
               else
                 dcc = lei->todepth - lei->fromdepth;
               lei->depthchange = dcc;  
-              if (fabs(dcc) > lei->length)
-                ththrow("length reading is less than change in depth");
+              if (thdefinitely_greater_than(fabs(dcc),lei->length,1e-6))
+                ththrow("length reading is less than change in depth -- {}", fabs(dcc)-lei->length);
             }
             
             // check backwards compass reading
@@ -493,7 +492,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       // scan data equates
       eqi = dp->equate_list.begin();
       try {
@@ -518,7 +517,7 @@ void thdb1d::scan_data()
   while (obi != this->db->object_list.end()) {
 
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      thsurvey * srv = (thsurvey *) (*obi).get();
+      thsurvey * srv = dynamic_cast<thsurvey*>(obi->get());
       if (!srv->entrance.is_empty()) {
         srv->entrance.id = this->get_station_id(srv->entrance, srv);
         if (srv->entrance.id == 0) {
@@ -539,7 +538,7 @@ void thdb1d::scan_data()
 
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
 
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
 
       // scan data stations
       ssi = dp->ss_list.begin();
@@ -559,7 +558,7 @@ void thdb1d::scan_data()
             this->station_vec[ssi->station.id-1].explored = ssi->explored;
             this->station_vec[ssi->station.id-1].flags |= ssi->flags;            
             // set station attributes
-            this->m_station_attr.insert_object(NULL, (long) ssi->station.id);
+            this->m_station_attr.insert_object(nullptr, (long) ssi->station.id);
             thdatass_attr_map::iterator ami;
             for(ami = ssi->attr.begin(); ami != ssi->attr.end(); ami++) {
               this->m_station_attr.insert_attribute(ami->first.c_str(), ami->second);
@@ -914,7 +913,7 @@ void thdb1d::process_tree()
   int last_eq = -1;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       eqi = dp->equate_list.begin();
       last_eq = -1;
       while(eqi != dp->equate_list.end()) {
@@ -1323,7 +1322,7 @@ void thdb1d::process_survey_stat() {
   thpoint * pt;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
-      pt = (thpoint *)(*obi).get();
+      pt = dynamic_cast<thpoint*>(obi->get());
       ss = pt->fsptr;
       if ((pt->type == TT_POINT_TYPE_CONTINUATION) && (!thisnan(pt->xsize))) {
         while (ss != NULL) {
@@ -1374,21 +1373,21 @@ struct thlc_series
 
 struct thlc_cross_arrow
 {
-  thlc_cross * target;
-  thlc_cross_arrow * prev_arrow, * next_arrow;
-  thlc_series * series;
-  bool reverse;
+  thlc_cross * target = {};
+  thlc_cross_arrow * prev_arrow = {}, * next_arrow = {};
+  thlc_series * series = {};
+  bool reverse = {};
 };
 
 
 struct thlc_loop
 {
-  thlc_cross * from_cross, * to_cross;
-  thlc_cross_arrow * first_arrow, * last_arrow;
-  unsigned long minid, size, id;
+  thlc_cross * from_cross = {}, * to_cross = {};
+  thlc_cross_arrow * first_arrow = {}, * last_arrow = {};
+  unsigned long minid = {}, size = {}, id = {};
 #ifdef THDEBUG
-  bool is_new;
-  long old_id;
+  bool is_new = {};
+  long old_id = {};
 #endif  
 };
 
@@ -2168,7 +2167,7 @@ void thdb1d::close_loops()
   double avg_error = 0.0, avg_error_sum = 0.0;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
         tmps = &(this->station_vec[fii->station.id - 1]);
@@ -2584,7 +2583,7 @@ void thdb1d::print_loops() {
     lii++;
   }  
   
-  std::sort(lpr.begin(), lpr.end(), [](const auto& a, const auto& b){ return a.err >= b.err; });
+  std::sort(lpr.begin(), lpr.end(), [](const auto& a, const auto& b){ return a.err > b.err; });
   
   thdb1d_loop_leg * ll;
   thsurvey * ss;   
@@ -2708,7 +2707,7 @@ thdb3ddata * thdb1d::get_3d() {
           this->station_vec[id].x, \
           this->station_vec[id].y, \
           this->station_vec[id].z, \
-          (void *) &(this->station_vec[id])); \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2727,11 +2726,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_data.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+      fc->insert_vertex(station_in[last_st], *tlegs);
       
       // tu vygeneruje LRUD obalku
       
@@ -2821,7 +2820,7 @@ thdb3ddata * thdb1d::get_3d() {
           (*tlegs)->leg->from_left * secXz -
           (*tlegs)->leg->from_down * secYz + 
           secx[j] * ((*tlegs)->leg->from_left + (*tlegs)->leg->from_right) * secXz +
-          secy[j] * ((*tlegs)->leg->from_up + (*tlegs)->leg->from_down) * secYz,
+          secy[j] * ((*tlegs)->leg->from_up + (*tlegs)->leg->from_down) * secYz
 #else
           fromst->x + 
           (secx[j] < 0.5 ? (*tlegs)->leg->from_left : (*tlegs)->leg->from_right) * (secx[j] - 0.5) / 0.5 * secXx +
@@ -2831,9 +2830,9 @@ thdb3ddata * thdb1d::get_3d() {
           (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYy,
           fromst->z + 
           (secx[j] < 0.5 ? (*tlegs)->leg->from_left : (*tlegs)->leg->from_right) * (secx[j] - 0.5) / 0.5 * secXz +
-          (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYz,
+          (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYz
 #endif          
-          NULL);
+          );
 
         tsecvx[j] = this->d3_walls.insert_vertex(
 #ifdef SYMPASSAGES
@@ -2851,7 +2850,7 @@ thdb3ddata * thdb1d::get_3d() {
           (*tlegs)->leg->to_left * secXz -
           (*tlegs)->leg->to_down * secYz + 
           secx[j] * ((*tlegs)->leg->to_left + (*tlegs)->leg->to_right) * secXz +
-          secy[j] * ((*tlegs)->leg->to_up + (*tlegs)->leg->to_down) * secYz,
+          secy[j] * ((*tlegs)->leg->to_up + (*tlegs)->leg->to_down) * secYz
 #else
           tost->x + 
           (secx[j] < 0.5 ? (*tlegs)->leg->to_left : (*tlegs)->leg->to_right) * (secx[j] - 0.5) / 0.5 * secXx +
@@ -2861,9 +2860,9 @@ thdb3ddata * thdb1d::get_3d() {
           (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYy,
           tost->z + 
           (secx[j] < 0.5 ? (*tlegs)->leg->to_left : (*tlegs)->leg->to_right) * (secx[j] - 0.5) / 0.5 * secXz +
-          (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYz,
+          (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYz
 #endif          
-          NULL);
+          );
 
       }
 
@@ -2892,23 +2891,23 @@ thdb3ddata * thdb1d::get_3d() {
        tsecvx[j]->insert_normal(v3.x, v3.y, v3.z);
        
        if (j > 1) {
-         endsfc->insert_vertex(fsecvx[0],NULL);
-         endsfc->insert_vertex(fsecvx[j - 1],NULL);
-         endsfc->insert_vertex(fsecvx[j],NULL);
-         endsfc->insert_vertex(tsecvx[0],NULL);
-         endsfc->insert_vertex(tsecvx[j],NULL);
-         endsfc->insert_vertex(tsecvx[j - 1],NULL);
+         endsfc->insert_vertex(fsecvx[0]);
+         endsfc->insert_vertex(fsecvx[j - 1]);
+         endsfc->insert_vertex(fsecvx[j]);
+         endsfc->insert_vertex(tsecvx[0]);
+         endsfc->insert_vertex(tsecvx[j]);
+         endsfc->insert_vertex(tsecvx[j - 1]);
        }
        
        prevj = j;
       }      
       // vlozime triangle strip
       for(j = 0; j < secn; j++) {
-        secfc->insert_vertex(fsecvx[j],NULL);
-        secfc->insert_vertex(tsecvx[j],NULL);
+        secfc->insert_vertex(fsecvx[j]);
+        secfc->insert_vertex(tsecvx[j]);
       }
-      secfc->insert_vertex(fsecvx[0],NULL);
-      secfc->insert_vertex(tsecvx[0],NULL);
+      secfc->insert_vertex(fsecvx[0]);
+      secfc->insert_vertex(tsecvx[0]);
       
       // koniec generovania LRUD obalky
       SKIP_WALLS:;
@@ -2925,7 +2924,7 @@ thdb3ddata * thdb1d::get_3d() {
           this->station_vec[id].x, \
           this->station_vec[id].y, \
           this->station_vec[id].z, \
-          (void *) &(this->station_vec[id])); \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2939,11 +2938,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_surface.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+      fc->insert_vertex(station_in[last_st], *tlegs);
     }
   }
   
@@ -2957,7 +2956,7 @@ thdb3ddata * thdb1d::get_3d() {
           this->station_vec[id].x, \
           this->station_vec[id].y, \
           this->station_vec[id].z, \
-          (void *) &(this->station_vec[id])); \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2971,11 +2970,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_splay.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+      fc->insert_vertex(station_in[last_st], *tlegs);
     }
   }
 
@@ -2993,7 +2992,7 @@ void thdb1d::postprocess_objects()
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_SURFACE_CMD:
-        ((thsurface*)(*obi).get())->check_stations();
+        dynamic_cast<thsurface*>(obi->get())->check_stations();
         break;
     }
     obi++;
@@ -3060,7 +3059,7 @@ void thdb1d::process_xelev()
     switch ((*obi)->get_class_id()) {
       case TT_DATA_CMD:
         try {
-          dp = (thdata *)(*obi).get();
+          dp = dynamic_cast<thdata*>(obi->get());
           xi = dp->extend_list.begin();
           while(xi != dp->extend_list.end()) {
             if (!xi->to.is_empty()) {
@@ -3560,7 +3559,7 @@ thdb3ddata * thdb1ds::get_3d_outline() {
   thdb1d_tree_arrow * a;
   thdb1ds * tt;
   n = &(thdb.db1d.tree_nodes[this->uid - 1]);
-  Vector3<double> fv(this->x, this->y, this->z), tv, txv;
+  Vector3<double> fv(this->x, this->y, this->z), tv = {}, txv = {};
 
   // TODO: Add points to point cloud
 	// traverse all splay shots from given station, calculate normalized position and add

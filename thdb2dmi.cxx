@@ -26,7 +26,6 @@
  */
  
 #include "thdb2dmi.h"
-#include "thexception.h"
 
 thdb2dmi::thdb2dmi()
 {

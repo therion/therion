@@ -55,12 +55,12 @@ struct lxFileData {
 
   lxFileData() = default;
   void Clear();
-  void Copy(lxFileSizeT size, const void * src);
-  const void * GetData(lxFileDataPtr ptr);
+  void Copy(lxFileSizeT size, const uint8_t * data);
+  const uint8_t * GetData(lxFileDataPtr ptr);
   const char * GetString(lxFileDataPtr ptr);
   FILE * GetTmpFile(lxFileDataPtr ptr);
   lxFileDataPtr AppendStr(const char * str);
-  lxFileDataPtr AppendData(const void * data, lxFileSizeT size);
+  lxFileDataPtr AppendData(const uint8_t * src, lxFileSizeT size);
   lxFileDataPtr AppendFile(const char * fnm);
 
 };
@@ -200,11 +200,11 @@ struct lxFile {
 
   lxFileSurvey_list m_surveys;
   lxFileData m_surveysData;
-  lxFileSizeT m_nSurveys;
+  lxFileSizeT m_nSurveys = {};
 
   lxFileStation_list m_stations;
   lxFileData m_stationsData;
-  lxFileSizeT m_nStations;
+  lxFileSizeT m_nStations = {};
 
   lxFileShot_list m_shots;
   lxFileData m_shotsData;

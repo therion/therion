@@ -3156,7 +3156,7 @@ proc xth_me_cmds_set_colors {} {
 	  }   
 	}
 	$xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
-	$xth(me,can) itemconfigure lnln$id -fill $col -state normal
+	$xth(me,can) itemconfigure lnln$id -fill $col
 	if {$xth(me,hinactives) && ($col == $dcol)} {
 	  $xth(me,can) itemconfigure ln$id -state hidden  
 	}

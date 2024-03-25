@@ -26,40 +26,24 @@
  */
  
 #include "thexpmap.h"
-#include "thexporter.h"
-#include "thexception.h"
 #include "thdatabase.h"
-#include "thdb2d.h"
 #include "thdb2dmi.h"
 #include "thlayout.h"
 #include "thmap.h"
-#include "thsketch.h"
 #include "thconfig.h"
 #include <stdio.h>
-#include "thtmpdir.h"
 #include "thcsdata.h"
 #include "thdb3d.h"
-#include "thchenc.h"
 #include "thdb1d.h"
-#include "thinit.h"
-#include "thlogfile.h"
-#include "thcmdline.h"
 #include "thsurvey.h"
-#include "thchenc.h"
-#include <fstream>
 #include "thmapstat.h"
-#include "thsurface.h"
 #include <stdlib.h>
 #include "loch/lxMath.h"
-#include "shapefil.h"
 #include "thexpmodel.h"
-#include <fcntl.h>
 #include <stdlib.h>
 #include <time.h>
-#include <errno.h>
 #include "thexpuni.h"
 #include "thproj.h"
-#include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
 
@@ -475,7 +459,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   thdataobject * obj;
   for(obj = mainsrv->foptr; obj != NULL; obj = obj->nsptr) 
     if (obj->get_class_id() == TT_SURVEY_CMD) {
-      mainsrv = (thsurvey *) obj;
+      mainsrv = dynamic_cast<thsurvey*>(obj);
       break;
     }
 
@@ -552,7 +536,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
-            scrap = (thscrap*) cmi->object;
+            scrap = dynamic_cast<thscrap*>(cmi->object);
             xu.parse_scrap(scrap);
             if (xu.m_part_list.size() > 0) {
               fprintf(out,"<Polygon>\n");
@@ -667,7 +651,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
       if (cbm->mode == TT_MAPITEM_NORMAL) {
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
-            scrap = (thscrap*) cmi->object;
+            scrap = dynamic_cast<thscrap*>(cmi->object);
             if (!thisnan(scrap->lxmin)) {
 	    
               thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
@@ -759,7 +743,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
       if (cbm->mode == TT_MAPITEM_NORMAL) {
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
-            scrap = (thscrap*) cmi->object;
+            scrap = dynamic_cast<thscrap*>(cmi->object);
             xu.parse_scrap(scrap);
             if (xu.m_part_list.size() > 0) {
               double x(0.0), y(0.0), z(0.0), px(0.0), py(0.0);

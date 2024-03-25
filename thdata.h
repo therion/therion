@@ -142,9 +142,9 @@ class thdata : public thdataobject {
     dlc_up, dlc_down, dlc_left, dlc_right;
     
   // dls - data standard deviation and declination
-  double dls_length, dls_gradient, dls_bearing, dls_counter, dls_depth,
-    dls_dx, dls_dy, dls_dz, dls_x, dls_y, dls_z, dl_declination,
-    dl_survey_declination;
+  double dls_length = {}, dls_gradient = {}, dls_bearing = {}, dls_counter = {}, dls_depth = {},
+    dls_dx = {}, dls_dy = {}, dls_dz = {}, dls_x = {}, dls_y = {}, dls_z = {}, dl_declination = {},
+    dl_survey_declination = {};
     
   // statistics  
   double stat_length, stat_dlength, stat_splaylength, stat_slength, stat_alength;
@@ -155,16 +155,16 @@ class thdata : public thdataobject {
   bool dli_plumbs, dli_equates, dl_direction;
   
   // what is inserted
-  bool di_station, di_from, di_to, di_length, di_bearing, di_gradient,
-    di_backlength, di_backbearing, di_backgradient,
-    di_depth, di_fromdepth, di_todepth, di_depthchange, di_count, di_fromcount,
-    di_tocount, di_dx, di_dy, di_dz, di_direction, di_newline, di_interleaved,
-    di_up, di_down, di_left, di_right;
+  bool di_station = {}, di_from = {}, di_to = {}, di_length = {}, di_bearing = {}, di_gradient = {},
+    di_backlength = {}, di_backbearing = {}, di_backgradient = {},
+    di_depth = {}, di_fromdepth = {}, di_todepth = {}, di_depthchange = {}, di_count = {}, di_fromcount = {},
+    di_tocount = {}, di_dx = {}, di_dy = {}, di_dz = {}, di_direction = {}, di_newline = {}, di_interleaved = {},
+    di_up = {}, di_down = {}, di_left = {}, di_right = {};
   
   bool dl_survey_declination_on, dl_declination_north_grid;
   
   int d_type, ///< Type of data.
-    d_order[THDATA_MAX_ITEMS],  ///< Data order.
+    d_order[THDATA_MAX_ITEMS] = {},  ///< Data order.
     d_nitems,  ///< Number of items.
     d_current,  ///< Currently inserted item.
     d_mark,  ///< Station mark type.
@@ -182,7 +182,7 @@ class thdata : public thdataobject {
   void reset_data();  ///< Reset data type and order.
   
   thdataleg_list::iterator cd_leg, pd_leg;  // Current data leg.
-  bool cd_leg_def, pd_leg_def;  // Whether these legs are defined.
+  bool cd_leg_def = {}, pd_leg_def = {};  // Whether these legs are defined.
   
   void set_data_calibration(int nargs, char ** args);  ///< Data calibration.
   

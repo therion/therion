@@ -147,7 +147,7 @@ void thexporter::export_db(class thdatabase * dp)
     switch ((*ii)->export_mode) {
       case TT_EXP_MAP:
       case TT_EXP_ATLAS:
-        ((thexpmap*)(*ii))->parse_projection(dp);
+        dynamic_cast<thexpmap*>(*ii)->parse_projection(dp);
     }
   }    
 

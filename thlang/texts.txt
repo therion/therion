@@ -540,7 +540,7 @@ es: pared de bloques
 fr: blocs, effrondrement
 it: massi, crollo
 mi: pakaru
-pl: ściana utworzona przez zawalisko
+pl: ściana z zawaliska
 pt: parede de blocos
 rs: blokovi
 ru: глыбы
@@ -560,7 +560,7 @@ es: pared de derrubios
 fr: cailloutis, éboulis
 it: detriti
 mi: otaota
-pl: ściana utworzona przez żwir
+pl: ściana ze żwiru
 pt: parede de escombros
 rs: drobina
 ru: щебень
@@ -580,7 +580,7 @@ es: pared de cantos rodados
 fr: galets
 it: ciottoli
 mi: nga kōhatu iti
-pl: ściana utworzona przez okręglaki
+pl: ściana z okręglaków
 pt: parede de seixos
 rs: šljunak
 ru: галька
@@ -600,7 +600,7 @@ es: pared de arena
 fr: sable
 it: sabbia
 mi: onepū
-pl: ściana utworzona przez piasek
+pl: ściana z piasku
 pt: parede de areia
 rs: pesak
 ru: песок
@@ -736,7 +736,7 @@ es: sección
 fr: section
 it: sezione
 mi: roherohenga
-pl: przkrój
+pl: przekrój
 pt_BR: corte
 pt_PT: secção
 rs: poprečni presek
@@ -1361,7 +1361,7 @@ es: profundidad pozo
 fr: profondeur d'un puits
 it: profondità pozzo
 mi: rua hōhonu
-pl: głębokosc studni
+pl: głębokość studni
 pt: profundidade do poço
 rs: dubina vertikale
 ru: глубина колодца
@@ -3995,7 +3995,7 @@ es: ft
 fr: ft
 it: ft
 mi: whīti
-pl: ft (stopy)
+pl: ft
 pt: pés
 rs: ft (stope)
 ru: футы
@@ -4035,7 +4035,7 @@ es: m
 fr: m
 it: m
 mi: mehua
-pl: m (metry)
+pl: m
 pt: m
 rs: m
 ru: м

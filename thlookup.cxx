@@ -28,18 +28,13 @@
 #include "thlookup.h"
 #include "thexception.h"
 #include "thchenc.h"
-#include "thdata.h"
 #include "thparse.h"
 #include "thinfnan.h"
 #include "thpdfdata.h"
-#include "thsymbolset.h"
-#include "thtflength.h"
 #include "thlang.h"
-#include "thcsdata.h"
-#include "thconfig.h"
 #include "thscrap.h"
 #include "thmap.h"
-#include "thpdf.h"
+#include "thlayout.h"
 #include "thtexfonts.h"
 #include "thdatabase.h"
 #include <string.h>
@@ -270,7 +265,7 @@ bool scrap_in_map(thscrap * s, thmap * m) {
       if (m->is_basic) {
         if (s->id == mi->object->id) return true;
       } else {
-        if (scrap_in_map(s, (thmap *) mi->object)) return true;
+        if (scrap_in_map(s, dynamic_cast<thmap*>(mi->object))) return true;
       }
     }
     mi = mi->next_item;
@@ -361,7 +356,7 @@ void thlookup::color_scrap(thscrap * s) {
         if (tli->m_ref == NULL) continue;
         // if map contains scrap - set color and break
         // thprintf("%s", s->name);
-        if (scrap_in_map(s, (thmap *) tli->m_ref)) {
+        if (scrap_in_map(s, dynamic_cast<thmap*>(tli->m_ref))) {
           clr = tli->m_color;
           break;
         }

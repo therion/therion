@@ -892,10 +892,6 @@ Point is a command for drawing a point map symbol.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
-  * |dist <distance>| =  valid for extra points, specifies the distance to the nearest
-    station (or station specified using |-from| option. If not specified,
-    appropriate value from LRUD data is used.
-  * |from <station>| =  valid for extra points, specifies reference station.
   * |visibility <on/off>| = displays/hides the symbol.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
@@ -907,6 +903,10 @@ Point is a command for drawing a point map symbol.
 
     {\it Type-specific options:}\Nobreak
 
+  * |dist <distance>| =  if the point type is extra, specifies the distance to the nearest
+    station (or station specified using |-from| option. If not specified,
+    appropriate value from LRUD data is used.
+  * |from <station>| =  if the point type is extra, specifies reference station.
   * |name <reference>| = if the point type is station, this
     option gives the reference to the real survey station.
   * |extend [prev[ious] <station>]| = if the point type is station and scrap
@@ -1066,6 +1066,15 @@ respectively.
 
 
 \comopt
+    Most of these options are accepted both as a |line| command option and as a
+    |[LINE DATA]| option despite representing a 'whole line' option. The last 
+    one appearing prevails. The exceptions are |adjust|, |altitude|, |l-size|,
+    |mark|, |orientation|, |size| and |smooth| that are only accepted as a 
+    |[LINE DATA]| option.
+
+    The |direction| and |gradient| options are only accepted as a |[LINE DATA]| 
+    command option when set to |point|. Otherwise they are accepted as a |line| 
+    command option.
        * |subtype <keyword>| = determines line subtype. The following
          subtypes are supported for given types:
 
@@ -1096,32 +1105,17 @@ respectively.
          or not
        * |mark <keyword>| = is used to mark the point on the line (see
          |join| command).
-       * |orientation/orient <number>| = orientation of the symbols
-         on the line. If not specified, it's perpendicular to the
-         line on its left side. 0 $\le$ |number| $<$ 360.
        * |outline <in/out/none>| = determines whether the line serves as
          a border line for a scrap. Default value is `|out|' for
          walls, `|none|' for all other lines. Use |-outline in| for
          large pillars etc.
        * |reverse <on/off>| = whether points are given in reverse order.
-       * |size <number>| = line width (left and right sizes are set to
-         one half of this value)
-       * |r-size <number>| = size of the line to the right
-       * |l-size <number>| = same to the left. Required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
-  * |scale| = scale for labels, can be:
-    tiny (xs), small (s), normal (m), large (l), huge (xl) or a
-    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
-    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
-    $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
-    using |fonts-setup| in the |layout| configuration section.
-  * |adjust <horizontal/vertical>| = shifts the line point to be aligned
-    horizontally/ver\-ti\-cally with the previous point (or next point if there is
-    no previous point). The result is horizontal/vertical line segment).
-    If all line points have this option, they are aligned to the
-    average $y$ or $x$ coordinate, respectively. This option is not allowed
-    in the |plan| projection.
+    * |adjust <horizontal/vertical>| = shifts the line point to be aligned
+    horizontally/ver\-ti\-cally with the previous point. It can't be set on the 
+    first point. The result is a horizontal/vertical line segment.
+    This option is not allowed in the |plan| projection.
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
   * |visibility <on/off>| = displays/hides the symbol.
@@ -1144,21 +1138,37 @@ respectively.
          Units can follow the value. Examples: |+4|, |[+4 m]|,
          |[fix 1510 m]|.
        * |anchors <on/off>| = this option can be specified only with
-         the `rope' line type.
+         the `rope' line type. Default is |on|.
        * |border <on/off>| = this option can be specified only with
          the `slope' symbol type. It switches on/off the border line of
          the slope.
        * |direction <begin/end/both/none/point>| = can be used only
          with the section type. It indicates where to put
-         a direction arrow on the section line. None is default.
+         a direction arrow on the section line. None is default. The |point| 
+         option must be used inside |[LINE DATA]|. The others can (and should)
+         be used as a line option.
        * |gradient <none/center/point>| = can be used only with the contour
          type and indicates where to put a gradient mark on the contour line.
          If there is no gradient specification, behaviour is symbol-set
-         dependent (e.g. no tick in UIS, tick in the middle in SKBB).
+         dependent (e.g. no tick in UIS, tick in the middle in SKBB). The |point| 
+         option must be used inside |[LINE DATA]|. The others can (and should)
+         be used as a line option.
        * |head <begin/end/both/none>| = can be used only with the arrow
          type and indicates where to put an arrow head. End is default.
+       * |l-size <number>| = Size of the line (to the left). Only valid on and 
+         required for |slope| type.
+       * |orientation/orient <number>| = orientation of the symbols on the line.
+         Can be used only with slope type. If not specified, it's perpendicular 
+         to the line on its left side. 0 $\le$ |number| $<$ 360.
        * |rebelays <on/off>| = this option can be specified only with
-         the `rope' line type.
+         the `rope' line type. Default is |on|.
+       * |scale| = scale affects only the text on label lines, can be:
+         tiny (xs), small (s), normal (m), large (l), huge (xl) or a
+         numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+         $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+         $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
+         using |fonts-setup| in the |layout| configuration section.
+       * |size <number>| = synonym of l-size
        * |text <string>| = valid only for label lines.
        * \NEW{5.4}|height <value>| = height of pit or wall:pit; available in
          \MP\ as a numeric variable |ATTR__height|.
@@ -1176,10 +1186,10 @@ Area is specified by surrounding border lines. They may be of any type, but
 must be listed in order and each pair of consecutive lines must intersect.
 In order to be sure that lines intersect even after scrap transformation
 you may e.g.~continue a lake border 1\,cm behind a passage wall---these
-overlaps will be automatically clipped by scrap border.
-You may use invisible border to achieve this inside of the passage.
-
-
+overlaps will be automatically clipped by scrap border. You may use 
+invisible border to achieve this inside of the passage. When defined by more
+than one line, the actual area will be the intersection of the areas defined 
+by each separate line.
 \enddescription
 
 \syntax
@@ -1212,6 +1222,8 @@ You may use invisible border to achieve this inside of the passage.
 \endarguments
 
 \comopt
+All options can appear as command-like options or as |area| options, i.e., on
+the same line as the |area| command. The last one appearing prevails.
   * the data lines consist of border line references (IDs)
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.

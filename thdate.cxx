@@ -26,13 +26,9 @@
  */
  
 #include "thdate.h"
-#include "thparse.h"
 #include "thexception.h"
-#include "therion.h"
-#include <sys/types.h>
 #include <time.h>
 #include <locale.h>
-#include <errno.h>
 
 void thdate::reset()
 {
@@ -65,12 +61,6 @@ void thdate::reset_current()
   this->smin = tim->tm_min;
   this->ssec = double(tim->tm_sec > 59 ? 59 : tim->tm_sec);
 
-}
-
-
-thdate::thdate()
-{
-  this->reset();
 }
 
 

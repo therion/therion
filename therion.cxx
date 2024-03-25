@@ -26,27 +26,13 @@
  */
  
 #include "therion.h"
-#include "thlogfile.h"
-#include "thtmpdir.h"
-#include "thcmdline.h"
 #include "thconfig.h"
-#include "thinput.h"
-#include "thchenc.h"
-#include "thdatareader.h"
-#include "thexception.h"
-#include "thlibrary.h"
 #include "thinit.h"
-#include "thgrade.h"
 #include "thlayout.h"
-#include "thobjectsrc.h"
 #include "thpoint.h"
 #include "thline.h"
 #include "tharea.h"
-#include "thversion.h"
-#include "thtexfonts.h"
 #include "thlang.h"
-#include "thbezier.h"
-#include "thsymbolset.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -60,32 +46,6 @@ bool thverbose_mode = true;
 bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
-
-void thprintf(const char *format, ...)
-{
-  va_list args;
-  va_start(args, format);
-  thlog.vprintf(format, &args);
-  va_end(args);
-  if (thverbose_mode) {
-    va_start(args, format);
-    vfprintf(stdout, format, args);
-    va_end(args);
-  }
-}
-  
-
-void thprintf2err(const char *format, ...)
-{
-  va_list args;
-  va_start(args, format);
-  thlog.vprintf(format, &args);
-  va_end(args);
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-}
-
 
 void thprint_environment() {
   thprintf("\n\nINIT=%s\n",thcfg.get_initialization_path());

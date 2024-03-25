@@ -34,7 +34,6 @@
 #include "thlang.h"
 #include "thversion.h"
 #include "thtexfonts.h"
-#include "thsurvey.h"
 #include "thdb1d.h"
 #include "thconfig.h"
 #include "thcs.h"
@@ -204,12 +203,12 @@ void thmapstat::scanmap(class thmap * map) {
     if (mi->type == TT_MAPITEM_NORMAL) {
       switch (mi->object->get_class_id()) {
         case TT_MAP_CMD:
-          mapp = (thmap *) mi->object;
+          mapp = dynamic_cast<thmap*>(mi->object);
           mapp->stat.scanmap(mapp);
           map->stat.addstat(&(mapp->stat));
           break;
         case TT_SCRAP_CMD:
-          scrapp = (thscrap *) mi->object;
+          scrapp = dynamic_cast<thscrap*>(mi->object);
           scrapp->get_polygon();
           map->stat.addobj(scrapp);
           map->stat.adddata(&(scrapp->adata));
@@ -227,7 +226,7 @@ void thmapstat::scanmap(class thmap * map) {
 		for(thdb_object_list_type::iterator it = thdb.object_list.begin(); it != thdb.object_list.end(); it++) {
 			obj = it->get();
 			if ((obj->get_class_id() == TT_DATA_CMD) && (obj->is_in_survey(map->asoc_survey.psurvey))) {
-				dp.ptr = (thdata*)obj;
+				dp.ptr = dynamic_cast<thdata*>(obj);
 				dm[dp] = 1;
 			}
 		}
@@ -246,7 +245,7 @@ void thmapstat::scanmap(class thmap * map) {
 
 struct thmapstat_person_data {
   thperson person;
-  double crit;
+  double crit = {};
   bool operator < (const thmapstat_person_data& x) const
   {
 	  if (crit > x.crit)
@@ -263,7 +262,7 @@ struct thmapstat_person_data {
 struct thmapstat_copyright_data {
   thmapstat_copyright copy;
   thmapstat_data data;
-  double crit;
+  double crit = {};
   bool operator < (const thmapstat_copyright_data& x) const
   {
 	  if (crit > x.crit)

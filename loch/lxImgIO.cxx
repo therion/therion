@@ -4,7 +4,7 @@
 #ifndef LXDEPCHECK
 #include <stdio.h>
 #include <stdlib.h>
-#include <memory.h>
+#include <string.h>
 #include <setjmp.h>
 
 #ifdef __cplusplus
@@ -68,7 +68,7 @@ lxWrite_JPEG_file (const char * filename, int quality, lxImageRGB img) {
    * compression/decompression processes, in existence at once.  We refer
    * to any one struct (and its associated working data) as a "JPEG object".
    */
-  struct jpeg_compress_struct cinfo;
+  struct jpeg_compress_struct cinfo = {};
   /* This struct represents a JPEG error handler.  It is declared separately
    * because applications often want to supply a specialized error handler
    * (see the second half of this file for an example).  But here we just
@@ -77,7 +77,7 @@ lxWrite_JPEG_file (const char * filename, int quality, lxImageRGB img) {
    * Note that this struct must live as long as the main JPEG parameter
    * struct, to avoid dangling-pointer problems.
    */
-  struct jpeg_error_mgr jerr;
+  struct jpeg_error_mgr jerr = {};
   /* More stuff */
   FILE * outfile;               /* target file */
   JSAMPROW row_pointer[1];      /* pointer to JSAMPLE row[s] */
@@ -279,12 +279,12 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
   /* This struct contains the JPEG decompression parameters and pointers to
    * working space (which is allocated as needed by the JPEG library).
    */
-  struct jpeg_decompress_struct cinfo;
+  struct jpeg_decompress_struct cinfo = {};
   /* We use our private extension JPEG error handler.
    * Note that this struct must live as long as the main JPEG parameter
    * struct, to avoid dangling-pointer problems.
    */
-  struct my_error_mgr jerr;
+  struct my_error_mgr jerr = {};
   /* More stuff */
   //FILE * infile;                /* source file */
   JSAMPARRAY buffer;            /* Output row buffer */

@@ -162,18 +162,18 @@ class thdatabase {
   thmbuffer buff_strings;   ///< String storage buffer.
   
   
-  int ccontext;  ///< Current context.
-  class thsurvey * csurveyptr,  ///< Pointer to the current survey.
-    * fsurveyptr;  ///< Pointer to the first survey.
-  unsigned csurveylevel; ///< Current survey level.
-  class thscrap * cscrapptr; ///< Current scrap.
-  class th2ddataobject * lcscrapoptr; ///< Last object in given current scrap.
-  class thdataobject * lcsobjectptr;  ///< Last object in given current survey.
+  int ccontext = {};  ///< Current context.
+  class thsurvey * csurveyptr = {},  ///< Pointer to the current survey.
+    * fsurveyptr = {};  ///< Pointer to the first survey.
+  unsigned csurveylevel = {}; ///< Current survey level.
+  class thscrap * cscrapptr = {}; ///< Current scrap.
+  class th2ddataobject * lcscrapoptr = {}; ///< Last object in given current scrap.
+  class thdataobject * lcsobjectptr = {};  ///< Last object in given current survey.
 
   thdb_dictionary_type dictionary;  ///< Database dictionary.
   
-  unsigned long objid,  ///< Object identifier
-    nscraps;  ///< Total number of scraps.
+  unsigned long objid = {},  ///< Object identifier
+    nscraps = {};  ///< Total number of scraps.
   
   void reset_context();  ///< Reset database context.
 
@@ -389,7 +389,7 @@ std::unique_ptr<T> thdatabase::create(const thobjectsrc& osrc)
   ret->assigndb(this);
   // set object id and mark revision
   ret->id = ++this->objid;
-  this->attr.insert_object((void *) ret.get(), (long) ret->id);
+  this->attr.insert_object(ret.get(), (long) ret->id);
   ret->source = osrc;
   this->revision_set.insert(threvision(ret->id, 0, osrc));
 

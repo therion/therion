@@ -44,7 +44,6 @@
 #include "thgeomag.h"
 #include "thgeomagdata.h"
 #include "thlayout.h"
-#include "thcomment.h"
 #include "thsketch.h"
 #include "thcs.h"
 #ifdef THWIN32
@@ -681,7 +680,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
       ththrow("unknown command -- {}", this->cfg_file.get_cmd());
 
     if (objptr->get_class_id() == TT_LAYOUT_CMD) {
-      ((thlayout*)objptr.get())->m_pconfig = this;
+      dynamic_cast<thlayout*>(objptr.get())->m_pconfig = this;
     }
 
     thencode(&this->bf1, this->cfg_file.get_line(), this->cfg_file.get_cif_encoding());  

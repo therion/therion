@@ -41,7 +41,6 @@
 #include <math.h>
 #include "thlayout.h"
 #include "thexpmap.h"
-#include "thconfig.h"
 #include "thtrans.h"
 #include "thtmpdir.h"
 #include "thinit.h"
@@ -452,10 +451,10 @@ void thdb2d::process_references()
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_LINE_CMD:
-        ((thline *)(*obi).get())->preprocess();
+        dynamic_cast<thline*>(obi->get())->preprocess();
         break;
       case TT_LAYOUT_CMD:
-        ((thlayout *)(*obi).get())->process_copy();
+        dynamic_cast<thlayout*>(obi->get())->process_copy();
         break;
     }
     obi++;
@@ -466,19 +465,19 @@ void thdb2d::process_references()
     if ((*obi)->fsptr != NULL) {
       switch ((*obi)->get_class_id()) {
         case TT_AREA_CMD:
-          this->process_area_references((tharea *) obi->get());
+          this->process_area_references(dynamic_cast<tharea*>(obi->get()));
           break;
         case TT_POINT_CMD:
-          this->process_point_references((thpoint *) obi->get());
+          this->process_point_references(dynamic_cast<thpoint*>(obi->get()));
           break;
         case TT_MAP_CMD:
-          this->process_map_references((thmap *) obi->get());
+          this->process_map_references(dynamic_cast<thmap*>(obi->get()));
           break;
         case TT_JOIN_CMD:
-          this->process_join_references((thjoin *) obi->get());
+          this->process_join_references(dynamic_cast<thjoin*>(obi->get()));
           break;
         case TT_SCRAP_CMD:
-          this->process_scrap_references((thscrap *) obi->get());
+          this->process_scrap_references(dynamic_cast<thscrap*>(obi->get()));
       }
     }
     obi++;
@@ -490,7 +489,7 @@ void thdb2d::process_references()
     if ((*obi)->fsptr != NULL) {
       switch ((*obi)->get_class_id()) {
         case TT_MAP_CMD:
-          this->postprocess_map_references((thmap *) obi->get());
+          this->postprocess_map_references(dynamic_cast<thmap*>(obi->get()));
           break;
       }
     }
@@ -532,7 +531,7 @@ void thdb2d::process_area_references(tharea * aptr)
           cbl->source.name, cbl->source.line, cbl->name.name);
     }
 
-    cbl->line = (thline *) optr;
+    cbl->line = dynamic_cast<thline*>(optr);
     if (cbl->line->fscrapptr->id != aptr->fscrapptr->id) {
       if (cbl->name.survey != NULL)
         ththrow("{} [{}] -- line outside of current scrap -- {}@{}",
@@ -558,7 +557,7 @@ void thdb2d::process_map_references(thmap * mptr)
         ththrow("{} [{}] -- invalid survey reference -- {}",
           mptr->source.name, mptr->source.line, mptr->asoc_survey.name);
 		}
-		mptr->asoc_survey.psurvey = (thsurvey *) obj;
+		mptr->asoc_survey.psurvey = dynamic_cast<thsurvey*>(obj);
 	}
 
   if (mptr->projection_id > 0)
@@ -627,7 +626,7 @@ void thdb2d::process_map_references(thmap * mptr)
             ththrow("{} [{}] -- unsupported projection for survey", citem->source.name, citem->source.line);
             break;
         }
-        survp = (thsurvey*) optr;
+        survp = dynamic_cast<thsurvey*>(optr);
         
         // vytvorime specialnu mapu s jednym scrapom,
         // ktoremu nastavime centerline io a survey
@@ -668,7 +667,7 @@ void thdb2d::process_map_references(thmap * mptr)
         break;
 
       case TT_MAP_CMD:
-        mapp = (thmap *) optr;
+        mapp = dynamic_cast<thmap*>(optr);
         // if not defined - process recursively
         if (mapp->projection_id == 0) {
           try {
@@ -728,7 +727,7 @@ void thdb2d::process_map_references(thmap * mptr)
 
 
       case TT_SCRAP_CMD:
-        scrapp = (thscrap *) optr;
+        scrapp = dynamic_cast<thscrap*>(optr);
         if (proj_id == -1) {
           proj_id = scrapp->proj->id;
           mptr->is_basic = true;
@@ -830,7 +829,7 @@ void thdb2d::postprocess_map_references(thmap * mptr)
     thmap * mapp;
     switch (optr->get_class_id()) {
       case TT_MAP_CMD:
-        mapp = (thmap *) optr;
+        mapp = dynamic_cast<thmap*>(optr);
         if (mapp->projection_id != mptr->projection_id) {
           if (citem->name.survey != NULL)
             ththrow("{} [{}] -- incompatible map projection -- {}@{}",
@@ -896,9 +895,9 @@ void thdb2d::process_join_references(thjoin * jptr)
     if (optr->is(TT_2DDATAOBJECT_CMD) || optr->is(TT_SCRAP_CMD)) {
       if (jptr->proj != NULL) {
         if (optr->is(TT_SCRAP_CMD))
-          cprj = ((thscrap*)optr)->proj;
+          cprj = dynamic_cast<thscrap*>(optr)->proj;
         else
-          cprj = ((th2ddataobject *)optr)->fscrapptr->proj;
+          cprj = dynamic_cast<th2ddataobject*>(optr)->fscrapptr->proj;
         if (cprj->id != jptr->proj->id) {        
           if (citem->name.survey != NULL)
             ththrow("{} -- projection mishmash -- {}@{}", jptr->throw_source(),
@@ -909,9 +908,9 @@ void thdb2d::process_join_references(thjoin * jptr)
         }
       } else {
         if (optr->is(TT_SCRAP_CMD))
-          jptr->proj = ((thscrap*)optr)->proj;
+          jptr->proj = dynamic_cast<thscrap*>(optr)->proj;
         else
-          jptr->proj = ((th2ddataobject *)optr)->fscrapptr->proj;
+          jptr->proj = dynamic_cast<th2ddataobject*>(optr)->fscrapptr->proj;
       }
     }    
     
@@ -940,7 +939,7 @@ void thdb2d::process_join_references(thjoin * jptr)
         citem->object = optr;    
         break;
       case TT_POINT_CMD:
-        pointp = (thpoint*) optr;
+        pointp = dynamic_cast<thpoint*>(optr);
         if (citem->mark != NULL) {
           if (citem->name.survey != NULL)
             ththrow("{} -- mark reference with point -- {}@{}:{}", jptr->throw_source(),
@@ -954,7 +953,7 @@ void thdb2d::process_join_references(thjoin * jptr)
         citem->object = optr;    
         break;
       case TT_LINE_CMD:
-        linep = (thline *) optr;
+        linep = dynamic_cast<thline*>(optr);
         if (citem->mark != NULL) {
           citem->line_point = linep->get_marked_station(citem->mark);
           if (citem->line_point == NULL) {
@@ -1035,7 +1034,7 @@ void thdb2d::process_point_references(thpoint * pp)
         optr = this->db->get_object(pp->station_name,pp->fsptr);
         if (optr != NULL) {
           if (optr->get_class_id() == TT_SCRAP_CMD) {
-            if (((thscrap *)optr)->proj->type == TT_2DPROJ_NONE) {
+            if (dynamic_cast<thscrap*>(optr)->proj->type == TT_2DPROJ_NONE) {
               pp->text = (char *) optr;
             } else {
               extend_error = true;
@@ -1122,7 +1121,7 @@ void thdb2d::log_distortions() {
         i++;
       }
       
-      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist >= s2->maxdist; });
+      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist > s2->maxdist; });
       thlog.printf("\n\n###################### scrap distortions #######################\n");
       thlog.printf(" PROJECTION: %s%s%s\n", 
         thmatch_string(prj->type,thtt_2dproj), 
@@ -1177,7 +1176,7 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
       }
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
-          cs = (thscrap *) cmi->object;
+          cs = dynamic_cast<thscrap*>(cmi->object);
           z = cs->z;
           if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
 		  thlog.printf("S ");
@@ -1292,7 +1291,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 //  unsigned long searchid;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
-      ppp = (thpoint *)(*obi).get();
+      ppp = dynamic_cast<thpoint*>(obi->get());
       if ((ppp->fscrapptr->proj->id == prj->id) && (ppp->type == TT_POINT_TYPE_STATION) && (ppp->station_name.id != 0)) {
         // let's add control point to given scrap
         cp = ppp->fscrapptr->insert_control_point();
@@ -1778,7 +1777,7 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
     while (p2dobj != NULL) {
       switch (p2dobj->get_class_id()) {
         case TT_POINT_CMD:
-          ppoint = (thpoint *) p2dobj;
+          ppoint = dynamic_cast<thpoint*>(p2dobj);
           if (!thisnan(ppoint->orient)) {
             ppoint->orient += ps->mr;
             if (ppoint->orient < 0) {
@@ -1816,7 +1815,7 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
           //ppoint->ysize *= ps->ms;
           break;
         case TT_LINE_CMD:
-          pline = (thline *) p2dobj;
+          pline = dynamic_cast<thline*>(p2dobj);
           plp = pline->first_point;
 
           while (plp != NULL) {            
@@ -1877,8 +1876,8 @@ void thdb2d::pp_find_scraps_and_joins(thdb2dprj * prj)
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_SCRAP_CMD)) {
-      if (((thscrap *)(*obi).get())->proj->id == prj->id) {
-        cscrap = (thscrap *)(*obi).get();
+      if (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id) {
+        cscrap = dynamic_cast<thscrap*>(obi->get());
         if (pscrap != NULL)
           pscrap->proj_next_scrap = cscrap;
         else {
@@ -1892,9 +1891,9 @@ void thdb2d::pp_find_scraps_and_joins(thdb2dprj * prj)
     }
     
     if (((*obi)->get_class_id() == TT_JOIN_CMD) &&
-        (((thjoin *)(*obi).get())->proj != NULL) &&
-        (((thjoin *)(*obi).get())->proj->id == prj->id)) {    
-      cjoin = (thjoin *)(*obi).get();
+        (dynamic_cast<thjoin*>(obi->get())->proj != NULL) &&
+        (dynamic_cast<thjoin*>(obi->get())->proj->id == prj->id)) {    
+      cjoin = dynamic_cast<thjoin*>(obi->get());
       if (pjoin != NULL)
         pjoin->proj_next_join = cjoin;
       else {
@@ -2130,7 +2129,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
     while (p2dobj != NULL) {
       switch (p2dobj->get_class_id()) {
         case TT_POINT_CMD:
-          ppoint = (thpoint *) p2dobj;
+          ppoint = dynamic_cast<thpoint*>(p2dobj);
           if (!thisnan(ppoint->orient)) {
             ppoint->orient += pscrap->mr;
             if (ppoint->orient < 0) {
@@ -2171,7 +2170,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
           }
           break;
         case TT_LINE_CMD:
-          pline = (thline *) p2dobj;
+          pline = dynamic_cast<thline*>(p2dobj);
           plp = pline->first_point;
           while (plp != NULL) {            
             if (!thisnan(plp->orient)) {
@@ -2342,7 +2341,7 @@ void thdb2d::pp_morph_points(thdb2dprj * prj)
     pobj = pscrap->fs2doptr;
     while (pobj != NULL) {
       if (pobj->get_class_id() == TT_POINT_CMD) {
-        pointp = (thpoint *) pobj;
+        pointp = dynamic_cast<thpoint*>(pobj);
         if (pointp->type == TT_POINT_TYPE_EXTRA) {
           pointp->check_extra();
           if ((pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
@@ -2379,10 +2378,10 @@ void thdb2d::pp_morph_points(thdb2dprj * prj)
 
 
 struct joincand {
-	th2ddataobject * obj;
-	thdb2dlp * lp;
-	thdb2dpt * pt;
-	long fileid;
+	th2ddataobject * obj = {};
+	thdb2dlp * lp = {};
+	thdb2dpt * pt = {};
+	long fileid = {};
 };
 
 
@@ -2412,7 +2411,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
 	thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SCRAP_CMD) {
-			scp = (thscrap *)(*obi).get();
+			scp = dynamic_cast<thscrap*>(obi->get());
 			if ((scp->proj->type != TT_2DPROJ_NONE) && (scp->proj->id == prj->id)) {
  			o2d = scp->fs2doptr;
 			while (o2d != NULL) {
@@ -2425,7 +2424,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
 				thline * pln;
 					switch (o2d->get_class_id()) {
 						case TT_LINE_CMD:
-							pln = (thline*) o2d;
+							pln = dynamic_cast<thline*>(o2d);
 							switch (pln->type) {
  								case TT_LINE_TYPE_LABEL:
  								case TT_LINE_TYPE_SECTION:
@@ -2522,8 +2521,8 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             ji->is_active = false;
           break;
         case TT_LINE_CMD:
-          if ((((thline *)ji->object)->first_point != NULL) &&
-             (((thline *)ji->object)->first_point->point != NULL)) {
+          if ((dynamic_cast<thline*>(ji->object)->first_point != NULL) &&
+             (dynamic_cast<thline*>(ji->object)->first_point->point != NULL)) {
             ji->is_active = true;
             nactive++;
           } else
@@ -2538,10 +2537,10 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
   
             // z dvoch scrapov urobime body na ciarach
             if (ccount == 0) {
-              sc1 = (thscrap *) ji->object;
+              sc1 = dynamic_cast<thscrap*>(ji->object);
               ji->is_active = false;
               ji = ji->next_item;
-              sc2 = (thscrap *) ji->object;
+              sc2 = dynamic_cast<thscrap*>(ji->object);
               ji->is_active = false;
             }
             
@@ -2713,9 +2712,9 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
           if (ji->is_active && 
               (ji->object->get_class_id() == TT_LINE_CMD)) {
             if (l1 == NULL)
-              l1 = ((thline *)ji->object);
+              l1 = dynamic_cast<thline*>(ji->object);
             else
-              l2 = ((thline *)ji->object);
+              l2 = dynamic_cast<thline*>(ji->object);
           }  
           ji = ji->next_item;
         }
@@ -2758,15 +2757,15 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
         if (ji->is_active &&
             (ji->point == NULL) &&
             (ji->object->get_class_id() == TT_LINE_CMD)) {
-          if (std::hypot(((thline*)ji->object)->first_point->point->xt - searchpt->xt,
-              ((thline*)ji->object)->first_point->point->yt - searchpt->yt) <
-              std::hypot(((thline*)ji->object)->last_point->point->xt - searchpt->xt,
-              ((thline*)ji->object)->last_point->point->yt - searchpt->yt)) {
-            ji->point = ((thline*)ji->object)->first_point->point;
-            ji->line_point = ((thline*)ji->object)->first_point;
+          if (std::hypot(dynamic_cast<thline*>(ji->object)->first_point->point->xt - searchpt->xt,
+              dynamic_cast<thline*>(ji->object)->first_point->point->yt - searchpt->yt) <
+              std::hypot(dynamic_cast<thline*>(ji->object)->last_point->point->xt - searchpt->xt,
+              dynamic_cast<thline*>(ji->object)->last_point->point->yt - searchpt->yt)) {
+            ji->point = dynamic_cast<thline*>(ji->object)->first_point->point;
+            ji->line_point = dynamic_cast<thline*>(ji->object)->first_point;
           } else {
-            ji->point = ((thline*)ji->object)->last_point->point;
-            ji->line_point = ((thline*)ji->object)->last_point;
+            ji->point = dynamic_cast<thline*>(ji->object)->last_point->point;
+            ji->line_point = dynamic_cast<thline*>(ji->object)->last_point;
           }
         }
         ji = ji->next_item;
@@ -2858,10 +2857,10 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
     ji = jlist;
     while ((!has_target) && (ji != NULL)) {
       if ((ji->object->get_class_id() == TT_POINT_CMD) &&
-          (((thpoint*)ji->object)->cpoint != NULL)) {
+          (dynamic_cast<thpoint*>(ji->object)->cpoint != NULL)) {
         has_target = true;
-        tx = ((thpoint*)ji->object)->cpoint->tx;
-        ty = ((thpoint*)ji->object)->cpoint->ty;
+        tx = dynamic_cast<thpoint*>(ji->object)->cpoint->tx;
+        ty = dynamic_cast<thpoint*>(ji->object)->cpoint->ty;
       }
       ji = ji->next_list_item;
     }
@@ -2885,7 +2884,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
     std::set<thscrap *> join_scraps;
     while (ji != NULL) {
       if ((ji->object->get_class_id() != TT_POINT_CMD) ||
-          (((thpoint*)ji->object)->cpoint == NULL)) {
+          (dynamic_cast<thpoint*>(ji->object)->cpoint == NULL)) {
         cp = ji->point->pscrap->insert_control_point();
         cp->pt = ji->point;
         cp->tx = tx;
@@ -2959,10 +2958,10 @@ void thdb2d::pp_smooth_lines(thdb2dprj * prj)
     optr = pscrap->fs2doptr;
     while (optr != NULL) {
       if ((optr->get_class_id() == TT_LINE_CMD)
-        && (((thline *)optr)->first_point != NULL)
-        && (((thline *)optr)->first_point->nextlp != NULL)) {
+        && (dynamic_cast<thline*>(optr)->first_point != NULL)
+        && (dynamic_cast<thline*>(optr)->first_point->nextlp != NULL)) {
         
-        pt = ((thline *) optr)->first_point->nextlp;
+        pt = dynamic_cast<thline*>(optr)->first_point->nextlp;
         while (pt->nextlp != NULL) {
           if ((pt->smooth == TT_TRUE) &&
               (pt->cp2 != NULL) && (pt->nextlp->cp1 != NULL))
@@ -3144,7 +3143,7 @@ void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
     while (so != NULL) {
       switch (so->get_class_id()) {
         case TT_LINE_CMD:
-          lp = ((thline*)so)->first_point;
+          lp = dynamic_cast<thline*>(so)->first_point;
           while (lp != NULL) {
             numcdist += 1.0;
             if (lp->cp1 != NULL) {
@@ -3164,10 +3163,10 @@ void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
             while (so2 != NULL) {
               switch(so2->get_class_id()) {
                 case TT_POINT_CMD:
-                  calcdist(((thpoint*)so2)->point,lp->point);
+                  calcdist(dynamic_cast<thpoint*>(so2)->point,lp->point);
                   break;
                 case TT_LINE_CMD:
-                  lp2 = ((thline*)so2)->first_point;
+                  lp2 = dynamic_cast<thline*>(so2)->first_point;
                   while (lp2 != NULL) {
                     calcdist(lp->point, lp2->point);
                     lp2 = lp2->nextlp;
@@ -3185,12 +3184,12 @@ void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
           while (so2 != NULL) {
             switch(so2->get_class_id()) {
               case TT_POINT_CMD:
-                calcdist(((thpoint*)so)->point,((thpoint*)so2)->point);
+                calcdist(dynamic_cast<thpoint*>(so)->point,dynamic_cast<thpoint*>(so2)->point);
                 break;
               case TT_LINE_CMD:
-                lp2 = ((thline*)so2)->first_point;
+                lp2 = dynamic_cast<thline*>(so2)->first_point;
                 while (lp2 != NULL) {
-                  calcdist(((thpoint*)so)->point, lp2->point);
+                  calcdist(dynamic_cast<thpoint*>(so)->point, lp2->point);
                   lp2 = lp2->nextlp;
                 }
                 break;
@@ -3237,7 +3236,7 @@ bool thdb2d::pp_process_adjustments(thdb2dprj * prj)
     while (so != NULL) {
       if (so->get_class_id() == TT_LINE_CMD) {
         
-        ln = (thline*) so;
+        ln = dynamic_cast<thline*>(so);
         
         // vertical adjustment
         // 1. skusi ci je nejaky adjustment
@@ -3422,8 +3421,8 @@ thdb2dprj * thdb2d::get_projection(int id) {
 
 
 struct area_proc {
-  tharea * area;
-  double x, y, a, s;
+  tharea * area = {};
+  double x = {}, y = {}, a = {}, s = {};
 };
 
 void thdb2d::process_areas_in_projection(thdb2dprj * prj)
@@ -3462,7 +3461,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   for (cscrap = prj->first_scrap; cscrap != NULL; cscrap = cscrap->proj_next_scrap) {
     for (obj = cscrap->fs2doptr; obj != NULL; obj = obj->nscrapoptr) {
       if (obj->get_class_id() == TT_AREA_CMD) {
-        carea = (tharea*) obj;
+        carea = dynamic_cast<tharea*>(obj);
         cnt = 0;
         for (bln = carea->first_line; bln != NULL; bln = bln->next_line) {
           line = bln->line;

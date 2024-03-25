@@ -43,6 +43,7 @@ set xth(gui,help) ".xth_help"
 set xth(gui,message) ".xthmsg"
 #set xth(gui,minsize) {480 300}
 set xth(gui,minsize) {720 576}
+set xth(gui,init_app_normalized) 1
 set xth(gui,balloons) 0
 set xth(gui,toolbar) 1
 set xth(te,template) {}
@@ -270,17 +271,17 @@ case $tcl_platform(platform) {
     package require registry
     set xth(win32registry) {HKEY_LOCAL_MACHINE\SOFTWARE\Therion}
     if {[catch {
-      set xth(gui,compcmd) "\"[file join [registry get $xth(win32registry) InstallDir] therion.exe]\""
+      set xth(gui,compcmd) "\"[file join [registry -64bit get $xth(win32registry) InstallDir] therion.exe]\""
     }]} {
       set xth(win32registry) {HKEY_CURRENT_USER\SOFTWARE\Therion}
       catch {
-	set xth(gui,compcmd) "\"[file join [registry get $xth(win32registry) InstallDir] therion.exe]\""
+	set xth(gui,compcmd) "\"[file join [registry -64bit get $xth(win32registry) InstallDir] therion.exe]\""
       }      
     }
     
     catch {
-      if {[registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} AppCtrl]} {
-	set xth(gui,appctrlcmd) "[file join [registry get $xth(win32registry) InstallDir] bin appctrl.exe]"
+      if {[registry -64bit get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} AppCtrl]} {
+	set xth(gui,appctrlcmd) "[file join [registry -64bit get $xth(win32registry) InstallDir] bin appctrl.exe]"
       }
     }
     regsub -all {\/} $xth(gui,compcmd) {\\\\} xth(gui,compcmd)

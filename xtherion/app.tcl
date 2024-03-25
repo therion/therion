@@ -601,7 +601,7 @@ proc xth_exit {} {
   global xth
 
   catch {
-    registry set $xth(win32registry) XTherionDir $xth(gui,initdir)
+    registry -64bit set $xth(win32registry) XTherionDir $xth(gui,initdir)
   }
   
   # save all open text editor files

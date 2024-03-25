@@ -29,8 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef UTILS_H
-#define UTILS_H
+#pragma once
 
 // Otherwise #defines like M_PI are undeclared under Visual Studio
 #define _USE_MATH_DEFINES
@@ -68,7 +67,11 @@ Orientation Orient2d(const Point& pa, const Point& pb, const Point& pc)
   double detleft = (pa.x - pc.x) * (pb.y - pc.y);
   double detright = (pa.y - pc.y) * (pb.x - pc.x);
   double val = detleft - detright;
-  if (val > -EPSILON && val < EPSILON) {
+
+// Using a tolerance here fails on concave-by-subepsilon boundaries
+//   if (val > -EPSILON && val < EPSILON) {
+// Using == on double makes -Wfloat-equal warnings yell at us
+  if (std::fpclassify(val) == FP_ZERO) {
     return COLLINEAR;
   } else if (val > 0) {
     return CCW;
@@ -125,5 +128,3 @@ bool InScanArea(const Point& pa, const Point& pb, const Point& pc, const Point& 
 }
 
 }
-
-#endif

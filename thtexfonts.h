@@ -34,9 +34,9 @@
 std::string select_lang(std::string s, std::string lang);
 
 struct fontrecord {
-  int id;
+  int id = {};
   std::string rm,it,bf,ss,si;
-  bool opt;
+  bool opt = {};
 };
 
 extern std::list <fontrecord> FONTS;
