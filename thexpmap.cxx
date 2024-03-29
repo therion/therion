@@ -48,7 +48,6 @@
 #include "thdb1d.h"
 #include "thinit.h"
 #include "thlogfile.h"
-#include "thconvert.h"
 #include "thpdf.h"
 #include "thpdfdata.h"
 #include "thmpost.h"
@@ -2247,8 +2246,6 @@ if (ENC_NEW.NFSS==0) {
       if (!quick_map_exp) {
         thconvert_eps();
         thgraphics2pdf();
-
-        if (thtmp.debug) thconvert_old();
       }
 
       thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
