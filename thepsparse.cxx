@@ -52,15 +52,15 @@
 
 #define IOerr(F) fmt::format("Can't open file {}!\n", (F)).c_str()
 
-extern std::map<std::string,std::string> ALL_FONTS, ALL_PATTERNS;
+std::map<std::string,std::string> ALL_FONTS, ALL_PATTERNS;
 typedef std::set<unsigned char> FONTCHARS;
-extern std::map<std::string,FONTCHARS> USED_CHARS;
+std::map<std::string,FONTCHARS> USED_CHARS;
 std::list<pattern> PATTERNLIST;
 std::map<std::string,gradient> GRADIENTS;
 std::list<converted_data> GRIDLIST;
 converted_data NArrow, ScBar, AltBar;
 
-extern unsigned font_id, patt_id;
+unsigned font_id, patt_id;
 static int conv_mode;
 
 const int prec_col = 5;

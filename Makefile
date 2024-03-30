@@ -14,7 +14,7 @@ CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern
   thdb2dxm.o thdb2dxs.o thscraplo.o thscraplp.o thscrapen.o \
   thpoint.o thline.o tharea.o thlegenddata.o thmpost.o thsymbolsets.o \
   thjoin.o thmap.o thexpmap.o thlayoutln.o thlayoutclr.o thexpsys.o thexpuni.o \
-  thconvert.o thpdf.o thpdfdbg.o thpdfdata.o thtexfonts.o \
+  thpdf.o thpdfdbg.o thpdfdata.o thtexfonts.o \
   thsymbolset.o thlang.o thmapstat.o thexpdb.o thpic.o thsketch.o thproj.o \
   extern/lxMath.o extern/lxFile.o extern/icase.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
@@ -427,8 +427,6 @@ $(OUTDIR)/thconfig.o: thconfig.cxx thconfig.h thbuffer.h thmbuffer.h thinput.h \
  thlogfile.h thinit.h thgeomag.h thgeomagdata.h thcomment.h thdata.h \
  thtfangle.h thtf.h thtflength.h thtfpwf.h thsketch.h thpic.h thwarp.h \
  thcs.h
-$(OUTDIR)/thconvert.o: thconvert.cxx therion.h thpdfdbg.h thexception.h thpdfdata.h \
- thepsparse.h thtexfonts.h
 $(OUTDIR)/thcs.o: thcs.cxx thcs.h thcsdata.h thparse.h thbuffer.h thmbuffer.h \
  thexception.h thproj.h thdatabase.h thdataobject.h thperson.h thdate.h \
  thdataleg.h thobjectname.h therion.h thobjectsrc.h thinfnan.h \
@@ -643,7 +641,7 @@ $(OUTDIR)/thexpmap.o: thexpmap.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
  thlocale.h loch/icase.h thlang.h thlangdata.h thexporter.h thexception.h \
  thtmpdir.h thscrap.h thsketch.h thpic.h thwarp.h thtrans.h thpoint.h \
  th2ddataobject.h thline.h tharea.h thmap.h thconfig.h thinput.h \
- thselector.h thlookup.h thinit.h thlogfile.h thconvert.h thpdf.h \
+ thselector.h thlookup.h thinit.h thlogfile.h thpdf.h \
  thmpost.h thtex.h thcmdline.h thtexfonts.h thsurvey.h thtfpwf.h thdata.h \
  thtfangle.h thtf.h thtflength.h thcsdata.h thproj.h thsurface.h thsvg.h \
  extern/img/img.h thcs.h

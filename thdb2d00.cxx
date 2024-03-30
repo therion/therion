@@ -144,7 +144,7 @@ bool thdb2d_compscrap(const thscrap * e1, const thscrap * e2)
     return false;
   if (thisnan(e2->z))
     return true;
-  return e1->z >= e2->z;
+  return e1->z > e2->z;
 }
 
 

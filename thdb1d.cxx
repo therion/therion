@@ -2583,7 +2583,7 @@ void thdb1d::print_loops() {
     lii++;
   }  
   
-  std::sort(lpr.begin(), lpr.end(), [](const auto& a, const auto& b){ return a.err >= b.err; });
+  std::sort(lpr.begin(), lpr.end(), [](const auto& a, const auto& b){ return a.err > b.err; });
   
   thdb1d_loop_leg * ll;
   thsurvey * ss;   

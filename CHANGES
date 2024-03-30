@@ -1,5 +1,27 @@
-Therion 6.2.1 (in progress):
+Therion 6.2.2 (in progress):
 
+
+--------------------------------------------------------------------------------
+
+Therion 6.2.1 (2024-03-20):
+
+therion:
+ * Polish translation updated [#553]
+ * many C++/CMake/Makefile improvements and fixes by Matěj Plch
+   [#535, #536, #537, #539, #541, #541, #542, #552]
+ * updated poly2tri library [#538]
+ * bugs fixed:
+   - length can also be equal to depth change [#556]
+   - std::sort() usage causing segmentation fault in some cases
+
+xtherion:
+ * new setting $xth(gui,init_app_normalized) to allow disabling of window
+   geometry adjustments when xtherion starts [#557]
+ * xtherion line artifact fixed [#554]
+
+infrastructure:
+ * initial implementation of a devcontainer [#532]
+ * CI environments: fixes, macOS 14 added [#546, #551]
 
 --------------------------------------------------------------------------------
 
