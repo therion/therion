@@ -16,7 +16,6 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thcmdline.h
     ${CMAKE_SOURCE_DIR}/thcomment.h
     ${CMAKE_SOURCE_DIR}/thconfig.h
-    ${CMAKE_SOURCE_DIR}/thconvert.h
     ${CMAKE_SOURCE_DIR}/thcs.h
     ${CMAKE_SOURCE_DIR}/thdata.h
     ${CMAKE_SOURCE_DIR}/thdatabase.h
@@ -133,7 +132,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thcmdline.cxx
     ${CMAKE_SOURCE_DIR}/thcomment.cxx
     ${CMAKE_SOURCE_DIR}/thconfig.cxx
-    ${CMAKE_SOURCE_DIR}/thconvert.cxx
     ${CMAKE_SOURCE_DIR}/thcs.cxx
     ${CMAKE_SOURCE_DIR}/thdata.cxx
     ${CMAKE_SOURCE_DIR}/thdatabase.cxx
