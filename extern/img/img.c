@@ -1,6 +1,7 @@
 /* img.c
- * Routines for reading and writing Survex ".3d" image files
- * Copyright (C) 1993-2022 Olly Betts
+ * Routines for reading and writing processed survey data files
+ *
+ * Copyright (C) 1993-2024 Olly Betts
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +26,8 @@
 #include <errno.h>
 #include <limits.h>
 #include <locale.h>
+#include <stdarg.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,6 +39,7 @@
 #ifdef IMG_HOSTED
 # define INT32_T int32_t
 # define UINT32_T uint32_t
+# define SNPRINTF snprintf
 # include "debug.h"
 # include "filelist.h"
 # include "filename.h"
@@ -43,7 +47,9 @@
 # include "useful.h"
 # define TIMEFMT msg(/*%a,%Y.%m.%d %H:%M:%S %Z*/107)
 #else
-# ifdef HAVE_STDINT_H
+# if defined HAVE_STDINT_H || \
+     (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L) || \
+     (defined __cplusplus && __cplusplus >= 201103L)
 #  include <stdint.h>
 #  define INT32_T int32_t
 #  define UINT32_T uint32_t
@@ -57,9 +63,24 @@
 #   define UINT32_T unsigned long
 #  endif
 # endif
+# if defined HAVE_SNPRINTF || \
+     (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L) || \
+     (defined __cplusplus && __cplusplus >= 201103L)
+#  define SNPRINTF snprintf
+# else
+#  define SNPRINTF my_snprintf
+static int my_snprintf(char *s, size_t size, const char *format, ...) {
+    int result;
+    va_list ap;
+    va_start(ap, format);
+    (void)size; /* The buffer passed should always be large enough. */
+    result = vsprintf(s, format, ap);
+    va_end(ap);
+    return result;
+}
+# endif
 # define TIMEFMT "%a,%Y.%m.%d %H:%M:%S %Z"
 # define EXT_SVX_3D "3d"
-# define EXT_SVX_POS "pos"
 # define FNM_SEP_EXT '.'
 # define METRES_PER_FOOT 0.3048 /* exact value */
 # define xosmalloc(L) malloc((L))
@@ -269,29 +290,14 @@ my_lround(double x) {
 }
 #endif
 
-/* portable case insensitive string compare */
-#if defined(strcasecmp) || defined(HAVE_STRCASECMP)
-# define my_strcasecmp strcasecmp
-#else
-static int my_strcasecmp(const char *s1, const char *s2) {
-   unsigned char c1, c2;
-   do {
-      c1 = *s1++;
-      c2 = *s2++;
-   } while (c1 && toupper(c1) == toupper(c2));
-   /* now calculate real difference */
-   return c1 - c2;
-}
-#endif
-
 unsigned int img_output_version = IMG_VERSION_MAX;
 
 static img_errcode img_errno = IMG_NONE;
 
 #define FILEID "Survex 3D Image File"
 
-#define EXT_PLT "plt"
-#define EXT_PLF "plf"
+/* Encode extension into integer for fast testing. */
+#define EXT3(C1, C2, C3) (((C3) << 16) | ((C2) << 8) | (C1))
 
 /* Attempt to string paste to ensure we are passed a literal string */
 #define LITLEN(S) (sizeof(S"") - 1)
@@ -301,6 +307,152 @@ static img_errcode img_errno = IMG_NONE;
 #define VERSION_CMAP_STATION	-3
 #define VERSION_COMPASS_PLT	-2
 #define VERSION_SURVEX_POS	-1
+
+/* Flags bitwise-or-ed into pending to track XSECTs. */
+#define PENDING_XSECT_END	0x100
+#define PENDING_HAD_XSECT	0x001 /* Only for VERSION_COMPASS_PLT */
+#define PENDING_MOVE		0x002 /* Only for VERSION_COMPASS_PLT */
+#define PENDING_LINE		0x004 /* Only for VERSION_COMPASS_PLT */
+#define PENDING_XSECT		0x008 /* Only for VERSION_COMPASS_PLT */
+#define PENDING_FLAGS_SHIFT	9 /* Only for VERSION_COMPASS_PLT */
+
+/* Days from start of 1900 to start of 1970. */
+#define DAYS_1900 25567
+
+/* Start of 1900 in time_t with standard Unix epoch of start of 1970. */
+#define TIME_T_1900 -2208988800L
+
+/* Seconds in a day. */
+#define SECS_PER_DAY 86400L
+
+static unsigned
+hash_data(const char *s, unsigned len)
+{
+    /* djb2 hash but with an initial value of zero. */
+    unsigned h = 0;
+    while (len) {
+	unsigned char c = (unsigned char)*s++;
+	h = ((h << 5) + h) + c;
+	--len;
+    }
+    return h;
+}
+
+struct compass_station {
+    struct compass_station *next;
+    unsigned char flags;
+    unsigned char len;
+    char name[1];
+};
+
+/* On the first pass, at the start of each survey we run through all the
+ * hash table entries that exist and set this flag.
+ *
+ * If this flag is set when we add flags to an existing station we
+ * know it appears in multiple surveys and can infer img_SFLAG_EXPORTED.
+ */
+#define COMPASS_SFLAG_DIFFERENT_SURVEY 0x80
+
+#define COMPASS_SFLAG_MASK 0x7f
+
+/* How many hash buckets to use (must be a power of 2).
+ *
+ * Each bucket is a linked list so this doesn't limit how many entries we can
+ * store, but should be sized based on a plausible estimate of how many
+ * different stations we're likely to see in a single PLT file.
+ */
+#define HASH_BUCKETS 0x2000U
+
+static void*
+compass_plt_allocate_hash(void)
+{
+    struct compass_station_name** htab = xosmalloc(HASH_BUCKETS * sizeof(struct compass_station_name*));
+    if (htab) {
+	unsigned i;
+	for (i = 0; i < HASH_BUCKETS; ++i)
+	    htab[i] = NULL;
+    }
+    return htab;
+}
+
+static int
+compass_plt_update_station(img *pimg, const char *name, int name_len,
+			   unsigned flags)
+{
+    struct compass_station *p;
+    struct compass_station **htab = (struct compass_station**)pimg->data;
+    htab += hash_data(name, name_len) & (HASH_BUCKETS - 1U);
+    for (p = *htab; p; p = p->next) {
+	if (p->len == name_len) {
+	    if (memcmp(name, p->name, name_len) == 0) {
+		p->flags |= flags;
+		if (p->flags & COMPASS_SFLAG_DIFFERENT_SURVEY)
+		    p->flags |= img_SFLAG_EXPORTED;
+		return 0;
+	    }
+	}
+    }
+    p = malloc(offsetof(struct compass_station, name) + name_len);
+    if (!p) return -1;
+    p->flags = flags;
+    p->len = name_len;
+    memcpy(p->name, name, name_len);
+    p->next = *htab;
+    *htab = p;
+    return 0;
+}
+
+static void
+compass_plt_new_survey(img *pimg)
+{
+    struct compass_station **htab = (struct compass_station**)pimg->data;
+    int i = HASH_BUCKETS;
+    while (--i) {
+	struct compass_station *p;
+	for (p = *htab; p; p = p->next) {
+	    p->flags |= COMPASS_SFLAG_DIFFERENT_SURVEY;
+	}
+	++htab;
+    }
+}
+
+static void
+compass_plt_free_data(img *pimg)
+{
+    struct compass_station **htab = (struct compass_station**)pimg->data;
+    int i = HASH_BUCKETS;
+    while (--i) {
+	struct compass_station *p = *htab;
+	while (p) {
+	    struct compass_station *next = p->next;
+	    osfree(p);
+	    p = next;
+	}
+	++htab;
+    }
+    osfree(pimg->data);
+    pimg->data = NULL;
+}
+
+static int
+compass_plt_get_station_flags(img *pimg, const char *name, int name_len)
+{
+    struct compass_station *p;
+    struct compass_station **htab = (struct compass_station**)pimg->data;
+    htab += hash_data(name, name_len) & (HASH_BUCKETS - 1U);
+    for (p = *htab; p; p = p->next) {
+	if (p->len == name_len) {
+	    if (memcmp(name, p->name, name_len) == 0) {
+		if (p->flags & COMPASS_SFLAG_DIFFERENT_SURVEY) {
+		    p->flags &= ~COMPASS_SFLAG_DIFFERENT_SURVEY;
+		    return p->flags;
+		}
+		return p->flags | INT_MIN;
+	    }
+	}
+    }
+    return -1;
+}
 
 static char *
 my_strdup(const char *str)
@@ -359,10 +511,11 @@ static int
 check_label_space(img *pimg, size_t len)
 {
    if (len > pimg->buf_len) {
+      size_t label_offset = pimg->label - pimg->label_buf;
       char *b = (char *)xosrealloc(pimg->label_buf, len);
       if (!b) return 0;
-      pimg->label = (pimg->label - pimg->label_buf) + b;
       pimg->label_buf = b;
+      pimg->label = b + label_offset;
       pimg->buf_len = len;
    }
    return 1;
@@ -406,12 +559,8 @@ survey_included(img *pimg)
 static int
 buf_included(img *pimg, const char *buf, size_t len)
 {
-    return pimg->survey_len == len && strncmp(buf, pimg->survey, len) == 0;
+    return pimg->survey_len == len && memcmp(buf, pimg->survey, len) == 0;
 }
-
-#define has_ext(F,L,E) ((L) > LITLEN(E) + 1 &&\
-			(F)[(L) - LITLEN(E) - 1] == FNM_SEP_EXT &&\
-			my_strcasecmp((F) + (L) - LITLEN(E), E) == 0)
 
 img *
 img_open_survey(const char *fnm, const char *survey)
@@ -437,6 +586,470 @@ img_open_survey(const char *fnm, const char *survey)
    return pimg;
 }
 
+static int
+compass_plt_open(img *pimg)
+{
+    int utm_zone = 0;
+    int datum = img_DATUM_UNKNOWN;
+    long fpos;
+    char *from = NULL;
+    int from_len = 0;
+
+    pimg->version = VERSION_COMPASS_PLT;
+    /* Spaces aren't legal in Compass station names, but dots are, so
+     * use space as the level separator */
+    pimg->separator = ' ';
+    pimg->start = -1;
+    pimg->datestamp = my_strdup(TIMENA);
+    if (!pimg->datestamp) {
+	return IMG_OUTOFMEMORY;
+    }
+    pimg->data = compass_plt_allocate_hash();
+    if (!pimg->data) {
+	return IMG_OUTOFMEMORY;
+    }
+
+    /* Read through the whole file first, recording any station flags
+     * (pimg->data), finding where to start reading data from (pimg->start),
+     * and deciding what to report for "title".
+     */
+    while (1) {
+	int ch = GETC(pimg->fh);
+	switch (ch) {
+	  case '\x1a':
+	    fseek(pimg->fh, -1, SEEK_CUR);
+	    /* FALL THRU */
+	  case EOF:
+	    if (pimg->start < 0) {
+		pimg->start = ftell(pimg->fh);
+	    } else {
+		fseek(pimg->fh, pimg->start, SEEK_SET);
+	    }
+
+	    if (datum && utm_zone && abs(utm_zone) <= 60) {
+		/* Map to an EPSG code where we can. */
+		const char* template = "EPSG:%d";
+		int value = 0;
+		switch (datum) {
+		  case img_DATUM_NAD27:
+		    if (utm_zone < 0) {
+			template = "+proj=utm +zone=%d +datum=NAD27 +south +units=m +no_defs +type=crs";
+			value = -utm_zone;
+		    } else if (utm_zone <= 23) {
+			value = 26700 + utm_zone;
+		    } else if (utm_zone < 59) {
+			template = "+proj=utm +zone=%d +datum=NAD27 +units=m +no_defs +type=crs";
+			value = utm_zone;
+		    } else {
+			value = 3311 + utm_zone;
+		    }
+		    break;
+		  case img_DATUM_NAD83:
+		    if (utm_zone < 0) {
+			template = "+proj=utm +zone=%d +datum=NAD83 +south +units=m +no_defs +type=crs";
+			value = -utm_zone;
+		    } else if (utm_zone <= 23) {
+			value = 26900 + utm_zone;
+		    } else if (utm_zone == 24) {
+			value = 9712;
+		    } else if (utm_zone < 59) {
+			template = "+proj=utm +zone=%d +datum=NAD83 +units=m +no_defs +type=crs";
+			value = utm_zone;
+		    } else {
+			value = 3313 + utm_zone;
+		    }
+		    break;
+		  case img_DATUM_WGS84:
+		    if (utm_zone > 0) {
+			value = 32600 + utm_zone;
+		    } else {
+			value = 32700 - utm_zone;
+		    }
+		    break;
+		}
+		if (value) {
+		    size_t len = strlen(template) + 4;
+		    pimg->cs = (char*)xosmalloc(len);
+		    if (!pimg->cs) {
+			goto out_of_memory_error;
+		    }
+		    SNPRINTF(pimg->cs, len, template, value);
+		}
+	    }
+
+	    osfree(from);
+	    return 0;
+	  case 'S':
+	    /* "Section" - in the case where we aren't filtering by survey
+	     * (i.e. pimg->survey == NULL): if there's only one non-empty
+	     * section name specified, we use it as the title.
+	     */
+	    if (pimg->survey == NULL && (!pimg->title || pimg->title[0])) {
+		char *line = getline_alloc(pimg->fh);
+		if (!line) {
+		    goto out_of_memory_error;
+		}
+		if (line[0]) {
+		    if (pimg->title) {
+			if (strcmp(pimg->title, line) != 0) {
+			    /* Two different non-empty section names found. */
+			    pimg->title[0] = '\0';
+			}
+			osfree(line);
+		    } else {
+			pimg->title = line;
+		    }
+		} else {
+		    osfree(line);
+		}
+		continue;
+	    }
+	    break;
+	  case 'N': {
+	      char *line, *q;
+	      size_t len;
+	      compass_plt_new_survey(pimg);
+	      if (pimg->start >= 0) break;
+	      fpos = ftell(pimg->fh) - 1;
+	      if (!pimg->survey) {
+		  /* We're not filtering by survey so just note down the file
+		   * offset for the first N command. */
+		  pimg->start = fpos;
+		  break;
+	      }
+	      line = getline_alloc(pimg->fh);
+	      if (!line) {
+		  goto out_of_memory_error;
+	      }
+	      len = 0;
+	      while (line[len] > 32) ++len;
+	      if (!buf_included(pimg, line, len)) {
+		  /* Not the survey we are looking for. */
+		  osfree(line);
+		  continue;
+	      }
+	      q = strchr(line + len, 'C');
+	      if (q && q[1]) {
+		  osfree(pimg->title);
+		  pimg->title = my_strdup(q + 1);
+	      } else if (!pimg->title) {
+		  pimg->title = my_strdup(pimg->label);
+	      }
+	      osfree(line);
+	      if (!pimg->title) {
+		  goto out_of_memory_error;
+	      }
+	      pimg->start = fpos;
+	      continue;
+	  }
+	  case 'M':
+	  case 'D':
+	  case 'd': {
+	      /* Move or Draw */
+	      int command = ch;
+	      char *q, *name;
+	      unsigned station_flags = 0;
+	      int name_len;
+	      int not_plotted = (command == 'd');
+
+	      /* Find station name. */
+	      do { ch = GETC(pimg->fh); } while (ch >= ' ' && ch != 'S');
+
+	      if (ch != 'S') {
+		  /* Leave reporting error to second pass for consistency. */
+		  break;
+	      }
+
+	      name = getline_alloc(pimg->fh);
+	      if (!name) {
+		  goto out_of_memory_error;
+	      }
+
+	      name_len = 0;
+	      while (name[name_len] > ' ') ++name_len;
+	      if (name_len > 255) {
+		  /* The spec says "up to 12 characters", we allow up to 255. */
+		  osfree(name);
+		  osfree(from);
+		  return IMG_BADFORMAT;
+	      }
+
+	      /* Check for the "distance from entrance" field. */
+	      q = strchr(name + name_len, 'I');
+	      if (q) {
+		  double distance_from_entrance;
+		  int bytes_used = 0;
+		  ++q;
+		  if (sscanf(q, "%lf%n",
+			     &distance_from_entrance, &bytes_used) == 1 &&
+		      distance_from_entrance == 0.0) {
+		      /* Infer an entrance. */
+		      station_flags |= img_SFLAG_ENTRANCE;
+		  }
+		  q += bytes_used;
+		  while (*q && *q <= ' ') q++;
+	      } else {
+		  q = strchr(name + name_len, 'F');
+	      }
+
+	      if (q && *q == 'F') {
+		  /* "Shot Flags". */
+		  while (isalpha((unsigned char)*++q)) {
+		      switch (*q) {
+			case 'S':
+			  /* The format specification says «The shot is a "splay"
+			   * shot, which is a shot from a station to the wall to
+			   * define the passage shape.» so we set the wall flag
+			   * for the to station.
+			   */
+			  station_flags |= img_SFLAG_WALL;
+			  break;
+			case 'P':
+			  not_plotted = 1;
+			  break;
+		      }
+		  }
+	      }
+
+	      /* Shot flag P (which is also implied by command d) is "Exclude
+	       * this shot from plotting", but the use suggested in the Compass
+	       * docs is for surface data, and they "[do] not support passage
+	       * modeling".
+	       *
+	       * Even if it's actually being used for a different purpose,
+	       * Survex programs don't show surface legs by default so the end
+	       * effect is at least to not plot as intended.
+	       */
+	      if (command != 'M') {
+		  int surface_or_not = not_plotted ? img_SFLAG_SURFACE
+						   : img_SFLAG_UNDERGROUND;
+		  station_flags |= surface_or_not;
+		  if (compass_plt_update_station(pimg, from, from_len,
+						 surface_or_not) < 0) {
+		      goto out_of_memory_error;
+		  }
+	      }
+
+	      if (compass_plt_update_station(pimg, name, name_len,
+					     station_flags) < 0) {
+		  goto out_of_memory_error;
+	      }
+	      osfree(from);
+	      from = name;
+	      from_len = name_len;
+	      continue;
+	  }
+	  case 'P': {
+	      /* Fixed point. */
+	      char *line, *q, *name;
+	      int name_len;
+
+	      line = getline_alloc(pimg->fh);
+	      if (!line) {
+		  goto out_of_memory_error;
+	      }
+	      q = line;
+	      while (*q && *q <= ' ') q++;
+	      name = q;
+	      name_len = 0;
+	      while (name[name_len] > ' ') ++name_len;
+
+	      if (name_len > 255) {
+		  /* The spec says "up to 12 characters", we allow up to 255. */
+		  osfree(line);
+		  osfree(from);
+		  return IMG_BADFORMAT;
+	      }
+
+	      if (compass_plt_update_station(pimg, name, name_len,
+					     img_SFLAG_FIXED) < 0) {
+		  goto out_of_memory_error;
+	      }
+
+	      osfree(line);
+	      continue;
+	  }
+	  case 'G': {
+	      /* UTM Zone - 1 to 60 for North, -1 to -60 for South. */
+	      char *line = getline_alloc(pimg->fh);
+	      char *p = line;
+	      long v = strtol(p, &p, 10);
+	      if (v < -60 || v > 60 || v == 0 || *p > ' ') {
+		  osfree(line);
+		  continue;
+	      }
+	      if (utm_zone && utm_zone != v) {
+		  /* More than one UTM zone specified. */
+		  /* FIXME: We could handle this by reprojecting, but then we'd
+		   * need access to PROJ from img.
+		   */
+		  utm_zone = 99;
+	      } else {
+		  utm_zone = v;
+	      }
+	      osfree(line);
+	      continue;
+	  }
+	  case 'O': {
+	      /* Datum. */
+	      int new_datum;
+	      char *line = getline_alloc(pimg->fh);
+	      if (!line) {
+		  goto out_of_memory_error;
+	      }
+	      if (utm_zone == 99) {
+		  osfree(line);
+		  continue;
+	      }
+
+	      new_datum = img_parse_compass_datum_string(line, strlen(line));
+	      if (new_datum == img_DATUM_UNKNOWN) {
+		  utm_zone = 99;
+	      } else if (datum == img_DATUM_UNKNOWN) {
+		  datum = new_datum;
+	      } else if (datum != new_datum) {
+		  utm_zone = 99;
+	      }
+
+	      osfree(line);
+	      continue;
+	  }
+	}
+	while (ch != '\n' && ch != '\r') {
+	    ch = GETC(pimg->fh);
+	}
+    }
+out_of_memory_error:
+    osfree(from);
+    return IMG_OUTOFMEMORY;
+}
+
+static int
+cmap_xyz_open(img *pimg)
+{
+    size_t len;
+    char *line = getline_alloc(pimg->fh);
+    if (!line) {
+	return IMG_OUTOFMEMORY;
+    }
+
+    /* Spaces aren't legal in CMAP station names, but dots are, so
+     * use space as the level separator. */
+    pimg->separator = ' ';
+
+    /* There doesn't seem to be a spec for what happens after 1999 with cmap
+     * files, so this code allows for:
+     *  * 21xx -> xx (up to 2150)
+     *  * 21xx -> 1xx (up to 2199)
+     *  * full year being specified instead of 2 digits
+     */
+    len = strlen(line);
+    if (len > 59) {
+	/* Don't just truncate at column 59, allow for a > 2 digit year. */
+	char * p = strstr(line + len, "Page");
+	if (p) {
+	    while (p > line && p[-1] == ' ')
+		--p;
+	    *p = '\0';
+	    len = p - line;
+	} else {
+	    line[59] = '\0';
+	}
+    }
+    if (len > 45) {
+	/* YY/MM/DD HH:MM */
+	struct tm tm;
+	unsigned long v;
+	char * p;
+	pimg->datestamp = my_strdup(line + 45);
+	p = pimg->datestamp;
+	v = strtoul(p, &p, 10);
+	if (v <= 50) {
+	    /* In the absence of a spec for cmap files, assume <= 50 means 21st
+	     * century. */
+	    v += 2000;
+	} else if (v < 200) {
+	    /* Map 100-199 to 21st century. */
+	    v += 1900;
+	}
+	if (v == ULONG_MAX || *p++ != '/')
+	    goto bad_cmap_date;
+	tm.tm_year = v - 1900;
+	v = strtoul(p, &p, 10);
+	if (v < 1 || v > 12 || *p++ != '/')
+	    goto bad_cmap_date;
+	tm.tm_mon = v - 1;
+	v = strtoul(p, &p, 10);
+	if (v < 1 || v > 31 || *p++ != ' ')
+	    goto bad_cmap_date;
+	tm.tm_mday = v;
+	v = strtoul(p, &p, 10);
+	if (v >= 24 || *p++ != ':')
+	    goto bad_cmap_date;
+	tm.tm_hour = v;
+	v = strtoul(p, &p, 10);
+	if (v >= 60)
+	    goto bad_cmap_date;
+	tm.tm_min = v;
+	if (*p == ':') {
+	    v = strtoul(p + 1, &p, 10);
+	    if (v > 60)
+		goto bad_cmap_date;
+	    tm.tm_sec = v;
+	} else {
+	    tm.tm_sec = 0;
+	}
+	tm.tm_isdst = 0;
+	/* We have no indication of what timezone this timestamp is in.  It's
+	 * probably local time for whoever processed the data, so just assume
+	 * UTC, which is at least fairly central in the possibilities.
+	 */
+	pimg->datestamp_numeric = mktime_with_tz(&tm, "");
+    } else {
+	pimg->datestamp = my_strdup(TIMENA);
+    }
+bad_cmap_date:
+    if (strncmp(line, "  Cave Survey Data Processed by CMAP ",
+		LITLEN("  Cave Survey Data Processed by CMAP ")) != 0) {
+	if (len > 45) {
+	    line[45] = '\0';
+	    len = 45;
+	}
+	while (len > 2 && line[len - 1] == ' ') --len;
+	if (len > 2) {
+	    line[len] = '\0';
+	    pimg->title = my_strdup(line + 2);
+	}
+    }
+    osfree(line);
+    if (!pimg->datestamp || !pimg->title) {
+	return IMG_OUTOFMEMORY;
+    }
+    line = getline_alloc(pimg->fh);
+    if (!line) {
+	return IMG_OUTOFMEMORY;
+    }
+    if (line[0] != ' ' || (line[1] != 'S' && line[1] != 'O')) {
+	return IMG_BADFORMAT;
+    }
+    if (line[1] == 'S') {
+	pimg->version = VERSION_CMAP_STATION;
+    } else {
+	pimg->version = VERSION_CMAP_SHOT;
+    }
+    osfree(line);
+    line = getline_alloc(pimg->fh);
+    if (!line) {
+	return IMG_OUTOFMEMORY;
+    }
+    if (line[0] != ' ' || line[1] != '-') {
+	return IMG_BADFORMAT;
+    }
+    osfree(line);
+    pimg->start = ftell(pimg->fh);
+    return 0;
+}
+
 img *
 img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
 		       const char *fnm,
@@ -446,6 +1059,7 @@ img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
    size_t len;
    char buf[LITLEN(FILEID) + 9];
    int ch;
+   UINT32_T ext;
 
    if (stream == NULL) {
       img_errno = IMG_FILENOTFOUND;
@@ -476,6 +1090,7 @@ img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
 
    pimg->flags = 0;
    pimg->filename_opened = NULL;
+   pimg->data = NULL;
 
    /* for version >= 3 we use label_buf to store the prefix for reuse */
    /* for VERSION_COMPASS_PLT, 0 value indicates we haven't
@@ -510,8 +1125,7 @@ img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
 	    char *p;
 	    pimg->survey = (char *)xosmalloc(len + 2);
 	    if (!pimg->survey) {
-	       img_errno = IMG_OUTOFMEMORY;
-	       goto error;
+	       goto out_of_memory_error;
 	    }
 	    memcpy(pimg->survey, survey, len);
 	    /* Set title to leaf survey name */
@@ -520,8 +1134,7 @@ img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
 	    if (p) p++; else p = pimg->survey;
 	    pimg->title = my_strdup(p);
 	    if (!pimg->title) {
-	       img_errno = IMG_OUTOFMEMORY;
-	       goto error;
+	       goto out_of_memory_error;
 	    }
 	    pimg->survey[len] = '.';
 	    pimg->survey[len + 1] = '\0';
@@ -530,8 +1143,9 @@ img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
       pimg->survey_len = len;
    }
 
-   /* [VERSION_COMPASS_PLT, VERSION_CMAP_STATION, VERSION_CMAP_SHOT] pending
-    * IMG_LINE or IMG_MOVE - both have 4 added.
+   /* [VERSION_COMPASS_PLT] bitwise-or of PENDING_* values, or -1.
+    * [VERSION_CMAP_STATION, VERSION_CMAP_SHOT] pending IMG_LINE or IMG_MOVE -
+    * both have 4 added.
     * [VERSION_SURVEX_POS] already skipped heading line, or there wasn't one
     * [version 0] not in the middle of a 'LINE' command
     * [version >= 3] not in the middle of turning a LINE into a MOVE
@@ -539,229 +1153,58 @@ img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
    pimg->pending = 0;
 
    len = strlen(fnm);
-   if (has_ext(fnm, len, EXT_SVX_POS)) {
+   /* Currently only 3 character extensions are tested below. */
+   ext = 0;
+   if (len > 4 && fnm[len - 4] == '.') {
+       /* Read extension and pack into ext. */
+       int i;
+       for (i = 1; i < 4; ++i) {
+	   unsigned char ext_ch = fnm[len - i];
+	   ext = (ext << 8) | tolower(ext_ch);
+       }
+   }
+   switch (ext) {
+     case EXT3('p', 'o', 's'): /* Survex .pos */
 pos_file:
-      pimg->version = VERSION_SURVEX_POS;
-      if (!pimg->survey) pimg->title = baseleaf_from_fnm(fnm);
-      pimg->datestamp = my_strdup(TIMENA);
-      if (!pimg->datestamp) {
-	 img_errno = IMG_OUTOFMEMORY;
-	 goto error;
-      }
-      pimg->start = 0;
-      return pimg;
-   }
+       pimg->version = VERSION_SURVEX_POS;
+       pimg->datestamp = my_strdup(TIMENA);
+       if (!pimg->datestamp) {
+	   goto out_of_memory_error;
+       }
+       pimg->start = 0;
+       goto successful_return;
 
-   if (has_ext(fnm, len, EXT_PLT) || has_ext(fnm, len, EXT_PLF)) {
-      long fpos;
+     case EXT3('p', 'l', 't'): /* Compass .plt */
+     case EXT3('p', 'l', 'f'): /* Compass .plf */ {
+       int result;
 plt_file:
-      pimg->version = VERSION_COMPASS_PLT;
-      /* Spaces aren't legal in Compass station names, but dots are, so
-       * use space as the level separator */
-      pimg->separator = ' ';
-      pimg->start = 0;
-      if (!pimg->survey) pimg->title = baseleaf_from_fnm(fnm);
-      pimg->datestamp = my_strdup(TIMENA);
-      if (!pimg->datestamp) {
-	 img_errno = IMG_OUTOFMEMORY;
-	 goto error;
-      }
-      while (1) {
-	 ch = GETC(pimg->fh);
-	 switch (ch) {
-	  case '\x1a':
-	    fseek(pimg->fh, -1, SEEK_CUR);
-	    /* FALL THRU */
-	  case EOF:
-	    pimg->start = ftell(pimg->fh);
-	    return pimg;
-	  case 'N': {
-	    char *line, *q;
-	    fpos = ftell(pimg->fh) - 1;
-	    if (!pimg->survey) {
-	       /* FIXME : if there's only one survey in the file, it'd be nice
-		* to use its description as the title here...
-		*/
-	       ungetc('N', pimg->fh);
-	       pimg->start = fpos;
-	       return pimg;
-	    }
-	    line = getline_alloc(pimg->fh);
-	    if (!line) {
-	       img_errno = IMG_OUTOFMEMORY;
-	       goto error;
-	    }
-	    len = 0;
-	    while (line[len] > 32) ++len;
-	    if (!buf_included(pimg, line, len)) {
-	       osfree(line);
-	       continue;
-	    }
-	    q = strchr(line + len, 'C');
-	    if (q && q[1]) {
-		osfree(pimg->title);
-		pimg->title = my_strdup(q + 1);
-	    } else if (!pimg->title) {
-		pimg->title = my_strdup(pimg->label);
-	    }
-	    osfree(line);
-	    if (!pimg->title) {
-		img_errno = IMG_OUTOFMEMORY;
-		goto error;
-	    }
-	    if (!pimg->start) pimg->start = fpos;
-	    fseek(pimg->fh, pimg->start, SEEK_SET);
-	    return pimg;
-	  }
-	  case 'M': case 'D':
-	    pimg->start = ftell(pimg->fh) - 1;
-	    break;
-	 }
-	 while (ch != '\n' && ch != '\r') {
-	    ch = GETC(pimg->fh);
-	 }
-      }
-   }
+       result = compass_plt_open(pimg);
+       if (result) {
+	   img_errno = result;
+	   goto error;
+       }
+       goto successful_return;
+     }
 
-   /* Although these are often referred to as "CMAP .XYZ files", it seems
-    * that actually, the extension .XYZ isn't used, rather .SHT (shot
-    * variant, produced by CMAP v16 and later), .UNA (unadjusted) and
-    * .ADJ (adjusted) extensions are.  Since img has long checked for
-    * .XYZ, we continue to do so in case anyone is relying on it.
-    */
-   if (has_ext(fnm, len, "sht") ||
-       has_ext(fnm, len, "adj") ||
-       has_ext(fnm, len, "una") ||
-       has_ext(fnm, len, "xyz")) {
-      char *line;
+     /* Although these are often referred to as "CMAP .XYZ files", it seems
+      * that actually, the extension .XYZ isn't used, rather .SHT (shot
+      * variant, produced by CMAP v16 and later), .UNA (unadjusted) and .ADJ
+      * (adjusted) extensions are.  Since img has long checked for .XYZ, we
+      * continue to do so in case anyone is relying on it.
+      */
+     case EXT3('s', 'h', 't'): /* CMAP .sht */
+     case EXT3('a', 'd', 'j'): /* CMAP .adj */
+     case EXT3('u', 'n', 'a'): /* CMAP .una */
+     case EXT3('x', 'y', 'z'): /* CMAP .xyz */ {
+       int result;
 xyz_file:
-      /* Spaces aren't legal in CMAP station names, but dots are, so
-       * use space as the level separator. */
-      pimg->separator = ' ';
-      line = getline_alloc(pimg->fh);
-      if (!line) {
-	 img_errno = IMG_OUTOFMEMORY;
-	 goto error;
-      }
-      /* There doesn't seem to be a spec for what happens after 1999 with cmap
-       * files, so this code allows for:
-       *  * 21xx -> xx (up to 2150)
-       *  * 21xx -> 1xx (up to 2199)
-       *  * full year being specified instead of 2 digits
-       */
-      len = strlen(line);
-      if (len > 59) {
-	 /* Don't just truncate at column 59, allow for a > 2 digit year. */
-	 char * p = strstr(line + len, "Page");
-	 if (p) {
-	    while (p > line && p[-1] == ' ')
-	       --p;
-	    *p = '\0';
-	    len = p - line;
-	 } else {
-	    line[59] = '\0';
-	 }
-      }
-      if (len > 45) {
-	 /* YY/MM/DD HH:MM */
-	 struct tm tm;
-	 unsigned long v;
-	 char * p;
-	 pimg->datestamp = my_strdup(line + 45);
-	 p = pimg->datestamp;
-	 v = strtoul(p, &p, 10);
-	 if (v <= 50) {
-	    /* In the absence of a spec for cmap files, assume <= 50 means 21st
-	     * century. */
-	    v += 2000;
-	 } else if (v < 200) {
-	    /* Map 100-199 to 21st century. */
-	    v += 1900;
-	 }
-	 if (v == ULONG_MAX || *p++ != '/')
-	    goto bad_cmap_date;
-	 tm.tm_year = v - 1900;
-	 v = strtoul(p, &p, 10);
-	 if (v < 1 || v > 12 || *p++ != '/')
-	    goto bad_cmap_date;
-	 tm.tm_mon = v - 1;
-	 v = strtoul(p, &p, 10);
-	 if (v < 1 || v > 31 || *p++ != ' ')
-	    goto bad_cmap_date;
-	 tm.tm_mday = v;
-	 v = strtoul(p, &p, 10);
-	 if (v >= 24 || *p++ != ':')
-	    goto bad_cmap_date;
-	 tm.tm_hour = v;
-	 v = strtoul(p, &p, 10);
-	 if (v >= 60)
-	    goto bad_cmap_date;
-	 tm.tm_min = v;
-	 if (*p == ':') {
-	    v = strtoul(p + 1, &p, 10);
-	    if (v > 60)
-	       goto bad_cmap_date;
-	    tm.tm_sec = v;
-	 } else {
-	    tm.tm_sec = 0;
-	 }
-	 tm.tm_isdst = 0;
-	 /* We have no indication of what timezone this timestamp is in.  It's
-	  * probably local time for whoever processed the data, so just assume
-	  * UTC, which is at least fairly central in the possibilities.
-	  */
-	 pimg->datestamp_numeric = mktime_with_tz(&tm, "");
-      } else {
-	 pimg->datestamp = my_strdup(TIMENA);
-      }
-bad_cmap_date:
-      if (strncmp(line, "  Cave Survey Data Processed by CMAP ",
-		  LITLEN("  Cave Survey Data Processed by CMAP ")) == 0) {
-	 len = 0;
-      } else {
-	 if (len > 45) {
-	    line[45] = '\0';
-	    len = 45;
-	 }
-	 while (len > 2 && line[len - 1] == ' ') --len;
-	 if (len > 2) {
-	    line[len] = '\0';
-	    pimg->title = my_strdup(line + 2);
-	 }
-      }
-      if (len <= 2) pimg->title = baseleaf_from_fnm(fnm);
-      osfree(line);
-      if (!pimg->datestamp || !pimg->title) {
-	 img_errno = IMG_OUTOFMEMORY;
-	 goto error;
-      }
-      line = getline_alloc(pimg->fh);
-      if (!line) {
-	 img_errno = IMG_OUTOFMEMORY;
-	 goto error;
-      }
-      if (line[0] != ' ' || (line[1] != 'S' && line[1] != 'O')) {
-	 img_errno = IMG_BADFORMAT;
-	 goto error;
-      }
-      if (line[1] == 'S') {
-	 pimg->version = VERSION_CMAP_STATION;
-      } else {
-	 pimg->version = VERSION_CMAP_SHOT;
-      }
-      osfree(line);
-      line = getline_alloc(pimg->fh);
-      if (!line) {
-	 img_errno = IMG_OUTOFMEMORY;
-	 goto error;
-      }
-      if (line[0] != ' ' || line[1] != '-') {
-	 img_errno = IMG_BADFORMAT;
-	 goto error;
-      }
-      osfree(line);
-      pimg->start = ftell(pimg->fh);
-      return pimg;
+       result = cmap_xyz_open(pimg);
+       if (result) {
+	   img_errno = result;
+	   goto error;
+       }
+       goto successful_return;
+     }
    }
 
    if (fread(buf, LITLEN(FILEID) + 1, 1, pimg->fh) != 1 ||
@@ -825,15 +1268,18 @@ v03d:
    {
        size_t title_len;
        char * title = getline_alloc_len(pimg->fh, &title_len);
-       if (pimg->version == 8 && title) {
-	   /* We sneak in an extra field after a zero byte here, containing the
-	    * specified coordinate system (if any).  Older readers will just
-	    * not see it (which is fine), and this trick avoids us having to
-	    * bump the 3d format version.
+       if (!title) goto out_of_memory_error;
+       if (pimg->version == 8) {
+	   /* We sneak in extra fields after a zero byte here, containing the
+	    * specified coordinate system (if any) and the level separator
+	    * character.  Older readers will just not see these fields (which
+	    * is OK), and this trick avoids us having to bump the 3d format
+	    * version.
 	    */
 	   size_t real_len = strlen(title);
 	   if (real_len != title_len) {
 	       char * cs = title + real_len + 1;
+	       real_len += strlen(cs) + 1;
 	       if (memcmp(cs, "+init=", 6) == 0) {
 		   /* PROJ 5 and later don't handle +init=esri:<number> but
 		    * that's what cavern used to put in .3d files for
@@ -892,7 +1338,10 @@ v03d:
 			* may not have.
 			*/
 		       if (*p == '\0' || strcmp(p, " +no_defs") == 0) {
-			   sprintf(cs, "EPSG:%d", n);
+			   /* There are at least 45 bytes (see memcmp above)
+			    * which is ample for EPSG: plus an integer.
+			    */
+			   SNPRINTF(cs, 45, "EPSG:%d", n);
 		       }
 		   } else if (memcmp(p, "merc +lat_ts=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +units=m +nadgrids=@null", 89) == 0) {
 		       p = p + 89;
@@ -906,7 +1355,11 @@ v03d:
 		       }
 		   }
 	       }
-	       pimg->cs = my_strdup(cs);
+	       if (cs[0]) pimg->cs = my_strdup(cs);
+	   }
+
+	   if (real_len != title_len) {
+	       pimg->separator = title[real_len + 1];
 	   }
        }
        if (!pimg->title) {
@@ -916,9 +1369,10 @@ v03d:
        }
    }
    pimg->datestamp = getline_alloc(pimg->fh);
-   if (!pimg->title || !pimg->datestamp) {
+   if (!pimg->datestamp) {
+out_of_memory_error:
       img_errno = IMG_OUTOFMEMORY;
-      error:
+error:
       osfree(pimg->title);
       osfree(pimg->cs);
       osfree(pimg->datestamp);
@@ -931,7 +1385,7 @@ v03d:
    if (pimg->version >= 8) {
       int flags = GETC(pimg->fh);
       if (flags & img_FFLAG_EXTENDED) pimg->is_extended_elevation = 1;
-   } else {
+   } else if (pimg->title) {
       len = strlen(pimg->title);
       if (len > 11 && strcmp(pimg->title + len - 11, " (extended)") == 0) {
 	  pimg->title[len - 11] = '\0';
@@ -997,6 +1451,12 @@ bad_3d_date:
 
    pimg->start = ftell(pimg->fh);
 
+successful_return:
+   /* If no title from another source, default to the base leafname. */
+   if (!pimg->title || !pimg->title[0]) {
+       osfree(pimg->title);
+       pimg->title = baseleaf_from_fnm(fnm);
+   }
    return pimg;
 }
 
@@ -1071,6 +1531,9 @@ img_write_stream(FILE *stream, int (*close_func)(FILE*),
    }
 
    pimg->filename_opened = NULL;
+   pimg->data = NULL;
+
+   pimg->separator = (flags & 0x100) ? (flags >> 9) : '.';
 
    /* Output image file header */
    fputs("Survex 3D Image File\n", pimg->fh); /* file identifier string */
@@ -1090,14 +1553,20 @@ img_write_stream(FILE *stream, int (*close_func)(FILE*),
       if (len < 11 || strcmp(title + len - 11, " (extended)") != 0)
 	 fputs(" (extended)", pimg->fh);
    }
-   if (pimg->version == 8 && cs && *cs) {
-      /* We sneak in an extra field after a zero byte here, containing the
-       * specified coordinate system (if any).  Older readers will just not
-       * see it (which is fine), and this trick avoids us having to bump the
-       * 3d format version.
+   if (pimg->version == 8 && ((cs && *cs) || pimg->separator != '.')) {
+      /* We sneak in extra fields after a zero byte here, containing the
+       * specified coordinate system (if any) and the separator character
+       * if it isn't the default of '.'.  Older readers will just not see
+       * these (which is fine for the coordinate system, and not very
+       * problematic for the separator), and this trick avoids us having to
+       * bump the 3d format version.
        */
       PUTC('\0', pimg->fh);
-      fputs(cs, pimg->fh);
+      if (cs && *cs) fputs(cs, pimg->fh);
+      if (pimg->separator != '.') {
+	  PUTC('\0', pimg->fh);
+	  PUTC(pimg->separator, pimg->fh);
+      }
    }
    PUTC('\n', pimg->fh);
 
@@ -1372,7 +1841,7 @@ img_read_item_new(img *pimg, img_point *p)
    int opt;
    pimg->l = pimg->r = pimg->u = pimg->d = -1.0;
    if (pimg->pending >= 0x40) {
-      if (pimg->pending == 256) {
+      if (pimg->pending == PENDING_XSECT_END) {
 	 pimg->pending = 0;
 	 return img_XSECT_END;
       }
@@ -1409,7 +1878,7 @@ img_read_item_new(img *pimg, img_point *p)
 	      case 0x11: { /* Single date */
 		  int days1 = (int)getu16(pimg->fh);
 #if IMG_API_VERSION == 0
-		  pimg->date2 = pimg->date1 = (days1 - 25567) * 86400;
+		  pimg->date2 = pimg->date1 = (days1 - DAYS_1900) * SECS_PER_DAY;
 #else /* IMG_API_VERSION == 1 */
 		  pimg->days2 = pimg->days1 = days1;
 #endif
@@ -1419,8 +1888,8 @@ img_read_item_new(img *pimg, img_point *p)
 		  int days1 = (int)getu16(pimg->fh);
 		  int days2 = days1 + GETC(pimg->fh) + 1;
 #if IMG_API_VERSION == 0
-		  pimg->date1 = (days1 - 25567) * 86400;
-		  pimg->date2 = (days2 - 25567) * 86400;
+		  pimg->date1 = (days1 - DAYS_1900) * SECS_PER_DAY;
+		  pimg->date2 = (days2 - DAYS_1900) * SECS_PER_DAY;
 #else /* IMG_API_VERSION == 1 */
 		  pimg->days1 = days1;
 		  pimg->days2 = days2;
@@ -1431,8 +1900,8 @@ img_read_item_new(img *pimg, img_point *p)
 		  int days1 = (int)getu16(pimg->fh);
 		  int days2 = (int)getu16(pimg->fh);
 #if IMG_API_VERSION == 0
-		  pimg->date1 = (days1 - 25567) * 86400;
-		  pimg->date2 = (days2 - 25567) * 86400;
+		  pimg->date1 = (days1 - DAYS_1900) * SECS_PER_DAY;
+		  pimg->date2 = (days2 - DAYS_1900) * SECS_PER_DAY;
 #else /* IMG_API_VERSION == 1 */
 		  pimg->days1 = days1;
 		  pimg->days2 = days2;
@@ -1467,7 +1936,7 @@ img_read_item_new(img *pimg, img_point *p)
 		  /* If this is the last cross-section in this passage, set
 		   * pending so we return img_XSECT_END next time. */
 		  if (pimg->flags & 0x01) {
-		      pimg->pending = 256;
+		      pimg->pending = PENDING_XSECT_END;
 		      pimg->flags &= ~0x01;
 		  }
 		  return img_XSECT;
@@ -1528,7 +1997,7 @@ img_read_item_v3to7(img *pimg, img_point *p)
    int result;
    int opt;
    pimg->l = pimg->r = pimg->u = pimg->d = -1.0;
-   if (pimg->pending == 256) {
+   if (pimg->pending == PENDING_XSECT_END) {
       pimg->pending = 0;
       return img_XSECT_END;
    }
@@ -1586,7 +2055,8 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		      pimg->date2 = pimg->date1 = date1;
 #else /* IMG_API_VERSION == 1 */
 		      if (date1 != 0) {
-			  pimg->days2 = pimg->days1 = (date1 / 86400) + 25567;
+			  pimg->days1 = (date1 - TIME_T_1900) / SECS_PER_DAY;
+			  pimg->days2 = pimg->days1;
 		      } else {
 			  pimg->days2 = pimg->days1 = -1;
 		      }
@@ -1594,7 +2064,8 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		  } else {
 		      int days1 = (int)getu16(pimg->fh);
 #if IMG_API_VERSION == 0
-		      pimg->date2 = pimg->date1 = (days1 - 25567) * 86400;
+		      pimg->date1 = (days1 - DAYS_1900) * SECS_PER_DAY;
+		      pimg->date2 = pimg->date1;
 #else /* IMG_API_VERSION == 1 */
 		      pimg->days2 = pimg->days1 = days1;
 #endif
@@ -1608,15 +2079,15 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		      pimg->date1 = date1;
 		      pimg->date2 = date2;
 #else /* IMG_API_VERSION == 1 */
-		      pimg->days1 = (date1 / 86400) + 25567;
-		      pimg->days2 = (date2 / 86400) + 25567;
+		      pimg->days1 = (date1 - TIME_T_1900) / SECS_PER_DAY;
+		      pimg->days2 = (date2 - TIME_T_1900) / SECS_PER_DAY;
 #endif
 		  } else {
 		      int days1 = (int)getu16(pimg->fh);
 		      int days2 = days1 + GETC(pimg->fh) + 1;
 #if IMG_API_VERSION == 0
-		      pimg->date1 = (days1 - 25567) * 86400;
-		      pimg->date2 = (days2 - 25567) * 86400;
+		      pimg->date1 = (days1 - DAYS_1900) * SECS_PER_DAY;
+		      pimg->date2 = (days2 - DAYS_1900) * SECS_PER_DAY;
 #else /* IMG_API_VERSION == 1 */
 		      pimg->days1 = days1;
 		      pimg->days2 = days2;
@@ -1654,8 +2125,8 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		      return img_BAD;
 		  }
 #if IMG_API_VERSION == 0
-		  pimg->date1 = (days1 - 25567) * 86400;
-		  pimg->date2 = (days2 - 25567) * 86400;
+		  pimg->date1 = (days1 - DAYS_1900) * SECS_PER_DAY;
+		  pimg->date2 = (days2 - DAYS_1900) * SECS_PER_DAY;
 #else /* IMG_API_VERSION == 1 */
 		  pimg->days1 = days1;
 		  pimg->days2 = days2;
@@ -1699,7 +2170,7 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		  /* If this is the last cross-section in this passage, set
 		   * pending so we return img_XSECT_END next time. */
 		  if (pimg->flags & 0x01) {
-		      pimg->pending = 256;
+		      pimg->pending = PENDING_XSECT_END;
 		      pimg->flags &= ~0x01;
 		  }
 		  return img_XSECT;
@@ -2073,16 +2544,29 @@ img_read_item_ascii(img *pimg, img_point *p)
       return img_LABEL;
    } else if (pimg->version == VERSION_COMPASS_PLT) {
       /* Compass .plt file */
-      if (pimg->pending > 0) {
-	 /* -1 signals we've entered the first survey we want to
-	  * read, and need to fudge lots if the first action is 'D'...
+      if ((pimg->pending & ~PENDING_HAD_XSECT) > 0) {
+	 /* -1 signals we've entered the first survey we want to read, and
+	  * need to fudge lots if the first action is 'D' or 'd'...
 	  */
-	 /* pending MOVE or LINE */
-	 int r = pimg->pending - 4;
-	 pimg->pending = 0;
 	 pimg->flags = 0;
+	 if (pimg->pending & PENDING_XSECT_END) {
+	     /* pending XSECT_END */
+	     pimg->pending &= ~PENDING_XSECT_END;
+	     return img_XSECT_END;
+	 }
+	 if (pimg->pending & PENDING_XSECT) {
+	     /* pending XSECT */
+	     pimg->pending &= ~PENDING_XSECT;
+	     return img_XSECT;
+	 }
 	 pimg->label[pimg->label_len] = '\0';
-	 return r;
+	 if (pimg->pending & PENDING_LINE) {
+	     pimg->flags = (pimg->pending >> PENDING_FLAGS_SHIFT);
+	     pimg->pending &= ((1 << PENDING_FLAGS_SHIFT) - 1) & ~PENDING_LINE;
+	     return img_LINE;
+	 }
+	 pimg->pending &= ~PENDING_MOVE;
+	 return img_MOVE;
       }
 
       while (1) {
@@ -2093,10 +2577,20 @@ img_read_item_ascii(img *pimg, img_point *p)
 
 	 switch (ch) {
 	    case '\x1a': case EOF: /* Don't insist on ^Z at end of file */
+	       if (pimg->pending == PENDING_HAD_XSECT) {
+		   ungetc('\x1a', pimg->fh);
+		   pimg->pending = 0;
+		   return img_XSECT_END;
+	       }
 	       return img_STOP;
 	    case 'X': case 'F': case 'S':
 	       /* bounding boX (marks end of survey), Feature survey, or
 		* new Section - skip to next survey */
+	       if (pimg->pending == PENDING_HAD_XSECT) {
+		   ungetc(ch, pimg->fh);
+		   pimg->pending = 0;
+		   return img_XSECT_END;
+	       }
 	       if (pimg->survey) return img_STOP;
 skip_to_N:
 	       while (1) {
@@ -2109,6 +2603,7 @@ skip_to_N:
 	       }
 	       /* FALLTHRU */
 	    case 'N':
+	       compass_plt_new_survey(pimg);
 	       line = getline_alloc(pimg->fh);
 	       if (!line) {
 		  img_errno = IMG_OUTOFMEMORY;
@@ -2125,10 +2620,73 @@ skip_to_N:
 	       pimg->label = pimg->label_buf;
 	       memcpy(pimg->label, line, len);
 	       pimg->label[len] = '\0';
+	       /* Handle the survey date. */
+	       while (line[len] && line[len] <= 32) ++len;
+	       if (line[len] == 'D') {
+		  struct tm tm;
+		  memset(&tm, 0, sizeof(tm));
+		  unsigned long v;
+		  q = line + len + 1;
+		  /* NB Order is Month Day Year order. */
+		  v = strtoul(q, &q, 10);
+		  if (v < 1 || v > 12)
+		     goto bad_plt_date;
+		  tm.tm_mon = v - 1;
+
+		  v = strtoul(q, &q, 10);
+		  if (v < 1 || v > 31)
+		     goto bad_plt_date;
+		  tm.tm_mday = v;
+
+		  v = strtoul(q, &q, 10);
+		  if (v == ULONG_MAX)
+		     goto bad_plt_date;
+		  if (v < 1900) {
+		     /* "The Year is expected to be the full year like 1994 not
+		      * 94", but "expected to" != "must" so treat a two digit
+		      * year as 19xx.
+		      */
+		     v += 1900;
+		  }
+		  if (v == 1901 && tm.tm_mday == 1 && tm.tm_mon == 0) {
+		     /* Compass uses 1/1/1 or 1/1/1901 for "date unknown". */
+		     goto bad_plt_date;
+		  }
+		  tm.tm_year = v - 1900;
+		  /* We have no indication of what timezone this date is
+		   * in.  It's probably local time for whoever processed the
+		   * data, so just assume noon in UTC, which is at least fairly
+		   * central in the possibilities.
+		   */
+		  tm.tm_hour = 12;
+		  {
+		     time_t datestamp = mktime_with_tz(&tm, "");
+#if IMG_API_VERSION == 0
+		     pimg->date1 = pimg->date2 = datestamp;
+#else /* IMG_API_VERSION == 1 */
+		     pimg->days1 = (datestamp - TIME_T_1900) / SECS_PER_DAY;
+		     pimg->days2 = pimg->days1;
+#endif
+		  }
+	       } else {
+bad_plt_date:
+#if IMG_API_VERSION == 0
+		  pimg->date1 = pimg->date2 = 0;
+#else /* IMG_API_VERSION == 1 */
+		  pimg->days1 = pimg->days2 = -1;
+#endif
+	       }
 	       osfree(line);
 	       break;
-	    case 'M': case 'D': {
+	    case 'M':
+	       if (pimg->pending == PENDING_HAD_XSECT) {
+		   pimg->pending = PENDING_XSECT_END;
+	       }
+	       /* FALLTHRU */
+	    case 'D':
+	    case 'd': {
 	       /* Move or Draw */
+	       unsigned shot_flags = (ch == 'd' ? img_FLAG_SURFACE : 0);
 	       long fpos = -1;
 	       if (pimg->survey && pimg->label_len == 0) {
 		  /* We're only holding onto this line in case the first line
@@ -2136,18 +2694,21 @@ skip_to_N:
 		   */
 		  goto skip_to_N;
 	       }
-	       if (ch == 'D' && pimg->pending == -1) {
-		  if (pimg->survey) {
-		     fpos = ftell(pimg->fh) - 1;
-		     fseek(pimg->fh, pimg->start, SEEK_SET);
-		     ch = GETC(pimg->fh);
-		     pimg->pending = 0;
-		  } else {
-		     /* If a file actually has a 'D' before any 'M', then
-		      * pretend the 'D' is an 'M' - one of the examples
-		      * in the docs was like this! */
-		     ch = 'M';
-		  }
+	       if (pimg->pending == -1) {
+		   pimg->pending = 0;
+		   if (ch != 'M') {
+		       if (pimg->survey) {
+			   fpos = ftell(pimg->fh) - 1;
+			   fseek(pimg->fh, pimg->start, SEEK_SET);
+			   ch = GETC(pimg->fh);
+		       } else {
+			   /* If a file actually has a 'D' or 'd' before any
+			    * 'M', then pretend the action is 'M' - one of the
+			    * examples in the docs was like this!
+			    */
+			   ch = 'M';
+		       }
+		   }
 	       }
 	       line = getline_alloc(pimg->fh);
 	       if (!line) {
@@ -2176,29 +2737,36 @@ skip_to_N:
 	       ++q;
 	       len = 0;
 	       while (q[len] > ' ') ++len;
-	       q[len] = '\0';
-	       len += 2; /* ' ' and '\0' */
-	       if (!check_label_space(pimg, pimg->label_len + len)) {
+	       /* Add 2 for ' ' before and terminating '\0'. */
+	       if (!check_label_space(pimg, pimg->label_len + len + 2)) {
 		  img_errno = IMG_OUTOFMEMORY;
 		  return img_BAD;
 	       }
+	       pimg->flags = compass_plt_get_station_flags(pimg, q, len);
 	       pimg->label = pimg->label_buf;
 	       if (pimg->label_len) {
 		   pimg->label[pimg->label_len] = ' ';
-		   memcpy(pimg->label + pimg->label_len + 1, q, len - 1);
+		   memcpy(pimg->label + pimg->label_len + 1, q, len);
+		   pimg->label[pimg->label_len + 1 + len] = '\0';
 	       } else {
-		   memcpy(pimg->label, q, len - 1);
+		   memcpy(pimg->label, q, len);
+		   pimg->label[len] = '\0';
 	       }
-	       q += len - 1;
+	       q += len;
+
 	       /* Now read LRUD.  Technically, this is optional but virtually
 		* all PLT files have it (with dummy negative values if no LRUD
-		* was measured) and some versions of Compass can't read PLT
+		* was recorded) and some versions of Compass can't read PLT
 		* files without it!
 		*/
 	       while (*q && *q <= ' ') q++;
 	       if (*q == 'P') {
-		   if (sscanf(q + 1, "%lf%lf%lf%lf",
-			      &pimg->l, &pimg->r, &pimg->u, &pimg->d) != 4) {
+		   double dim[4];
+		   int bytes_used;
+		   ++q;
+		   if (sscanf(q, "%lf%lf%lf%lf%n",
+			      &dim[0], &dim[1], &dim[2], &dim[3],
+			      &bytes_used) != 4) {
 		       osfree(line);
 		       if (ferror(pimg->fh)) {
 			   img_errno = IMG_READERROR;
@@ -2207,20 +2775,107 @@ skip_to_N:
 		       }
 		       return img_BAD;
 		   }
-		   pimg->l *= METRES_PER_FOOT;
-		   pimg->r *= METRES_PER_FOOT;
-		   pimg->u *= METRES_PER_FOOT;
-		   pimg->d *= METRES_PER_FOOT;
+		   q += bytes_used;
+
+		   // No cross-sections for surface data.
+		   if ((pimg->flags & img_SFLAG_UNDERGROUND)) {
+		       int have_xsect = 0;
+		       int i;
+		       for (i = 0; i < 4; ++i) {
+			   // The PLT format specification says 'Values less
+			   // than zero are considered to be missing or
+			   // “Passage.”' but Compass has an (apparently
+			   // undocumented) extra check here for compatibility
+			   // with data that was originally entered in Karst
+			   // which uses 999 instead.
+			   //
+			   // Larry Fish says the check Compass actually uses
+			   // when processing PLT files is:
+			   //
+			   // if (Left<0) or (Left>900)
+			   if (dim[i] < 0.0 || dim[i] > 900.0) {
+			       dim[i] = -1.0;
+			   } else {
+			       dim[i] *= METRES_PER_FOOT;
+			       have_xsect = 1;
+			   }
+		       }
+		       if (!have_xsect) goto no_xsect;
+		       pimg->l = dim[0];
+		       pimg->r = dim[1];
+		       pimg->u = dim[2];
+		       pimg->d = dim[3];
+		       pimg->pending |= PENDING_XSECT | PENDING_HAD_XSECT;
+		   } else {
+		       goto no_xsect;
+		   }
 	       } else {
-		   pimg->l = pimg->r = pimg->u = pimg->d = -1;
+no_xsect:
+		   pimg->l = pimg->r = pimg->u = pimg->d = -1.0;
+		   if (pimg->pending == PENDING_HAD_XSECT) {
+		       pimg->pending = PENDING_XSECT_END;
+		   }
+	       }
+	       while (*q && *q <= ' ') q++;
+	       if (*q == 'I') {
+		   /* Skip distance from entrance. */
+		   do ++q; while (*q && *q <= ' ');
+		   while (*q > ' ') q++;
+		   while (*q && *q <= ' ') q++;
+	       }
+	       if (*q == 'F') {
+		   /* "Shot Flags".  Defined flags we currently ignore here:
+		    * C: "Do not adjust this shot when closing loops."
+		    * X: "you will never see this flag in a plot file."
+		    */
+		   while (isalpha((unsigned char)*++q)) {
+		       switch (*q) {
+			 case 'L':
+			   shot_flags |= img_FLAG_DUPLICATE;
+			   break;
+			 case 'S':
+			   shot_flags |= img_FLAG_SPLAY;
+			   break;
+			 case 'P':
+			   /* P is "Exclude this shot from plotting", but the
+			    * use suggested in the Compass docs is for surface
+			    * data, and they "[do] not support passage
+			    * modeling".
+			    *
+			    * Even if it's actually being used for a different
+			    * purpose, Survex programs don't show surface legs
+			    * by default so img_FLAG_SURFACE matches fairly
+			    * well.
+			    */
+			   shot_flags |= img_FLAG_SURFACE;
+			   break;
+		       }
+		   }
+	       }
+	       if (shot_flags & img_FLAG_SURFACE) {
+		   /* Suppress passage? */
 	       }
 	       osfree(line);
-	       pimg->flags = img_SFLAG_UNDERGROUND; /* default flags */
 	       if (fpos != -1) {
-		  fseek(pimg->fh, fpos, SEEK_SET);
-	       } else {
-		  pimg->pending = (ch == 'M' ? img_MOVE : img_LINE) + 4;
+		   fseek(pimg->fh, fpos, SEEK_SET);
 	       }
+
+	       if (pimg->flags < 0) {
+		   pimg->flags = shot_flags;
+		   /* We've already emitted img_LABEL for this station. */
+		   if (ch == 'M') {
+		       return img_MOVE;
+		   }
+		   return img_LINE;
+	       }
+	       if (fpos == -1) {
+		   if (ch == 'M') {
+		       pimg->pending |= PENDING_MOVE;
+		   } else {
+		       pimg->pending |= PENDING_LINE | (shot_flags << PENDING_FLAGS_SHIFT);
+		   }
+	       }
+
 	       return img_LABEL;
 	    }
 	    default:
@@ -2343,18 +2998,13 @@ write_coord(FILE *fh, double x, double y, double z)
 {
    SVX_ASSERT(fh);
    /* Output in cm */
-   static INT32_T X_, Y_, Z_;
    INT32_T X = my_lround(x * 100.0);
    INT32_T Y = my_lround(y * 100.0);
    INT32_T Z = my_lround(z * 100.0);
 
-   X_ -= X;
-   Y_ -= Y;
-   Z_ -= Z;
    put32(X, fh);
    put32(Y, fh);
    put32(Z, fh);
-   X_ = X; Y_ = Y; Z_ = Z;
 }
 
 static int
@@ -2488,22 +3138,22 @@ img_write_item_date_new(img *pimg)
 	} else {
 	    PUTC(0x11, pimg->fh);
 #if IMG_API_VERSION == 0
-	    put16(pimg->date1 / 86400 + 25567, pimg->fh);
+	    put16((pimg->date1 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
 #else /* IMG_API_VERSION == 1 */
 	    put16(pimg->days1, pimg->fh);
 #endif
 	}
     } else {
 #if IMG_API_VERSION == 0
-	int diff = (pimg->date2 - pimg->date1) / 86400;
+	int diff = (pimg->date2 - pimg->date1) / SECS_PER_DAY;
 	if (diff > 0 && diff <= 256) {
 	    PUTC(0x12, pimg->fh);
-	    put16(pimg->date1 / 86400 + 25567, pimg->fh);
+	    put16((pimg->date1 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
 	    PUTC(diff - 1, pimg->fh);
 	} else {
 	    PUTC(0x13, pimg->fh);
-	    put16(pimg->date1 / 86400 + 25567, pimg->fh);
-	    put16(pimg->date2 / 86400 + 25567, pimg->fh);
+	    put16((pimg->date1 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
+	    put16((pimg->date2 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
 	}
 #else /* IMG_API_VERSION == 1 */
 	int diff = pimg->days2 - pimg->days1;
@@ -2552,7 +3202,7 @@ img_write_item_date(img *pimg)
 #if IMG_API_VERSION == 0
 	    put32(pimg->date1, pimg->fh);
 #else /* IMG_API_VERSION == 1 */
-	    put32((pimg->days1 - 25567) * 86400, pimg->fh);
+	    put32((pimg->days1 - DAYS_1900) * SECS_PER_DAY, pimg->fh);
 #endif
 	} else {
 	    if (unset) {
@@ -2560,7 +3210,7 @@ img_write_item_date(img *pimg)
 	    } else {
 		PUTC(0x20, pimg->fh);
 #if IMG_API_VERSION == 0
-		put16(pimg->date1 / 86400 + 25567, pimg->fh);
+		put16((pimg->date1 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
 #else /* IMG_API_VERSION == 1 */
 		put16(pimg->days1, pimg->fh);
 #endif
@@ -2573,20 +3223,20 @@ img_write_item_date(img *pimg)
 	    put32(pimg->date1, pimg->fh);
 	    put32(pimg->date2, pimg->fh);
 #else /* IMG_API_VERSION == 1 */
-	    put32((pimg->days1 - 25567) * 86400, pimg->fh);
-	    put32((pimg->days2 - 25567) * 86400, pimg->fh);
+	    put32((pimg->days1 - DAYS_1900) * SECS_PER_DAY, pimg->fh);
+	    put32((pimg->days2 - DAYS_1900) * SECS_PER_DAY, pimg->fh);
 #endif
 	} else {
 #if IMG_API_VERSION == 0
-	    int diff = (pimg->date2 - pimg->date1) / 86400;
+	    int diff = (pimg->date2 - pimg->date1) / SECS_PER_DAY;
 	    if (diff > 0 && diff <= 256) {
 		PUTC(0x21, pimg->fh);
-		put16(pimg->date1 / 86400 + 25567, pimg->fh);
+		put16((pimg->date1 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
 		PUTC(diff - 1, pimg->fh);
 	    } else {
 		PUTC(0x23, pimg->fh);
-		put16(pimg->date1 / 86400 + 25567, pimg->fh);
-		put16(pimg->date2 / 86400 + 25567, pimg->fh);
+		put16((pimg->date1 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
+		put16((pimg->date2 - TIME_T_1900) / SECS_PER_DAY, pimg->fh);
 	    }
 #else /* IMG_API_VERSION == 1 */
 	    int diff = pimg->days2 - pimg->days1;
@@ -2856,9 +3506,167 @@ img_close(img *pimg)
 	     result = 0;
 	 if (!result) img_errno = pimg->fRead ? IMG_READERROR : IMG_WRITEERROR;
       }
+      if (pimg->data) {
+	  switch (pimg->version) {
+	    case VERSION_COMPASS_PLT:
+	      compass_plt_free_data(pimg);
+	      break;
+	    default:
+	      osfree(pimg->data);
+	  }
+      }
       osfree(pimg->label_buf);
       osfree(pimg->filename_opened);
       osfree(pimg);
    }
    return result;
+}
+
+img_datum
+img_parse_compass_datum_string(const char *s, size_t len)
+{
+#define EQ(S) len == LITLEN(S) && memcmp(s, S, LITLEN(S)) == 0
+    /* First check the three which seem to be commonly used in Compass data. */
+    if (EQ("WGS 1984"))
+	return img_DATUM_WGS84;
+    if (EQ("North American 1927"))
+	return img_DATUM_NAD27;
+    if (EQ("North American 1983"))
+	return img_DATUM_NAD83;
+
+    if (EQ("Adindan"))
+	return img_DATUM_ADINDAN;
+    if (EQ("Arc 1950"))
+	return img_DATUM_ARC1950;
+    if (EQ("Arc 1960"))
+	return img_DATUM_ARC1960;
+    if (EQ("Cape"))
+	return img_DATUM_CAPE;
+    if (EQ("European 1950"))
+	return img_DATUM_EUROPEAN1950;
+    if (EQ("Geodetic 1949"))
+	return img_DATUM_NZGD49;
+    if (EQ("Hu Tzu Shan"))
+	return img_DATUM_HUTZUSHAN1950;
+    if (EQ("Indian"))
+	return img_DATUM_INDIAN1960;
+    if (EQ("Tokyo"))
+	return img_DATUM_TOKYO;
+    if (EQ("WGS 1972"))
+	return img_DATUM_WGS72;
+
+    return img_DATUM_UNKNOWN;
+}
+
+char *
+img_compass_utm_proj_str(img_datum datum, int utm_zone)
+{
+    int epsg_code = 0;
+    const char* proj4_datum = NULL;
+
+    if (utm_zone < -60 || utm_zone > 60 || utm_zone == 0)
+	return NULL;
+
+    switch (datum) {
+      case img_DATUM_UNKNOWN:
+	break;
+      case img_DATUM_ADINDAN:
+	if (utm_zone >= 35 && utm_zone <= 38)
+	    epsg_code = 20100 + utm_zone;
+	break;
+      case img_DATUM_ARC1950:
+	if (utm_zone >= -36 && utm_zone <= -34)
+	    epsg_code = 20900 - utm_zone;
+	break;
+      case img_DATUM_ARC1960:
+	if (utm_zone >= -37 && utm_zone <= -35)
+	    epsg_code = 21000 - utm_zone;
+	break;
+      case img_DATUM_CAPE:
+	if (utm_zone >= -36 && utm_zone <= -34)
+	    epsg_code = 22200 - utm_zone;
+	break;
+      case img_DATUM_EUROPEAN1950:
+	if (utm_zone >= 28 && utm_zone <= 38)
+	    epsg_code = 23000 + utm_zone;
+	break;
+      case img_DATUM_NZGD49:
+	if (utm_zone >= 58)
+	    epsg_code = 27200 + utm_zone;
+	break;
+      case img_DATUM_HUTZUSHAN1950:
+	if (utm_zone == 51)
+	    epsg_code = 3829;
+	break;
+      case img_DATUM_INDIAN1960:
+	if (utm_zone >= 48 && utm_zone <= 49)
+	    epsg_code = 3100 + utm_zone;
+	break;
+      case img_DATUM_NAD27:
+	if (utm_zone > 0 && utm_zone <= 23)
+	    epsg_code = 26700 + utm_zone;
+	else if (utm_zone >= 59)
+	    epsg_code = 3311 + utm_zone;
+	else
+	    proj4_datum = "NAD27";
+	break;
+      case img_DATUM_NAD83:
+	if (utm_zone > 0 && utm_zone <= 23)
+	    epsg_code = 26900 + utm_zone;
+	else if (utm_zone == 24)
+	    epsg_code = 9712;
+	else if (utm_zone >= 59)
+	    epsg_code = 3313 + utm_zone;
+	else
+	    proj4_datum = "NAD83";
+	break;
+      case img_DATUM_TOKYO:
+	if (utm_zone >= 51 && utm_zone <= 55)
+	    epsg_code = 3041 + utm_zone;
+	break;
+      case img_DATUM_WGS72:
+	if (utm_zone > 0)
+	    epsg_code = 32200 + utm_zone;
+	else
+	    epsg_code = 32300 - utm_zone;
+	break;
+      case img_DATUM_WGS84:
+	if (utm_zone > 0)
+	    epsg_code = 32600 + utm_zone;
+	else
+	    epsg_code = 32700 - utm_zone;
+	break;
+    }
+
+    if (epsg_code) {
+	char *proj_str = xosmalloc(11);
+	if (!proj_str) {
+	    img_errno = IMG_OUTOFMEMORY;
+	    return NULL;
+	}
+	SNPRINTF(proj_str, 11, "EPSG:%d", epsg_code);
+	return proj_str;
+    }
+
+    if (proj4_datum) {
+	char *proj_str;
+	size_t len = strlen(proj4_datum) + 52 + 2 + 1;
+	const char *south = "";
+	if (utm_zone < 0) {
+	    utm_zone = -utm_zone;
+	    south = "+south ";
+	    len += 7;
+	}
+	proj_str = xosmalloc(len);
+	if (!proj_str) {
+	    img_errno = IMG_OUTOFMEMORY;
+	    return NULL;
+	}
+	SNPRINTF(proj_str, len,
+		 "+proj=utm +zone=%d %s+datum=%s +units=m +no_defs +type=crs",
+		 utm_zone, south, proj4_datum);
+	return proj_str;
+    }
+
+    return NULL;
 }
