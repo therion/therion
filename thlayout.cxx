@@ -43,6 +43,7 @@
 #include <string.h>
 #include <filesystem>
 #include <algorithm>
+#include <cassert>
 
 namespace fs = std::filesystem;
 
@@ -247,12 +248,8 @@ thlayout::thlayout()
   this->color_labels = false;
   
   this->def_tex_lines = 0;
-  this->first_line = NULL;
-  this->last_line = NULL;
   
   this->lock = false;
-  this->first_copy_src = NULL;
-  this->last_copy_src = NULL;
   
   this->color_preview_below.R = 0.5;
   this->color_preview_below.G = 0.5;
@@ -421,12 +418,11 @@ static const thstok thlayout_mapitems[] = {
 void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
   double dum;
-  thlayout_copy_src dumm;
   int sv, sv2, dum_int;
   const char * tmp1;
   const char * tmp2;
   //bool parsed;
-  thlayout_copy_src * lcp;
+  thlayoutln * last_line = nullptr;
   thcmd_option_desc defcod = this->get_default_cod(cod.id);
   switch (cod.id) {
     case TT_DATAOBJECT_AUTHOR:
@@ -446,13 +442,9 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SYMBOL_HIDE:
     case TT_LAYOUT_SYMBOL_SHOW:
     case TT_LAYOUT_SYMBOL_COLOR:
+      last_line = &lines.emplace_back();
       if (this->def_tex_lines < 2) {
-        this->first_line = this->db->db2d.insert_layoutln();
-        this->last_line = this->first_line;
         this->def_tex_lines = 2;
-      } else {
-        this->last_line->next_line = this->db->db2d.insert_layoutln();
-        this->last_line = this->last_line->next_line;
       }
       switch(cod.id) {
         case 0:
@@ -460,30 +452,30 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             ththrow("unknown option -- {}", *args);
           }
           thencode(&(this->db->buff_enc), *args, argenc);
-          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
-          this->last_line->code = this->ccode;
-          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
+          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->code = this->ccode;
+          last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
             if (!th_is_keyword(*args))
               ththrow("invalid keyword -- {}", args[0]);
             thencode(&(this->db->buff_enc), *args, argenc);
-            this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+            last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           }
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
           break;
         case TT_LAYOUT_SYMBOL_ASSIGN:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          if (!thsymbolset_assign[this->last_line->smid])
+          if (!thsymbolset_assign[last_line->smid])
             ththrow("symbol can not be assigned -- {} {}", args[0], args[1]);
           if (!th_is_keyword(args[2]))
             ththrow("invalid keyword -- {}", args[2]);
           thencode(&(this->db->buff_enc), args[2], argenc);
-          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
+          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
           break;
 //        case TT_LAYOUT_MAP_ITEM:
 //          this->last_line->smid = thmatch_token(args[0],thtt_layout_mapitem);
@@ -496,23 +488,23 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 //          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
 //          break;
         case TT_LAYOUT_SYMBOL_HIDE:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
           break;
         case TT_LAYOUT_SYMBOL_SHOW:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
           break;
         case TT_LAYOUT_SYMBOL_COLOR:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
             ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->sclr.parse(args[2]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
+          last_line->sclr.parse(args[2]);
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
           break;
       }
       break;
@@ -1090,15 +1082,9 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       
     case TT_LAYOUT_COPY:
       if (th_is_extkeyword(*args)) {
-        lcp = & ( * thlayout_copy_src_list.insert(thlayout_copy_src_list.end(),dumm));
-        if (this->first_copy_src == NULL) {
-          this->first_copy_src = lcp;
-          this->last_copy_src = lcp;
-        } else {
-          this->last_copy_src->next_src = lcp;
-          this->last_copy_src = lcp;
-        }
-        lcp->srcn = this->db->strstore(*args);
+        auto lcp = &lines.emplace_back();
+        lcp->code = TT_LAYOUT_CODE_COPY;
+        lcp->line = this->db->strstore(*args);
       } else 
         ththrow("invalid keyword -- {}", *args);
       break;
@@ -1392,9 +1378,8 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->pgsnum = %s;\n",(this->pgsnum ? "true" : "false"));
 
   
-  thlayoutln * ln = this->first_line;
   char last_code = TT_LAYOUT_CODE_UNKNOWN;
-  while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
     switch (ln->code) {
       case TT_LAYOUT_CODE_METAPOST:
       case TT_LAYOUT_CODE_TEX_MAP:
@@ -1435,31 +1420,30 @@ void thlayout::self_print_library() {
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
-              thprintf("\tplayout->last_line->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;
           }
         }
         break;
     }
-    ln = ln->next_line;
   }
   thprintf("\tplayout->def_tex_lines = %d;\n", this->def_tex_lines);
   
@@ -1685,9 +1669,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
   bool anyline = false;
   bool anylegend = false;
   const char * last_path = "";
-  if (this->first_line != NULL) {
-    thlayoutln * ln = this->first_line;
-    while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
       if (ln->code == mode) {
         // ak najde \\formattedlegend v \\insertmaps tak anyline bude
         // true
@@ -1702,8 +1684,6 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
         thdecode_utf2tex(&(this->db->buff_enc), ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
-      ln = ln->next_line;
-    }
   }
   
   if (!anyline) {
@@ -1721,9 +1701,7 @@ void thlayout::export_mpost(FILE * o) {
 
   bool anyline = false;
   const char * last_path = "";
-  if (this->first_line != NULL) {
-    thlayoutln * ln = this->first_line;
-    while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
       if (ln->code == TT_LAYOUT_CODE_METAPOST) {
         if (strcmp(ln->path, last_path) != 0) {
           last_path = ln->path;
@@ -1733,8 +1711,6 @@ void thlayout::export_mpost(FILE * o) {
         thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
-      ln = ln->next_line;
-    }
   }
   
   if (!anyline) {
@@ -1745,8 +1721,7 @@ void thlayout::export_mpost(FILE * o) {
 
 
 void thlayout::export_mpost_symbols(FILE * o, thsymbolset * symset) {
-  thlayoutln * ln = this->first_line;
-  while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
     switch (ln->code) {
       case TT_LAYOUT_CODE_SYMBOL_DEFAULTS:
         symset->export_symbol_defaults(o,ln->line);
@@ -1767,33 +1742,35 @@ void thlayout::export_mpost_symbols(FILE * o, thsymbolset * symset) {
         symset->export_symbol_assign(o,ln->smid,ln->line);
         break;
     }
-    ln = ln->next_line;
   }
 }
 
 
+static bool is_copy_src(thlayoutln const &ll) {
+  return ll.code == TT_LAYOUT_CODE_COPY;
+}
+
 
 void thlayout::process_copy() {
-  thlayout_copy_src * csp;
-  thlayout * srcl;
   // ak je locknuty -> tak warning a koniec
   if (this->lock) {
     thwarning(("%s -- recursive layout copying", this->throw_source().c_str()))
     return;
   }
   this->lock = true;
-  this->last_copy_src = this->first_copy_src;
-  while (this->first_copy_src != NULL) {
-    csp = this->first_copy_src;
+
+  for (auto csp = lines.begin(); csp != lines.end(); ++csp) {
+    if (!is_copy_src(*csp)) {
+      continue;
+    }
+
     // najdeme si layout podla mena
-    csp->srcptr = this->db->get_layout(csp->srcn);
-    if (csp->srcptr == NULL) {
-      thwarning(("%s -- source layout not found -- %s", this->throw_source().c_str(), csp->srcn))
+    thlayout * srcl = this->db->get_layout(csp->line);
+    if (srcl == NULL) {
+      thwarning(("%s -- source layout not found -- %s", this->throw_source().c_str(), csp->line))
     } else {
-      srcl = csp->srcptr;
       // ak ma este nevyriesene zavislosti
-      if (srcl->first_copy_src != NULL)
-        srcl->process_copy();
+      srcl->process_copy();
       
       // teraz skopirujme co nemame a on ma
 #define begcopy(whatx) if ((this->whatx < 2) && (srcl->whatx > 0)) { \
@@ -2080,32 +2057,8 @@ void thlayout::process_copy() {
         this->pgsnum = srcl->pgsnum;
       endcopy
 
-      if (srcl->first_line != NULL) {
-
-        // musime ich nakopirovat pred nase
-        thlayoutln * cl, * nl, * newfl = NULL, * newll = NULL;
-        cl = srcl->first_line;
-        while (cl != NULL) {
-          nl = this->db->db2d.insert_layoutln();
-          *nl = *cl;
-          if (newll == NULL) {
-            newfl = nl;
-            newll = nl;
-            newll->next_line = NULL;
-          } else {
-            newll->next_line = nl;
-            newll = nl;
-          }
-          cl = cl->next_line;
-        }        
-        if (this->last_line == NULL) {
-          this->last_line = newll;
-          newll->next_line = NULL;
-        } else {
-          newll->next_line = this->first_line;
-        }
-        this->first_line = newfl;
-      }
+      assert(std::none_of(srcl->lines.begin(), srcl->lines.end(), is_copy_src));
+      this->lines.insert(csp, srcl->lines.begin(), srcl->lines.end());
 
       // copy map images
       thlayout_map_image_list::iterator mit, mits;
@@ -2115,10 +2068,11 @@ void thlayout::process_copy() {
       }
       
     } 
-
-    // pokracujeme v cykle
-    this->first_copy_src = this->first_copy_src->next_src;
   }
+
+  // now remove the processed copy lines
+  lines.remove_if(is_copy_src);
+
   this->lock = false;
 }
 
@@ -2249,9 +2203,6 @@ bool thlayout::is_debug_scrapnames() {
 bool thlayout::is_debug_stationnames() {
   return ((this->debug & TTLDBG_STATIONNAMES) != 0);
 }
-
-std::list <thlayout_copy_src> thlayout_copy_src_list;
-
 
 bool thlayout_map_image::defined() {
   return (strlen(this->m_fn) > 0);
