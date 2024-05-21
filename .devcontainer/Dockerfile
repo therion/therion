@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:jammy
+FROM mcr.microsoft.com/devcontainers/base:noble
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y \
@@ -20,7 +20,7 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y \
     libproj-dev \
     libtk-img-dev \
     libvtk9-dev \
-    libwxgtk3.0-gtk3-dev \
+    libwxgtk3.2-dev \
     ninja-build \
     python3 \
     survex \
