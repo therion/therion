@@ -25,23 +25,23 @@ struct R2PCTX {
  
 void R2Pmake_context(R2PContext * r2pc)
 {
-   const int sbAttrib[] = { GLX_RGBA,
-                            GLX_RED_SIZE, 1,
-                            GLX_GREEN_SIZE, 1,
-                            GLX_BLUE_SIZE, 1,
-                            None };
-   const int dbAttrib[] = { GLX_RGBA,
-                            GLX_RED_SIZE, 1,
-                            GLX_GREEN_SIZE, 1,
-                            GLX_BLUE_SIZE, 1,
-                            GLX_DOUBLEBUFFER,
-                            None };
+   int sbAttrib[] = { GLX_RGBA,
+                      GLX_RED_SIZE, 1,
+                      GLX_GREEN_SIZE, 1,
+                      GLX_BLUE_SIZE, 1,
+                      None };
+   int dbAttrib[] = { GLX_RGBA,
+                      GLX_RED_SIZE, 1,
+                      GLX_GREEN_SIZE, 1,
+                      GLX_BLUE_SIZE, 1,
+                      GLX_DOUBLEBUFFER,
+                      None };
    int scrnum;
    scrnum = DefaultScreen( r2pc->dpy );
 
-   r2pc->visinfo = glXChooseVisual( r2pc->dpy, scrnum, (int *) sbAttrib );
+   r2pc->visinfo = glXChooseVisual( r2pc->dpy, scrnum, sbAttrib );
    if (!r2pc->visinfo) {
-      r2pc->visinfo = glXChooseVisual( r2pc->dpy, scrnum, (int *) dbAttrib );
+      r2pc->visinfo = glXChooseVisual( r2pc->dpy, scrnum, dbAttrib );
       if (!r2pc->visinfo) {
          printf("Error: couldn't get an RGB visual\n");
          exit(1);
