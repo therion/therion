@@ -86,6 +86,10 @@ ifeq ($(VTKV6),1)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 endif
+ifeq ($(VTKV9),1)
+VTKLIBS += -lvtkpng$(VTKLIBSUFFIX) -lvtkjpeg$(VTKLIBSUFFIX)
+endif
+
 CXXPFLAGS = \
     -std=c++17 \
     -Wno-deprecated \
