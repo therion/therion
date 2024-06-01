@@ -93,6 +93,8 @@ Therion uses following data types:
              (not starting with `|-|').
 * {\it ext\_keyword} = keyword that can also contain |+*.,'| characters,
             but not on the first position.
+* {\it restr\_keyword} = keyword limited to |A-Z|, |a-z| and |_| characters because
+            of \MP\ limitations
 * {\it date} = a date (or a time interval) specification in the format\hfil\break
           |YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]] [- YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]]]| or `|-|'
           to leave a date unspecified.
@@ -859,7 +861,7 @@ Point is a command for drawing a point map symbol.
 
 
 \options
-  * |subtype <keyword>| = determines the object's subtype. The following
+  * |subtype <restr_keyword>| = determines the object's subtype. The following
     subtypes for given types are supported:
 
     {\it station:}\[if station subtype is not specified, Therion reads it from centreline,
@@ -1075,7 +1077,7 @@ respectively.
     The |direction| and |gradient| options are only accepted as a |[LINE DATA]| 
     command option when set to |point|. Otherwise they are accepted as a |line| 
     command option.
-       * |subtype <keyword>| = determines line subtype. The following
+       * |subtype <restr_keyword>| = determines line subtype. The following
          subtypes are supported for given types:
 
          {\it wall:} |invisible|, |bedrock| (default), |sand|, |clay|,
