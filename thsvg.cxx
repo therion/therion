@@ -483,12 +483,12 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
     if (!ldata.cavelength.empty()) F << "<p><i>" << escape_html(ldata.cavelengthtitle) << ":</i> " << ldata.cavelength << "</p>" << std::endl;
     if (!ldata.cavedepth.empty()) F << "<p><i>" << escape_html(ldata.cavedepthtitle) << ":</i> " << ldata.cavedepth << "</p>" << std::endl;
     if (!ldata.copyrights.empty()) F << "<p>" << escape_html(ldata.copyrights) << "</p>" << std::endl;
-    if (LAYOUT.scalebar != "") {
+    if (ldata.scalebar && LAYOUT.scalebar != "") {
       F << "<p>" << std::endl;
       ScBar.print_svg(F,unique_prefix);
       F << "</p>" << std::endl;
     }
-    if (LAYOUT.northarrow != "") {
+    if (ldata.northarrow && LAYOUT.northarrow != "") {
       F << "<p>" << std::endl;
       NArrow.print_svg(F,unique_prefix);
       F << "</p>" << std::endl;
