@@ -230,6 +230,10 @@ class thdb1ds {
 
   thdb3ddata * get_3d_outline();
 
+  /**
+   * Get either the comment - if not empty - or the name.
+   */
+  const char * get_label() const;
 
 };
 
