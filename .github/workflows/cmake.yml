@@ -6,18 +6,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-20.04, toolchain: gcc.cmake,              args: "-DUSE_BUNDLED_CATCH2=ON"                         }
-          - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: ""                                                }
-          - { os: ubuntu-22.04, toolchain: gcc.cmake,              args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
+          - { os: ubuntu-20.04, toolchain: gcc.cmake,              pkgs: "libwxgtk3.0-gtk3-dev libvtk7-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                         }
+          - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                }
+          - { os: ubuntu-22.04, toolchain: gcc.cmake,              pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
+          - { os: ubuntu-24.04, toolchain: gcc.cmake,              pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: ""                                                }
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
         run: |
           sudo apt -qq update
-          sudo apt install -y texlive-binaries texlive-metapost libproj-dev libshp-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build clang-tidy gettext libfmt-dev
-      - name: install Catch2
-        if: matrix.os == 'ubuntu-22.04'
-        run: sudo apt install -y catch2
+          sudo apt install -y ${{ matrix.pkgs }} texlive-binaries texlive-metapost libproj-dev libshp-dev survex imagemagick ghostscript ninja-build clang-tidy gettext libfmt-dev
       - name: install additional texlive languages
         if: matrix.toolchain == 'clang-sanitizers.cmake'
         run:  sudo apt install -y texlive-lang-czechslovak texlive-lang-cyrillic
