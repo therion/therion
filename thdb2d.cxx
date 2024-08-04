@@ -45,6 +45,7 @@
 #include "thtmpdir.h"
 #include "thinit.h"
 #include "thfilehandle.h"
+#include "therion.h"
 #include <list>
 #include <set>
 #include <iterator>

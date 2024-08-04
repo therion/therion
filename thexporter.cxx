@@ -34,6 +34,7 @@
 #include "thexpdb.h"
 #include "thexpsys.h"
 #include "thexptable.h"
+#include "therion.h"
 #include <stdio.h>
 
 

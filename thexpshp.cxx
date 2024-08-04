@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "thcs.h"
+#include "therion.h"
 #include <filesystem>
 
 #include "thexpshp.h"

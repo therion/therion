@@ -40,6 +40,7 @@
 #include "thconfig.h"
 #include "th2ddataobject.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include <string.h>
 #include <filesystem>
 #include <algorithm>

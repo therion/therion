@@ -40,6 +40,7 @@
 #include "thproj.h"
 #include "thconfig.h"
 #include "thcs.h"
+#include "therion.h"
 #include <filesystem>
 
 

@@ -36,6 +36,7 @@
 #include "thdate.h"
 #include "thscrap.h"
 #include "thobjectname.h"
+#include "therion.h"
 #include <string>
 #include <cstdio>
 

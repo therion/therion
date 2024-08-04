@@ -33,6 +33,7 @@
 #include "thtmpdir.h"
 #include "thexception.h"
 #include "thconfig.h"
+#include "therion.h"
 #include <filesystem>
 
 #include <fmt/printf.h>

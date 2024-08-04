@@ -44,6 +44,7 @@
 #include "thlogfile.h"
 #include "thepsparse.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include <fmt/printf.h>
 
 thsymbolset::thsymbolset()

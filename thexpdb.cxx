@@ -38,6 +38,7 @@
 #include "thchenc.h"
 #include <map>
 #include "thinfnan.h"
+#include "therion.h"
 
 thexpdb::thexpdb() {
   this->format = TT_EXPDB_FMT_UNKNOWN;

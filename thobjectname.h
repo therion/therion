@@ -30,7 +30,6 @@
 #define thobjectname_h
 
 #include "thmbuffer.h"
-#include "therion.h"
 
 #include <string>
 
