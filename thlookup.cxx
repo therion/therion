@@ -37,6 +37,7 @@
 #include "thlayout.h"
 #include "thtexfonts.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include <string.h>
 
 

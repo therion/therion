@@ -51,6 +51,7 @@
 #include "thendscrap.h"
 #include "thconfig.h"
 #include "thproj.h"
+#include "therion.h"
 
 
 const char * thlibrarydata_init_text =

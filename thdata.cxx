@@ -34,6 +34,7 @@
 #include "thcsdata.h"
 #include "thdatareader.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include "loch/icase.h"
 
 thdata::thdata()

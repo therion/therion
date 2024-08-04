@@ -63,6 +63,7 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thsurface.h"
+#include "therion.h"
 #include <stdlib.h>
 #include "loch/lxMath.h"
 #include "thsvg.h"

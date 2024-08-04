@@ -49,6 +49,7 @@
 #include "loch/lxMath.h"
 #include "thcsdata.h"
 #include "thgeomagdata.h"
+#include "therion.h"
 #include "QuickHull.hpp"
 
 //#define THUSESVX

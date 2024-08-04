@@ -38,6 +38,7 @@
 #include <vector>
 #include "thchenc.h"
 #include "thmap.h"
+#include "therion.h"
 
 #include <fmt/printf.h>
 

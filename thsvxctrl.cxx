@@ -38,6 +38,7 @@
 #include "thsurvey.h"
 #include "thcsdata.h"
 #include "thlogfile.h"
+#include "therion.h"
 #include "img.h"
 #include <math.h>
 #include <string>

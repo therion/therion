@@ -40,6 +40,7 @@
 #include "thsketch.h"
 #include "thcsdata.h"
 #include "thdatabase.h"
+#include "therion.h"
 
 #define EXPORT3D_INVISIBLE true
 
