@@ -3613,6 +3613,14 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 
 }
 
+const char * thdb1ds::get_label() const {
+  const char * label = this->comment;
+  if (!label || !label[0]) {
+    label = this->name;
+  }
+  return label;
+}
+
 void thdb1d_tree_node::push_back_arrow(thdb1d_tree_arrow * arrow) {
 	if (this->back_arrow == NULL) {
 		this->back_arrow = arrow;

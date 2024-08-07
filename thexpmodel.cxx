@@ -1937,7 +1937,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
           station->x, station->y, station->z, x, y, z);
         fprintf(out, "<Placemark>\n");
         fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
-        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
+        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->get_label(), layout->lang).c_str());
         fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
         fprintf(out, "</Placemark>\n");
       }
