@@ -510,6 +510,8 @@ class thpoint : public th2ddataobject {
 
   void check_extra();
 
+  thdate * get_date();
+
   /**
    * Standard constructor.
    */
