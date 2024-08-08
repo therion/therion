@@ -17,6 +17,7 @@ Checks: '-*,
           -bugprone-branch-clone,
           -bugprone-assignment-in-if-condition,
           -bugprone-switch-missing-default-case,
+          -bugprone-chained-comparison,
         performance-for-range-copy,
         cppcoreguidelines-no-malloc,
         cppcoreguidelines-pro-type-member-init'
