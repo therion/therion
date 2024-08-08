@@ -1192,6 +1192,7 @@ bool lxApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     // Use a double-buffered visual if available, as it will give much smoother
     // animation.
+    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
     int wx_gl_attribs[] = { 
 			WX_GL_RGBA,
 			WX_GL_DOUBLEBUFFER,

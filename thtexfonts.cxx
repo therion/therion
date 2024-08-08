@@ -325,7 +325,6 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   if (str.empty()) return str;
 
   std::ostringstream T;
-  std::string tmp;
   int wc;  //wide char
   int lastenc = -1;
   int laststyle = -1;
