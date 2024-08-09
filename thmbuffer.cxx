@@ -27,6 +27,7 @@
  
 #include "thmbuffer.h"
 
+#include <algorithm>
 #include <cstring>
 
 thmbuffer::mblock::mblock(size_t min_size, size_t last_size)
@@ -87,7 +88,7 @@ char * thmbuffer::appendn(const char * src, size_t n)
     char ** new_buf;
     this->max_size *= 4;
     new_buf = new char* [this->max_size];
-    memcpy(new_buf, this->buf, this->size * sizeof(char*));
+    std::copy_n(this->buf, this->size, new_buf);
     delete [] this->buf;
     this->buf = new_buf;
   }

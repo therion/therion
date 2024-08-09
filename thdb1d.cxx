@@ -3572,14 +3572,12 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 	//if (tt->temps == TT_TEMPSTATION_FEATURE) continue;
 	tv = Vector3<double>(tt->x, tt->y, tt->z);
 	txv = tv - fv;
-	try {
-		txv.normalize();
-		pointCloud.push_back(txv);
-		originalPointCloud.push_back(tv);
-		originalPointCloudUse.push_back(NULL);
-		if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
-		else undercnt++;
-	} catch (...) {}
+  txv.normalize();
+  pointCloud.push_back(txv);
+  originalPointCloud.push_back(tv);
+  originalPointCloudUse.push_back(NULL);
+  if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
+  else undercnt++;
   }
   // if there are more then 1 underground shots from this station, add it
   if (undercnt > 0) {
