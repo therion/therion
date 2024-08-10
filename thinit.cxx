@@ -26,7 +26,6 @@
  */
  
 #include "thinit.h"
-#include "thparse.h"
 #include "thchenc.h"
 #include "therion.h"
 #include "thconfig.h"

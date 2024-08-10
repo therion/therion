@@ -27,7 +27,6 @@
  
 #include "thdb2d.h"
 #include "thdatabase.h"
-#include "thparse.h"
 #include "thmap.h"
 #include "thscrap.h"
 #include "thsurvey.h"

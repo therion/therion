@@ -33,6 +33,7 @@
 #include <string>
 #include "thbuffer.h"
 #include "thmbuffer.h"
+#include "thstok.h"
 
 
 enum {
@@ -40,15 +41,6 @@ enum {
   TT_IMG_TYPE_JPEG,
   TT_IMG_TYPE_PNG,
 };
-
-/**
- * Token definition structure.
- */
-
-typedef struct {
-  const char * s;  ///< String.
-  int tok;  ///< Token.
-} thstok;
 
 
 /**

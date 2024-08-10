@@ -30,7 +30,6 @@
 #include "thexception.h"
 #include "thchenc.h"
 #include "thtfangle.h"
-#include "thparse.h"
 #include "thinfnan.h"
 #include "thpdfdata.h"
 #include "thsymbolset.h"

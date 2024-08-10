@@ -28,6 +28,7 @@
 
 #include "thtflength.h"
 #include "thexception.h"
+#include "thparse.h"
 
 thtflength::thtflength() : thtf(TT_TFU_M) {}
 

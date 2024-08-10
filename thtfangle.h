@@ -30,7 +30,7 @@
 #define thtfangle_h
 
 #include "thtf.h"
-#include "thparse.h"
+#include "thstok.h"
 
 
 enum {TT_TFU_DEG, TT_TFU_DMS, TT_TFU_GRAD, TT_TFU_MIN, TT_TFU_PERC, TT_TFU_UNKNOWN_ANGLE, TT_TFU_MILS};

@@ -26,7 +26,6 @@
  */
 
 #include "thsymbolset.h"
-#include "thparse.h"
 #include "thpoint.h"
 #include "thline.h"
 #include "tharea.h"

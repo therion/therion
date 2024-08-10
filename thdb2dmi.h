@@ -32,7 +32,7 @@
 #include <list>
 #include "thobjectname.h"
 #include "thobjectsrc.h"
-#include "thparse.h"
+#include "thstok.h"
 
 
 /**

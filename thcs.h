@@ -27,6 +27,7 @@
 
 #include "thcsdata.h"
 #include <map>
+#include <string>
 
 const int TTCS_EPSG = 1000000;
 const int TTCS_ESRI = 2000000;

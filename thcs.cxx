@@ -26,7 +26,6 @@
  */
 
 #include "thcs.h"
-#include "thparse.h"
 #include "thcsdata.h"
 #include "thexception.h"
 #include "thproj.h"

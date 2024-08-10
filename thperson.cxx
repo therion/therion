@@ -27,7 +27,6 @@
  
 #include "thperson.h"
 #include "thdatabase.h"
-#include "thparse.h"
 #include "thexception.h"
 #include <string.h>
 

@@ -30,7 +30,7 @@
 #define thexport_h
 
 #include <stdio.h>
-#include "thparse.h"
+#include "thbuffer.h"
 #include "thobjectsrc.h"
 #include "thlayout.h"
 #include "loch/icase.h"

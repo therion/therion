@@ -27,7 +27,6 @@
  
 #include "thgrade.h"
 #include "thdata.h"
-#include "thparse.h"
 #include "thdatabase.h"
 #include "therion.h"
 
