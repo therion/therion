@@ -1372,7 +1372,7 @@ void convert_scraps_new() {
   if(!P) therror(("Can't open patterns definition file!"));
   char buf[5000];
   char delim[] = ":";
-  std::string line,num,pfile,bbox,xstep,ystep,matr;
+  std::string num,pfile,bbox,xstep,ystep,matr;
   while(P.getline(buf,5000,'\n')) {
     num = strtok(buf,delim);
     pfile = strtok(NULL,delim);
