@@ -30,7 +30,7 @@
 #define thdb2dprj_h
 
 
-#include "thparse.h"
+#include "thstok.h"
 #include "thmapstat.h"
 #include <map>
 #include <list>

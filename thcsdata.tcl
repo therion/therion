@@ -323,7 +323,7 @@ puts $fid {/**
 #ifndef thcsdata_h
 #define thcsdata_h
  
-#include "thparse.h"
+#include "thstok.h"
  
 #include <map>
 

@@ -26,7 +26,6 @@
  */
  
 #include "thlayoutclr.h"
-#include "thparse.h"
 #include "thdatabase.h"
 #include "thexception.h"
 #include <cmath>

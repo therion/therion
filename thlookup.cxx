@@ -28,7 +28,6 @@
 #include "thlookup.h"
 #include "thexception.h"
 #include "thchenc.h"
-#include "thparse.h"
 #include "thinfnan.h"
 #include "thpdfdata.h"
 #include "thlang.h"

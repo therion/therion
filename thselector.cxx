@@ -30,7 +30,6 @@
 #include "thconfig.h"
 #include <stdio.h>
 #include <string.h>
-#include "thparse.h"
 #include "thdatabase.h"
 #include "thdataobject.h"
 #include "thsurvey.h"

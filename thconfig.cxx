@@ -28,7 +28,6 @@
 
 #include "thconfig.h"
 #include "therion.h"
-#include "thparse.h"
 #include "thlang.h"
 #include <stdlib.h>
 #include <stdio.h>

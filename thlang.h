@@ -30,7 +30,7 @@
 #define thlang_h
 
 #include "thlangdata.h"
-#include "thparse.h"
+#include "thstok.h"
 
 const char * thT(const char * txt, int lng = THLANG_UNKNOWN);
 

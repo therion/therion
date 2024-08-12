@@ -218,7 +218,7 @@ ENDOUT
  */
 
 #include "thlangdata.h"
-#include "thparse.h"
+#include "thstok.h"
 #include <cstddef>
 
 typedef const char * thlang_pchar;

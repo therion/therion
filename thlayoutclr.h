@@ -29,7 +29,7 @@
 #ifndef thlayoutclr_h
 #define thlayoutclr_h
 
-#include "thparse.h"
+#include "thstok.h"
 #include "thpdfdata.h"
 #include <stdio.h>
 

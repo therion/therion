@@ -27,6 +27,7 @@
  
 #include "thdataleg.h"
 #include "thcsdata.h"
+#include "thparse.h"
 
 thdataleg::thdataleg()
 {

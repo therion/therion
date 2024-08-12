@@ -27,7 +27,6 @@
  
 #include "thobjectname.h"
 #include "thexception.h"
-#include "thparse.h"
 #include "thdatabase.h"
 #include "thdataobject.h"
 #include "thsurvey.h"

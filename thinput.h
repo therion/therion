@@ -31,7 +31,6 @@
 
 #include "thbuffer.h"
 #include "thmbuffer.h"
-#include "thparse.h"
 #include <fstream>
 #include <memory>
 

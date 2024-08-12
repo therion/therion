@@ -33,6 +33,7 @@
 #include "thtfpwf.h"
 #include "thperson.h"
 #include "thdata.h"
+#include "thbuffer.h"
 #include <map>
 #include <memory>
 

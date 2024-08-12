@@ -30,7 +30,6 @@
 #include "thchenc.h"
 #include "thsurvey.h"
 #include "thconfig.h"
-#include "thparse.h"
 #include "thcsdata.h"
 #include "thdata.h"
 #include "thproj.h"

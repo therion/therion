@@ -31,7 +31,6 @@
 
 
 #include "thperson.h"
-#include "thparse.h"
 #include "thdate.h"
 #include "thlayoutclr.h"
 #include "thobjectsrc.h"

@@ -33,6 +33,7 @@
 #include "thline.h"
 #include "tharea.h"
 #include "thlang.h"
+#include "thparse.h"
 
 #include <stdlib.h>
 #include <stdio.h>

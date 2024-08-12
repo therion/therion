@@ -31,7 +31,7 @@
 
 
 #include "th2ddataobject.h"
-#include "thparse.h"
+#include "thstok.h"
 #include "thdb2dpt.h"
 #include "thobjectname.h"
 

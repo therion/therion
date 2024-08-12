@@ -29,7 +29,7 @@
 #ifndef thdataleg_h
 #define thdataleg_h
 
-#include "thparse.h"
+#include "thstok.h"
 #include "thobjectname.h"
 #include "thobjectsrc.h"
 #include "thinfnan.h"

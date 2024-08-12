@@ -27,7 +27,6 @@
  
 #include "thjoin.h"
 #include "thexception.h"
-#include "thparse.h"
 #include "thdatabase.h"
 
 thjoin::thjoin()

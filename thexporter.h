@@ -31,7 +31,7 @@
 
 
 #include "thexport.h"
-#include "thparse.h"
+#include "thstok.h"
 #include <stdio.h>
 #include <list>
 

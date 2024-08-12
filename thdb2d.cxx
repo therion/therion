@@ -28,7 +28,6 @@
 #include "thdb2d.h"
 #include "thexception.h"
 #include "thdatabase.h"
-#include "thparse.h"
 #include "thtfangle.h"
 #include "tharea.h"
 #include "thmap.h"

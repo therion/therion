@@ -32,6 +32,7 @@
 
 #include "th2ddataobject.h"
 #include "thdb2dab.h"
+#include "thstok.h"
 
 #include <memory>
 
