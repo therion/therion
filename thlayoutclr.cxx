@@ -28,6 +28,7 @@
 #include "thlayoutclr.h"
 #include "thdatabase.h"
 #include "thexception.h"
+#include "thepsparse.h"
 #include <cmath>
 #include <fmt/printf.h>
 
