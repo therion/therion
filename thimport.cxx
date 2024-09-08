@@ -430,6 +430,27 @@ static char * get_filtered_name(char * stnm, const char * filter,
   return stnm;
 }
 
+/**
+ * Add an EQUATE command for the given stations.
+ */
+static void set_equate(thimport * imp,
+                       thsst const & station1,
+                       thsst const & station2) {
+  // need copies because set_data_equate modifies the buffers
+  std::string copies[] = {
+    station1.fullname,
+    station2.fullname,
+  };
+  char * args[] = {
+    copies[0].data(),
+    copies[1].data(),
+  };
+  auto tmpsurvey = imp->db->csurveyptr;
+  imp->db->csurveyptr = imp->fsptr;
+  imp->db->csurveyptr->data->set_data_equate(2, args);
+  imp->db->csurveyptr = tmpsurvey;
+}
+
 typedef std::map<std::string, std::string> str2strmap;
 typedef std::map<thimg_stpos, std::vector<thsst>> pos2strmap;
 typedef std::list<thimg_shot> thimgshotlist;
@@ -554,7 +575,12 @@ void thimport::import_file_img()
           args[3] = zb.data();
           args[0] = n1.get_buffer();
           tmpdata->cs = this->cs;
-          tmpdata->set_data_fix(4, args);
+          // only fix the first station, use equate for the others
+          if (svxpos2ths[tmppos].size() == 1 || this->fsptr == nullptr) {
+            tmpdata->set_data_fix(4, args);
+          } else {
+            set_equate(this, svxpos2ths[tmppos][0], tmpsst);
+          }
           // ak bude entrance, vlozi aj station
           if ((pimg->flags & img_SFLAG_ENTRANCE) != 0) {
             args[0] = n2.get_buffer();
