@@ -545,8 +545,6 @@ void thimport::import_file_img()
     thwarning(("unable to import %lu stations outside survey", notimpst));
   }
 
-  thsurvey * s1survey, * s2survey;
-  long s1slevel, s2slevel, maxlevel, i, j;
   thsst s1s, s2s;  
   
   // nakoniec povklada shoty
@@ -569,8 +567,34 @@ void thimport::import_file_img()
     s2s = p2si->second;
     
     tmpsurvey = this->db->csurveyptr;
-    tmpdata = NULL;
     
+    if (!import_shot(s1s, s2s, &*sli)) {
+      notimpsh++;
+    }
+
+    this->db->csurveyptr = tmpsurvey;
+  }
+
+  if (notimpsh > 0) {
+    thwarning(("unable to import %lu shots outside survey", notimpsh));
+  }
+}
+
+/**
+ * Try to import shot between stations s1s and s2s.
+ *
+ * @return True if shot import was successful
+ */
+bool thimport::import_shot(thsst const & s1s, //
+                           thsst const & s2s, //
+                           thimg_shot const * sli) {
+  {
+    thsurvey *s1survey, *s2survey;
+    long s1slevel, s2slevel, maxlevel, i, j;
+    char *args[3], a0[32], a1[32], a2[32];
+    thbuffer n1, n2;
+    thdata * tmpdata = nullptr;
+
     // find survey levels
     s1slevel = 0;
     s1survey = s1s.survey;
@@ -621,9 +645,8 @@ void thimport::import_file_img()
       if (this->fsptr != NULL)
         tmpdata = this->fsptr->data;
       else {
-        notimpsh++;
         // do not import
-        continue;
+        return false;
       }
 
       // tmpdata = this->data;
@@ -651,13 +674,9 @@ void thimport::import_file_img()
       tmpdata->d_flags |= TT_LEGFLAG_SPLAY;
     }
     tmpdata->insert_data_leg(2, args);      
-    this->db->csurveyptr = tmpsurvey;
   }
 
-  if (notimpsh > 0) {
-    thwarning(("unable to import %lu shots outside survey", notimpsh));
-  }
-
+  return true;
 }
 
 
