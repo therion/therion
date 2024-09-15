@@ -32,6 +32,8 @@
 #include "thsymbolsetlist.h"
 #include "thlayoutclr.h"
 #include <stdio.h>
+#include <vector>
+#include <map>
 
 
 struct thsymbolset_usym {
