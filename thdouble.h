@@ -50,7 +50,9 @@ struct formatter<thdouble>: formatter<std::string> {
             }
         }
         num.resize(result_len);
-        return formatter<std::string>::format(num, ctx);
+        // Remove const for compatibility with fmtlib < 9.0.0
+        return const_cast<formatter<thdouble> *>(this)
+            ->formatter<std::string>::format(num, ctx);
     }
 };
 }
