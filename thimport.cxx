@@ -468,7 +468,10 @@ void thimport::import_file_img()
       case img_LABEL:      
         // vlozime fix station
         stnm = pimg->label;
-        if ((filterl > 0) && (strncmp(stnm, this->filter, filterl) == 0)) {
+        if (filterl > 0) {
+          if (strncmp(stnm, this->filter, filterl) != 0) {
+            break;
+          }
           stnm = &stnm[filterl];
           while ((*stnm != 0) && (*stnm == pimg->separator)) {
             stnm++;
