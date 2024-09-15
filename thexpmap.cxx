@@ -740,11 +740,11 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
 
 
 static void fprint_quoted_string(FILE * stream, const char * text) {
-  if (!strchr(text, '"')) {
-    fprintf(stream, "\"%s\"", text);
-  } else {
-    fprintf(stream, "[%s]", text);
+  while (auto q = strchr(text, '"')) {
+    fprintf(stream, "\"%.*s\"", int(q - text), text);
+    text = q + 1;
   }
+  fprintf(stream, "\"%s\"", text);
 }
 
 static void fprint_scale_option(FILE * pltf, th2ddataobject * obj) {
