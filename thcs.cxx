@@ -117,6 +117,7 @@ const thcsdata * thcs_get_data(int cs) {
 	static thcsdata rv;
 	static char params[200];
 	static char prjname[200];
+	size_t len;
 	rv.dms = false;
 	rv.output = true;
 	rv.params = params;
@@ -129,7 +130,8 @@ const thcsdata * thcs_get_data(int cs) {
       if (esri_labels.find(cs - TTCS_ESRI) != esri_labels.end()) {
         rv.prjname = esri_labels[cs - TTCS_ESRI];
       } else {
-        thcs_get_label(params).copy(prjname, 200, 0);
+        len = thcs_get_label(params).copy(prjname, 199, 0);
+        prjname[len] = '\0';
       }
 		return &rv;
 	}
@@ -138,7 +140,8 @@ const thcsdata * thcs_get_data(int cs) {
       if (epsg_labels.find(cs - TTCS_EPSG) != epsg_labels.end()) {
         rv.prjname = epsg_labels[cs - TTCS_EPSG];
       } else {
-        thcs_get_label(params).copy(prjname, 200, 0);
+        len = thcs_get_label(params).copy(prjname, 199, 0);
+        prjname[len] = '\0';
       }
 		return &rv;
 	}
