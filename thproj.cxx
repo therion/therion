@@ -48,6 +48,7 @@ thcs_config thcs_cfg;
 
 #if PROJ_VER < 5
 
+#include "thexception.h"
 #include <proj_api.h>
 
 void thcs2cs(int si, int ti,
@@ -444,6 +445,7 @@ proj_cache cache;
 
     double undo_radians = 1.0, redo_radians = 1.0;
     double c_orig = c;
+    if (std::isnan(c)) c = 0.0;
     PJ* P = NULL;
 
 // set CA bundle path; supported since proj 7.2.0

@@ -47,6 +47,8 @@ double p1_utm_h = 2025.437;
 double p1_s42_y = 7401458.68;
 double p1_s42_x = 5423542.23;
 
+double undefined = NAN;
+
 TEST_CASE( "projections: init", "[proj]" ) {
     CHECK(thcs_check(thcs_get_params(TTCS_JTSK03)));
 }
@@ -102,6 +104,14 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, p1_jtsk_h, 0.001));
+}
+
+TEST_CASE( "projections: JTSK03 -- utm, auto=false, NaN z coordinate", "[proj]" ) {
+    thcs2cs(TTCS_JTSK03, TTCS_ETRS34,
+            p1_jtsk_y, p1_jtsk_x, undefined, x, y, z);
+    CHECK(coord_equal(x, p1_utm_e, 0.01));
+    CHECK(coord_equal(y, p1_utm_n, 0.01));
+    CHECK(std::isnan(z));
 }
 
 /*
