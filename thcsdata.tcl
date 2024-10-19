@@ -1,90 +1,5 @@
 #! /usr/bin/tclsh
 
-set labels_path "/usr/share/proj"
-if {$argc == 1} {
-  set labels_path [lindex $argv 0]
-}
-
-proc load_proj_init_file_add {name spec desc} {
-  global proj_specs
-  regsub -all {\+?no\_defs} $spec {} spec
-  regsub -all {\s+\<\>} $spec  { } spec
-  regsub -all {\s+\+?} $spec { } spec
-  regsub {\s+$} $spec {} spec
-  regsub -all {(\s+)} $spec { +} spec
-  regsub {^\s+} $spec {} spec
-  regsub {longlat} $spec {latlong} spec
-  if {[regexp {proj\=latlong} $spec]} {
-    set options {dms}
-  } else {
-    set options {output}
-  }
-  lappend proj_specs [list $name $options $spec {} $desc]
-}
-
-proc load_proj_init_file {fn shortcut} {
-  set active_comment {}
-  set active_name {}
-  set active_spec { }
-  set fid [open $fn r]
-  while {![eof $fid]} {
-    gets $fid line
-    regexp {^\s*\#\s*(.*)$} $line dum active_comment
-    regsub {\s*\#.*$} $line {} line
-    if {[string length $active_name] == 0} {
-      if {[regexp {^\s*\<(\S+)\>} $line dum id]} {
-	set active_name [string tolower "$shortcut:$id"]
-	regsub {^\s*\<\S+\>\s*} $line {} line
-      }
-    }
-    if {[string length $active_name] > 0} {
-      append active_spec $line
-      if {[regexp {\s+\<\>} $line]} {
-	load_proj_init_file_add $active_name $active_spec $active_comment
-	set active_name {}
-	set active_spec { }
-      }
-    }
-  }
-  close $fid
-  load_proj_init_file_add $active_name $active_spec $active_comment
-}
-
-
-
-proc load_proj_init_file_for_labels {fn shortcut} {
-  global projlabels
-  set projlabels($shortcut) "std::map<int, const char *> $shortcut\_labels = {\n"
-  set active_comment {}
-  set active_name {}
-  set active_spec { }
-  set fid [open $fn r]
-  while {![eof $fid]} {
-    gets $fid line
-    if {[regexp {^\<metadata\> } $line]} {continue}
-    regexp {^\s*\#\s*(.*)$} $line dum active_comment
-    regsub -all {"} $active_comment active_comment
-    regsub {\s*\#.*$} $line {} line
-    if {[string length $active_name] == 0} {
-      if {[regexp {^\s*\<(\S+)\>} $line dum id]} {
-	set active_name [expr int($id)]
-	regsub {^\s*\<\S+\>\s*} $line {} line
-      }
-    }
-    if {[string length $active_name] > 0} {
-      append active_spec $line
-      if {[regexp {\s+\<\>} $line]} {
-	append projlabels($shortcut) "  {$active_name, \"$active_comment\"},\n"
-	set active_name {}
-	set active_spec { }
-      }
-    }
-  }
-  close $fid
-  append projlabels($shortcut) "};\n\n\n"
-}
-
-
 # <identifiers> <options> <libPROJ definition> <.PRJ definition>
 set proj_specs {
   {{long-lat} {dms} "+init=epsg:4326" {} {}}
@@ -253,17 +168,6 @@ foreach al $osgb1 {
 
 set osgbspecs {{ST 1 -2} {SN 2 -3} {} {} {} {}}
 
-#load_proj_init_file extern/proj4/nad/epsg epsg
-#load_proj_init_file extern/proj4/nad/esri esri
-set projlabels(esri) "\nstd::map<int, const char *> esri_labels = {};\n\n"
-set projlabels(epsg) "\nstd::map<int, const char *> epsg_labels = {};\n\n"
-if {[file exists $labels_path/epsg]} {
-  load_proj_init_file_for_labels $labels_path/epsg epsg
-  load_proj_init_file_for_labels $labels_path/esri esri
-} else {
-  puts "No PROJ system definitions imported (this is OK for Proj v6 and newer)."
-}
-
 # join identical projections
 array set proj_defs {}
 set new_proj_specs {}
@@ -363,12 +267,6 @@ puts $fid "extern const thstok thtt_cs\[[expr [llength $proj_parse] + 1]\];\n";
 puts $fid "extern const thcsdata thcsdata_table\[[llength $proj_specs]\];\n"
 
 puts $fid {
-extern std::map<int, const char *> esri_labels;
-extern std::map<int, const char *> epsg_labels;
-}
-
-
-puts $fid {
 #endif
 } 
 
@@ -420,9 +318,6 @@ foreach p $proj_specs {
   puts $fid "  \{$o_dms, $o_output, $o_swap, \"[lindex $p 2]\", \"$prjspec\"\, \"$prjname\"\},"
 } 
 puts $fid "\};"
-
-puts $fid $projlabels(esri)
-puts $fid $projlabels(epsg)
 
 puts $fid "\nvoid thcs_add_default_transformations() {"
 foreach p $proj_transformations {

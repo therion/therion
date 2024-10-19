@@ -34,6 +34,13 @@
 #include <map>
 #include <set>
 #include <regex>
+#include <proj.h>
+#include <math.h>
+#include <sstream>
+#include <iomanip>
+#ifdef THWIN32
+  #include "thconfig.h"
+#endif
 
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
@@ -46,120 +53,14 @@ thcs_config::thcs_config() {
 
 thcs_config thcs_cfg;
 
-#if PROJ_VER < 5
-
-#include "thexception.h"
-#include <proj_api.h>
-
-void thcs2cs(int si, int ti,
-              double a, double b, double c, double &x, double &y, double &z) {
-  std::string s = thcs_get_params(si);
-  std::string t = thcs_get_params(ti);
-  projPJ P1, P2;
-  double c_orig = c;
-  if ((P1 = pj_init_plus(s.c_str()))==NULL) 
-     therror(("Can't initialize input projection!"));
-  if ((P2 = pj_init_plus(t.c_str()))==NULL) 
-     therror(("Can't initialize output projection!"));
-  if (pj_transform(P1,P2,1,0,&a,&b,&c) != 0)
-     therror(("Can't transform projections!"));
-  x = a; 
-  y = b;
-//  z = c;       // don't convert heights
-  z = c_orig;
-  pj_free(P1);
-  pj_free(P2);
-}
-
-signed int thcs2zone(int si, double a, double b, double c) {
-  std::string s = thcs_get_params(si);
-  projPJ P1, P2;
-  if ((P1 = pj_init_plus(s.c_str()))==NULL) 
-     therror(("Can't initialize input projection!"));
-  if ((P2 = pj_init_plus("+proj=latlong +datum=WGS84"))==NULL) 
-     therror(("Can't initialize default projection!"));
-  if (pj_transform(P1,P2,1,0,&a,&b,&c) != 0)
-     therror(("Can't transform projections!"));
-  pj_free(P1);
-  pj_free(P2);
-  return (int) (a*180/M_PI+180)/6 + 1; 
-}
-
-double thcsconverg(int si, double a, double b) {
-  std::string s = thcs_get_params(si);
-  projPJ P1, P2;
-  double c = 0;
-  double x = a, y = b;
-  thassert (s.find("+proj=latlong") == s.npos);
-  if ((P1 = pj_init_plus(s.c_str()))==NULL) 
-     therror(("Can't initialize input projection!"));
-  if ((P2 = pj_init_plus("+proj=latlong +datum=WGS84"))==NULL) 
-     therror(("Can't initialize default projection!"));
-  if (pj_transform(P1,P2,1,0,&a,&b,&c) != 0)
-     therror(("Can't transform projections!"));
-  b += 1e-6;
-  if (pj_transform(P2,P1,1,0,&a,&b,&c) != 0)
-     therror(("Can't transform projections!"));
-  pj_free(P1);
-  pj_free(P2);
-  return atan2(a-x,b-y)/M_PI*180;
-}
-
-bool thcs_islatlong(std::string s) {
-  projPJ P;
-  if ((P = pj_init_plus(s.c_str()))==NULL)
-     therror(("Can't initialize input projection!"));
-  bool res = pj_is_latlong(P);
-  pj_free(P);
-  return res;
-}
-
-bool thcs_check(std::string s) {
-  projPJ P;
-  if ((P = pj_init_plus(s.c_str()))==NULL)
-    ththrow("invalid proj4 identifier -- {}", s.c_str());
-  pj_free(P);
-  return true;
-}
-
-std::string thcs_get_proj_version() {
-  std::string s = pj_get_release();
-  std::smatch match;
-  std::regex_search(s, match, std::regex(R"(\d+\.\d+\.\d+)"));
-  return match[0];
-}
-
-std::string thcs_get_proj_version_headers() {
-  std::ostringstream s;
-  std::string ver = std::to_string(PJ_VERSION);
-  for(int i = 0; i < 3; i++) {
-    s << ver[i];
-    if (i < 2) s << ".";
-  }
-  return s.str();
-}
-
-#else    // PROJ 5 and newer
-
-  #include <proj.h>
-  #include <math.h>
-  #include <sstream>
-  #include <iomanip>
-#ifdef THWIN32
-  #include "thconfig.h"
-#endif
-
-#if PROJ_VER > 5
   std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
   std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
   std::regex reg_type(R"(\+type\s*=\s*crs\b)");
   std::regex reg_space(R"(\s+)");
   std::regex reg_trim(R"(^\s*(.*\S)\s*$)");
   std::regex reg_czech(R"(\s+\+czech\b)");
-#endif
 
   std::string sanitize_crs(std::string s) {
-#if PROJ_VER > 5
     s = std::regex_replace(s, reg_trim, "$1");
     s = std::regex_replace(s, reg_space, " ");
     if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
@@ -169,12 +70,8 @@ std::string thcs_get_proj_version_headers() {
     else if (std::regex_match(s,reg_init)) return regex_replace(s, reg_init, "$1:$2");   // get epsg:nnnn format
     else if (!std::regex_search(s,reg_type)) return s + " +type=crs";                    // add +type=crs to explicitly declare CRS
     else return s;
-#else
-    return s;
-#endif
   }
 
-#if PROJ_VER >= 6
 class proj_cache {
     std::map<std::tuple<int,int,std::vector<double> >, PJ*> transf_cache;
     std::set<PJ*> PJ_cache;
@@ -235,7 +132,6 @@ proj_cache::~proj_cache() {
 }
 
 proj_cache cache;
-#endif
 
   std::map<std::pair<int,int>, std::string> precise_transf;
 
@@ -244,9 +140,7 @@ proj_cache cache;
   std::regex reg_gridtif(R"(\.tiff?$)");
 
   void th_init_proj(PJ * &P, std::string s) {
-#if PROJ_VER > 5
     proj_context_use_proj4_init_rules(PJ_DEFAULT_CTX, true);
-#endif
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
 #if PROJ_VER >= 7
     // try to download the missing grids if proj_create() fails
@@ -308,7 +202,6 @@ proj_cache cache;
     }
   }
 
-#if PROJ_VER >= 6
   void th_init_proj_auto(PJ * &P, int si, int ti) {
 
     // check the cache first
@@ -429,7 +322,6 @@ proj_cache cache;
     if (!cache.add(si,ti,thcs_cfg.bbox,P))
       therror(("could not add projection to the cache, it's already there -- should not happen"));
   }
-#endif
 
   void thcs2cs(int si, int ti,
               double a, double b, double c, double &x, double &y, double &z) {
@@ -463,7 +355,6 @@ proj_cache cache;
       precise_transf[{si,ti}] = transf;
     } else
 #endif
-#if PROJ_VER > 5
     if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
       th_init_proj_auto(P, si, ti);
       if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
@@ -473,20 +364,15 @@ proj_cache cache;
         redo_radians = M_PI / 180.0;
       }
     } else {
-#endif
       th_init_proj(P, (std::string("+proj=pipeline +step +inv ") + s + " +step " + t).c_str());
-#if PROJ_VER > 5
     }
-#endif
     PJ_COORD res;
     res = proj_trans(P, PJ_FWD, proj_coord(a*undo_radians, b*undo_radians, c, 0));
     x = res.xyz.x*redo_radians;
     y = res.xyz.y*redo_radians;
 //    z = res.xyz.z;         // don't convert heights
     z = c_orig;
-#if PROJ_VER >= 6
     if (!cache.contains(P))   // cached Ps are destroyed in proj_cache's destructor
-#endif
       proj_destroy(P);
   }
 
@@ -509,12 +395,8 @@ proj_cache cache;
   bool thcs_islatlong(std::string s) {
     PJ* P;
     th_init_proj(P, sanitize_crs(s).c_str());
-#if PROJ_VER > 5
     int type = proj_get_type(P);
     bool angular = (type == PJ_TYPE_GEOGRAPHIC_CRS || type == PJ_TYPE_GEOGRAPHIC_2D_CRS || type == PJ_TYPE_GEOGRAPHIC_3D_CRS);
-#else
-    bool angular = proj_angular_output(P,PJ_FWD);  // in PROJ v6 it returns just that input is in radians
-#endif
     proj_destroy(P);
     return angular;
   }
@@ -535,7 +417,6 @@ proj_cache cache;
     return std::to_string(PROJ_VERSION_MAJOR)+"."+std::to_string(PROJ_VERSION_MINOR)+"."+std::to_string(PROJ_VERSION_PATCH);
   }
 
-#endif   // end of Proj 5+ branch
 
 std::map<std::string,int> grid_map {
   {"ignore", GRID_IGNORE},
@@ -567,20 +448,14 @@ void thcs_log_transf_used() {
     thlog.printf("############ end of custom transformations used ################\n");
   }
 #endif
-#if PROJ_VER >= 6
   thlog.printf(cache.log().c_str());
-#endif
 }
 
-std::string thcs_get_label([[maybe_unused]] std::string s) {
-#if PROJ_VER >= 6
+std::string thcs_get_label(std::string s) {
     PJ* P;
     th_init_proj(P, sanitize_crs(s));
     PJ_PROJ_INFO pinfo = proj_pj_info(P);
     const std::string res(pinfo.description);
     proj_destroy(P);
     return res;
-#else
-    return "";
-#endif
 }

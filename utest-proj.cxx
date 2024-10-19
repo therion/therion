@@ -80,11 +80,7 @@ TEST_CASE( "projections: UTM zones", "[proj]" ) {
 }
 
 TEST_CASE( "projections: EPSG label", "[proj]" ) {
-#if PROJ_VER < 6
-    CHECK((epsg_labels.count(32634) > 0 && strcmp(epsg_labels[32634],"WGS 84 / UTM zone 34N") == 0));
-#else
     CHECK(thcs_get_label("+init=epsg:32634") == "WGS 84 / UTM zone 34N");
-#endif
 }
 
 
@@ -153,15 +149,10 @@ TEST_CASE( "projections: latlong -- JTSK03", "[proj]" ) {
 TEST_CASE( "projections: JTSK03 -- EPSG_4417, auto=false", "[proj]" ) {
     thcs2cs(TTCS_JTSK03, TTCS_EPSG + 4417,
         p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
-#if PROJ_VER < 6
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
-#else
     // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
     // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
     CHECK(coord_equal(x, p1_s42_y, 130));
     CHECK(coord_equal(y, p1_s42_x, 40));
-#endif
 }
 
 /*
@@ -189,15 +180,10 @@ TEST_CASE( "projections: iJTSK03 -- EPSG_4417, auto=true", "[proj]" ) {
     thcs2cs(TTCS_IJTSK03, TTCS_EPSG + 4417,
         -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
     thcs_cfg.proj_auto = false;
-#if PROJ_VER < 6
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
-#else
     // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
     // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
     CHECK(coord_equal(x, p1_s42_y, 130));
     CHECK(coord_equal(y, p1_s42_x, 40));
-#endif
 }
 
 TEST_CASE( "UTM34N -- EPSG_4417 auto=true", "[proj]" ) {    // UTM34N -> S42
