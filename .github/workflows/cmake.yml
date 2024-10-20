@@ -65,7 +65,7 @@ jobs:
           sudo tlmgr update --self
           sudo tlmgr install collection-langcyrillic
           sudo tlmgr install collection-langczechslovak
-          cmake --build build -t samples-build
+          cmake --build build -t samples-verify-crc
       - uses: actions/upload-artifact@v4
         if: always()
         with:

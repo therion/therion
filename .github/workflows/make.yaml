@@ -16,8 +16,8 @@ jobs:
           make tests
           sudo make install
           ./therion --print-symbols
-      - name: make samples
-        run: make samples
+  #      - name: make samples
+  #        run: make samples
   # mac:
   #   runs-on: macos-latest
   #   steps:
