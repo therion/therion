@@ -83,6 +83,7 @@ layout::layout() {
   col_preview_above.set(0,0,0);
   own_pages = 0;
   OCG = true;
+  geospatial = true;
   lang = THLANG_UNKNOWN;
   legend_width = 200;
   legend_columns = 2;
