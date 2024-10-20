@@ -283,6 +283,14 @@
 
 \newdimen\tmpdimenX
 \newdimen\tmpdimenY
+\newdimen\tmpdimenXa
+\newdimen\tmpdimenYa
+\newdimen\tmpdimenXc
+\newdimen\tmpdimenYc
+\newdimen\tmpdimenXf
+\newdimen\tmpdimenYf
+\newdimen\tmpdimenXh
+\newdimen\tmpdimenYh
 \def\calibrX#1{\tmpdimen=#1\advance\tmpdimen by\overlap\advance\tmpdimen by\extraW}
 \def\calibrY#1{\tmpdimen=#1\advance\tmpdimen by\overlap\advance\tmpdimen by\extraS}
 
@@ -328,6 +336,8 @@
 }
 
 {\catcode`\p=12\catcode`\t=12\gdef\SKIPPT#1pt{#1}}
+
+\def\ratio#1#2{\expandafter\SKIPPT\the\dimexpr\numexpr\dimexpr#1*65536/\dimexpr#2\relax\relax sp\relax}
 
 \def\dimtobp#1{%
   \tmpdimen=#1%

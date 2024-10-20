@@ -1,5 +1,9 @@
-Therion 6.2.2 (in progress):
+Therion 6.3.0 (in progress):
 
+therion:
+ * support for Geospatial PDF maps added (custom georeferencing used in versions
+   5.3-6.2.1 is not included in PDF maps any more)
+ * new layout option: geospatial on/off
 
 --------------------------------------------------------------------------------
 

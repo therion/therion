@@ -51,6 +51,8 @@
 #include "thversion.h"
 #include "thdouble.h"
 #include "therion.h"
+#include "thcs.h"
+#include "thproj.h"
 
 #define IOerr(F) fmt::format("Can't open file {}!\n", (F)).c_str()
 
@@ -1292,7 +1294,7 @@ void build_pages() {
   std::ofstream PDFRES("th_resources.tex");
   if(!PDFRES) therror(("Can't write file th_resources.tex"));
 
-  PDFRES << "\\pdfminorversion=5%\n";
+  PDFRES << "\\pdfminorversion=7%\n";
 
   if (thcfg.reproducible_output) {
     PDFRES <<
@@ -1607,19 +1609,35 @@ R"(\pdfcompresslevel=9%
       "\\advance\\adjustedVS by \\overlap" << 
       "\\advance\\adjustedVS by \\overlap" << std::endl;
 
-    //calibration
-    //PAGEDEF.precision(10);
-    for (int i=0; i<9; i++) {
-      PAGEDEF << "\\calibrX{" << fmt::format("{}",thdouble(LAYOUT.calibration_local[i].x - MINX,10)) << "bp}\\tmpdimenX=\\tmpdimen" << std::endl;
-      PAGEDEF << "\\calibrY{" << fmt::format("{}",thdouble(LAYOUT.calibration_local[i].y - MINY,10)) << "bp}\\tmpdimenY=\\tmpdimen" << std::endl;
-    
-      PAGEDEF << "\\pdfcatalog { /thCalibrate" << i << 
-                 " (X=\\the\\tmpdimenX, Y=\\the\\tmpdimenY, L=" << fmt::format("{}",thdouble(LAYOUT.calibration_latlong[i].x,10)) <<
-                 ", F=" << fmt::format("{}",thdouble(LAYOUT.calibration_latlong[i].y,10)) << ")}" << std::endl;
+    // geospatial
+    if (LAYOUT.geospatial && thcfg.outcs != TTCS_LOCAL && thcfg.outcs != TTCS_UNKNOWN) {
+      std::list<int> ind = {0,5,7,2};
+      PAGEDEF << "\\dimtobp{\\adjustedHS}\\edef\\adjustedHSbp{\\tmpdef}" << std::endl;
+      PAGEDEF << "\\dimtobp{\\adjustedVS}\\edef\\adjustedVSbp{\\tmpdef}" << std::endl;
+      for (int i: ind) {
+        PAGEDEF << "\\calibrX{" << fmt::format("{}",thdouble(LAYOUT.calibration_local[i].x - MINX,10)) << "bp}\\tmpdimenX" << static_cast<char>('a'+i) << "=\\tmpdimen" << std::endl;
+        PAGEDEF << "\\calibrY{" << fmt::format("{}",thdouble(LAYOUT.calibration_local[i].y - MINY,10)) << "bp}\\tmpdimenY" << static_cast<char>('a'+i) << "=\\tmpdimen" << std::endl;
+      }
+      PAGEDEF << "\\edef\\tmppdfpageattr{/VP [<< /Type /Viewport /BBox [0 0 \\adjustedHSbp\\space \\adjustedVSbp] /Measure << /Type /Measure /Subtype /GEO /GPTS [" << std::endl;
+      for (int i: ind) {
+        PAGEDEF << fmt::format("{}",thdouble(LAYOUT.calibration_latlong[i].y,10)) << " " <<
+                   fmt::format("{}",thdouble(LAYOUT.calibration_latlong[i].x,10)) << " ";
+      }
+      PAGEDEF << "] /LPTS [";
+      for (int i: ind) {
+        PAGEDEF << "\\ratio{\\the\\tmpdimenX" << static_cast<char>('a'+i) << "}{\\adjustedHS} \\ratio{\\the\\tmpdimenY" << static_cast<char>('a'+i) << "}{\\adjustedVS} ";
+      }
+      PAGEDEF << "] " << std::endl;
+      PAGEDEF << "/GCS << /Type /PROJCS ";
+      if (thcfg.outcs > TTCS_EPSG && thcfg.outcs < TTCS_ESRI)
+        PAGEDEF << "/EPSG " << thcfg.outcs - TTCS_EPSG;
+      else {
+        PAGEDEF << "/WKT (" << thcs_get_wkt(thcs_get_params(thcfg.outcs)) << ")";
+      }
+      PAGEDEF << " >> >> >>]}" << std::endl;
+      PAGEDEF << "\\expandafter\\pdfpageattr\\expandafter{\\tmppdfpageattr}" << std::endl;
     }
-    PAGEDEF << "\\pdfcatalog { /thCalibrate (HS=\\the\\adjustedHS, VS=\\the\\adjustedVS, HD=" <<
-               fmt::format("{}",thdouble(LAYOUT.calibration_hdist,10)) << ")}";
-    //PAGEDEF.precision(2);
+    // geospatial end
 
     PAGEDEF << "\\tmpdimen=\\extraW\\advance\\tmpdimen by \\overlap" << std::endl;
     PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedX{\\tmpdef}%" << std::endl;

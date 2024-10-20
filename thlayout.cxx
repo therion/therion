@@ -235,6 +235,9 @@ thlayout::thlayout()
   this->def_layers = 0;
   this->layers = true;
 
+  this->def_geospatial = 0;
+  this->geospatial = true;
+
   this->def_grid = 0;
   this->grid = TT_LAYOUT_GRID_OFF;
   
@@ -885,6 +888,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->def_layers = 2;
       break;
 
+    case TT_LAYOUT_GEOSPATIAL:
+      sv = thmatch_token(args[0],thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow("invalid geospatial switch -- {}",args[0]);
+      this->geospatial = (sv == TT_TRUE);
+      this->def_geospatial = 2;
+      break;
+
     case TT_LAYOUT_MAP_HEADER_BG:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
@@ -1256,6 +1267,9 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_layers = %d;\n", this->def_layers);
   thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
+
+  thprintf("\tplayout->def_geospatial = %d;\n", this->def_geospatial);
+  thprintf("\tplayout->geospatial = %s;\n",(this->geospatial ? "true" : "false"));
 
   thprintf("\tplayout->def_map_header_bg = %d;\n", this->def_map_header_bg);
   thprintf("\tplayout->map_header_bg = %s;\n",(this->map_header_bg ? "true" : "false"));
@@ -2041,6 +2055,10 @@ void thlayout::process_copy() {
         this->layers = srcl->layers;
       endcopy
 
+      begcopy(def_geospatial)
+        this->geospatial = srcl->geospatial;
+      endcopy
+
       begcopy(def_map_header_bg)
         this->map_header_bg = srcl->map_header_bg;
       endcopy
@@ -2095,6 +2113,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * /*prj*/, double /*x_scale*/, double 
   LAYOUT.page_numbering = this->pgsnum;
   LAYOUT.transparency = this->transparency;
   LAYOUT.OCG = this->layers;
+  LAYOUT.geospatial = this->geospatial;
   LAYOUT.map_header_bg = this->map_header_bg;
   LAYOUT.transparent_map_bg = (this->color_map_bg.A < 1.0);
   //TODO

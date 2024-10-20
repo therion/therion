@@ -459,3 +459,13 @@ std::string thcs_get_label(std::string s) {
     proj_destroy(P);
     return res;
 }
+
+#include <iostream>
+std::string thcs_get_wkt(std::string s, bool multiline, PJ_WKT_TYPE wkttype) {
+    PJ* P;
+    th_init_proj(P, sanitize_crs(s));
+    const char *const options[] = {multiline ? "MULTILINE=YES" : "MULTILINE=NO", nullptr};
+    const std::string res = proj_as_wkt(PJ_DEFAULT_CTX, P, wkttype, options);
+    proj_destroy(P);
+    return res;
+}

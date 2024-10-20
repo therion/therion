@@ -285,6 +285,7 @@ available translations, see |thlang/texts.txt| file.
     colo[u]r <item> <colour>
     smooth-shading <off/quick>
     debug <on/all/first/second/scrap-names/station-names/off>
+    geospatial <on/off>
     doc-author <string>
     doc-keywords <string>
     doc-subject <string>
@@ -571,6 +572,13 @@ endlayout|
 
   {\it PDF related:}\Nobreak
 
+  * \NEW{6.3}|geospatial <on/off>| = enable/disable geospatial PDF features. When enabled,
+    compatible applications can use this information (e.g.\ Acrobat Reader for length measurements
+    and finding coordinates; GIS applications like GDAL\[Raster GDAL
+    tools like |gdal\_translate| work fine, vector tools like |ogr2ogr| should support
+    Therion maps from version 3.10. Note that QGIS uses GDAL library to import PDF data.]
+    and QGIS for importing and processing georeferenced data). This feature should be used
+    with |layers on| setting. (M; default: |on|)
   * |doc-author <string>| = set document author (M, A)
   * |doc-keywords <string>| = set document keywords (M, A)
   * |doc-subject <string>| = set document subject (M, A)

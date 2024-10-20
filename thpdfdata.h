@@ -107,7 +107,7 @@ struct layout {
          northarrow, scalebar, altitudebar, langstr,
          icc_profile_cmyk, icc_profile_rgb, icc_profile_gray;
   bool  excl_pages,title_pages,page_numbering,
-        transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg; 
+        transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg,geospatial;
   double hsize,vsize,overlap,
         hgridsize = 0.0, vgridsize = 0.0,
         hgridorigin, vgridorigin, gridrot = 0.0,
