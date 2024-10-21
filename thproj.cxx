@@ -460,7 +460,6 @@ std::string thcs_get_label(std::string s) {
     return res;
 }
 
-#include <iostream>
 std::string thcs_get_wkt(std::string s, bool multiline, PJ_WKT_TYPE wkttype) {
     PJ* P;
     th_init_proj(P, sanitize_crs(s));
