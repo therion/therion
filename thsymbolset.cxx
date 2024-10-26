@@ -1827,7 +1827,7 @@ void export_all_symbols()
     }
   }
   hf << "</table>\n";
-  hf << "</body></html>" << std::endl;
+  hf << "</body></html>\n";
   hf.close();
 }
 

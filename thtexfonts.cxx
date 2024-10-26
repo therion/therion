@@ -84,7 +84,7 @@ int encodings_new::get_enc_pos (int ch) {
       m_fon[ch] = v_fon.size()-1;
     }
   }
-//cout << "==FP== " << m_fon[style][ch] << std::endl;
+//cout << "==FP== " << m_fon[style][ch] << '\n';
   return m_fon[ch];
 }
 
@@ -106,17 +106,17 @@ void encodings_new::write_enc_files() {
     
     std::ofstream F(fname_enc.c_str());
     if (!F) therror(("could not write encoding file\n"));
-    F << "% LIGKERN uni002D uni002D =: uni2013 ; uni2013 uni002D =: uni2014 ;" << std::endl;
-    F << "% LIGKERN uni0066 uni0066 =: uniFB00 ; uni0066 uni006C =: uniFB02 ; uni0066 uni0069 =: uniFB01 ; uniFB00 uni0069 =: uniFB03 ; uniFB00 uni006C =: uniFB04 ;" << std::endl;
-    F << "/" << fname_enc << "[" << std::endl;
+    F << "% LIGKERN uni002D uni002D =: uni2013 ; uni2013 uni002D =: uni2014 ;\n";
+    F << "% LIGKERN uni0066 uni0066 =: uniFB00 ; uni0066 uni006C =: uniFB02 ; uni0066 uni0069 =: uniFB01 ; uniFB00 uni0069 =: uniFB03 ; uniFB00 uni006C =: uniFB04 ;\n";
+    F << "/" << fname_enc << "[\n";
     for (int k=0; k < 256; k++) {
-//cout << ccount << "** i:" << i << " j:" << j << " k:" << k << " "  << v_fon[i][k] << std::endl;
+//cout << ccount << "** i:" << i << " j:" << j << " k:" << k << " "  << v_fon[i][k] << '\n';
       if ((v_fon.size() <= ((unsigned) 256*j + k)) || (v_fon[256*j + k] == 0)) 
-        F << "/.notdef" << std::endl;
+        F << "/.notdef\n";
       else
-        F << "/uni" << std::setw(4) << std::setfill('0') << std::hex << std::noshowbase << std::uppercase << v_fon[256*j + k] << std::endl;
+        F << "/uni" << std::setw(4) << std::setfill('0') << std::hex << std::noshowbase << std::uppercase << v_fon[256*j + k] << '\n';
     }
-    F << "] def" << std::endl;
+    F << "] def\n";
     F.close();
 
     for (int i=0; i<5; i++) {
@@ -149,7 +149,7 @@ void encodings_new::write_enc_files() {
       G.close();
       std::ofstream H ("thfonts.map", std::ios::app); 
       if (!H) therror(("could not write font mapping data for pdfTeX\n"));
-      H << "\\pdfmapline{+" << s << "}" << std::endl;
+      H << "\\pdfmapline{+" << s << "}\n";
       H.close();
     }
   }
@@ -175,7 +175,8 @@ int get_enc_id(const char * enc) {
 }
 
 void print_tex_encodings (void) {
-  for (int i=0; i<max_enc; i++) std::cout << encodings[i] << std::endl;
+  for (int i=0; i<max_enc; i++) std::cout << encodings[i] << '\n';
+  std::cout << std::flush;
 }
 
 void init_encodings() {
@@ -635,72 +636,72 @@ int tex2uni(std::string font, int ch) {
 void print_fonts_setup() {
   std::ofstream P("th_enc.tex");  // included also in MetaPost
   if(!P) therror(("Can't write file th_enc.tex"));
-  P << "\\def\\rms{\\rm}" << std::endl;
-  P << "\\def\\its{\\it}" << std::endl;
-  P << "\\def\\bfs{\\bf}" << std::endl;
-  P << "\\def\\sss{\\ss}" << std::endl;
-  P << "\\def\\sis{\\si}" << std::endl;
+  P << "\\def\\rms{\\rm}\n";
+  P << "\\def\\its{\\it}\n";
+  P << "\\def\\bfs{\\bf}\n";
+  P << "\\def\\sss{\\ss}\n";
+  P << "\\def\\sis{\\si}\n";
 
 if (ENC_NEW.NFSS==0) {
-  P << "\\def\\fixaccent#1#2 {{\\setbox0\\hbox{#2}\\ifdim\\ht0=1ex\\accent#1 #2%" << std::endl;
-  P << "  \\else\\ooalign{\\unhbox0\\crcr\\hidewidth\\char#1\\hidewidth}\\fi}}" << std::endl;
+  P << "\\def\\fixaccent#1#2 {{\\setbox0\\hbox{#2}\\ifdim\\ht0=1ex\\accent#1 #2%\n";
+  P << "  \\else\\ooalign{\\unhbox0\\crcr\\hidewidth\\char#1\\hidewidth}\\fi}}\n";
 
-  P << "\\def\\size[#1]{%" << std::endl;
-  P << "  \\let\\prevstyle\\laststyle" << std::endl;
-  P << "  \\baselineskip#1pt" << std::endl;
-  P << "  \\baselineskip=1.2\\baselineskip" << std::endl;
+  P << "\\def\\size[#1]{%\n";
+  P << "  \\let\\prevstyle\\laststyle\n";
+  P << "  \\baselineskip#1pt\n";
+  P << "  \\baselineskip=1.2\\baselineskip\n";
 
   std::string firstfont = "\\thf" + u2str(FONTS.begin()->id+1);
 
   P << "  \\def\\rm{";
   for (std::list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++)
     P << "\\font\\thf" << u2str(J->id+1) << "=" << J->rm << " at#1pt";
-  P << "\\let\\laststyle\\rms" << firstfont << "}%" << std::endl;
+  P << "\\let\\laststyle\\rms" << firstfont << "}%\n";
 
   P << "  \\def\\it{";
   for (std::list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++)
     P << "\\font\\thf" << u2str(J->id+1) << "=" << J->it << " at#1pt";
-  P << "\\let\\laststyle\\its" << firstfont << "}%" << std::endl;
+  P << "\\let\\laststyle\\its" << firstfont << "}%\n";
 
   P << "  \\def\\bf{";
   for (std::list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++)
     P << "\\font\\thf" << u2str(J->id+1) << "=" << J->bf << " at#1pt";
-  P << "\\let\\laststyle\\bfs" << firstfont << "}%" << std::endl;
+  P << "\\let\\laststyle\\bfs" << firstfont << "}%\n";
 
   P << "  \\def\\ss{";
   for (std::list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++)
     P << "\\font\\thf" << u2str(J->id+1) << "=" << J->ss << " at#1pt";
-  P << "\\let\\laststyle\\sss" << firstfont << "}%" << std::endl;
+  P << "\\let\\laststyle\\sss" << firstfont << "}%\n";
 
   P << "  \\def\\si{";
   for (std::list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++)
     P << "\\font\\thf" << u2str(J->id+1) << "=" << J->si << " at#1pt";
-  P << "\\let\\laststyle\\sis" << firstfont << "}%" << std::endl;
+  P << "\\let\\laststyle\\sis" << firstfont << "}%\n";
   
-  P << "  \\prevstyle" << std::endl;
+  P << "  \\prevstyle\n";
   P << "}";
-  P << "\\let\\laststyle\\rms" << std::endl;
-  P << "\\size[10]\\ss" << std::endl;
-  P << "\\def\\mainfont{" << firstfont << "}" << std::endl;
+  P << "\\let\\laststyle\\rms\n";
+  P << "\\size[10]\\ss\n";
+  P << "\\def\\mainfont{" << firstfont << "}\n";
 } else {
   std::string styledef[5] = {"rm", "it", "bf", "ss", "si"};
-  P << "\\def\\size[#1]{%" << std::endl;
-  P << "  \\let\\prevstyle\\laststyle" << std::endl;
-  P << "  \\baselineskip#1pt" << std::endl;
-  P << "  \\baselineskip=1.2\\baselineskip" << std::endl;
+  P << "\\def\\size[#1]{%\n";
+  P << "  \\let\\prevstyle\\laststyle\n";
+  P << "  \\baselineskip#1pt\n";
+  P << "  \\baselineskip=1.2\\baselineskip\n";
   
   for (int j=0; j<5; j++) {
     P << "  \\def\\" << styledef[j] << "{";
     for (int i = 0; i < ENC_NEW.get_enc_count(); i++) 
       P << "\\font\\thf" << u2str(i+1) << "=th" << styledef[j] << 
       std::setw(2) << std::setfill('0') << i << " at#1pt";
-    P << "\\let\\laststyle\\" << styledef[j] << "s\\thfa}%" << std::endl;
+    P << "\\let\\laststyle\\" << styledef[j] << "s\\thfa}%\n";
     }
-  P << "  \\prevstyle" << std::endl;
+  P << "  \\prevstyle\n";
   P << "}";
-  P << "\\let\\laststyle\\rms" << std::endl;
-  P << "\\size[10]\\ss" << std::endl;
-  P << "\\def\\mainfont{\\thfa}" << std::endl;
+  P << "\\let\\laststyle\\rms\n";
+  P << "\\size[10]\\ss\n";
+  P << "\\def\\mainfont{\\thfa}\n";
 }  
 
   // needs to be defined here as this file (th_enc.tex) is included by MP before processing of the labels

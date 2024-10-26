@@ -110,10 +110,10 @@ std::string proj_cache::log() {
     if (transf_cache.size() == 0) return "";
     std::ostringstream s;
     s << std::setprecision(3) << std::fixed;
-    s << std::endl << "############# CRS transformations chosen by PROJ ###############" << std::endl;
+    s << "\n############# CRS transformations chosen by PROJ ###############\n";
     if (thcs_cfg.bbox.size() == 4)
       s << "  Area of Use (AoU): (" << thcs_cfg.bbox[0] << ", " << thcs_cfg.bbox[1] << ") (" <<
-                                     thcs_cfg.bbox[2] << ", " << thcs_cfg.bbox[3] << ")" << std::endl;
+                                     thcs_cfg.bbox[2] << ", " << thcs_cfg.bbox[3] << ")\n";
     for (const auto & i : transf_cache) {
       PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
       s << "  [" << thcs_get_name(std::get<0>(i.first)) <<
@@ -121,9 +121,9 @@ std::string proj_cache::log() {
               "] AoU: [" << (std::get<2>(i.first).size()>0 ? "yes" : "no") <<
               "] transformation: [" << pinfo.description <<
               "] definition: [" << pinfo.definition <<
-              "] accuracy: [" << pinfo.accuracy << " m]" << std::endl;
+              "] accuracy: [" << pinfo.accuracy << " m]\n";
     }
-    s << "########## end of CRS transformations chosen by PROJ ###########" << std::endl;
+    s << "########## end of CRS transformations chosen by PROJ ###########\n";
     return s.str();
 }
 

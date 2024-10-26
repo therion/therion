@@ -259,7 +259,7 @@ void MP_text::print_svg(std::ofstream & F, CGS & gstate) {
        " " << x << " " << y << ")\">";
   for (unsigned int i = 0; i < text.size(); i++)
     F << "&#x" << std::hex << tex2uni(font, int(text[i])) << std::dec << ";";
-  F << "</text>" << std::endl;
+  F << "</text>\n";
 }
 
 void MP_text::print_pdf(std::ofstream & F) const {
@@ -346,7 +346,7 @@ void MP_path::print_svg(std::ofstream & F, CGS & gstate, std::string unique_pref
   if (fillstroke == MP_clip) {
     CGS::clippathID++;
     gstate.clippathdepth.insert(std::make_pair(CGS::clippathID,0));
-    F << "<clipPath id=\"clip_" << CGS::clippathID << "_" << unique_prefix << "\">" << std::endl << "  ";
+    F << "<clipPath id=\"clip_" << CGS::clippathID << "_" << unique_prefix << "\">\n" << "  ";
   }
   F << "<path ";
   if (fillstroke != MP_clip) {
@@ -404,9 +404,9 @@ void MP_path::print_svg(std::ofstream & F, CGS & gstate, std::string unique_pref
     }
   }
   if (closed) F << "Z";
-  F << "\" />" << std::endl;
-  if (fillstroke == MP_clip) F << "</clipPath>" << std::endl << 
-     "<g clip-path=\"url(#clip_" << CGS::clippathID << "_" << unique_prefix << ")\">" << std::endl;
+  F << "\" />\n";
+  if (fillstroke == MP_clip) F << "</clipPath>\n" << 
+     "<g clip-path=\"url(#clip_" << CGS::clippathID << "_" << unique_prefix << ")\">\n";
 }
 
 void MP_path::print_pdf(std::ofstream & F) const {
@@ -640,14 +640,14 @@ void MP_data::print_svg (std::ofstream & F, std::string unique_prefix) {
             for (std::map<int,int>::iterator I = gstate.clippathdepth.begin();
                                         I!= gstate.clippathdepth.end(); I++) 
               I->second++;
-            F << "<g>" << std::endl;
+            F << "<g>\n";
             GSTATE_stack.push_back(gstate);
             break;
           case MP_grestore:
             for (std::map<int,int>::iterator I = gstate.clippathdepth.begin();
                                         I!= gstate.clippathdepth.end(); I++) {
               I->second--;
-              if (I->second < 0) F << "</g>" << std::endl;
+              if (I->second < 0) F << "</g>\n";
             }
             // nemoze ist do predch. cyklu, lebo zmazanie smernika
             // urobi chaos
@@ -661,7 +661,7 @@ void MP_data::print_svg (std::ofstream & F, std::string unique_prefix) {
             gstate = GSTATE_stack.back();
             gstate.clippathdepth = tmpclip;
             GSTATE_stack.pop_back();
-            F << "</g>" << std::endl;
+            F << "</g>\n";
             break;
 //          case MP_transp_on:
 //            
@@ -725,8 +725,8 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
       "cm\" viewBox=\"" << llx << " " << -ury << 
       " " << urx-llx << " " << ury-lly << 
       "\" xmlns=\"http://www.w3.org/2000/svg\" " << 
-      "xmlns:xlink=\"http://www.w3.org/1999/xlink\">" << std::endl;
-  F << "<defs>" << std::endl;
+      "xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
+  F << "<defs>\n";
   //patterns
   if (!patterns.empty()) {
     for (std::list<pattern>::iterator J = PATTERNLIST.begin();
@@ -739,15 +739,15 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
             "\" patternTransform=\"matrix(" << J->xx << " " << J->xy << " " 
                                             << J->yx << " " << J->yy << " " 
                                             << J->x <<  " " << J->y  << 
-            ")\">" << std::endl;
+            ")\">\n";
         F << "<g transform=\"translate(" 
                       << J->llx1-J->llx << " " << J->lly1-J->lly << ")\"" <<
                        " fill=\"black\" stroke=\"black\">\n";
                        // currentColor doesn't work to inherit the color of the symbol;
                        // context-fill/stroke doesn't work in patterns
         J->data.MP.print_svg(F,unique_prefix);
-        F << "</g>" << std::endl;
-        F << "</pattern>" << std::endl;
+        F << "</g>\n";
+        F << "</pattern>\n";
       }
     }
   }
@@ -771,19 +771,19 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
     }
   }
   // clip to initial viewBox
-  F << "<clipPath id=\"clip_viewBox_" << unique_prefix << "\">" << std::endl;
+  F << "<clipPath id=\"clip_viewBox_" << unique_prefix << "\">\n";
   F << "<path d=\"M" << llx << " " << lly << 
       "L" << urx << " " << lly << 
       "L" << urx << " " << ury << 
-      "L" << llx << " " << ury << "z\" />" << std::endl;
-  F << "</clipPath>" << std::endl;
+      "L" << llx << " " << ury << "z\" />\n";
+  F << "</clipPath>\n";
   
-  F << "</defs>" << std::endl;
+  F << "</defs>\n";
   // --- end of definitions ---
-  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox_" << unique_prefix << ")\">" << std::endl;
+  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox_" << unique_prefix << ")\">\n";
   MP.print_svg(F,unique_prefix);
-  F << "</g>" << std::endl;
-  F << "</svg>" << std::endl;
+  F << "</g>\n";
+  F << "</svg>\n";
 }
 
 void converted_data::print_pdf(std::ofstream & F, std::string name) const {
@@ -800,7 +800,7 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) const {
   MP.print_pdf(F);
 
   if (mode > 0) {
-    F << "}}\\wd\\xxx=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp" << std::endl;
+    F << "}}\\wd\\xxx=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp\n";
     F << "\\immediate\\pdfxform";
     if (mode == 32 && LAYOUT.transparency) {  // transparency group for the altitude bar
       F << " attr{/Group \\the\\attrid\\space 0 R}";
@@ -849,7 +849,7 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) const {
     else if (31 <= mode && mode <= 32) outname = tex_Wname(name);
     else if (mode > 100 && mode < 110) outname = tex_Wname(name);
     else therror(("invalid conversion mode"));
-    F << "\\xxx\n" << tex_set_ref(outname,"\\pdflastxform") << std::endl;
+    F << "\\xxx\n" << tex_set_ref(outname,"\\pdflastxform") << '\n';
   }
 }
 
@@ -1500,21 +1500,21 @@ void thgraphics2pdf() {
 
   std::ofstream F("th_fontdef.tex");
   if(!F) therror((IOerr("th_fontdef.tex")));
-  F << "% FONTS:" << std::endl;
+  F << "% FONTS:\n";
   F.setf(std::ios::fixed, std::ios::floatfield);
   F.precision(2);
   for (std::map<std::string,std::string>::iterator I = ALL_FONTS.begin();
                                     I != ALL_FONTS.end(); I++) {
-    F << "\\font\\" << tex_Fname((*I).second) << "=" << (*I).first << std::endl;
+    F << "\\font\\" << tex_Fname((*I).second) << "=" << (*I).first << '\n';
 
   }
-  F << "\\begingroup" << std::endl           // make special characters normal
-    << "\\catcode`\\^^@=12\\catcode`\\^^?=12\\catcode`\\{=12" << std::endl
-    << "\\catcode`\\}=12\\catcode`\\$=12\\catcode`\\&=12" << std::endl
-    << "\\catcode`\\#=12\\catcode`\\_=12\\catcode`\\~=12" << std::endl
-    << "\\catcode`\\%=12" << std::endl
-    << "\\catcode`\\^^L=12\\catcode`\\^^A=12\\catcode`\\^^K=12\\catcode`\\^^I=12" << std::endl
-    << "\\catcode`\\^^M=12" << std::endl;   // na tomto riadku ma tex este stare catcode konca riadku,
+  F << "\\begingroup\n"           // make special characters normal
+    << "\\catcode`\\^^@=12\\catcode`\\^^?=12\\catcode`\\{=12\n"
+    << "\\catcode`\\}=12\\catcode`\\$=12\\catcode`\\&=12\n"
+    << "\\catcode`\\#=12\\catcode`\\_=12\\catcode`\\~=12\n"
+    << "\\catcode`\\%=12\n"
+    << "\\catcode`\\^^L=12\\catcode`\\^^A=12\\catcode`\\^^K=12\\catcode`\\^^I=12\n"
+    << "\\catcode`\\^^M=12\n";   // na tomto riadku ma tex este stare catcode konca riadku,
                                        // vsetko nasledovne musi byt v jednom riadku
   std::set<std::string> fontset;
   std::string s;
@@ -1536,9 +1536,9 @@ void thgraphics2pdf() {
     fontset.insert(s);
   }
   for (auto & i: fontset) F << i;   // print the fonts sorted
-  F << "\\endgroup" << std::endl;
+  F << "\\endgroup\n";
 
-  F << "% PATTERNS:" << std::endl;
+  F << "% PATTERNS:\n";
   for (auto &patt: PATTERNLIST) {
       auto I = ALL_PATTERNS.find(patt.name);
       if (I == ALL_PATTERNS.end()) continue;
@@ -1555,7 +1555,7 @@ void thgraphics2pdf() {
       patt.data.print_pdf(F,patt.name);
       F << "}" << tex_set_ref(tex_Pname(ALL_PATTERNS[patt.name]), "\\pdflastobj") << "\n";
   }
-  if (GRADIENTS.size() > 0) F << "% GRADIENTS:" << std::endl;
+  if (GRADIENTS.size() > 0) F << "% GRADIENTS:\n";
   for (auto &g: GRADIENTS) {
       F << "\\immediate\\pdfobj {<< /Type /Pattern /PatternType 2 /Shading <<\n";
       F << fmt::format("/ShadingType {:d} /ColorSpace /Device{:s}\n", g.second.type == gradient_lin ? 2 : 3, g.second.c0.model == colormodel::grey ? "Gray" : (g.second.c0.model == colormodel::cmyk ? "CMYK" : "RGB"));
@@ -1606,17 +1606,17 @@ void thgraphics2pdf() {
   int rows = (int) ceil(double(legendbox_num) / columns);
   int pos = 0;
 
-  LEG << "\\legendcolumns" << columns << std::endl;
+  LEG << "\\legendcolumns" << columns << '\n';
 
   for (int i = 0; i < rows; i++) {
-    LEG << "\\line{%" << std::endl;
+    LEG << "\\line{%\n";
     for (int j = 0; j < columns; j++) {
       pos = i + j * rows;
       if (pos < legendbox_num)
         LEG << "  \\legendsymbolbox{" << tex_get_ref(tex_Lname(legend_arr_n[pos])) <<
-               "}{" << utf2tex(legend_arr_d[pos]) << "}\\hskip10pt" << std::endl;
+               "}{" << utf2tex(legend_arr_d[pos]) << "}\\hskip10pt\n";
     }
-    LEG << "\\hss}" << std::endl;
+    LEG << "\\hss}\n";
   }
 
   LEG.close();
