@@ -413,7 +413,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   bool * isexp;
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -777,7 +777,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 #endif 
 
   FILE * pltf;
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;

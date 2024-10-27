@@ -427,7 +427,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
   FILE * out;
   const char * fnm = this->get_output("cave.kml");
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;
@@ -620,7 +620,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
 
   FILE * out;
   const char * fnm = this->get_output("cave.bbox");
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;

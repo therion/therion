@@ -395,7 +395,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   FILE * pltf;
   char station_name[14];
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -677,7 +677,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
       
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -926,7 +926,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
       
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -1878,7 +1878,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
 
   FILE * out;
   const char * fnm = this->get_output("cave.kml");
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;

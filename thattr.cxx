@@ -530,7 +530,7 @@ void thattr::export_txt(const char * fname, int /*encoding*/) // TODO unused par
 
   this->analyze_fields();
 
-  f = fopen(fname, "w");
+  f = fopen(fname, "wb");
   if (f == NULL) {
     thwarning(("unable to open file for output -- %s", fname));
     return;
@@ -592,7 +592,7 @@ void thattr::export_kml(const char * fname, const char * name_field, const char 
     return;
   }
   
-  f = fopen(fname, "w");
+  f = fopen(fname, "wb");
   if (f == NULL) {
     thwarning(("unable to open file for output -- %s", fname));
     return;
@@ -667,7 +667,7 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
 
   this->analyze_fields();
 
-  f = fopen(fname, "w");
+  f = fopen(fname, "wb");
   if (f == NULL) {
     thwarning(("unable to open file for output -- %s", fname));
     return;
