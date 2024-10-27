@@ -32,7 +32,7 @@ jobs:
       - run: cmake --build build -t test
       - name: Run samples
         if: matrix.os == 'ubuntu-24.04'
-        run: cmake --build build -t samples-verify-crc
+        run: cmake --build build -t samples-verify-crc -- -j 4
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04' && always()
         with:
@@ -65,7 +65,7 @@ jobs:
           sudo tlmgr update --self
           sudo tlmgr install collection-langcyrillic
           sudo tlmgr install collection-langczechslovak
-          cmake --build build -t samples-verify-crc
+          cmake --build build -t samples-verify-crc -- -j 4
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -102,7 +102,7 @@ jobs:
           echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
           mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' build/innosetup.ini),proj-datumgrid}/. ../proj-lib
-          cmake --build build -t samples-verify-crc
+          cmake --build build -t samples-verify-crc -- -j 4
       - uses: actions/upload-artifact@v4
         if: always()
         with:
