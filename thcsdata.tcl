@@ -133,6 +133,9 @@ set proj_transformations {
   {{ijtsk03 epsg:8353} {jtsk epsg:5513} {+proj=pipeline +step +inv +proj=krovak +lat_0=49.5 +lon_0=24.8333333333333 +alpha=30.2881397527778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +step +proj=hgridshift +grids=sk_gku_JTSK03_to_JTSK.tif +step +proj=krovak +axis=wsu +lat_0=49.5 +lon_0=24.8333333333333 +alpha=30.2881397527778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel}}
 }
 
+# remove comments from the list
+set proj_transformations [regsub -all {#.*?\n} $proj_transformations \n]
+
 set osgb1 {
 	{S T}
 	{N O}
