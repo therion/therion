@@ -428,7 +428,7 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   std::string bgcol;
   std::string unique_prefix = fname;
 
-  std::ofstream F(fname);
+  std::ofstream F(fname, std::ios_base::binary);
   F.setf(std::ios::fixed, std::ios::floatfield);  // dolezite pre velke suradnice
   F.precision(3);
   
