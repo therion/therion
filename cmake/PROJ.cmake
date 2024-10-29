@@ -22,7 +22,7 @@ endif()
 string(FIND ${PROJ_VERSION} "." MVER_SEP)
 string(SUBSTRING ${PROJ_VERSION} 0 ${MVER_SEP} PROJ_MVER)
 set(PROJ_UNSUPPORTED 7.0.0)
-if (PROJ_VERSION IN_LIST PROJ_UNSUPPORTED OR PROJ_VERSION VERSION_LESS 6.2.1) # check if proj version is unsupported
+if (PROJ_VERSION IN_LIST PROJ_UNSUPPORTED OR PROJ_VERSION VERSION_LESS 6.3.1) # check if proj version is unsupported
     message(FATAL_ERROR "Unsupported proj version: ${PROJ_VERSION}")
 endif()
 target_compile_definitions(proj-interface INTERFACE PROJ_VER=${PROJ_MVER})
