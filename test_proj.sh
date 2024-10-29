@@ -56,7 +56,7 @@ do
     curl $URL-$ver.tar.gz | tar -xz --directory=$TMPDIR
     cd $TMPDIR/proj-$ver
     if (( `echo $ver | sed 's/\..*//'` < 8 )); then # pkgconfig supported with cmake since 8.0.0
-      ./configure --prefix=$PREFIX/proj-$ver; make -j$(nproc); make install
+      CC=gcc-12 CXX=g++-12 ./configure --prefix=$PREFIX/proj-$ver; make -j$(nproc); make install
     else
       mkdir build; cd build
       cmake -DCMAKE_INSTALL_PREFIX=$PREFIX/proj-$ver -DBUILD_APPS=OFF -DBUILD_TESTING=OFF ..; make -j$(nproc); make install
