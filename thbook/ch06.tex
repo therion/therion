@@ -409,9 +409,12 @@ supported initialization commands follow.
   Using this option you can change any default therion text translation in output.
   For list of therion texts and available translations, see |thlang/texts.txt| file.
 
-* |cs-def <id> <proj4def>|\NEW{5.4}  %[other options]
+* |cs-def <id> <proj_def>|\NEW{5.4}  %[other options]
 
-  Define a new coordinate system |<id>| using Proj4 syntax.
+  Define a new coordinate system |<id>| using Proj syntax.
+  It is recommended to specify coordinate systems
+  using the EPSG codes directly (e.g.~EPSG:4258),
+  or using Well\discretionary{-}{-}{-}known text (WKT) definition.
 
 * |cs-trans <cs1> <cs2> <proj-pipeline>|\NEW{6.1.0}
 
@@ -431,29 +434,11 @@ supported initialization commands follow.
   |proj-missing-grid| option is set to |download| (otherwise it prints an error message
   and stops).
 
-  This option is ignored if Therion is using PROJ v6 or older.
+  This option is ignored if Therion is using PROJ v6.
 
   Example: {\rightskip 0pt plus 3cm\catcode`\=12
   |cs-trans [jtsk epsg:5513] [etrs34 epsg:25834] "+proj=pipeline +step +inv +proj=krovak +axis=wsu +lat_0=49.5 +lon_0=24.8333333333333 +alpha=30.2881397527778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +step +inv +proj=hgridshift +grids=sk_gku_JTSK03_to_JTSK.tif +step +proj=push +v_3 +step +proj=cart +ellps=bessel +step +proj=helmert +x=485.021 +y=169.465 +z=483.839 +rx=-7.786342 +ry=-4.397554 +rz=-4.102655 +s=0 +convention=coordinate_frame +step +inv +proj=cart +ellps=GRS80 +step +proj=pop +v_3 +step +proj=utm +zone=34 +ellps=GRS80"|
   \par}
-
-
-* |proj-auto <on/off>|\NEW{5.5}
-
-  \penalty50
-  If set |on|, let PROJ v6+ decide which transformation between coordinate systems
-  is optimal.\[In this case
-  the function |proj\_create\_crs\_to\_crs()| is used. Otherwise Therion calls
-  |proj\_create()| function in the PROJ library.] The selected transformations
-  are listed in the |log| file. It is recommended to specify coordinate systems
-  using the EPSG codes directly (e.g.~EPSG:4258).
-
-  If set |off| or if Therion uses PROJ older than v6, the source coordinates are
-  first transformed to |wgs-84|, then from |wgs-84| to the target coordinate
-  system. This might result in a suboptimal precision.
-
-  The default setting is |on|.\NEW{6.1.0} This option is ignored for those pairs of coordinate
-  systems which have a transformation pipeline defined (see |cs-trans|).
 
 * |proj-missing-grid <ignore/warn/fail/cache/download>|\NEW{5.5.1}
 
@@ -493,8 +478,7 @@ supported initialization commands follow.
   lets Proj to download the missing grids from the
   Internet. The grids are used in {\it subsequent} runs (in any mode).
 
-  The default setting is |download|.\NEW{6.1.0} The option |proj-missing-grid| is ignored if
-  |proj-auto| is |off| or Proj v5 or older is used.
+  The default setting is |download|.\NEW{6.1.0}\
   If Proj v6 is used by Therion, the settings
   |cache| and |download| are equivalent to |fail|, as the network
   connectivity is a feature of Proj v7 and later.

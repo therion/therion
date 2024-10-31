@@ -46,7 +46,6 @@ std::string thcs_get_wkt(std::string s, bool=false, PJ_WKT_TYPE=PJ_WKT2_2019);
 struct thcs_config {
   thcs_config();
   std::vector<double> bbox;
-  bool proj_auto;
   int proj_auto_grid;
 };
 

@@ -126,13 +126,13 @@ const thcsdata * thcs_get_data(int cs) {
 	rv.prjspec = "";
 	rv.swap = false;
 	if (cs > TTCS_ESRI) {
-	  std::snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
+	  std::snprintf(params, sizeof(params), "esri:%d", cs - TTCS_ESRI);
         len = thcs_get_label(params).copy(prjname, 199, 0);
         prjname[len] = '\0';
 		return &rv;
 	}
 	if (cs > TTCS_EPSG) {
-	  std::snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
+	  std::snprintf(params, sizeof(params), "epsg:%d", cs - TTCS_EPSG);
         len = thcs_get_label(params).copy(prjname, 199, 0);
         prjname[len] = '\0';
 		return &rv;

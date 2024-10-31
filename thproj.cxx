@@ -47,7 +47,6 @@
 #endif
 
 thcs_config::thcs_config() {
-  proj_auto = true;
   proj_auto_grid = GRID_DOWNLOAD;
 }
 
@@ -140,7 +139,6 @@ proj_cache cache;
   std::regex reg_gridtif(R"(\.tiff?$)");
 
   void th_init_proj(PJ * &P, std::string s) {
-    proj_context_use_proj4_init_rules(PJ_DEFAULT_CTX, true);
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
 #if PROJ_VER >= 7
     // try to download the missing grids if proj_create() fails
@@ -325,13 +323,6 @@ proj_cache cache;
 
   void thcs2cs(int si, int ti,
               double a, double b, double c, double &x, double &y, double &z) {
-
-    //  Proj (at least 5.2.0) doesn't accept custom proj strings in
-    //  proj_create_crs_to_crs(); just +init=epsg:NNN and similar init strings
-    //  PJ* P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, s.c_str(), t.c_str(), NULL);
-
-    //  Proj v.6 supports them
-
     std::string s = thcs_get_params(si);
     std::string t = thcs_get_params(ti);
 
@@ -355,7 +346,7 @@ proj_cache cache;
       precise_transf[{si,ti}] = transf;
     } else
 #endif
-    if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
+    {  // let PROJ find the best transformation
       th_init_proj_auto(P, si, ti);
       if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
         undo_radians = 180.0 / M_PI;
@@ -363,8 +354,6 @@ proj_cache cache;
       if (thcs_islatlong(t) && !proj_angular_output(P, PJ_FWD)) {
         redo_radians = M_PI / 180.0;
       }
-    } else {
-      th_init_proj(P, (std::string("+proj=pipeline +step +inv ") + s + " +step " + t).c_str());
     }
     PJ_COORD res;
     res = proj_trans(P, PJ_FWD, proj_coord(a*undo_radians, b*undo_radians, c, 0));

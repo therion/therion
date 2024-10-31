@@ -80,21 +80,10 @@ TEST_CASE( "projections: UTM zones", "[proj]" ) {
 }
 
 TEST_CASE( "projections: EPSG label", "[proj]" ) {
-    CHECK(thcs_get_label("+init=epsg:32634") == "WGS 84 / UTM zone 34N");
+    CHECK(thcs_get_label("epsg:32634") == "WGS 84 / UTM zone 34N");
 }
 
-
-TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_JTSK03, TTCS_UTM34N,
-            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_utm_e, 0.01));
-    CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
-}
-
-TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
+TEST_CASE( "projections: JTSK03 -- utm", "[proj]" ) {
     thcs2cs(TTCS_JTSK03, TTCS_ETRS34,
             p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
@@ -102,7 +91,7 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
     CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 }
 
-TEST_CASE( "projections: JTSK03 -- utm, auto=false, NaN z coordinate", "[proj]" ) {
+TEST_CASE( "projections: JTSK03 -- utm, NaN z coordinate", "[proj]" ) {
     thcs2cs(TTCS_JTSK03, TTCS_ETRS34,
             p1_jtsk_y, p1_jtsk_x, undefined, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
@@ -121,17 +110,7 @@ TEST_CASE( "projections: +krovak +czech -- utm, auto=true", "[proj]" ) {
     CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 } */
 
-TEST_CASE( "projections: iJTSK03 -- utm, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_IJTSK03, TTCS_UTM34N,
-            -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_utm_e, 0.01));
-    CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
-}
-
-TEST_CASE( "projections: iJTSK03 -- utm, auto=false", "[proj]" ) {
+TEST_CASE( "projections: iJTSK03 -- utm", "[proj]" ) {
     thcs2cs(TTCS_IJTSK03, TTCS_UTM34N,
             -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
@@ -146,82 +125,28 @@ TEST_CASE( "projections: latlong -- JTSK03", "[proj]" ) {
     CHECK(coord_equal(y, p1_jtsk_x, 0.05));
 }
 
-TEST_CASE( "projections: JTSK03 -- EPSG_4417, auto=false", "[proj]" ) {
+TEST_CASE( "projections: JTSK03 -- EPSG_4417", "[proj]" ) {
     thcs2cs(TTCS_JTSK03, TTCS_EPSG + 4417,
         p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
-    // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
-    // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
-}
-
-/*
-#include <iostream>
-TEST_CASE( "projections: JTSK03 -- EPSG_4417, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_JTSK03, TTCS_EPSG + 4417,
-        p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-#if PROJ_VER < 6
     CHECK(coord_equal(x, p1_s42_y, 1.3));
     CHECK(coord_equal(y, p1_s42_x, 0.05));
-#else
-    // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
-    // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
-cout << x << " " << y << " " << p1_s42_y << " " << p1_s42_x << endl;
-#endif
 }
-*/
 
-TEST_CASE( "projections: iJTSK03 -- EPSG_4417, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
+TEST_CASE( "projections: iJTSK03 -- EPSG_4417", "[proj]" ) {
     thcs2cs(TTCS_IJTSK03, TTCS_EPSG + 4417,
         -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
-    // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
+    CHECK(coord_equal(x, p1_s42_y, 1.3));
+    CHECK(coord_equal(y, p1_s42_x, 0.05));
 }
 
-TEST_CASE( "UTM34N -- EPSG_4417 auto=true", "[proj]" ) {    // UTM34N -> S42
-    thcs_cfg.proj_auto = true;
+TEST_CASE( "UTM34N -- EPSG_4417", "[proj]" ) {    // UTM34N -> S42
     thcs2cs(TTCS_UTM34N, TTCS_EPSG + 4417,
         p1_utm_e, p1_utm_n, p1_utm_h, x, y, z);
-    thcs_cfg.proj_auto = false;
     CHECK(coord_equal(x, p1_s42_y, 1.3));
     CHECK(coord_equal(y, p1_s42_x, 0.05));
 }
 
-TEST_CASE( "EPSG_32634 -- EPSG_4417 auto=true", "[proj]" ) {    // UTM34N -> S42
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_EPSG + 32634, TTCS_EPSG + 4417,
-        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
-}
-
-TEST_CASE( "EPSG_32634 -- EPSG_4417 auto=false", "[proj]" ) {   // UTM34N -> S42
-    thcs2cs(TTCS_EPSG + 32634, TTCS_EPSG + 4417,
-        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z);
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
-}
-
-
-TEST_CASE( "EPSG_4326 -- EPSG_32634 auto=true", "[proj]" ) {  // LATLON -> UTM34N
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_EPSG + 4326, TTCS_EPSG + 32634,
-        p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_utm_e, 0.4));
-    CHECK(coord_equal(y, p1_utm_n, 0.02));
-}
-
-TEST_CASE( "EPSG_4326 -- EPSG_32634 auto=false", "[proj]" ) {  // LATLON -> UTM34N
+TEST_CASE( "EPSG_4326 -- EPSG_32634", "[proj]" ) {  // LATLON -> UTM34N
     thcs2cs(TTCS_EPSG + 4326, TTCS_EPSG + 32634,
         p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.4));
