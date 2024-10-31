@@ -52,24 +52,24 @@ thcs_config::thcs_config() {
 
 thcs_config thcs_cfg;
 
-  std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
-  std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
-  std::regex reg_type(R"(\+type\s*=\s*crs\b)");
-  std::regex reg_space(R"(\s+)");
-  std::regex reg_trim(R"(^\s*(.*\S)\s*$)");
-  std::regex reg_czech(R"(\s+\+czech\b)");
+std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
+std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
+std::regex reg_type(R"(\+type\s*=\s*crs\b)");
+std::regex reg_space(R"(\s+)");
+std::regex reg_trim(R"(^\s*(.*\S)\s*$)");
+std::regex reg_czech(R"(\s+\+czech\b)");
 
-  std::string sanitize_crs(std::string s) {
-    s = std::regex_replace(s, reg_trim, "$1");
-    s = std::regex_replace(s, reg_space, " ");
-    if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
-      s = std::regex_replace(s, reg_czech, " +axis=wsu");
-    }
-    if (std::regex_match(s,reg_epsg_ok)) return s;
-    else if (std::regex_match(s,reg_init)) return regex_replace(s, reg_init, "$1:$2");   // get epsg:nnnn format
-    else if (!std::regex_search(s,reg_type)) return s + " +type=crs";                    // add +type=crs to explicitly declare CRS
-    else return s;
+std::string sanitize_crs(std::string s) {
+  s = std::regex_replace(s, reg_trim, "$1");
+  s = std::regex_replace(s, reg_space, " ");
+  if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
+    s = std::regex_replace(s, reg_czech, " +axis=wsu");
   }
+  if (std::regex_match(s,reg_epsg_ok)) return s;
+  else if (std::regex_match(s,reg_init)) return regex_replace(s, reg_init, "$1:$2");   // get epsg:nnnn format
+  else if (!std::regex_search(s,reg_type)) return s + " +type=crs";                    // add +type=crs to explicitly declare CRS
+  else return s;
+}
 
 class proj_cache {
     std::map<std::tuple<int,int,std::vector<double> >, PJ*> transf_cache;
@@ -132,280 +132,279 @@ proj_cache::~proj_cache() {
 
 proj_cache cache;
 
-  std::map<std::pair<int,int>, std::string> precise_transf;
+std::map<std::pair<int,int>, std::string> precise_transf;
 
-  std::regex reg_gridlist(R"(\+(nad|geoid|xy_|z_|)grids\s*=\s*(\S+)\b)");
-  std::regex reg_gridfile(R"(@?([^,]+))");
-  std::regex reg_gridtif(R"(\.tiff?$)");
+std::regex reg_gridlist(R"(\+(nad|geoid|xy_|z_|)grids\s*=\s*(\S+)\b)");
+std::regex reg_gridfile(R"(@?([^,]+))");
+std::regex reg_gridtif(R"(\.tiff?$)");
 
-  void th_init_proj(PJ * &P, std::string s) {
-    P = proj_create(PJ_DEFAULT_CTX, s.c_str());
+void th_init_proj(PJ * &P, std::string s) {
+  P = proj_create(PJ_DEFAULT_CTX, s.c_str());
 #if PROJ_VER >= 7
-    // try to download the missing grids if proj_create() fails
-    if (P==0 && thcs_cfg.proj_auto_grid == GRID_DOWNLOAD && proj_errno(P) ==
+  // try to download the missing grids if proj_create() fails
+  if (P==0 && thcs_cfg.proj_auto_grid == GRID_DOWNLOAD && proj_errno(P) ==
 #if PROJ_VER >= 8
-      PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID
+    PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID
 #else
-      -38 // PJD_ERR_FAILED_TO_LOAD_GRID is not exposed
+    -38 // PJD_ERR_FAILED_TO_LOAD_GRID is not exposed
 #endif
-       ) {
-        thprintf("trying to recover from the error listed above...\n");
-        std::smatch m1, m2;
-        std::set<std::string> grids;
-        // find all grid lists
-        for (auto i1 = std::sregex_iterator(s.begin(), s.end(), reg_gridlist);
-             i1 != std::sregex_iterator(); i1++) {
-          m1 = *i1;
-          std::string s2 = m1.str(2);
-          // split comma separated list of grids
-          for (auto i2 = std::sregex_iterator(s2.begin(), s2.end(), reg_gridfile);
-               i2 != std::sregex_iterator(); i2++) {
-            m2 = *i2;
-            if (std::regex_search(m2.str(1),reg_gridtif)) grids.insert(m2.str(1));
-          }
-      }
-
-      // download all tif grids from the Proj CDN
-      if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
-        proj_destroy(P);
-        therror(("couldn't enable network access for Proj"));
-      }
-      for (auto & f: grids) {
-#if PROJ_VER >= 8  // supported since 7.1.0
-        thprintf("downloading the grid %s from %s into %s...\n", f.c_str(), proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
-                                                                 proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
-#else
-        thprintf("downloading the grid %s...\n", f.c_str());
-#endif
-        if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
-          proj_destroy(P);
-          therror(("couldn't download the grid"));
+      ) {
+      thprintf("trying to recover from the error listed above...\n");
+      std::smatch m1, m2;
+      std::set<std::string> grids;
+      // find all grid lists
+      for (auto i1 = std::sregex_iterator(s.begin(), s.end(), reg_gridlist);
+            i1 != std::sregex_iterator(); i1++) {
+        m1 = *i1;
+        std::string s2 = m1.str(2);
+        // split comma separated list of grids
+        for (auto i2 = std::sregex_iterator(s2.begin(), s2.end(), reg_gridfile);
+              i2 != std::sregex_iterator(); i2++) {
+          m2 = *i2;
+          if (std::regex_search(m2.str(1),reg_gridtif)) grids.insert(m2.str(1));
         }
-      }
-      if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
-        proj_destroy(P);
-        therror(("couldn't disable network access for Proj"));
-      }
-      thprintf("done\n");
-
-      // try once again after downloading the grids
-      P = proj_create(PJ_DEFAULT_CTX, s.c_str());
     }
-#endif  // PROJ_VER >= 7
-    if (P==0) {
-      std::ostringstream u;
-      u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << "): " << s;
+
+    // download all tif grids from the Proj CDN
+    if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
       proj_destroy(P);
-      therror((u.str().c_str()));
+      therror(("couldn't enable network access for Proj"));
     }
-  }
-
-  void th_init_proj_auto(PJ * &P, int si, int ti) {
-
-    // check the cache first
-    if ((P = cache.get(si,ti,thcs_cfg.bbox)) != nullptr) return;
-
-    std::string s = thcs_get_params(si);
-    std::string t = thcs_get_params(ti);
-
-    if
-#if PROJ_VER >= 7
-    (thcs_cfg.proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
-      if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
-        therror(("couldn't enable network access for Proj"));
-      }
-      proj_grid_cache_set_enable(PJ_DEFAULT_CTX, 1);
-      thprintf("network access for Proj library enabled...\n");
-    } else if
+    for (auto & f: grids) {
+#if PROJ_VER >= 8  // supported since 7.1.0
+      thprintf("downloading the grid %s from %s into %s...\n", f.c_str(), proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+                                                                proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
+#else
+      thprintf("downloading the grid %s...\n", f.c_str());
 #endif
-    (thcs_cfg.proj_auto_grid == GRID_WARN || thcs_cfg.proj_auto_grid == GRID_FAIL || thcs_cfg.proj_auto_grid == GRID_DOWNLOAD) {
-      // start of missing grid detection
-      PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
-      // allow PROJ to find more potential transformations
-      proj_operation_factory_context_set_spatial_criterion(PJ_DEFAULT_CTX, operation_factory_context, PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION);
-      // set area of interest
-      if (thcs_cfg.bbox.size() == 4) {
-        proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context,
-            thcs_cfg.bbox[0], thcs_cfg.bbox[1], thcs_cfg.bbox[2], thcs_cfg.bbox[3]);
+      if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
+        proj_destroy(P);
+        therror(("couldn't download the grid"));
       }
-      // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
-      proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
-      PJ* P_1 = proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str());
-      PJ* P_2 = proj_create(PJ_DEFAULT_CTX, sanitize_crs(t).c_str());
-      PJ_OBJ_LIST *ops = proj_create_operations(PJ_DEFAULT_CTX, P_1, P_2, operation_factory_context);
-      proj_destroy(P_1);
-      proj_destroy(P_2);
-      proj_operation_factory_context_destroy(operation_factory_context);
-      const char * short_name, * url;
-      if (proj_list_get_count(ops) < 1) {
-        proj_list_destroy(ops);
-        therror(("no usable coordinate transformation found"));
-      }
-      for (int i = 0; i < 1; i++) {   // let's look just at the first operation instead of up to proj_list_get_count(ops)
-        PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
-  //      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
-  //        therror(("no reasonably precise coordinate transformation found"));
-        if (!proj_coordoperation_is_instantiable(PJ_DEFAULT_CTX, P_tmp)) {
-          for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
-            proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j,
-                &short_name, nullptr, nullptr, &url, nullptr, nullptr, nullptr);
-            std::string s_tmp = fmt::format("missing PROJ transformation grid '{}'; you can download it from {} and install it to a location where PROJ finds it", short_name, url);
-            switch (thcs_cfg.proj_auto_grid) {
-              case GRID_WARN:
-                thwarning((s_tmp.c_str()));
-                break;
-              case GRID_FAIL:
+    }
+    if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
+      proj_destroy(P);
+      therror(("couldn't disable network access for Proj"));
+    }
+    thprintf("done\n");
+
+    // try once again after downloading the grids
+    P = proj_create(PJ_DEFAULT_CTX, s.c_str());
+  }
+#endif  // PROJ_VER >= 7
+  if (P==0) {
+    std::ostringstream u;
+    u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << "): " << s;
+    proj_destroy(P);
+    therror((u.str().c_str()));
+  }
+}
+
+void th_init_proj_auto(PJ * &P, int si, int ti) {
+
+  // check the cache first
+  if ((P = cache.get(si,ti,thcs_cfg.bbox)) != nullptr) return;
+
+  std::string s = thcs_get_params(si);
+  std::string t = thcs_get_params(ti);
+
+  if
+#if PROJ_VER >= 7
+  (thcs_cfg.proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
+    if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
+      therror(("couldn't enable network access for Proj"));
+    }
+    proj_grid_cache_set_enable(PJ_DEFAULT_CTX, 1);
+    thprintf("network access for Proj library enabled...\n");
+  } else if
+#endif
+  (thcs_cfg.proj_auto_grid == GRID_WARN || thcs_cfg.proj_auto_grid == GRID_FAIL || thcs_cfg.proj_auto_grid == GRID_DOWNLOAD) {
+    // start of missing grid detection
+    PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
+    // allow PROJ to find more potential transformations
+    proj_operation_factory_context_set_spatial_criterion(PJ_DEFAULT_CTX, operation_factory_context, PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION);
+    // set area of interest
+    if (thcs_cfg.bbox.size() == 4) {
+      proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context,
+          thcs_cfg.bbox[0], thcs_cfg.bbox[1], thcs_cfg.bbox[2], thcs_cfg.bbox[3]);
+    }
+    // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
+    proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
+    PJ* P_1 = proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str());
+    PJ* P_2 = proj_create(PJ_DEFAULT_CTX, sanitize_crs(t).c_str());
+    PJ_OBJ_LIST *ops = proj_create_operations(PJ_DEFAULT_CTX, P_1, P_2, operation_factory_context);
+    proj_destroy(P_1);
+    proj_destroy(P_2);
+    proj_operation_factory_context_destroy(operation_factory_context);
+    const char * short_name, * url;
+    if (proj_list_get_count(ops) < 1) {
+      proj_list_destroy(ops);
+      therror(("no usable coordinate transformation found"));
+    }
+    for (int i = 0; i < 1; i++) {   // let's look just at the first operation instead of up to proj_list_get_count(ops)
+      PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
+//      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
+//        therror(("no reasonably precise coordinate transformation found"));
+      if (!proj_coordoperation_is_instantiable(PJ_DEFAULT_CTX, P_tmp)) {
+        for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
+          proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j,
+              &short_name, nullptr, nullptr, &url, nullptr, nullptr, nullptr);
+          std::string s_tmp = fmt::format("missing PROJ transformation grid '{}'; you can download it from {} and install it to a location where PROJ finds it", short_name, url);
+          switch (thcs_cfg.proj_auto_grid) {
+            case GRID_WARN:
+              thwarning((s_tmp.c_str()));
+              break;
+            case GRID_FAIL:
+              proj_destroy(P_tmp);
+              proj_list_destroy(ops);
+              therror((s_tmp.c_str()));
+              break;
+#if PROJ_VER >= 7
+            case GRID_DOWNLOAD:
+              if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
                 proj_destroy(P_tmp);
                 proj_list_destroy(ops);
-                therror((s_tmp.c_str()));
-                break;
-#if PROJ_VER >= 7
-              case GRID_DOWNLOAD:
-                if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
-                  proj_destroy(P_tmp);
-                  proj_list_destroy(ops);
-                  therror(("couldn't enable network access for Proj"));
-                }
+                therror(("couldn't enable network access for Proj"));
+              }
 #if PROJ_VER >= 8  // supported since 7.1.0
-                thprintf("downloading the grid %s from %s into %s...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
-                                                                         proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
+              thprintf("downloading the grid %s from %s into %s...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+                                                                        proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
 #else
-                thprintf("downloading the grid %s... ", url);
+              thprintf("downloading the grid %s... ", url);
 #endif
-                if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
-                  proj_destroy(P_tmp);
-                  proj_list_destroy(ops);
-                  therror(("couldn't download the grid"));
-                }
-                if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
-                  proj_destroy(P_tmp);
-                  proj_list_destroy(ops);
-                  therror(("couldn't disable network access for Proj"));
-                }
-                thprintf("done\n");
-                break;
+              if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
+                proj_destroy(P_tmp);
+                proj_list_destroy(ops);
+                therror(("couldn't download the grid"));
+              }
+              if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
+                proj_destroy(P_tmp);
+                proj_list_destroy(ops);
+                therror(("couldn't disable network access for Proj"));
+              }
+              thprintf("done\n");
+              break;
 #endif
-            }
           }
         }
-        proj_destroy(P_tmp);
       }
-      proj_list_destroy(ops);
-      // end of missing grid handling
+      proj_destroy(P_tmp);
     }
-
-    PJ_AREA* PA = proj_area_create();
-    if (thcs_cfg.bbox.size() == 4) {
-      proj_area_set_bbox(PA, thcs_cfg.bbox[0], thcs_cfg.bbox[1], thcs_cfg.bbox[2], thcs_cfg.bbox[3]);
-    }
-    P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), PA);
-    proj_area_destroy(PA);
-    if (P==0) {
-      std::ostringstream u;
-      u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << ")";
-      proj_destroy(P);
-      therror((u.str().c_str()));
-    }
-    PJ* P_for_GIS = proj_normalize_for_visualization(PJ_DEFAULT_CTX, P);
-    if( 0 == P_for_GIS )  {
-      std::ostringstream u;
-      u << "PROJ library: " << proj_errno(P_for_GIS) << " (" << proj_errno_string(proj_errno(P_for_GIS)) << ")";
-      proj_destroy(P);
-      proj_destroy(P_for_GIS);
-      therror((u.str().c_str()));
-    }
-    proj_destroy(P);
-    P = P_for_GIS;
-
-    if (!cache.add(si,ti,thcs_cfg.bbox,P))
-      therror(("could not add projection to the cache, it's already there -- should not happen"));
+    proj_list_destroy(ops);
+    // end of missing grid handling
   }
 
-  void thcs2cs(int si, int ti,
-              double a, double b, double c, double &x, double &y, double &z) {
-    std::string s = thcs_get_params(si);
-    std::string t = thcs_get_params(ti);
+  PJ_AREA* PA = proj_area_create();
+  if (thcs_cfg.bbox.size() == 4) {
+    proj_area_set_bbox(PA, thcs_cfg.bbox[0], thcs_cfg.bbox[1], thcs_cfg.bbox[2], thcs_cfg.bbox[3]);
+  }
+  P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), PA);
+  proj_area_destroy(PA);
+  if (P==0) {
+    std::ostringstream u;
+    u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << ")";
+    proj_destroy(P);
+    therror((u.str().c_str()));
+  }
+  PJ* P_for_GIS = proj_normalize_for_visualization(PJ_DEFAULT_CTX, P);
+  if( 0 == P_for_GIS )  {
+    std::ostringstream u;
+    u << "PROJ library: " << proj_errno(P_for_GIS) << " (" << proj_errno_string(proj_errno(P_for_GIS)) << ")";
+    proj_destroy(P);
+    proj_destroy(P_for_GIS);
+    therror((u.str().c_str()));
+  }
+  proj_destroy(P);
+  P = P_for_GIS;
 
-    double undo_radians = 1.0, redo_radians = 1.0;
-    double c_orig = c;
-    if (std::isnan(c)) c = 0.0;
-    PJ* P = NULL;
+  if (!cache.add(si,ti,thcs_cfg.bbox,P))
+    therror(("could not add projection to the cache, it's already there -- should not happen"));
+}
+
+void thcs2cs(int si, int ti,
+            double a, double b, double c, double &x, double &y, double &z) {
+  std::string s = thcs_get_params(si);
+  std::string t = thcs_get_params(ti);
+
+  double undo_radians = 1.0, redo_radians = 1.0;
+  double c_orig = c;
+  if (std::isnan(c)) c = 0.0;
+  PJ* P = NULL;
 
 // set CA bundle path; supported since proj 7.2.0
 #ifdef THWIN32
 #if PROJ_VER >= 8
-    std::string ca_path = fmt::format("{}\\lib\\cacert.pem", thcfg.install_path.get_buffer());
-    proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
+  std::string ca_path = fmt::format("{}\\lib\\cacert.pem", thcfg.install_path.get_buffer());
+  proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
 #endif
 #endif
 
 #if PROJ_VER >= 7         // grids in .tif format supported since v7
-    std::string transf;
-    if ((transf = thcs_get_trans(si, ti)) != "") {  // use the preconfigured precise transformation
-      th_init_proj(P, transf.c_str());
-      precise_transf[{si,ti}] = transf;
-    } else
+  std::string transf;
+  if ((transf = thcs_get_trans(si, ti)) != "") {  // use the preconfigured precise transformation
+    th_init_proj(P, transf.c_str());
+    precise_transf[{si,ti}] = transf;
+  } else
 #endif
-    {  // let PROJ find the best transformation
-      th_init_proj_auto(P, si, ti);
-      if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
-        undo_radians = 180.0 / M_PI;
-      }
-      if (thcs_islatlong(t) && !proj_angular_output(P, PJ_FWD)) {
-        redo_radians = M_PI / 180.0;
-      }
+  {  // let PROJ find the best transformation
+    th_init_proj_auto(P, si, ti);
+    if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
+      undo_radians = 180.0 / M_PI;
     }
-    PJ_COORD res;
-    res = proj_trans(P, PJ_FWD, proj_coord(a*undo_radians, b*undo_radians, c, 0));
-    x = res.xyz.x*redo_radians;
-    y = res.xyz.y*redo_radians;
+    if (thcs_islatlong(t) && !proj_angular_output(P, PJ_FWD)) {
+      redo_radians = M_PI / 180.0;
+    }
+  }
+  PJ_COORD res;
+  res = proj_trans(P, PJ_FWD, proj_coord(a*undo_radians, b*undo_radians, c, 0));
+  x = res.xyz.x*redo_radians;
+  y = res.xyz.y*redo_radians;
 //    z = res.xyz.z;         // don't convert heights
-    z = c_orig;
-    if (!cache.contains(P))   // cached Ps are destroyed in proj_cache's destructor
-      proj_destroy(P);
-  }
-
-  signed int thcs2zone(int s, double a, double b, double c) {
-    double x, y, z;
-    thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
-    return (int) (x*180/M_PI+180)/6 + 1;
-  }
-
-  double thcsconverg(int s, double a, double b) {
-    double c = 0, x, y, z, x2, y2, z2;
-    if (thcs_islatlong(thcs_get_params(s)))
-      therror(("can't determine meridian convergence for lat-long systems"));
-    thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
-    y += 1e-6;
-    thcs2cs(TTCS_EPSG + 4326,s,x,y,z,x2,y2,z2);
-    return atan2(x2-a,y2-b)/M_PI*180;
-  }
-
-  bool thcs_islatlong(std::string s) {
-    PJ* P;
-    th_init_proj(P, sanitize_crs(s).c_str());
-    int type = proj_get_type(P);
-    bool angular = (type == PJ_TYPE_GEOGRAPHIC_CRS || type == PJ_TYPE_GEOGRAPHIC_2D_CRS || type == PJ_TYPE_GEOGRAPHIC_3D_CRS);
+  z = c_orig;
+  if (!cache.contains(P))   // cached Ps are destroyed in proj_cache's destructor
     proj_destroy(P);
-    return angular;
-  }
+}
 
-  bool thcs_check(std::string s) {
-    PJ* P;
-    th_init_proj(P, s);
-    proj_destroy(P);
-    return true;
-  }
+signed int thcs2zone(int s, double a, double b, double c) {
+  double x, y, z;
+  thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
+  return (int) (x*180/M_PI+180)/6 + 1;
+}
 
-  std::string thcs_get_proj_version() {
-    PJ_INFO info = proj_info();
-    return std::string(info.version);
-  }
+double thcsconverg(int s, double a, double b) {
+  double c = 0, x, y, z, x2, y2, z2;
+  if (thcs_islatlong(thcs_get_params(s)))
+    therror(("can't determine meridian convergence for lat-long systems"));
+  thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
+  y += 1e-6;
+  thcs2cs(TTCS_EPSG + 4326,s,x,y,z,x2,y2,z2);
+  return atan2(x2-a,y2-b)/M_PI*180;
+}
 
-  std::string thcs_get_proj_version_headers() {
-    return std::to_string(PROJ_VERSION_MAJOR)+"."+std::to_string(PROJ_VERSION_MINOR)+"."+std::to_string(PROJ_VERSION_PATCH);
-  }
+bool thcs_islatlong(std::string s) {
+  PJ* P;
+  th_init_proj(P, sanitize_crs(s).c_str());
+  int type = proj_get_type(P);
+  bool angular = (type == PJ_TYPE_GEOGRAPHIC_CRS || type == PJ_TYPE_GEOGRAPHIC_2D_CRS || type == PJ_TYPE_GEOGRAPHIC_3D_CRS);
+  proj_destroy(P);
+  return angular;
+}
 
+bool thcs_check(std::string s) {
+  PJ* P;
+  th_init_proj(P, s);
+  proj_destroy(P);
+  return true;
+}
+
+std::string thcs_get_proj_version() {
+  PJ_INFO info = proj_info();
+  return std::string(info.version);
+}
+
+std::string thcs_get_proj_version_headers() {
+  return std::to_string(PROJ_VERSION_MAJOR)+"."+std::to_string(PROJ_VERSION_MINOR)+"."+std::to_string(PROJ_VERSION_PATCH);
+}
 
 std::map<std::string,int> grid_map {
   {"ignore", GRID_IGNORE},
@@ -414,6 +413,7 @@ std::map<std::string,int> grid_map {
   {"cache", GRID_CACHE},
   {"download", GRID_DOWNLOAD},
 };
+
 int thcs_parse_gridhandling(const char * s) {
   auto i = grid_map.find(std::string(s));
   if (i != grid_map.end()) {
