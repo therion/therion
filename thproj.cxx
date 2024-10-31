@@ -46,18 +46,23 @@
 #define M_PI       3.14159265358979323846
 #endif
 
-thcs_config::thcs_config() {
-  proj_auto_grid = GRID_DOWNLOAD;
-}
-
-thcs_config thcs_cfg;
-
 std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
 std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
 std::regex reg_type(R"(\+type\s*=\s*crs\b)");
 std::regex reg_space(R"(\s+)");
 std::regex reg_trim(R"(^\s*(.*\S)\s*$)");
 std::regex reg_czech(R"(\s+\+czech\b)");
+std::regex reg_gridlist(R"(\+(nad|geoid|xy_|z_|)grids\s*=\s*(\S+)\b)");
+std::regex reg_gridfile(R"(@?([^,]+))");
+std::regex reg_gridtif(R"(\.tiff?$)");
+
+std::map<std::pair<int,int>, std::string> precise_transf;
+
+thcs_config::thcs_config() {
+  proj_auto_grid = GRID_DOWNLOAD;
+}
+
+thcs_config thcs_cfg;
 
 std::string sanitize_crs(std::string s) {
   s = std::regex_replace(s, reg_trim, "$1");
@@ -131,12 +136,6 @@ proj_cache::~proj_cache() {
 }
 
 proj_cache cache;
-
-std::map<std::pair<int,int>, std::string> precise_transf;
-
-std::regex reg_gridlist(R"(\+(nad|geoid|xy_|z_|)grids\s*=\s*(\S+)\b)");
-std::regex reg_gridfile(R"(@?([^,]+))");
-std::regex reg_gridtif(R"(\.tiff?$)");
 
 void th_init_proj(PJ * &P, std::string s) {
   P = proj_create(PJ_DEFAULT_CTX, s.c_str());
