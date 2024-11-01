@@ -117,24 +117,18 @@ const thcsdata * thcs_get_data(int cs) {
 	static thcsdata rv;
 	static char params[200];
 	static char prjname[200];
-	size_t len;
 	rv.dms = false;
 	rv.output = true;
 	rv.params = params;
 	rv.prjname = prjname;
 	strcpy(prjname, thcs_get_name(cs));
-	rv.prjspec = "";
 	rv.swap = false;
 	if (cs > TTCS_ESRI) {
 	  std::snprintf(params, sizeof(params), "esri:%d", cs - TTCS_ESRI);
-        len = thcs_get_label(params).copy(prjname, 199, 0);
-        prjname[len] = '\0';
 		return &rv;
 	}
 	if (cs > TTCS_EPSG) {
 	  std::snprintf(params, sizeof(params), "epsg:%d", cs - TTCS_EPSG);
-        len = thcs_get_label(params).copy(prjname, 199, 0);
-        prjname[len] = '\0';
 		return &rv;
 	}
   if (cs >= 0) return &(thcsdata_table[cs]);
@@ -148,7 +142,6 @@ void thcs_add_cs(char * id, char * proj4id)
   if (!th_is_extkeyword(id)) ththrow("invalid cs identifier -- {}", id);
   thcs_check(proj4id);
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
-  pd->prjspec = "";
   pd->params = thdb.strstore(proj4id);
   pd->prjname = thdb.strstore(id);
   pd->dms = thcs_islatlong(proj4id);

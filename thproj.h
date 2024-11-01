@@ -40,8 +40,8 @@ void thcs_log_transf_used();
 int thcs_parse_gridhandling(const char *);
 std::string thcs_get_proj_version();
 std::string thcs_get_proj_version_headers();
-std::string thcs_get_label(std::string s);
-std::string thcs_get_wkt(std::string s, bool=false, PJ_WKT_TYPE=PJ_WKT2_2019);
+std::string thcs_get_label(int);
+std::string thcs_get_wkt(int, bool=false, PJ_WKT_TYPE=PJ_WKT2_2019);
 
 struct thcs_config {
   thcs_config();

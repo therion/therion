@@ -439,18 +439,22 @@ void thcs_log_transf_used() {
   thlog.printf(cache.log().c_str());
 }
 
-std::string thcs_get_label(std::string s) {
+std::string thcs_get_label(int i) {
+    if (i <= TTCS_EPSG) {
+      const std::string s(thcs_get_data(i)->prjname);
+      if (s != "") return s;
+    }
     PJ* P;
-    th_init_proj(P, sanitize_crs(s));
+    th_init_proj(P, sanitize_crs(thcs_get_params(i)));
     PJ_PROJ_INFO pinfo = proj_pj_info(P);
     const std::string res(pinfo.description);
     proj_destroy(P);
     return res;
 }
 
-std::string thcs_get_wkt(std::string s, bool multiline, PJ_WKT_TYPE wkttype) {
+std::string thcs_get_wkt(int i, bool multiline, PJ_WKT_TYPE wkttype) {
     PJ* P;
-    th_init_proj(P, sanitize_crs(s));
+    th_init_proj(P, sanitize_crs(thcs_get_params(i)));
     const char *const options[] = {multiline ? "MULTILINE=YES" : "MULTILINE=NO", nullptr};
     const std::string res = proj_as_wkt(PJ_DEFAULT_CTX, P, wkttype, options);
     proj_destroy(P);

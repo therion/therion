@@ -1632,7 +1632,7 @@ R"(\pdfcompresslevel=9%
       if (thcfg.outcs > TTCS_EPSG && thcfg.outcs < TTCS_ESRI)
         PAGEDEF << "/EPSG " << thcfg.outcs - TTCS_EPSG;
       else {
-        PAGEDEF << "/WKT (" << thcs_get_wkt(thcs_get_params(thcfg.outcs)) << ")";
+        PAGEDEF << "/WKT (" << thcs_get_wkt(thcfg.outcs) << ")";
       }
       PAGEDEF << " >> >> >>]}\n";
       PAGEDEF << "\\expandafter\\pdfpageattr\\expandafter{\\tmppdfpageattr}\n";

@@ -79,8 +79,16 @@ TEST_CASE( "projections: UTM zones", "[proj]" ) {
     CHECK(thcs2zone(TTCS_JTSK03, 509063.963, 1303089.823,0)==33);
 }
 
-TEST_CASE( "projections: EPSG label", "[proj]" ) {
-    CHECK(thcs_get_label("epsg:32634") == "WGS 84 / UTM zone 34N");
+TEST_CASE( "projections: EPSG label (generated)", "[proj]" ) {
+    CHECK(thcs_get_label(TTCS_EPSG + 32634) == "WGS 84 / UTM zone 34N");
+}
+
+TEST_CASE( "projections: custom label (defined)", "[proj]" ) {
+    CHECK(thcs_get_label(TTCS_OSGB_ST) == "OSGB:ST");
+}
+
+TEST_CASE( "projections: custom label (generated)", "[proj]" ) {
+    CHECK(thcs_get_label(TTCS_LAT_LONG) == "WGS 84");
 }
 
 TEST_CASE( "projections: JTSK03 -- utm", "[proj]" ) {

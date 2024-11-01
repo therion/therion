@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "thcs.h"
+#include "thproj.h"
 #include "therion.h"
 #include <filesystem>
 
@@ -89,12 +90,14 @@ void thexpshpf::close()
         enc = this->m_xshp->m_expmodel->encoding;
     }
     this->m_attributes.export_dbf(dbfname.c_str(), enc);
-    if ((thcfg.outcs != TTCS_LOCAL) && (strlen(thcs_get_data(thcfg.outcs)->prjspec) > 0)) {
+    if ((thcfg.outcs != TTCS_LOCAL)) {
       FILE * prjf;
       std::string prjname(this->m_fpath);
       prjname += ".prj";
-      prjf = fopen(prjname.c_str(), "w");
-      fprintf(prjf, "%s", thcs_get_data(thcfg.outcs)->prjspec);
+      prjf = fopen(prjname.c_str(), "wb");
+      // none of PJ_WKT2_* is recognized by ogrinfo as of GDAL 3.9.3
+      // see also https://github.com/qgis/QGIS/issues/34007#issuecomment-579525653
+      fprintf(prjf, "%s\n", thcs_get_wkt(thcfg.outcs, true, PJ_WKT1_ESRI).c_str());
       fclose(prjf);
     }
   }

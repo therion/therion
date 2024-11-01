@@ -37,6 +37,7 @@
 #include "thdb1d.h"
 #include "thconfig.h"
 #include "thcs.h"
+#include "thproj.h"
 #include "thdb2dmi.h"
 #include "thdatabase.h"
 #include <vector>
@@ -457,7 +458,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 	  fprintf(f,"\\gridconv={N/A}\n");
   } else {
 	  fprintf(f,"\\outcscode={%s}\n",utf2tex(thcs_get_name(thcfg.outcs)).c_str());
-	  fprintf(f,"\\outcsname={%s}\n",utf2tex(thcs_get_data(thcfg.outcs)->prjname).c_str());
+	  fprintf(f,"\\outcsname={%s}\n",utf2tex(thcs_get_label(thcfg.outcs)).c_str());
 	  double md;
 	  thcfg.get_outcs_mag_decl(cy, md);
 	  fprintf(f,"\\magdecl={%.2f}\n", md);
