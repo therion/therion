@@ -740,10 +740,20 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
 
 
 static void fprint_quoted_string(FILE * stream, const char * text) {
-  if (!strchr(text, '"')) {
-    fprintf(stream, "\"%s\"", text);
-  } else {
-    fprintf(stream, "[%s]", text);
+  while (auto q = strchr(text, '"')) {
+    fprintf(stream, "\"%.*s\"", int(q - text), text);
+    text = q + 1;
+  }
+  fprintf(stream, "\"%s\"", text);
+}
+
+static void fprint_scale_option(FILE * pltf, th2ddataobject * obj) {
+  switch (obj->scale) {
+    case TT_2DOBJ_SCALE_XS: fprintf(pltf, " -scale xs"); break;
+    case TT_2DOBJ_SCALE_S: fprintf(pltf, " -scale s"); break;
+    case TT_2DOBJ_SCALE_L: fprintf(pltf, " -scale l"); break;
+    case TT_2DOBJ_SCALE_XL: fprintf(pltf, " -scale xl"); break;
+    case TT_2DOBJ_SCALE_NUMERIC: fprintf(pltf, " -scale %f", obj->scale_numeric); break;
   }
 }
 
@@ -925,14 +935,14 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               thpoint * pt = dynamic_cast<thpoint*>(so);
               const char * typestr = thmatch_string(pt->type,thtt_point_types);
               fprintf(pltf,"  point %.2f %.2f %s", tf(pt->point->xt, pt->point->yt), typestr);
-              if (pt->subtype != TT_POINT_SUBTYPE_UNKNOWN) {
-                switch (pt->type) {
-                  case TT_POINT_TYPE_U:
-                    fprintf(pltf, ":%s", pt->m_subtype_str);
-                    break;
-                  default:
+              switch (pt->type) {
+                case TT_POINT_TYPE_U:
+                  fprintf(pltf, ":%s", pt->m_subtype_str);
+                  break;
+                default:
+                  if (pt->subtype != TT_POINT_SUBTYPE_UNKNOWN) {
                     fprintf(pltf, ":%s", thmatch_string(pt->subtype, thtt_point_subtypes));
-                }
+                  }
               }
               if (pt->type == TT_POINT_TYPE_STATION) {
                 if (pt->station_name.id != 0) {
@@ -959,13 +969,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                 case TT_2DOBJ_PLACE_BOTTOM: fprintf(pltf, " -place bottom"); break;
                 case TT_2DOBJ_PLACE_TOP: fprintf(pltf, " -place top"); break;
               }
-              switch (pt->scale) {
-                case TT_2DOBJ_SCALE_XS: fprintf(pltf, " -scale xs"); break;
-                case TT_2DOBJ_SCALE_S: fprintf(pltf, " -scale s"); break;
-                case TT_2DOBJ_SCALE_L: fprintf(pltf, " -scale l"); break;
-                case TT_2DOBJ_SCALE_XL: fprintf(pltf, " -scale xl"); break;
-                case TT_2DOBJ_SCALE_NUMERIC: fprintf(pltf, " -scale %f", pt->scale_numeric); break;
-              }
+              fprint_scale_option(pltf, pt);
               if (pt->text) {
                 // attention: pt->text is reinterpret_cast<>'ed for some point types!
                 switch (pt->type) {
@@ -1111,6 +1115,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               if (ln->text) {
                 fprintf(pltf, " -text ");
                 fprint_quoted_string(pltf, ln->text);
+                fprint_scale_option(pltf, ln);
               }
               fprintf(pltf,"\n");
               thdb2dlp * lpt = ln->first_point;
@@ -1155,6 +1160,11 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                 fprintf(pltf," -id %s%s%s", objname(ar));
               }
               fprintf(pltf,"\n");
+
+              for (auto const * bln = ar->first_line; bln != nullptr; bln = bln->next_line) {
+                fprintf(pltf, "    %s\n", bln->name.name);
+              }
+
               fprintf(pltf,"  endarea\n\n");
             }
             break;
