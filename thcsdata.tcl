@@ -155,7 +155,7 @@ foreach al $osgb1 {
 		foreach bl $osgb2 {
 			set x $xx
 			foreach b $bl {
-				lappend proj_specs [list "OSGB:$a$b" {output} "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=[expr $x * 100000] +y_0=[expr $y * 100000] +ellps=airy +datum=OSGB36 +units=m +no_defs" "OSGB:$a$b"]
+				lappend proj_specs [list "OSGB:$a$b" {output} "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=[expr $x * 100000] +y_0=[expr $y * 100000] +ellps=airy +nadgrids=OSTN15_NTv2_OSGBtoETRS.gsb +datum=OSGB36 +units=m +no_defs" "OSGB:$a$b"]
 				set x [expr $x - 1]
 			}
 			set y [expr $y - 1]
