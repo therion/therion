@@ -44,6 +44,28 @@
 struct thsst {
   std::string name, fullname;
   thsurvey * survey = {};  
+
+  bool has_survey_ancestor(thsurvey const * const survey) const {
+    thassert(survey);
+    for (auto sptr = this->survey; sptr; sptr = sptr->fsptr) {
+      if (sptr->id == survey->id)
+        return true;
+    }
+    return false;
+  }
+
+  std::string get_name_in_survey(thsurvey const * const survey) const {
+    thassert(survey);
+    std::string name_in_survey = this->name;
+    const char * delim = "@";
+    for (auto sptr = this->survey; sptr && sptr->id != survey->id;
+         sptr = sptr->fsptr) {
+      name_in_survey += delim;
+      name_in_survey += sptr->name;
+      delim = ".";
+    }
+    return name_in_survey;
+  }
 };
 
 
@@ -366,6 +388,7 @@ const char * thimport::station_name(const char * sn, const char separator, struc
 }
 
 struct thimg_shot {
+  thsurvey * survey = nullptr;
   double fx = {}, fy = {}, fz = {}, tx = {}, ty = {}, tz = {};
   long flags = {};
 };
@@ -390,9 +413,46 @@ bool operator < (const thimg_stpos & p1,
   return false;
 }
 
+/**
+ * Remove filter prefix from name. If filter does not match, return NULL.
+ */
+static char * get_filtered_name(char * stnm, const char * filter,
+                                size_t filterl, char separator) {
+  if (filterl > 0) {
+    if (strncmp(stnm, filter, filterl) != 0) {
+      return nullptr;
+    }
+    stnm = &stnm[filterl];
+    while ((*stnm != 0) && (*stnm == separator)) {
+      stnm++;
+    }
+  }
+  return stnm;
+}
+
+/**
+ * Add an EQUATE command for the given stations.
+ */
+static void set_equate(thimport * imp,
+                       thsst const & station1,
+                       thsst const & station2) {
+  // need copies because set_data_equate modifies the buffers
+  std::string copies[] = {
+    station1.fullname,
+    station2.fullname,
+  };
+  char * args[] = {
+    copies[0].data(),
+    copies[1].data(),
+  };
+  auto tmpsurvey = imp->db->csurveyptr;
+  imp->db->csurveyptr = imp->fsptr;
+  imp->db->csurveyptr->data->set_data_equate(2, args);
+  imp->db->csurveyptr = tmpsurvey;
+}
 
 typedef std::map<std::string, std::string> str2strmap;
-typedef std::map<thimg_stpos, thsst> pos2strmap;
+typedef std::map<thimg_stpos, std::vector<thsst>> pos2strmap;
 typedef std::list<thimg_shot> thimgshotlist;
 
 void thimport::import_file_img()
@@ -444,6 +504,7 @@ void thimport::import_file_img()
     imgerr = img_error();
     ththrow("unable to open file {}, error code: {}", this->fname, static_cast<int>(imgerr));
   }
+  const auto dummy_station_suffix = std::string{pimg->separator, 'x'};
   do {
     result = img_read_item(pimg, &imgpt);
     switch (result) {
@@ -455,6 +516,13 @@ void thimport::import_file_img()
         break;
         
       case img_LINE:
+        orig_name = pimg->label + dummy_station_suffix;
+        stnm = get_filtered_name(orig_name.data(), this->filter, filterl, pimg->separator);
+        if (stnm == nullptr || strlen(stnm) == 0) {
+          break;
+        }
+        new_name = this->station_name(stnm, pimg->separator, &tmpsst);
+        tmpshot.survey = tmpsst.survey ? tmpsst.survey : this->fsptr;
         tmpshot.tx = imgpt.x;
         tmpshot.ty = imgpt.y;
         tmpshot.tz = imgpt.z;
@@ -467,19 +535,11 @@ void thimport::import_file_img()
         
       case img_LABEL:      
         // vlozime fix station
-        stnm = pimg->label;
-        if (filterl > 0) {
-          if (strncmp(stnm, this->filter, filterl) != 0) {
-            break;
-          }
-          stnm = &stnm[filterl];
-          while ((*stnm != 0) && (*stnm == pimg->separator)) {
-            stnm++;
-          }
+        stnm = get_filtered_name(pimg->label, this->filter, filterl, pimg->separator);
+        if (stnm == nullptr || strlen(stnm) == 0) {
+          break;
         }
         orig_name = stnm;
-        if (strlen(stnm) < 1)
-          break;
         if (svxs2ths.find(orig_name) == svxs2ths.end()) {
           xb = fmt::sprintf("%.16g", imgpt.x + this->calib_x);
           yb = fmt::sprintf("%.16g", imgpt.y + this->calib_y);
@@ -487,35 +547,40 @@ void thimport::import_file_img()
           tmpsurvey = this->db->csurveyptr;
           new_name = this->station_name(stnm, pimg->separator, &tmpsst);
           // thprintf("%s -> %s\n", pimg->label, new_name.c_str());
-          tmpdata = NULL;
           if (tmpsst.survey != NULL) {
-            n1 = tmpsst.name.c_str();
-            n2 = tmpsst.name.c_str();
-            tmpdata = tmpsst.survey->data;
             this->db->csurveyptr = tmpsst.survey;
           } else {
-            n1 = new_name.c_str();
-            n2 = new_name.c_str();
+            thassert(tmpsst.name == new_name);
             if (this->fsptr != NULL)
-              tmpdata = this->fsptr->data;
+              tmpsst.survey = this->fsptr;
             else {
               notimpst++;
               // do not import station
               break;
             }
+            thassert(this->db->csurveyptr == tmpsst.survey);
           }
+          n1 = tmpsst.name.c_str();
+          n2 = tmpsst.name.c_str();
+          tmpdata = tmpsst.survey->data;
+          thassert(tmpdata);
           tmppos.x = imgpt.x;
           tmppos.y = imgpt.y;
           tmppos.z = imgpt.z;
           tmpsst.fullname = new_name;
-          svxpos2ths[tmppos] = tmpsst;
+          svxpos2ths[tmppos].push_back(tmpsst);
           svxs2ths[orig_name] = new_name;
           args[1] = xb.data();
           args[2] = yb.data();
           args[3] = zb.data();
           args[0] = n1.get_buffer();
           tmpdata->cs = this->cs;
-          tmpdata->set_data_fix(4, args);
+          // only fix the first station, use equate for the others
+          if (svxpos2ths[tmppos].size() == 1 || this->fsptr == nullptr) {
+            tmpdata->set_data_fix(4, args);
+          } else {
+            set_equate(this, svxpos2ths[tmppos][0], tmpsst);
+          }
           // ak bude entrance, vlozi aj station
           if ((pimg->flags & img_SFLAG_ENTRANCE) != 0) {
             args[0] = n2.get_buffer();
@@ -545,10 +610,6 @@ void thimport::import_file_img()
     thwarning(("unable to import %lu stations outside survey", notimpst));
   }
 
-  thsurvey * s1survey, * s2survey;
-  long s1slevel, s2slevel, maxlevel, i, j;
-  thsst s1s, s2s;  
-  
   // nakoniec povklada shoty
   for(sli = shotlist.begin(); sli != shotlist.end(); sli++) {
   
@@ -558,88 +619,67 @@ void thimport::import_file_img()
     p2si = svxpos2ths.find(tmppos);
     if (p2si == svxpos2ths.end())
       continue;
-    s1s = p2si->second;
     
     tmppos.x = sli->tx;
     tmppos.y = sli->ty;
     tmppos.z = sli->tz;
-    p2si = svxpos2ths.find(tmppos);
-    if (p2si == svxpos2ths.end())
+    auto p2si_to = svxpos2ths.find(tmppos);
+    if (p2si_to == svxpos2ths.end())
       continue;
-    s2s = p2si->second;
     
-    tmpsurvey = this->db->csurveyptr;
-    tmpdata = NULL;
-    
-    // find survey levels
-    s1slevel = 0;
-    s1survey = s1s.survey;
-    while (s1survey != NULL) {
-      s1survey = s1survey->fsptr;
-      s1slevel++;
-    }
-    s2slevel = 0;
-    s2survey = s2s.survey;
-    while (s2survey != NULL) {
-      s2survey = s2survey->fsptr;
-      s2slevel++;
-    }
-    maxlevel = s1slevel;
-    if (s2slevel < maxlevel) maxlevel = s2slevel;
-    // try from max to min level
-    for (i = maxlevel; i > 0; i--) {
-      // find survey at i
-      s1survey = s1s.survey;
-      n1 = s1s.name.c_str();
-      for (j = s1slevel; j > i; j--) {
-        if (j == s1slevel)
-          n1 += "@";
-        else
-          n1 += ".";
-        n1 += s1survey->name;
-        s1survey = s1survey->fsptr;
+    auto const import_shot_for_matching_station_pair = [&] {
+      for (thsst const & s1s : p2si->second) {
+        for (thsst const & s2s : p2si_to->second) {
+          if (import_shot(s1s, s2s, &*sli)) {
+            return true;
+          }
+        }
       }
+      return false;
+    };
 
-      s2survey = s2s.survey;
-      n2 = s2s.name.c_str();
-      for (j = s2slevel; j > i; j--) {
-        if (j == s2slevel)
-          n2 += "@";
-        else
-          n2 += ".";
-        n2 += s2survey->name;
-        s2survey = s2survey->fsptr;
-      }
-      if (s1survey->id == s2survey->id) {
-        this->db->csurveyptr = s1survey;
-        tmpdata = s1survey->data;
-        break;
-      }
+    if (!import_shot_for_matching_station_pair()) {
+      notimpsh++;
     }
-    
-    if (tmpdata == NULL) {
-      if (this->fsptr != NULL)
-        tmpdata = this->fsptr->data;
-      else {
-        notimpsh++;
-        // do not import
-        continue;
-      }
+  }
 
-      // tmpdata = this->data;
-      n1 = s1s.fullname.c_str();
-      n2 = s2s.fullname.c_str();
+  if (notimpsh > 0) {
+    thwarning(("unable to import %lu shots outside survey", notimpsh));
+  }
+}
+
+/**
+ * Import shot if stations s1s and s2s are in the same survey as shot sli.
+ *
+ * @return True if shot import was successful
+ */
+bool thimport::import_shot(thsst const & s1s, //
+                           thsst const & s2s, //
+                           thimg_shot const * sli) {
+  {
+    char *args[3], a0[32], a1[32], a2[32];
+
+    thassert(sli->survey);
+
+    if (!s1s.has_survey_ancestor(sli->survey) ||
+        !s2s.has_survey_ancestor(sli->survey)) {
+      // do not import
+      return false;
     }
-    
-//    thprintf("%s - %s = %s - %s in %s\n", s1s.fullname.c_str(), s2s.fullname.c_str(), n1.get_buffer(), n2.get_buffer(), tmpdata->fsptr->full_name);
+
+    auto * const tmpsurvey = this->db->csurveyptr;
+    this->db->csurveyptr = sli->survey;
+    auto * const tmpdata = sli->survey->data;
 
     args[0] = strcpy(a0, "nosurvey");
     args[1] = strcpy(a1, "from");
     args[2] = strcpy(a2, "to");
     tmpdata->set_data_data(3,args);
 
-    args[0] = n1.get_buffer();
-    args[1] = n2.get_buffer();
+    auto sn1 = s1s.get_name_in_survey(sli->survey);
+    auto sn2 = s2s.get_name_in_survey(sli->survey);
+    args[0] = sn1.data();
+    args[1] = sn2.data();
     tmpdata->d_flags = TT_LEGFLAG_NONE;
     if ((sli->flags & img_FLAG_SURFACE) != 0) {
       tmpdata->d_flags |= TT_LEGFLAG_SURFACE;
@@ -654,10 +694,7 @@ void thimport::import_file_img()
     this->db->csurveyptr = tmpsurvey;
   }
 
-  if (notimpsh > 0) {
-    thwarning(("unable to import %lu shots outside survey", notimpsh));
-  }
-
+  return true;
 }
 
 
