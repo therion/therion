@@ -431,7 +431,7 @@ proc xth_cp_compile {} {
   $xth(ctrl,cp,stp).gores configure -text [mc "RUNNING"] -fg black -bg yellow
   update idletasks
   catch {
-    set thid [open "|$xth(gui,compcmd) -x $xth(cp,opts) $xth(cp,fname)" r]
+    set thid [open |[list $xth(gui,compcmd) -x {*}$xth(cp,opts) $xth(cp,fname)] r]
     if $xth(gui,compshow) {
       while {![eof $thid]} {
 	$xth(cp,log).txt insert end [read $thid 8]
