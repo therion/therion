@@ -500,7 +500,7 @@ void thdb1d::scan_data()
         while(eqi != dp->equate_list.end()) {
           prevlsid = this->lsid;
           eqi->station.id = this->insert_station(eqi->station, eqi->psurvey, dp, 1);
-          if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL))
+          if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL) && (eqi->srcf.line > 0))
             thwarning(("%s [%d] -- equate used to define new station (%s@%s)", eqi->srcf.name, eqi->srcf.line, eqi->station.name, eqi->station.survey));
           eqi++;
         }

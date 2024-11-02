@@ -448,6 +448,7 @@ static void set_equate(thimport * imp,
   auto tmpsurvey = imp->db->csurveyptr;
   imp->db->csurveyptr = imp->fsptr;
   imp->db->csurveyptr->data->set_data_equate(2, args);
+  imp->db->csurveyptr->data->clear_last_equate_warning();
   imp->db->csurveyptr = tmpsurvey;
 }
 

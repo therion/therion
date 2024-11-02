@@ -2374,7 +2374,15 @@ void thdata::set_data_equate(int nargs, char ** args)
     it->psurvey = this->db->get_current_survey();
   } 
 }
-  
+
+void thdata::clear_last_equate_warning()
+{
+	for(auto & eq : this->equate_list) {
+		if (eq.eqid == this->d_last_equate) eq.srcf.line = 0;
+	}
+}
+
+
 
 #define setstflag(casev, flagv) case casev: \
             if (notflag) \

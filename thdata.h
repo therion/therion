@@ -208,6 +208,8 @@ class thdata : public thdataobject {
   
   void set_data_equate(int nargs, char ** args);  ///< Add equivalency.
   
+  void clear_last_equate_warning();  ///< Clear warning for new station created by last equate command.
+
   void set_data_flags(int nargs, char ** args);  ///< Set data leg flags.
 
   void set_data_extend(int nargs, char ** args);  ///< Set default extend
