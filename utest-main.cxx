@@ -1,5 +1,9 @@
+#ifdef CATCH2_V3
+#include <catch2/catch_session.hpp>
+#else
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch.hpp>
+#endif
 #include "thinit.h"
 #include "thproj.h"
 
