@@ -11,6 +11,7 @@
 #include <memory>
 #include "VertexDataSource.hpp"
 #include <unordered_map>
+#include <cstdint>
 
 namespace quickhull {
 
