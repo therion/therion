@@ -1529,6 +1529,30 @@ endrevise|
   revise must always be specified).
 \endarguments
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `require'.
+
+\description
+  Checks that the version of Therion in use is at least |<version>| and stops
+  with an error if not.
+\enddescription
+
+\syntax
+  |require <version>|
+\endsyntax
+
+\context
+  all
+\endcontext
+
+\arguments
+* |<version>| = The minimum supported Therion version in the form
+  |major[.minor[.patch]]|, e.g.~|6.3|.
+\endarguments
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \subchapter Custom attributes.
