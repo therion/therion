@@ -520,6 +520,9 @@ void thimport::import_file_img()
         orig_name = pimg->label + dummy_station_suffix;
         stnm = get_filtered_name(orig_name.data(), this->filter, filterl, pimg->separator);
         if (stnm == nullptr || strlen(stnm) == 0) {
+          tmpshot.fx = imgpt.x;
+          tmpshot.fy = imgpt.y;
+          tmpshot.fz = imgpt.z;
           break;
         }
         new_name = this->station_name(stnm, pimg->separator, &tmpsst);
