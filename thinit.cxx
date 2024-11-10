@@ -756,10 +756,12 @@ char * thinit::get_path_otftotfm()
   return this->path_otftotfm.get_buffer();
 }
 
-
 void thinit::set_proj_lib_path() {  // set PROJ library resources path
 #ifdef THWIN32
-  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj-" + std::to_string(PROJ_VER)).c_str());
+  if (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr) {
+    const char* const proj_lib_s[] = {fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER).c_str()};
+    proj_context_set_search_paths(PJ_DEFAULT_CTX, 1, proj_lib_s);
+  }
 #endif
 }
 
