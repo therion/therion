@@ -186,9 +186,7 @@ if (BUILD_THERION)
     add_executable(utest utest-main.cxx utest-proj.cxx utest-icase.cxx utest-thdouble.cxx)
     target_link_libraries(utest PUBLIC therion-common catch2-interface)
     enable_testing()
-    if (NOT WIN32)
-        add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    endif()
+    add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
     # updates thlibrarydata.cxx
     add_custom_target(library 
