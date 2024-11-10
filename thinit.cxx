@@ -759,7 +759,8 @@ char * thinit::get_path_otftotfm()
 void thinit::set_proj_lib_path() {  // set PROJ library resources path
 #ifdef THWIN32
   if (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr) {
-    const char* const proj_lib_s[] = {fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER).c_str()};
+    const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER);
+    const char* const proj_lib_s[] = {path.c_str()};
     proj_context_set_search_paths(PJ_DEFAULT_CTX, 1, proj_lib_s);
   }
 #endif
