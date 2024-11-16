@@ -79,7 +79,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW64, arch: x86_64,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                  }
+          - { msystem: MINGW64, arch: x86_64,       args: ""                                                                                   }
           - { msystem: CLANG64, arch: clang-x86_64, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
     defaults:
       run:
@@ -94,7 +94,7 @@ jobs:
           msystem: ${{ matrix.config.msystem }}
           update: true
           install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.2 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Set up the batteries
         run: |
