@@ -41,9 +41,28 @@
 
 #include <fmt/printf.h>
 
+constexpr auto ANON_STATION_NAME = "-";
+
+/**
+ * Helper function for converting a string vector to a vector of char pointers.
+ */
+static std::vector<char *> to_charp_vec(std::vector<std::string> & svec) {
+  const size_t N = svec.size();
+  auto vec = std::vector<char *>(N);
+  for (size_t i = 0; i != N; ++i) {
+    vec[i] = svec[i].data();
+  }
+  return vec;
+}
+
 struct thsst {
   std::string name, fullname;
   thsurvey * survey = {};  
+
+  /**
+   * True if this is an anonymous station (splay station)
+   */
+  bool is_anon() const { return name.empty(); }
 
   bool has_survey_ancestor(thsurvey const * const survey) const {
     thassert(survey);
@@ -520,6 +539,9 @@ void thimport::import_file_img()
         orig_name = pimg->label + dummy_station_suffix;
         stnm = get_filtered_name(orig_name.data(), this->filter, filterl, pimg->separator);
         if (stnm == nullptr || strlen(stnm) == 0) {
+          tmpshot.fx = imgpt.x;
+          tmpshot.fy = imgpt.y;
+          tmpshot.fz = imgpt.z;
           break;
         }
         new_name = this->station_name(stnm, pimg->separator, &tmpsst);
@@ -611,26 +633,41 @@ void thimport::import_file_img()
     thwarning(("unable to import %lu stations outside survey", notimpst));
   }
 
+  std::vector<thsst> anon_stations(1);
+
   // nakoniec povklada shoty
   for(sli = shotlist.begin(); sli != shotlist.end(); sli++) {
   
+    auto const find_tmppos_stations = [&]() -> std::vector<thsst> * {
+      auto it = svxpos2ths.find(tmppos);
+      if (it != svxpos2ths.end()) {
+        return &(it->second);
+      }
+      if ((sli->flags & img_FLAG_SPLAY) != 0) {
+        return &anon_stations;
+      }
+      return nullptr;
+    };
+
     tmppos.x = sli->fx;
     tmppos.y = sli->fy;
     tmppos.z = sli->fz;
-    p2si = svxpos2ths.find(tmppos);
-    if (p2si == svxpos2ths.end())
+    auto * from_stations = find_tmppos_stations();
+    if (from_stations == nullptr) {
       continue;
+    }
     
     tmppos.x = sli->tx;
     tmppos.y = sli->ty;
     tmppos.z = sli->tz;
-    auto p2si_to = svxpos2ths.find(tmppos);
-    if (p2si_to == svxpos2ths.end())
+    auto * to_stations = find_tmppos_stations();
+    if (to_stations == nullptr) {
       continue;
+    }
     
     auto const import_shot_for_matching_station_pair = [&] {
-      for (thsst const & s1s : p2si->second) {
-        for (thsst const & s2s : p2si_to->second) {
+      for (thsst const & s1s : *from_stations) {
+        for (thsst const & s2s : *to_stations) {
           if (import_shot(s1s, s2s, &*sli)) {
             return true;
           }
@@ -658,29 +695,50 @@ bool thimport::import_shot(thsst const & s1s, //
                            thsst const & s2s, //
                            thimg_shot const * sli) {
   {
-    char *args[3], a0[32], a1[32], a2[32];
-
     thassert(sli->survey);
 
-    if (!s1s.has_survey_ancestor(sli->survey) ||
-        !s2s.has_survey_ancestor(sli->survey)) {
+    if (!(s1s.has_survey_ancestor(sli->survey) || s1s.is_anon()) ||
+        !(s2s.has_survey_ancestor(sli->survey) || s2s.is_anon())) {
       // do not import
       return false;
+    }
+
+    std::vector<std::string> shead;
+    std::vector<std::string> sdata;
+
+    if (s1s.is_anon()) {
+      thassert(!s2s.is_anon());
+      shead = {"cartesian", "from", "to", "easting", "northing", "altitude"};
+      sdata = {
+          s2s.get_name_in_survey(sli->survey),
+          ANON_STATION_NAME,
+          std::to_string(sli->fx - sli->tx),
+          std::to_string(sli->fy - sli->ty),
+          std::to_string(sli->fz - sli->tz),
+      };
+    } else if (s2s.is_anon()) {
+      shead = {"cartesian", "from", "to", "easting", "northing", "altitude"};
+      sdata = {
+          s1s.get_name_in_survey(sli->survey),
+          ANON_STATION_NAME,
+          std::to_string(sli->tx - sli->fx),
+          std::to_string(sli->ty - sli->fy),
+          std::to_string(sli->tz - sli->fz),
+      };
+    } else {
+      shead = {"nosurvey", "from", "to"};
+      sdata = {
+          s1s.get_name_in_survey(sli->survey),
+          s2s.get_name_in_survey(sli->survey),
+      };
     }
 
     auto * const tmpsurvey = this->db->csurveyptr;
     this->db->csurveyptr = sli->survey;
     auto * const tmpdata = sli->survey->data;
 
-    args[0] = strcpy(a0, "nosurvey");
-    args[1] = strcpy(a1, "from");
-    args[2] = strcpy(a2, "to");
-    tmpdata->set_data_data(3,args);
+    tmpdata->set_data_data(shead.size(), to_charp_vec(shead).data());
 
-    auto sn1 = s1s.get_name_in_survey(sli->survey);
-    auto sn2 = s2s.get_name_in_survey(sli->survey);
-    args[0] = sn1.data();
-    args[1] = sn2.data();
     tmpdata->d_flags = TT_LEGFLAG_NONE;
     if ((sli->flags & img_FLAG_SURFACE) != 0) {
       tmpdata->d_flags |= TT_LEGFLAG_SURFACE;
@@ -691,7 +749,7 @@ bool thimport::import_shot(thsst const & s1s, //
     if ((sli->flags & img_FLAG_SPLAY) != 0) {
       tmpdata->d_flags |= TT_LEGFLAG_SPLAY;
     }
-    tmpdata->insert_data_leg(2, args);      
+    tmpdata->insert_data_leg(sdata.size(), to_charp_vec(sdata).data());
     this->db->csurveyptr = tmpsurvey;
   }
 
