@@ -34,6 +34,7 @@
 #include "thobjectsrc.h"
 #include "thlayout.h"
 #include "loch/icase.h"
+#include <memory>
 
 /**
  * General export options.
@@ -74,7 +75,7 @@ class thexport {
 
   public:
 
-  class thlayout * layout;  ///< Layout pointer.
+  std::unique_ptr<thlayout> layout;  ///< Layout pointer.
   friend class thexporter;
   class thconfig * cfgptr = nullptr;  ///< Current config pointer.
   int export_mode;  ///< Export mode.
@@ -91,7 +92,7 @@ class thexport {
   public:
   
   thexport();  ///< Default constructor.
-  virtual ~thexport();
+  virtual ~thexport() = default;
   
   // These operations are not implemented.
   thexport(const thexport&) = delete;

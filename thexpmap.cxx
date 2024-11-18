@@ -1303,7 +1303,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   layoutnan(goz, 0.0);
 
   out.symset = &(this->symset);
-  out.layout = this->layout;
+  out.layout = this->layout.get();
   out.symset->color_model = this->layout->color_model;
   out.ms = this->layout->scale * 2834.64566929;
   // korekcia shiftu na layout origin
@@ -1908,7 +1908,7 @@ if (ENC_NEW.NFSS==0) {
   LEGENDLIST.clear();
   if ((this->layout->legend != TT_LAYOUT_LEGEND_OFF) && 
       ((this->export_mode == TT_EXP_ATLAS) || (this->layout->map_header != TT_LAYOUT_MAP_HEADER_OFF))) {
-    this->symset.export_pdf(this->layout,mpf,sfig);
+    this->symset.export_pdf(this->layout.get(),mpf,sfig);
   }
   
   
@@ -2304,7 +2304,7 @@ if (ENC_NEW.NFSS==0) {
     fprintf(tf,"\\scalebartrue\n");
     ldata.scalebar = true;
   }
-  prj->stat.export_pdftex(tf, this->layout, &ldata);
+  prj->stat.export_pdftex(tf, this->layout.get(), &ldata);
   fclose(tf);
 
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
@@ -3698,7 +3698,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     cmap = cmap->next_item;
   }
 
-  lkp->export_color_legend(this->layout);
+  lkp->export_color_legend(this->layout.get());
 
 }
 
