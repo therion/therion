@@ -25,8 +25,8 @@ If you want to compile Therion from source code and run it, you need
 * GNU make or CMake
 * Perl
 * Python 3
-* PROJ library (\www{https://proj.org/}). Supported versions are:
-  v4: 4.9.3; v5: 5.1.0 and newer; v6: 6.2.1 and newer; 7.0.1 and newer.
+* PROJ library (\www{https://proj.org/}). Supported versions are
+  6.3.1 and newer (except 7.0.0).
 * fmt (\www{https://github.com/fmtlib/fmt}).
 * Tcl/Tk 8.4.3 and newer (\www{https://www.tcl.tk}) with
   {\it BWidget} widget set  \hfil\break
@@ -179,8 +179,11 @@ Here is a selection of parameters which can be used with cmake:
 The following cmake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
 th-docs, loch-docs.
 
-\subsubchapter Legacy approach: using make (deprecated!).
+\subsubchapter Legacy approach: using make.
 
+\NEW{6.3}This method is deprecated, use CMake instead.
+
+\iffalse
 \list
 * unpack the source distribution |therion-6.*.tar.gz|
 * |cd therion|
@@ -203,6 +206,7 @@ Therion's {\it makefile} may take some optional parameters.
 * |install| = install Therion
 * |clean| = delete all temporary files
 \endlist
+\fi
 
 \subsubchapter Hacker's guide.
 
