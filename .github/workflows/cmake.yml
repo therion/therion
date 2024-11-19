@@ -79,7 +79,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW64, arch: x86_64,       args: ""                                                                                   }
+          - { msystem: UCRT64,  arch: ucrt-x86_64,  args: ""                                                                                   }
           - { msystem: CLANG64, arch: clang-x86_64, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
     defaults:
       run:

@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW64, arch: x86_64 }
+          - { msystem: UCRT64, arch: ucrt-x86_64 }
     defaults:
       run:
         shell: msys2 {0}
