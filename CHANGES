@@ -37,6 +37,16 @@ xtherion:
  * remove check for Img package [#566]
  * allow space in thconfig filename [#590]
 
+loch:
+ * bug fixes:
+   - fix missing surface texture on Windows [#587] (thanks to switching to ucrt)
+
+Windows installer:
+ * build environment changed from MSYS2/mingw64 to a more modern MSYS2/ucrt64;
+   for Windows 7 and 8 users this may require to install UCRT libraries
+   (https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment)
+   to run Therion, unless already installed by system updates
+
 infrastructure:
  * CI environments fixes and updates [#568, #575, #578, #589, #593]
  * Windows CI: run unit tests; verify samples; enforce warnings [#600]
