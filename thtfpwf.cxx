@@ -74,15 +74,14 @@ void thtfpwf::parse(int nfact, char ** sfact)
       break;
     default:
       if ((nfact > 2) && ((nfact % 2) == 0)) {
-        double * coefs = new double [nfact];
+        std::vector<double> coefs(nfact);
         int cidx,spv;
         for(cidx = 0; cidx < nfact; cidx++) {
           thparse_double(spv,coefs[cidx],sfact[cidx]);
           if (spv == TT_SV_UNKNOWN)
             ththrow("invalid number -- {}", sfact[cidx]);
         }
-        this->set(nfact / 2, coefs);
-        delete [] coefs;
+        this->set(nfact / 2, coefs.data());
       }
       else
         ththrow("invalid number of transformation constants");
