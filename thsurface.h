@@ -34,6 +34,8 @@
 #include "thobjectname.h"
 #include "thtflength.h"
 
+#include <memory>
+
 /**
  * surface command options tokens.
  */
@@ -81,7 +83,7 @@ class thsurface : public thdataobject {
   long grid_nx, grid_ny, grid_counter, grid_size;
   int grid_flip, pict_type;
   thtflength grid_units;
-  double * grid;
+  std::unique_ptr<double[]> grid;
   thdb3ddata d3d;
   bool d3dok;
   int pict_cs, grid_cs;
@@ -96,13 +98,6 @@ class thsurface : public thdataobject {
    */
   
   thsurface();
-  
-  
-  /**
-   * Standard destructor.
-   */
-   
-  virtual ~thsurface();
   
   
   /**

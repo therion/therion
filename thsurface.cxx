@@ -88,7 +88,6 @@ thsurface::thsurface()
   this->calib_yy = thnan;
   this->calib_r = thnan;
   this->calib_s = thnan;
-  this->grid = NULL;
   this->grid_flip = TT_SURFACE_GFLIP_NONE;
   
   this->s1.clear();
@@ -100,13 +99,6 @@ thsurface::thsurface()
 
     
 }
-
-
-thsurface::~thsurface()
-{
-  delete [] this->grid;
-}
-
 
 int thsurface::get_class_id() 
 {
@@ -419,7 +411,7 @@ void thsurface::parse_grid(char * spec)
   if (this->grid == NULL) {
     this->grid_counter = 0;
     this->grid_size = this->grid_nx * this->grid_ny;
-    this->grid = new double [this->grid_size];
+    this->grid = std::make_unique<double[]>(this->grid_size);
   }
   
   // rozdelime na argumenty
@@ -467,8 +459,9 @@ thdb3ddata * thsurface::get_3d() {
   // vytvorime 3d data
   long i, j;
   double nx, ny, nz, nl, nt;
-  thdb3dvx ** surfvx = new thdb3dvx* [this->grid_size],
-   * pvx, * cvx;
+  std::vector<thdb3dvx*> surfvx(this->grid_size);
+  thdb3dvx* pvx = {};
+  thdb3dvx* cvx = {};
   
 #define grd(I, J) (this->grid_nx * (J) + (I))
   for(i = 0; i < this->grid_nx; i++)
@@ -539,7 +532,6 @@ thdb3ddata * thsurface::get_3d() {
     }
   }
   
-  delete [] surfvx;
   this->d3dok = true;
   this->d3d.postprocess();
   return &(this->d3d);    
