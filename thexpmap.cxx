@@ -87,7 +87,7 @@ thexpmap::~thexpmap() {
 }
 
 void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug) {
-  char * lnbuff = new char [4097];
+  std::string lnbuff;
 //  unsigned long lnum = 0;
   thlog.printf("%s",on_title);
   std::ifstream lf(logfpath);
@@ -96,15 +96,14 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
     }
     thlog.printf("can't open %s file for input",logfpath);
     thlog.printf("%s",off_title);
-    delete [] lnbuff;
     return;
   }
   // let's read line by line and print to log file
   bool skip_next = false, skip_this = false, peoln = false;
   while (!(lf.eof())) {
-    lf.getline(lnbuff,4096);
+    std::getline(lf, lnbuff);
     if (mpbug && (!skip_this)) {
-      if (strncmp(lnbuff,"write",5) == 0) {
+      if (lnbuff.substr(0, 5) == "write") {
         skip_next = true;
         skip_this = true;
         peoln = false;
@@ -124,7 +123,6 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
   if (peoln) 
     thlog.printf("\n");
   lf.close();
-  delete [] lnbuff;
   thlog.printf("%s",off_title);
 }
 
@@ -409,8 +407,6 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   size_t i, nst = thdb.db1d.station_vec.size(), nsh = thdb.db1d.leg_vec.size();
   thdb1ds * cs;
   thdataleg * cl;
-  lxVec * stvec;
-  bool * isexp;
   FILE * pltf;
 
   pltf = fopen(fnm,"wb");
@@ -421,7 +417,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   }
   this->register_output(fnm);
 
-  isexp = new bool [nst];
+  std::vector<bool> isexp(nst);
   size_t nstvec, nstvecsize;
   if (prj->type == TT_2DPROJ_EXTEND)
     nstvec = 2 * nsh;
@@ -430,7 +426,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   nstvecsize = 1;
   if (nstvecsize < nstvec) nstvecsize = nstvec;
   if (nstvecsize < nst) nstvecsize = nst;
-  stvec = new lxVec [nstvecsize];
+  std::vector<lxVec> stvec(nstvecsize);
 
   layoutnan(gxs, 1.0);
   layoutnan(gys, 1.0);
@@ -727,8 +723,6 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   thset_grid(gyo, gxs, ymin - goverlap, ymax + goverlap, gyoo, gyn);
   fprintf(pltf,"set XVIgrid  {%g %g %g 0.0 0.0 %g %ld %ld}\n", gxoo, gyoo, gxs, gxs, gxn+1, gyn+1);
   
-  delete [] isexp;
-  delete [] stvec;
   fclose(pltf);
   
 #ifdef THDEBUG
@@ -1230,11 +1224,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   legenddata ldata;
 
   bool anyprev, anyprevabove = false, anyprevbelow = false;
-  char * prevbf;
-  prevbf = new char [128];
-  prevbf[127] = 0;
   
-  thbuffer aboveprev, belowprev;
+  std::string aboveprev, belowprev;
 
   std::list<scraprecord>::iterator SCRAPITEM;
   scraprecord dummsr;
@@ -1847,7 +1838,6 @@ if (ENC_NEW.NFSS==0) {
   fprintf(mpf,"beginfig(%d);\ns_northarrow(%g);\nendfig;\n",sfig++,this->layout->rotate + rotate_plus);
 
   LAYOUT.scalebar = fmt::sprintf("data.%d",sfig);
-  //std::snprintf(prevbf,127,"%g",sblen);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()).c_str());
 
@@ -2194,23 +2184,19 @@ if (ENC_NEW.NFSS==0) {
             case TT_MAPITEM_BELOW:
               MAP_PREVIEW_DOWN.insert(cbm->m_target->preview_output_number);
               if (!anyprevbelow) {
-                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
-                belowprev += prevbf;
+                belowprev += std::to_string(cbm->m_target->preview_output_number);
                 anyprevbelow = true;
               } else {
-                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
-                belowprev += prevbf;
+                belowprev += std::to_string(cbm->m_target->preview_output_number);
               }
               break;
             case TT_MAPITEM_ABOVE:
               MAP_PREVIEW_UP.insert(cbm->m_target->preview_output_number);
               if (!anyprevabove) {
-                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
-                aboveprev += prevbf;
+                aboveprev += std::to_string(cbm->m_target->preview_output_number);
                 anyprevabove = true;
               } else {
-                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
-                aboveprev += prevbf;
+                aboveprev += std::to_string(cbm->m_target->preview_output_number);
               }
               break;
           }
@@ -2224,16 +2210,14 @@ if (ENC_NEW.NFSS==0) {
   
   // map preview hash
   if (anyprevabove) {
-    fprintf(plf,"\n\n$MAP_PREVIEW{U} = \"%s\";",aboveprev.get_buffer());
+    fprintf(plf,"\n\n$MAP_PREVIEW{U} = \"%s\";",aboveprev.c_str());
   }
   if (anyprevbelow) {
-    fprintf(plf,"\n\n$MAP_PREVIEW{D} = \"%s\";",belowprev.get_buffer());
+    fprintf(plf,"\n\n$MAP_PREVIEW{D} = \"%s\";",belowprev.c_str());
   }
   
   fprintf(plf,"\n\n\n$PATTERN_DEFS = \"./\";\n");
   fclose(plf);
-  
-  delete [] prevbf;
 
   //QUICK_MAP_EXPORT:
 
