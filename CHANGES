@@ -1,4 +1,9 @@
-Therion 6.3.0 (in progress):
+Therion 6.3.1 (in progress):
+
+
+--------------------------------------------------------------------------------
+
+Therion 6.3.0 (2024-11-20):
 
 therion:
  * REMOVED proj-auto initialization file option;
@@ -10,6 +15,53 @@ therion:
    for all output projections;
    it's not possible to specify them in thcsdata.tcl any more
  * use precise grid transformation for built-in OSGB:XY coordinate systems
+ * import splays from 3d files [#599]
+ * new 'require <version>' command [#598]
+ * thbook updates
+ * REMOVED Proj v4 and v5 compatibility; minimum supported Proj version is 6.3.1
+ * updated Survex img library [#567]
+ * old MetaPost output to PDF conversion functions removed from sources
+   (they were unused since 6.0.0 release)
+ * bug fixes:
+   - fix symbol-hide special (scale-bar|north-arrow) in XHTML output [#558]
+   - fix order of layout copy commands [#563]
+   - don't reset symbol-hide with symbol-set [#561]
+   - improve th2 export [#573, #588]
+   - import .3d shots with their correct survey name [#585]
+   - KML entrance label: comment or name [#574]
+   - fix import filter: exclude filtered stations [#583]
+   - fix NaN coordinates if Z is undefined in Proj 9.2.0+
+   - fix thcsdata.cxx generation
+   - fix PROJ_LIB path handling
+   - use linux line-ends in text outputs (TXT, SVG, HTML, XHTML, KML, SQL, CSV,
+     XVI, TH2, PLT, VRML, 3DMF, BBOX) to ensure cross-platform uniformity
+   - various smaller fixes [#559, #586]
+ * code refactoring [#576, #579, #580] and cleanup
+
+xtherion:
+ * remove check for Img package [#566]
+ * allow space in thconfig filename [#590]
+
+loch:
+ * bug fixes:
+   - fix missing surface texture on Windows [#587] (thanks to switching to ucrt)
+
+Windows installer:
+ * build environment changed from MSYS2/mingw64 to a more modern MSYS2/ucrt64;
+   for Windows 7 and 8 users this may require to install UCRT libraries
+   (https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment)
+   to run Therion, unless already installed by system updates
+
+infrastructure:
+ * CI environments fixes and updates [#568, #575, #578, #589, #593]
+ * Windows CI: run unit tests; verify samples; enforce warnings [#600]
+ * drop make workflows on MacOSX and Windows CI
+ * Makefile fixes for fmtlib and VTK
+ * updates in test_proj.sh testing script
+ * Catch2 testing suite fixes [#595] and updates
+ * add SVG and XHTML samples; make sure that Proj needs proj.db in samples
+
+Thanks to Matěj Plch and Thomas Holder for many contributions to this release.
 
 --------------------------------------------------------------------------------
 
