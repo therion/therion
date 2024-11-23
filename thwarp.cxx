@@ -314,7 +314,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     start = T2.forward(T1.forward(thvec2(0.0, double(mh/2.0))));
     this->mpic.rgba_init(mw, mh);
     long ox, oy, x1, y1, x2, y2;
-    thvec2 * pscan, * cscan, newp, newpmin, newpmax;
+    thvec2 newp, newpmin, newpmax;
     thline2 lAB, lBC, lCD, lDA, lCA;
     double dAB, dBC, dCD, dDA, dCA;
     std::vector<thvec2> pscan(sketch->m_pic.width);
