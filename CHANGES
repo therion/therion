@@ -1,5 +1,11 @@
 Therion 6.3.2 (in progress):
 
+therion:
+ * bugs fixed:
+   - Proj can't find files in the user-writable directory on Windows
+
+Windows installer:
+ * fixed shortcuts to thbook.pdf and CHANGES.txt
 
 --------------------------------------------------------------------------------
 

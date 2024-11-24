@@ -760,8 +760,19 @@ void thinit::set_proj_lib_path() {  // set PROJ library resources path
 #ifdef THWIN32
   if (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr) {
     const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER);
-    const char* const proj_lib_s[] = {path.c_str()};
-    proj_context_set_search_paths(PJ_DEFAULT_CTX, 1, proj_lib_s);
+    // Proj's method to get user-writable directory (filemanager.cpp)
+    std::string local_path;
+    const char *local_app_data = std::getenv("LOCALAPPDATA");
+    if (!local_app_data) {
+      local_app_data = std::getenv("TEMP");
+      if (!local_app_data) {
+        local_app_data = "c:/users";
+      }
+    }
+    local_path = local_app_data;
+    local_path += "/proj";
+    const char* const proj_lib_s[] = {path.c_str(), local_path.c_str()};
+    proj_context_set_search_paths(PJ_DEFAULT_CTX, 2, proj_lib_s);
   }
 #endif
 }
