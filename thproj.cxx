@@ -33,6 +33,7 @@
 #include <cmath>
 #include <map>
 #include <set>
+#include <unordered_set>
 #include <regex>
 #include <proj.h>
 #include <math.h>
@@ -387,6 +388,84 @@ bool thcs_islatlong(std::string s) {
   bool angular = (type == PJ_TYPE_GEOGRAPHIC_CRS || type == PJ_TYPE_GEOGRAPHIC_2D_CRS || type == PJ_TYPE_GEOGRAPHIC_3D_CRS);
   proj_destroy(P);
   return angular;
+}
+
+std::map<std::string,axis_orient> axis_map {
+  {"north", axis_orient::NORTH},
+  {"south", axis_orient::SOUTH},
+  {"west", axis_orient::WEST},
+  {"east", axis_orient::EAST}
+};
+std::unordered_set<std::string> axis_units {
+  "Bin width 12.5 metres", "Bin width 165 US survey feet", "Bin width 25 metres",
+  "Bin width 3.125 metres", "Bin width 330 US survey feet", "Bin width 37.5 metres",
+  "Bin width 6.25 metres", "Bin width 82.5 US survey feet",
+  "British chain (Benoit 1895 A)", "British chain (Benoit 1895 B)",
+  "British chain (Sears 1922 truncated)", "British chain (Sears 1922)",
+  "British foot (1865)", "British foot (1936)", "British foot (Benoit 1895 A)",
+  "British foot (Benoit 1895 B)", "British foot (Sears 1922 truncated)", "British foot (Sears 1922)",
+  "British link (Benoit 1895 A)", "British link (Benoit 1895 B)",
+  "British link (Sears 1922 truncated)", "British link (Sears 1922)",
+  "British yard (Benoit 1895 A)", "British yard (Benoit 1895 B)",
+  "British yard (Sears 1922 truncated)", "British yard (Sears 1922)",
+  "Clarke's chain", "Clarke's foot", "Clarke's link", "Clarke's yard", "German legal metre",
+  "Gold Coast foot", "Indian chain", "Indian foot", "Indian foot (1937)", "Indian foot (1962)",
+  "Indian foot (1975)", "Indian yard", "Indian yard (1937)", "Indian yard (1962)",
+  "Indian yard (1975)", "Statute mile", "US survey chain", "US survey foot", "US survey inch",
+  "US survey link", "US survey mile", "US survey yard", "centimetre",
+  "chain", "decimeter", "fathom", "foot", "inch", "kilometre", "link", "metre",
+  "millimetre", "nautical mile", "yard"
+};
+
+// cs:     coordinate system therion ID
+// scale:  conversion factor to metres; 0 for unrecognized units (e.g. degrees)
+// gis_ok: east-north axes, recognized length units (from axis_units set)
+std::vector<axis_orient> thcs_axesinfo(int cs, double &scale, bool &gis_ok) {
+  PJ *P = nullptr, *P2 = nullptr, *CS = nullptr;
+  th_init_proj(P, sanitize_crs(thcs_get_params(cs)).c_str());
+  if (proj_get_type(P) == PJ_TYPE_BOUND_CRS) {
+    P2 = proj_get_source_crs(PJ_DEFAULT_CTX, P);
+    proj_destroy(P);
+    if (P2 == nullptr) therror(("invalid bound crs conversion -- should not happen"));
+    P = P2;
+  } else if (proj_get_type(P) == PJ_TYPE_COMPOUND_CRS) {
+    P2 = proj_crs_get_sub_crs(PJ_DEFAULT_CTX, P, 0);
+    proj_destroy(P);
+    if (P2 == nullptr) therror(("invalid compound crs conversion -- should not happen"));
+    P = P2;
+  }
+  CS = proj_crs_get_coordinate_system(PJ_DEFAULT_CTX, P);
+  proj_destroy(P);
+  if (CS == nullptr) therror(("invalid coordinate system -- should not happen"));
+  int count = proj_cs_get_axis_count(PJ_DEFAULT_CTX, CS);
+  const char *outdir = nullptr, *unit_name = nullptr;
+  double conv_factor = 0;
+  std::vector<axis_orient> axes;
+  gis_ok = true;
+  for (int i = 0; i < count; ++i) {
+    proj_cs_get_axis_info(PJ_DEFAULT_CTX, CS, i,
+          nullptr, nullptr,
+          &outdir, &conv_factor, &unit_name,
+          nullptr, nullptr);
+    // units and scale
+    if (axis_units.find(unit_name) != axis_units.end()) {
+      if (i == 0) scale = conv_factor;
+      else if (scale != conv_factor) therror(("inconsistent axes scales"));
+    } else {
+      scale = 0;
+      gis_ok = false;
+    }
+    // axes orientation
+    auto it = axis_map.find(outdir);
+    if (it != axis_map.end()) axes.push_back(it->second);
+    else axes.push_back(axis_orient::OTHER);
+  }
+  if (gis_ok && axes.size() >= 2 && axes[0] == axis_orient::EAST && axes[1] == axis_orient::NORTH)
+    gis_ok = true;
+  else
+    gis_ok = false;
+  proj_destroy(CS);
+  return axes;
 }
 
 bool thcs_check(std::string s) {

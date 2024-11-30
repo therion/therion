@@ -53,6 +53,11 @@ double p1_s42_x = 5423543.01;
 
 double undefined = NAN;
 
+std::vector<axis_orient> ax;
+double scale;
+bool gis_ok;
+
+
 TEST_CASE( "projections: init", "[proj]" ) {
     CHECK(thcs_check(thcs_get_params(TTCS_JTSK03)));
 }
@@ -172,6 +177,30 @@ TEST_CASE( "s-merc -- EPSG_32634", "[proj]" ) {  // Pseudo Mercator -> UTM34N
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, 2025.44, 0.001));
+}
+
+TEST_CASE( "axes -- JTSK", "[proj]" ) {
+    ax = thcs_axesinfo(TTCS_JTSK, scale, gis_ok);
+    CHECK(ax[0] == axis_orient::WEST);
+    CHECK(ax[1] == axis_orient::SOUTH);
+    CHECK(scale == 1.0);
+    CHECK(gis_ok == false);
+}
+
+TEST_CASE( "axes -- EPSG_32634", "[proj]" ) {
+    ax = thcs_axesinfo(TTCS_EPSG + 32634, scale, gis_ok);
+    CHECK(ax[0] == axis_orient::EAST);
+    CHECK(ax[1] == axis_orient::NORTH);
+    CHECK(scale == 1.0);
+    CHECK(gis_ok == true);
+}
+
+TEST_CASE( "axes -- latlong", "[proj]" ) {
+    ax = thcs_axesinfo(TTCS_LAT_LONG, scale, gis_ok);
+    CHECK(ax[0] == axis_orient::NORTH);
+    CHECK(ax[1] == axis_orient::EAST);
+    CHECK(scale == 0.0);
+    CHECK(gis_ok == false);
 }
 
 /*

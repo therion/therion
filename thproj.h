@@ -30,11 +30,13 @@
 #include <proj.h>
 
 enum {GRID_INVALID, GRID_IGNORE, GRID_WARN, GRID_FAIL, GRID_CACHE, GRID_DOWNLOAD};
+enum class axis_orient {NORTH, SOUTH, WEST, EAST, OTHER};
 
 void thcs2cs(int, int, double, double, double, double &, double &, double &);
 signed int thcs2zone(int, double, double, double);
 double thcsconverg(int, double, double);
 bool thcs_islatlong(std::string);
+std::vector<axis_orient> thcs_axesinfo(int, double &, bool &);
 bool thcs_check(std::string);
 void thcs_log_transf_used();
 int thcs_parse_gridhandling(const char *);
