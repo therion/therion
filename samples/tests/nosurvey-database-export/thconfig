@@ -1,0 +1,17 @@
+source
+  survey a
+    centreline
+      fix 1  0.00 0.0 0.0
+      fix 2  5.00 0.0 0.0
+      fix 3  9.33 2.5 0.0
+      fix 4 14.33 2.5 0.0
+
+      data nosurvey from to
+      1 2
+      2 3
+      3 4
+    endcentreline
+  endsurvey
+endsource
+
+export database -o database.csv

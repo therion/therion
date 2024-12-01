@@ -27,6 +27,7 @@ add_dependencies(samples-html therion)
  # subdirectories will add dependencies to these targets
 add_custom_target(samples-build)
 add_custom_target(samples-verify-crc)
+add_custom_target(samples-verify-ref)
 add_custom_target(samples-generate-crc)
 
 # Function for registration of therion samples to the build.
@@ -90,3 +91,4 @@ add_subdirectory(tests/inputrel)
 add_subdirectory(tests/pocket-topo)
 add_subdirectory(tests/proj)
 add_subdirectory(tests/sym-colors)
+add_subdirectory(tests/nosurvey-database-export)
