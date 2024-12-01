@@ -35,6 +35,7 @@
 #include "thdatareader.h"
 #include "thdb1d.h"
 #include "thinfnan.h"
+#include "thproj.h"
 #include "therion.h"
 #include <algorithm>
 #include <filesystem>
@@ -76,6 +77,10 @@ thsurface::thsurface()
   this->grid_oy = thnan; 
   this->grid_dx = thnan;
   this->grid_dy = thnan;
+  this->grid_dxx = thnan;
+  this->grid_dxy = thnan;
+  this->grid_dyx = thnan;
+  this->grid_dyy = thnan;
   this->grid_nx = 0;
   this->grid_ny = 0;
   this->grid_size = 0;
@@ -383,13 +388,6 @@ void thsurface::parse_grid_setup(char ** args)
         ththrow("integer expected -- {}", args[YYY]); \
       XXX = long(dblv);
   
-  this->grid_cs = this->cs;
-  this->read_cs(args[0], args[1], this->grid_ox, this->grid_oy);
-  if (this->cs == TTCS_LOCAL) {
-    this->grid_ox = this->grid_units.transform(this->grid_ox);
-    this->grid_oy = this->grid_units.transform(this->grid_oy);
-  }
-
   parsedbl(this->grid_dx,2);
   if (this->grid_dx == 0.0)
     ththrow("non-zero number expected -- {}", args[2]);
@@ -402,6 +400,29 @@ void thsurface::parse_grid_setup(char ** args)
   parsenum(this->grid_ny,5);
   if (this->grid_ny < 2)
     ththrow("number > 1 expected -- {}", args[5]);
+
+  this->grid_cs = this->cs;
+  this->read_cs(args[0], args[1], this->grid_ox, this->grid_oy);
+  if (this->cs == TTCS_LOCAL) {
+    this->grid_ox = this->grid_units.transform(this->grid_ox);
+    this->grid_oy = this->grid_units.transform(this->grid_oy);
+    this->grid_dxx = this->grid_ox + double(this->grid_nx-1) * this->grid_dx;
+    this->grid_dxy = this->grid_oy;
+    this->grid_dyx = this->grid_ox;
+    this->grid_dyy = this->grid_oy + double(this->grid_ny-1) * this->grid_dy;
+  } else {
+	double scale = 0.0;
+	bool gis_ok = false;
+	auto cs_axes = thcs_axesinfo(this->grid_cs, scale, gis_ok);
+	this->grid_dxx = this->grid_ox + double(this->grid_nx-1) * this->grid_dx;
+	this->grid_dxy = this->grid_oy;
+	this->grid_dyx = this->grid_ox;
+	this->grid_dyy = this->grid_oy + double(this->grid_ny-1) * this->grid_dy;
+	if (!gis_ok) thwarning(("%s [%lu] -- cs not supported for surface grid definition",
+		thdbreader.get_cinf()->get_cif_name(),
+        thdbreader.get_cinf()->get_cif_line_number()));
+  }
+
 }
 
 void thsurface::parse_grid(char * spec)
@@ -464,11 +485,16 @@ thdb3ddata * thsurface::get_3d() {
   thdb3dvx* cvx = {};
   
 #define grd(I, J) (this->grid_nx * (J) + (I))
+  double c2, c3, c4, c5;
+  c2 = (this->grid_dxx - this->grid_ox) / double(this->grid_nx-1);
+  c3 = (this->grid_dyx - this->grid_ox) / double(this->grid_ny-1);
+  c4 = (this->grid_dxy - this->grid_oy) / double(this->grid_nx-1);
+  c5 = (this->grid_dyy - this->grid_oy) / double(this->grid_ny-1);
   for(i = 0; i < this->grid_nx; i++)
     for(j = 0; j < this->grid_ny; j++)
       surfvx[grd(i,j)] = this->d3d.insert_vertex(
-        this->grid_ox + i * this->grid_dx,
-        this->grid_oy + j * this->grid_dy,
+        this->grid_ox + i * c2 + j * c3, //i * this->grid_dx,
+        this->grid_oy + i * c4 + j * c5, //j * this->grid_dy,
         this->grid[grd(i,j)]
         );
 
@@ -548,6 +574,8 @@ void thsurface::convert_all_cs() {
 	}
 	if (!thisnan(this->grid_ox)) {
 		this->convert_cs(this->grid_cs, this->grid_ox, this->grid_oy, this->grid_ox, this->grid_oy);
+		this->convert_cs(this->grid_cs, this->grid_dxx, this->grid_dxy, this->grid_dxx, this->grid_dxy);
+		this->convert_cs(this->grid_cs, this->grid_dyx, this->grid_dyy, this->grid_dyx, this->grid_dyy);
 	}
 }
 

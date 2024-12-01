@@ -1659,10 +1659,14 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             expf_sfc.m_height = csrf->grid_ny;
             expf_sfc.m_calib[0] = csrf->grid_ox;
             expf_sfc.m_calib[1] = csrf->grid_oy;
-            expf_sfc.m_calib[2] = csrf->grid_dx;
-            expf_sfc.m_calib[3] = 0.0;
-            expf_sfc.m_calib[4] = 0.0;
-            expf_sfc.m_calib[5] = csrf->grid_dy;
+            //expf_sfc.m_calib[2] = csrf->grid_dx;
+            //expf_sfc.m_calib[3] = 0.0;
+            //expf_sfc.m_calib[4] = 0.0;
+            //expf_sfc.m_calib[5] = csrf->grid_dy;
+            expf_sfc.m_calib[2] = (csrf->grid_dxx - csrf->grid_ox) / double(csrf->grid_nx-1);
+            expf_sfc.m_calib[3] = (csrf->grid_dyx - csrf->grid_ox) / double(csrf->grid_ny-1);
+            expf_sfc.m_calib[4] = (csrf->grid_dxy - csrf->grid_oy) / double(csrf->grid_nx-1);
+            expf_sfc.m_calib[5] = (csrf->grid_dyy - csrf->grid_oy) / double(csrf->grid_ny-1);
 
             lxFileDbl * cdata = new lxFileDbl[csrf->grid_size];
             for(i = 0; i < (unsigned long) csrf->grid_size; i++) {
