@@ -456,30 +456,26 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 
       for (lei = dp->leg_list.begin(); lei != dp->leg_list.end(); lei++) {
         if (lei->is_valid) {
-          if ((lei->flags & TT_LEGFLAG_SPLAY) == TT_LEGFLAG_SPLAY)
-            fprintf(out, "%s@%s,-,%.2f,%.2f,%.2f\n",
-              lei->from.name, lei->from.psurvey->get_full_name(),
-              lei->total_length, lei->total_bearing, lei->total_gradient);
-          else
-            fprintf(out, "%s@%s,%s@%s,%.2f,%.2f,%.2f\n",
-              lei->from.name, lei->from.psurvey->get_full_name(), lei->to.name, lei->to.psurvey->get_full_name(),
+          bool is_splay = (lei->flags & TT_LEGFLAG_SPLAY) == TT_LEGFLAG_SPLAY;
+          fprintf(out, "%s,%s,%.2f,%.2f,%.2f\n",
+              lei->from.print_full_name().c_str(),
+              is_splay ? "-" : lei->to.print_full_name().c_str(),
               lei->total_length, lei->total_bearing, lei->total_gradient);
         }
       }
 
       // Export equate links between stations 
       int last_equate = 0;
-      const long MAX_LEN = 500;
-      char first_name[MAX_LEN];
+      std::string first_name;
       if (!dp->equate_list.empty()) {
         fprintf(out, "# Equated stations\n");
         for (eqi = dp->equate_list.begin(); eqi != dp->equate_list.end(); eqi++) {
           if (last_equate != eqi->eqid) {
-            std::snprintf(first_name, MAX_LEN, "%s@%s", eqi->station.name, eqi->station.survey);
+            first_name = eqi->station.print_full_name();
             last_equate = eqi->eqid;
           } else {
             if (last_equate != 0)
-              fprintf(out, "%s,%s@%s\n", first_name, eqi->station.name, eqi->station.survey);
+              fprintf(out, "%s,%s\n", first_name.c_str(), eqi->station.print_full_name().c_str());
           }
         }
         fprintf(out, "# End equated stations\n");
