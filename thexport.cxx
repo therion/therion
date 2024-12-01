@@ -42,17 +42,13 @@
 
 
 thexport::thexport() {
-  this->layout = new thlayout;
+  this->layout = std::make_unique<thlayout>();
   this->layout->assigndb(&thdb);
   this->layout->id = ++thdb.objid;
   this->outpt = "";
   this->outpt_def = false;
   this->export_mode = 0;
   this->cs = TTCS_LOCAL;
-}
-
-thexport::~thexport() {
-  delete this->layout;
 }
 
 void thexport::assign_config(class thconfig * cptr) 

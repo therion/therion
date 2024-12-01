@@ -173,8 +173,8 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
 
   thvec2 origin( mw/2.0, mh/2.0	);
   double unit	=	TW.to_unit() * sf;
-  TW.map_image(	(const unsigned	char*)this->m_sketch->m_pic.rgba,	pw,	ph,
-    (unsigned	char*)this->mpic.rgba, mw, mh, 
+  TW.map_image(	(const unsigned	char*)this->m_sketch->m_pic.rgba.data(),	pw,	ph,
+    (unsigned	char*)this->mpic.rgba.data(), mw, mh, 
     origin,	unit,
     4	);
 

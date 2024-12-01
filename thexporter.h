@@ -34,6 +34,7 @@
 #include "thstok.h"
 #include <stdio.h>
 #include <list>
+#include <memory>
 
 
 /**
@@ -72,7 +73,7 @@ static const thstok thtt_exporter[] = {
  * Export list.
  */
  
-typedef std::list <thexport *> thexporter_list;
+using thexporter_list = std::list<std::unique_ptr<thexport>>;
 
 
 /**
@@ -88,8 +89,6 @@ class thexporter {
   public:
   
   thexporter();  ///< Default constructor.
-
-  ~thexporter();  ///< Default destructor.
   
   void assign_config(class thconfig * cptr);  ///< ??
   

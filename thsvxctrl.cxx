@@ -569,7 +569,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
 {
   thbuffer tsbuff;
   thdb1ds * stp;
-  char * lnbuff = new char [4097];
+  std::string lnbuff;
   std::string numbuff;
   unsigned long lnum = 0;
   thlog.printf("\n####################### cavern log file ########################\n");
@@ -578,26 +578,26 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
     ththrow("can't open cavern log file for input");
   // let's read line by line and print to log file
   size_t chidx, nchs;
-  char * chch;
+  const char * chch;
   bool onnum, ondig, fonline;
   long csn;
   size_t lsid;
   lsid = dbp->db1d.station_vec.size();
   while (!(clf.eof())) {
     lnum++;
-    clf.getline(lnbuff,2048);
+    std::getline(clf, lnbuff);
     thlog.printf("%2lu> %s\n",lnum,lnbuff);
     // let's scan the line
-    chch = lnbuff;
+    chch = lnbuff.c_str();
     nchs = strlen(chch);
     onnum = false;
     fonline = true;
     csn = 0;
     chidx = 0;
-    char * start_ch = NULL; //, * test_ch;
+    const char * start_ch = NULL; //, * test_ch;
     int num_type;
     thsvxctrl_src_maptype::iterator srcmi;
-    const auto prev_char_is = [&lnbuff, &start_ch](const char c) { return (start_ch - 1) >= lnbuff && start_ch[-1] == c; };
+    const auto prev_char_is = [&lnbuff, &start_ch](const char c) { return (start_ch - 1) >= lnbuff.c_str() && start_ch[-1] == c; };
 //    if (*lnbuff == 13) lnbuff++;
 //    if (strncmp(lnbuff,"There were",10) == 0)
 //      chidx = 2049;
@@ -696,7 +696,6 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   clf.close();
   thlog.printf("######################### transcription ########################\n%s",tsbuff.get_buffer());
   thlog.printf("#################### end of cavern log file ####################\n");
-  delete [] lnbuff;
 }
 
 void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {

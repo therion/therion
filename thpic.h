@@ -30,12 +30,13 @@
 #define thpic_h
 
 #include <string>
+#include <vector>
 
 struct thpic {
 
   const char * fname, * texfname, * rgbafn;
   
-  char * rgba;
+  std::vector<char> rgba;
 
   long width, height;
 

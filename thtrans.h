@@ -36,6 +36,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <memory>
 
 struct thline2; // forward declaration
 
@@ -266,7 +267,7 @@ struct thmorphtrans {
 
 struct thmorph2trans {
   
-  struct thmorph2trans_members * m;
+  std::unique_ptr<struct thmorph2trans_members> m;
   double m_eps = {};
 
   thmorph2trans();

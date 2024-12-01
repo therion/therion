@@ -32,6 +32,7 @@
 #include <cstddef>
 #include <map>
 #include <list>
+#include <memory>
 #include "thdb3d.h"
 #include "loch/lxMath.h"
 #define THSCRAPISRES 0.001
@@ -153,7 +154,7 @@ struct thscrapis {
 
 #endif
 
-  pthscrapisolpt (*tri_triangles) [3];
+  std::unique_ptr<std::array<pthscrapisolpt, 3>[]> tri_triangles;
   
   int tri_num;
 
@@ -164,7 +165,6 @@ struct thscrapis {
   std::list <thscrapisolpt> ol_list;  
   
   thscrapis(class thscrap * scrap); ///< Default constructor
-  ~thscrapis(); ///< Default destructor
 
 #ifdef THSCRAPIS_NEW3D
 
