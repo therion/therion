@@ -211,7 +211,8 @@ class thimport : public thdataobject {
 
   bool import_shot(struct thsst const & s1s, //
                    struct thsst const & s2s, //
-                   struct thimg_shot const * sli);
+                   struct thimg_shot const * sli,
+                   thsurvey * survey);
 
   void parse_calib(char * spec, int enc);
   

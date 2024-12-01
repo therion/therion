@@ -666,10 +666,12 @@ void thimport::import_file_img()
     }
     
     auto const import_shot_for_matching_station_pair = [&] {
-      for (thsst const & s1s : *from_stations) {
-        for (thsst const & s2s : *to_stations) {
-          if (import_shot(s1s, s2s, &*sli)) {
-            return true;
+      for (thsurvey * survey = sli->survey; survey; survey = survey->fsptr) {
+        for (thsst const & s1s : *from_stations) {
+          for (thsst const & s2s : *to_stations) {
+            if (import_shot(s1s, s2s, &*sli, survey)) {
+              return true;
+            }
           }
         }
       }
@@ -687,18 +689,22 @@ void thimport::import_file_img()
 }
 
 /**
- * Import shot if stations s1s and s2s are in the same survey as shot sli.
+ * Import shot if stations s1s and s2s are in survey `survey`.
+ *
+ * One of the stations may be an anonymous station (which doesn't belong to
+ * a survey).
  *
  * @return True if shot import was successful
  */
 bool thimport::import_shot(thsst const & s1s, //
                            thsst const & s2s, //
-                           thimg_shot const * sli) {
+                           thimg_shot const * sli,
+                           thsurvey * survey) {
   {
-    thassert(sli->survey);
+    thassert(survey);
 
-    if (!(s1s.has_survey_ancestor(sli->survey) || s1s.is_anon()) ||
-        !(s2s.has_survey_ancestor(sli->survey) || s2s.is_anon())) {
+    if (!(s1s.has_survey_ancestor(survey) || s1s.is_anon()) ||
+        !(s2s.has_survey_ancestor(survey) || s2s.is_anon())) {
       // do not import
       return false;
     }
@@ -710,7 +716,7 @@ bool thimport::import_shot(thsst const & s1s, //
       thassert(!s2s.is_anon());
       shead = {"cartesian", "from", "to", "easting", "northing", "altitude"};
       sdata = {
-          s2s.get_name_in_survey(sli->survey),
+          s2s.get_name_in_survey(survey),
           ANON_STATION_NAME,
           std::to_string(sli->fx - sli->tx),
           std::to_string(sli->fy - sli->ty),
@@ -719,7 +725,7 @@ bool thimport::import_shot(thsst const & s1s, //
     } else if (s2s.is_anon()) {
       shead = {"cartesian", "from", "to", "easting", "northing", "altitude"};
       sdata = {
-          s1s.get_name_in_survey(sli->survey),
+          s1s.get_name_in_survey(survey),
           ANON_STATION_NAME,
           std::to_string(sli->tx - sli->fx),
           std::to_string(sli->ty - sli->fy),
@@ -728,14 +734,14 @@ bool thimport::import_shot(thsst const & s1s, //
     } else {
       shead = {"nosurvey", "from", "to"};
       sdata = {
-          s1s.get_name_in_survey(sli->survey),
-          s2s.get_name_in_survey(sli->survey),
+          s1s.get_name_in_survey(survey),
+          s2s.get_name_in_survey(survey),
       };
     }
 
     auto * const tmpsurvey = this->db->csurveyptr;
-    this->db->csurveyptr = sli->survey;
-    auto * const tmpdata = sli->survey->data;
+    this->db->csurveyptr = survey;
+    auto * const tmpdata = survey->data;
 
     tmpdata->set_data_data(shead.size(), to_charp_vec(shead).data());
 
