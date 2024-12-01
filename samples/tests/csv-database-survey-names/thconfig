@@ -1,0 +1,23 @@
+source
+  survey a
+    survey b
+      centreline
+        data normal from to length compass clino
+        1 2 5 90 0
+      endcentreline
+    endsurvey
+    centreline
+      data normal from to length compass clino
+      2@b 3 4 30 -8
+      3   4 8 60 10
+    endcentreline
+  endsurvey
+  centreline
+    data normal from to length compass clino
+    4@a 5      7      350       0
+    5   6      3      300      -5
+    6   1@b.a 18.6736 212.3959 -1.7492
+  endcentreline
+endsource
+
+export database -o database.csv
