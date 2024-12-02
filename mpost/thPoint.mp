@@ -488,19 +488,6 @@ def p_gradient_BCRA (expr pos,theta,sc,al)=
     thfill (-.25u,-0.7u)--(0,.7u)--(.25u,-.7u)--cycle;
 enddef;
 
-% by Philip Schuchardt
-def p_gradient_NSS (expr pos,theta,sc,al) =
-  U:=(.7u, .6u);
-  T:=identity aligned al rotated theta scaled sc shifted pos;
-  pickup PenC;
-
-  thdraw (-.3u, -.5u) -- (-.7u, -.2u);
-  thdraw (-.2u, -.4u) -- (-.4u, .3u);
-  thdraw (0u, -.3u) -- (0u, .6u);
-  thdraw (.3u, -.5u) -- (.7u, -.2u);
-  thdraw (.2u, -.4u) -- (.4u, .3u);
-enddef;
-
 def p_waterflow_permanent_UIS (expr pos,theta,sc,al)=
     U:=(.15u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
@@ -857,5 +844,3 @@ def p_pillars_UIS(expr pos,theta,sc,al) =
         thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
     endfor;
 enddef;
-
-
