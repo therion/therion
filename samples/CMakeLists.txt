@@ -77,6 +77,34 @@ function(therion_add_sample SAMPLE_NAME THCONFIG)
     add_dependencies(samples-generate-crc _samples-generate-crc-${SAMPLE_NAME})
 endfunction()
 
+# Function for registration of therion samples which produce diffable outputs
+function(therion_add_sample_with_ref SAMPLE_NAME THCONFIG)
+    set(MULTI_ARGS OUTPUT DEPENDS_SRC)
+    cmake_parse_arguments(SAMPLE "" "" "${MULTI_ARGS}" ${ARGN})
+
+    therion_copy_files(${THCONFIG} ${SAMPLE_DEPENDS_SRC}) # copy dependency files to the build dir
+
+    add_custom_command(
+        OUTPUT ${SAMPLE_OUTPUT}
+        DEPENDS therion ${THCONFIG} ${SAMPLE_DEPENDS_SRC}
+        COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:therion> --reproducible-output ${THCONFIG}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+
+    foreach(OUTFILE IN LISTS SAMPLE_OUTPUT)
+        set(TARGET_NAME _samples-verify-ref-${SAMPLE_NAME}--${OUTFILE})
+
+        add_custom_target(
+            ${TARGET_NAME}
+            DEPENDS ${OUTFILE}
+            COMMAND diff -ub ${OUTFILE} ${CMAKE_CURRENT_SOURCE_DIR}/${OUTFILE}.ref
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        )
+
+        add_dependencies(samples-verify-ref ${TARGET_NAME})
+    endforeach()
+endfunction()
+
 add_subdirectory(areas)
 add_subdirectory(basics)
 add_subdirectory(cave-list)
