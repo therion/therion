@@ -95,7 +95,32 @@ Installing dependencies to compile Therion on Ubuntu 22.04:
   |tcl-dev|
   |texlive-binaries|
   |texlive-metapost|
-  |zlib1g-dev|.
+  |zlib1g-dev|
+\par}
+
+Installing dependencies on Ubuntu 24.10:
+
+{\rightskip 0pt plus 3cm
+  |sudo apt install|
+  |bwidget|
+  |catch2|
+  |cmake|
+  |gcc|
+  |ghostscript|
+  |imagemagick|
+  |lcdf-typetools|
+  |libfmt-dev|
+  |libfreetype-dev|
+  |libjpeg-dev|
+  |libpng-dev|
+  |libproj-dev|
+  |libtk-img-dev|
+  |libvtk9-dev|
+  |libwxgtk3.2-dev|
+  |tcl-dev|
+  |texlive-binaries|
+  |texlive-metapost|
+  |zlib1g-dev|
 \par}
 
 Installing dependencies in Fedora 37:
@@ -176,7 +201,7 @@ Here is a selection of parameters which can be used with cmake:
 
 \endlist
 
-The following cmake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
+The following CMake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
 th-docs, loch-docs.
 
 \subsubchapter Legacy approach: using make.
@@ -195,7 +220,7 @@ th-docs, loch-docs.
 
 {\it Make parameters}
 
-Therion's {\it makefile} may take some optional parameters.
+Therion's {\it Makefile} may take some optional parameters.
 
 \list
 * |config-linux|, |config-macosx|, |config-win32| = configure Therion for a
@@ -424,7 +449,7 @@ supported initialization commands follow.
 
 * |cs-trans <cs1> <cs2> <proj-pipeline>|\NEW{6.1.0}
 
-  Define a transforamation pipeline between two coordinate systems.
+  Define a transformation pipeline between two coordinate systems.
   \[See \www{https://proj.org/usage/transformation.html} for details of pipelines
   definition.] Both |cs1| and |cs2| can be lists of aliases
   enclosed in brackets.
