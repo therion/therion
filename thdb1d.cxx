@@ -2387,6 +2387,9 @@ void thdb1d::close_loops()
 
 
     if (cleg->leg->data_type == TT_DATATYPE_NOSURVEY) {
+      // ignore cleg->reverse
+      froms = &(this->station_vec[cleg->leg->from.id - 1]);
+      tos = &(this->station_vec[cleg->leg->to.id - 1]);
       // ak je no-survey, nastavi mu total statistiku
       cleg->leg->total_dx = tos->x - froms->x;
       cleg->leg->total_dy = tos->y - froms->y;

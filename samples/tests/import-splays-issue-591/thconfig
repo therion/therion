@@ -1,0 +1,13 @@
+source
+  survey foo
+    import data.3d -surveys use
+  endsurvey
+endsource
+
+layout x
+  scale 254 50000
+endlayout
+
+export map -layout x -o map-p.xvi -projection plan
+
+export database -o database.csv

@@ -1,0 +1,4 @@
+*data normal from to length compass clino
+a.1 a.2 5 90 0
+a.2 b.1 5 60 0 ; leg in survey [a]
+b.1 b.2 5 90 0

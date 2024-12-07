@@ -1,0 +1,4 @@
+From,To,Length(m),Azimuth(deg),Clino(deg)
+a.1@foo,-,2.00,0.00,0.00
+a.1@foo,a.2@foo,6.00,90.00,0.00
+a.2@foo,-,2.00,180.00,0.00

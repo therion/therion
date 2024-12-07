@@ -1,0 +1,17 @@
+source
+  import data.3d
+
+  centreline
+    extend left 3@b 4@b
+  endcentreline
+endsource
+
+layout x
+  scale 254 50000
+endlayout
+
+select b
+
+export map -layout x -o map-p.xvi -projection plan
+
+export database -o database.csv

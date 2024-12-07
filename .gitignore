@@ -38,7 +38,6 @@ xtherion/therion.tcl
 samples/pocket-topo/cave.3d
 samples/pocket-topo/cave.plt
 core
-thconfig
 geomag/test/geomag.i
 geomag/test/geomag.py
 loch.app/Contents/MacOS/loch

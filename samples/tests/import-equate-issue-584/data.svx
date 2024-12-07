@@ -1,0 +1,12 @@
+*infer exports on
+*begin a
+  1 2  4.0  0 0
+  2 3  2.0  0 -90
+*end a
+*begin b
+  1 2  2.0 90 0
+  2 3  3.0 90 -70
+  3 4  9.0 90 0
+  4 5  3.0 90 +70
+*end b
+*equate a.2 b.3
