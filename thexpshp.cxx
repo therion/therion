@@ -475,8 +475,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
         switch (ppt->type) {
           case TT_POINT_TYPE_LABEL:
           case TT_POINT_TYPE_REMARK:
-            if ((ppt->text != NULL) && (strlen(ppt->text) > 0))
-              this->m_fpoints.m_attributes.insert_attribute("_TEXT",ppt->text);
+            if (const auto* text = ppt->get_text(); text != nullptr && !text->empty())
+              this->m_fpoints.m_attributes.insert_attribute("_TEXT", text->c_str());
             break;
           case TT_POINT_TYPE_STATION:
             if (ppt->station_name.id > 0) {

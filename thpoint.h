@@ -35,6 +35,8 @@
 #include "thdb2dpt.h"
 #include "thobjectname.h"
 
+#include <variant>
+
 /**
  * point command options tokens.
  */
@@ -483,7 +485,7 @@ class thpoint : public th2ddataobject {
     align;  ///< Point align.
   double orient, xsize, ysize;  ///<...
 
-  const char * text;  ///< Point text.
+  std::variant<std::monostate, std::string, thdate, thscrap*> data; ///< Point data.
 
   thdb2dpt * point;  ///< Point coordinates.
 
@@ -512,18 +514,15 @@ class thpoint : public th2ddataobject {
 
   thdate * get_date();
 
+  std::string * get_text();
+
+  thscrap * get_scrap();
+
   /**
    * Standard constructor.
    */
 
   thpoint();
-
-
-  /**
-   * Standard destructor.
-   */
-
-  ~thpoint();
 
 
   /**
