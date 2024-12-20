@@ -246,7 +246,7 @@ set xth(gui,bindinsdel) 1
 set xth(gui,me,pointsizectrl) 0
 
 # platform dependent settings
-case $tcl_platform(platform) {
+switch -- $tcl_platform(platform) {
   unix {
     set xth(gui,sbwidth) 9
     set xth(gui,sbwidthb) 1
@@ -303,7 +303,7 @@ case $tcl_platform(platform) {
 }
 
 
-case $tcl_platform(os) {
+switch -- $tcl_platform(os) {
   Darwin {
     set xth(gui,rmb) 2
   }

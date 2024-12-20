@@ -35,7 +35,7 @@ switch $what {
 ##}
   }
   default {
-    case $what {
+    switch $what {
       WIN32 {
         set oid [open "xtherion.tcl" w]
       }
@@ -93,7 +93,7 @@ while {![eof $fid]} {
 close $fid
 close $oid
 
-case $tcl_platform(platform) {
+switch -- $tcl_platform(platform) {
   unix {
     catch {exec chmod 775 xtherion}
     catch {exec chmod 775 svxedit}

@@ -48,7 +48,7 @@ set xth(prj,title) "survex source editor"
 set xth(about,info) "svxedit v1.0 beta\n \u00A9 2002 Stacho Mudrak"
 
 # fonts :-)
-case $tcl_platform(platform) {
+switch -- $tcl_platform(platform) {
   unix {
     set xth(gui,lfont) "Helvetica 10"
     set xth(gui,efont) {fixed 10 roman}
