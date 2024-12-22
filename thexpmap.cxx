@@ -938,9 +938,14 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                     fprintf(pltf, ":%s", thmatch_string(pt->subtype, thtt_point_subtypes));
                   }
               }
-              if (pt->type == TT_POINT_TYPE_STATION) {
-                if (pt->station_name.id != 0) {
-                  fprintf(pltf," -name %s", pt->station_name.print_name().c_str());
+              if (!pt->station_name.is_empty()) {
+                switch (pt->type) {
+                  case TT_POINT_TYPE_STATION:
+                    fprintf(pltf, " -name %s", pt->station_name.print_name().c_str());
+                    break;
+                  case TT_POINT_TYPE_SECTION:
+                    fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
+                    break;
                 }
               }
               if (strlen(pt->name) > 0) {
@@ -966,9 +971,6 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               fprint_scale_option(pltf, pt);
               if (const auto* text = pt->get_text()) {
                 switch (pt->type) {
-                  case TT_POINT_TYPE_SECTION:
-                    fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
-                    break;
                   case TT_POINT_TYPE_LABEL:
                   case TT_POINT_TYPE_REMARK:
                   case TT_POINT_TYPE_STATION_NAME:
