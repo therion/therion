@@ -1028,8 +1028,8 @@ void thdb2d::process_point_references(thpoint * pp)
         optr = this->db->get_object(pp->station_name,pp->fsptr);
         if (optr != NULL) {
           if (optr->get_class_id() == TT_SCRAP_CMD) {
-            if (dynamic_cast<thscrap*>(optr)->proj->type == TT_2DPROJ_NONE) {
-              pp->text = (char *) optr;
+            if (auto& scrap = dynamic_cast<thscrap&>(*optr); scrap.proj->type == TT_2DPROJ_NONE) {
+              pp->data = &scrap;
             } else {
               extend_error = true;
               err_code = "not a none scrap projection";
@@ -2137,14 +2137,14 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
           //  ppoint->ysize *= pscrap->ms;
           switch (ppoint->type) {
             case TT_POINT_TYPE_STATION_NAME:
-              if (ppoint->text == NULL) {
+              if (ppoint->get_text() == nullptr) {
                 neas = pscrap->get_nearest_station(ppoint->point);
                 if (neas == NULL) {
                   ththrow("{} -- unable to determine station name", ppoint->throw_source());
                 } else {
                   ppoint->station_name.name = neas->name;
                   ppoint->station_name.psurvey = neas->survey;
-                  ppoint->text = neas->name;
+                  ppoint->data = std::string(neas->name);
                 }
               }
               break;

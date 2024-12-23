@@ -938,9 +938,14 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                     fprintf(pltf, ":%s", thmatch_string(pt->subtype, thtt_point_subtypes));
                   }
               }
-              if (pt->type == TT_POINT_TYPE_STATION) {
-                if (pt->station_name.id != 0) {
-                  fprintf(pltf," -name %s", pt->station_name.print_name().c_str());
+              if (!pt->station_name.is_empty()) {
+                switch (pt->type) {
+                  case TT_POINT_TYPE_STATION:
+                    fprintf(pltf, " -name %s", pt->station_name.print_name().c_str());
+                    break;
+                  case TT_POINT_TYPE_SECTION:
+                    fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
+                    break;
                 }
               }
               if (strlen(pt->name) > 0) {
@@ -964,18 +969,14 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                 case TT_2DOBJ_PLACE_TOP: fprintf(pltf, " -place top"); break;
               }
               fprint_scale_option(pltf, pt);
-              if (pt->text) {
-                // attention: pt->text is reinterpret_cast<>'ed for some point types!
+              if (const auto* text = pt->get_text()) {
                 switch (pt->type) {
-                  case TT_POINT_TYPE_SECTION:
-                    fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
-                    break;
                   case TT_POINT_TYPE_LABEL:
                   case TT_POINT_TYPE_REMARK:
                   case TT_POINT_TYPE_STATION_NAME:
                   case TT_POINT_TYPE_CONTINUATION:
                     fprintf(pltf, " -text ");
-                    fprint_quoted_string(pltf, pt->text);
+                    fprint_quoted_string(pltf, text->c_str());
                     break;
                 }
               }
@@ -1534,8 +1535,8 @@ if (ENC_NEW.NFSS==0) {
                 if ((op2->get_class_id() == TT_POINT_CMD) &&
                   (dynamic_cast<thpoint*>(op2)->type == TT_POINT_TYPE_SECTION) &&
                   (((dynamic_cast<thpoint*>(op2)->context < 0) && this->symset.is_assigned(SYMP_SECTION)) || ((dynamic_cast<thpoint*>(op2)->context > -1) && this->symset.assigned[dynamic_cast<thpoint*>(op2)->context])) &&
-                  (dynamic_cast<thpoint*>(op2)->text != NULL)) {
-                    cs = (thscrap *) dynamic_cast<thpoint*>(op2)->text;
+                  (dynamic_cast<thpoint*>(op2)->get_scrap() != nullptr)) {
+                    cs = dynamic_cast<thpoint*>(op2)->get_scrap();
                     thdb.db2d.process_projection(cs->proj);
                 }
                 else
