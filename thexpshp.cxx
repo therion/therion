@@ -413,11 +413,13 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
   slp = scrap->get_polygon();
   while (slp != NULL) {
     if (slp->lnio) {
-      this->m_flines.point_insert(slp->lnx1 + scrap->proj->rshift_x, slp->lny1 + scrap->proj->rshift_y, slp->lnz1 + scrap->proj->rshift_z);
-      this->m_flines.point_insert(slp->lnx2 + scrap->proj->rshift_x, slp->lny2 + scrap->proj->rshift_y, slp->lnz2 + scrap->proj->rshift_z);
-      this->m_flines.object_insert();
-	  this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) scrap->id);
-      this->m_flines.m_attributes.insert_attribute("_TYPE","centerline");
+  	  if (((slp->arrow != NULL) && ((slp->arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) == 0)) || scrap->centerline_io) {
+  		  this->m_flines.point_insert(slp->lnx1 + scrap->proj->rshift_x, slp->lny1 + scrap->proj->rshift_y, slp->lnz1 + scrap->proj->rshift_z);
+  		  this->m_flines.point_insert(slp->lnx2 + scrap->proj->rshift_x, slp->lny2 + scrap->proj->rshift_y, slp->lnz2 + scrap->proj->rshift_z);
+  		  this->m_flines.object_insert();
+  		  this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) scrap->id);
+  		  this->m_flines.m_attributes.insert_attribute("_TYPE","centerline");
+      }
     } else {
       this->m_fpoints.point_insert(slp->stx + scrap->proj->rshift_x,  slp->sty + scrap->proj->rshift_y,  slp->stz + scrap->proj->rshift_z);
       this->m_fpoints.object_insert();
