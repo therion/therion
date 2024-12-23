@@ -33,6 +33,7 @@ jobs:
       - name: Run samples
         if: matrix.os == 'ubuntu-24.04'
         run: cmake --build build -t samples-verify-crc -- -j 4
+      - run: cmake --build build -t samples-verify-ref -- -j 4
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04' && always()
         with:
@@ -66,6 +67,7 @@ jobs:
           sudo tlmgr install collection-langcyrillic
           sudo tlmgr install collection-langczechslovak
           cmake --build build -t samples-verify-crc -- -j 4
+          cmake --build build -t samples-verify-ref -- -j 4
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -93,7 +95,22 @@ jobs:
         with:
           msystem: ${{ matrix.config.msystem }}
           update: true
-          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.2 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
+          install: >
+            make
+            git
+            python
+            diffutils
+            mingw-w64-${{ matrix.config.arch }}-freetype
+            mingw-w64-${{ matrix.config.arch }}-cmake
+            mingw-w64-${{ matrix.config.arch }}-proj
+            mingw-w64-${{ matrix.config.arch }}-shapelib
+            mingw-w64-${{ matrix.config.arch }}-vtk
+            mingw-w64-${{ matrix.config.arch }}-wxWidgets3.2
+            mingw-w64-${{ matrix.config.arch }}-gcc
+            mingw-w64-${{ matrix.config.arch }}-make
+            mingw-w64-${{ matrix.config.arch }}-bwidget
+            mingw-w64-${{ matrix.config.arch }}-fmt
+            mingw-w64-${{ matrix.config.arch }}-catch
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Set up the batteries
@@ -104,6 +121,7 @@ jobs:
           mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' build/innosetup.ini),proj-datumgrid}/. ../proj-lib
       - run: cmake --build build -t test
       - run: cmake --build build -t samples-verify-crc -- -j 4
+      - run: cmake --build build -t samples-verify-ref -- -j 4
       - uses: actions/upload-artifact@v4
         if: always()
         with:
