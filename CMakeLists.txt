@@ -45,6 +45,9 @@ if (ENABLE_CCACHE)
     endif()
 endif()
 
+option(ENABLE_CODE_COVERAGE "Enable code coverage." OFF)
+include(CodeCoverage)
+
 # determine platform
 if(UNIX AND NOT APPLE)
     set(THPLATFORM LINUX)
@@ -187,6 +190,9 @@ if (BUILD_THERION)
     target_link_libraries(utest PUBLIC therion-common catch2-interface)
     enable_testing()
     add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    if (ENABLE_CODE_COVERAGE)
+        set_property(TEST utest PROPERTY ENVIRONMENT LLVM_PROFILE_FILE=${COVERAGE_FOLDER}/utest.profraw)
+    endif()
 
     # updates thlibrarydata.cxx
     add_custom_target(library 
