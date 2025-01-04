@@ -1,11 +1,29 @@
 Therion 6.3.2 (in progress):
 
 therion:
+ * geomag data updated up to 2030
+ * splay shots removed from SHP 2D line layer (to be consistent with PDF;
+   splay shots are included in 3D SHP files)
+ * code improvements: manual memory management cleanup [#604],
+   refactoring of thpoint internal state [#611]
+ * documentation updates including #610, #615
  * bugs fixed:
-   - Proj can't find files in the user-writable directory on Windows
+   - Proj canʼt find files in the user-writable directory on Windows
+   - import .3d unmatched survey legs [#606]
+   - fixed surface grid misalignment when CS of grid differs from output CS
+
+xtherion:
+ * allow space in thconfig filename [#603]
+ * code improvements: replace obsolete ‛case’ with ‛switch’ [#612]
 
 Windows installer:
  * fixed shortcuts to thbook.pdf and CHANGES.txt
+
+infrastructure:
+ * add several ‛diff’ tests, fix CSV database export [#609]
+ * CI: fix Windows installer version in GIT forks [#613]
+ * removed Ubuntu 20.04 CI job [#616]
+ * Proj 9.5.1 included to the testing script
 
 --------------------------------------------------------------------------------
 
