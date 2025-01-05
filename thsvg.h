@@ -26,5 +26,7 @@
 void thsvg(const char * fname, int, const legenddata& ldata);
 
 std::string escape_html(std::string);
+std::string sanitize_xml_id(const std::string&
+);
 
 #endif

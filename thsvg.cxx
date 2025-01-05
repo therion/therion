@@ -29,11 +29,10 @@
 #include <iostream>
 #include <fstream>
 #include <list>
-//#include <deque>
 #include <map>
 #include <set>
-//#include <vector>
 #include <string>
+#include <regex>
 
 #include <cstring>
 #include <cstdio>
@@ -45,7 +44,6 @@
 #include "thepsparse.h"
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
-//#include "thtexfonts.h"
 #include "therion.h"
 #include "thversion.h"
 #include "thconfig.h"
@@ -54,6 +52,7 @@
 #include "thdouble.h"
 
 const int prec_xy = 2;
+bool scraps_in_defs = false;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -118,6 +117,19 @@ std::string escape_html(std::string s) {
   if (close_font!="") t+= close_font;
 
   return t;
+}
+
+// https://www.w3.org/TR/SVG2/struct.html#IDAttribute
+// https://www.w3.org/TR/xml/#NT-Name
+std::string sanitize_xml_id(const std::string& s) {
+    if (s.empty()) return "_";
+    std::regex invalid_chars("[^a-zA-Z0-9_:.-]");
+    std::regex valid_first("^[a-zA-Z_:]");
+
+    std::string sanitized = std::regex_replace(s, invalid_chars, "_");
+    if (!std::regex_search(sanitized, valid_first)) sanitized = '_' + sanitized;
+
+    return sanitized;
 }
 
 static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -248,11 +260,11 @@ void print_preview(int up,std::ofstream& F, std::string unique_prefix) {
   std::set<std::string> used_scraps;
   
   if (up) { 
-    F << "<g fill=\"none\" stroke=\"" <<
+    F << "<g id=\":preview_above:\" fill=\"none\" stroke=\"" <<
        LAYOUT.col_preview_above.to_svg() << "\" stroke-width=\"0.1\">\n";
   }
   else { 
-    F << "<g stroke=\"none\" fill=\"" <<
+    F << "<g id=\":preview_below:\" stroke=\"none\" fill=\"" <<
        LAYOUT.col_preview_below.to_svg() << "\">\n";
   }
   used_layers = (up ? MAP_PREVIEW_UP : MAP_PREVIEW_DOWN);
@@ -265,12 +277,26 @@ void print_preview(int up,std::ofstream& F, std::string unique_prefix) {
         if (used_scraps.count(K->name) > 0) {
           if (up) {
             if (K->B != "" && K->sect == 0) {
-              F << "<use x=\"" << K->B1 << "\" y=\"" << K->B2 << "\" xlink:href=\"#B_" << K->name << "_" << unique_prefix << "\" />\n";
+              if (scraps_in_defs)
+                F << "<use x=\"" << K->B1 << "\" y=\"" << K->B2 << "\" xlink:href=\"#B_" << K->name << "_" << unique_prefix << "\" />\n";
+              else {
+                F << "<g transform=\"translate(" << K->B1 << " " << K->B2 << ")\" id=\"" << sanitize_xml_id(K->src_name) << "." <<
+                   sanitize_xml_id(K->src_survey) << ":preview_above:" << K->id << "\">\n";
+                K->Bc.MP.print_svg(F, unique_prefix);
+                F << "</g>\n";
+              }
             }
           }
           else {
             if (K->I != "" && K->sect == 0) {
-              F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />\n";
+              if (scraps_in_defs)
+                F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />\n";
+              else {
+                F << "<g transform=\"translate(" << K->I1 << " " << K->I2 << ")\" id=\"" << sanitize_xml_id(K->src_name) << "." <<
+                   sanitize_xml_id(K->src_survey) << ":preview_below:" << K->id << "\">\n";
+                K->Ic.MP.print_svg(F, unique_prefix);
+                F << "</g>\n";
+              }
             }
           }
         }
@@ -283,7 +309,7 @@ void print_preview(int up,std::ofstream& F, std::string unique_prefix) {
 
 void print_grid(std::ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY, std::string unique_prefix) {
   if (LAYOUT.grid == 0) return;
-  PAGEDEF << "<g>\n";
+  PAGEDEF << "<g id=\":grid:\">\n";
   
   paired ll, ur, lr, ul, llrot, urrot, ulrot, lrrot, llnew, urnew, origin;
   ll.x = LLX;
@@ -394,7 +420,7 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
 
 void print_surface_bitmaps (std::ofstream &F) {
   if (LAYOUT.transparency) 
-    F << "<g opacity=\"" << LAYOUT.surface_opacity << "\">\n";
+    F << "<g id=\":surface_bitmap:\" opacity=\"" << LAYOUT.surface_opacity << "\">\n";
   F.precision(8);
   for (std::list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
                                       I != SURFPICTLIST.end(); I++) {
@@ -549,15 +575,16 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
     }
   }
   // scraps:
-  for(std::list<scraprecord>::iterator I = SCRAPLIST.begin(); 
+  if (scraps_in_defs)
+    for(std::list<scraprecord>::iterator I = SCRAPLIST.begin();
                                   I != SCRAPLIST.end(); I++) {
-    ginit("F_" + I->name); I->Fc.MP.print_svg(F,unique_prefix); gend;
-    ginit("G_" + I->name); I->Gc.MP.print_svg(F,unique_prefix); gend;
-    ginit("B_" + I->name); I->Bc.MP.print_svg(F,unique_prefix); gend;
-    ginit("I_" + I->name); I->Ic.MP.print_svg(F,unique_prefix); gend;
-    ginit("E_" + I->name); I->Ec.MP.print_svg(F,unique_prefix); gend;
-    ginit("X_" + I->name); I->Xc.MP.print_svg(F,unique_prefix); gend;
-  }
+      ginit("F_" + I->name); I->Fc.MP.print_svg(F,unique_prefix); gend;
+      ginit("G_" + I->name); I->Gc.MP.print_svg(F,unique_prefix); gend;
+      ginit("B_" + I->name); I->Bc.MP.print_svg(F,unique_prefix); gend;
+      ginit("I_" + I->name); I->Ic.MP.print_svg(F,unique_prefix); gend;
+      ginit("E_" + I->name); I->Ec.MP.print_svg(F,unique_prefix); gend;
+      ginit("X_" + I->name); I->Xc.MP.print_svg(F,unique_prefix); gend;
+    }
   // grid:
   int i=0;
   for (std::list<converted_data>::iterator I = GRIDLIST.begin();
@@ -576,7 +603,7 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   F << "</defs>\n";
   // --- end of definitions ---
 
-  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox)\">\n";
+  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox)\" id=\"root\">\n";
   // page background:
   if (!LAYOUT.col_background.is_white()) {
     F << "<rect x=\"" << llx << "\" y=\"" << lly << 
@@ -598,6 +625,7 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   for (std::map<int,layerrecord>::iterator J = LAYERHASH.begin();
                                       J != LAYERHASH.end(); J++) {
     if (J->second.Z == 0) {
+      F << "<g id=\"" << sanitize_xml_id(J->second.Nraw) << ":map:" << J->first << "\">\n";
       std::map < int,std::set<std::string> > LEVEL;
       std::set <std::string> page_text_scraps,used_scraps;
       LEVEL = J->second.scraps;
@@ -624,9 +652,16 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
             bgcol=K->col_scrap.to_svg();
           }
           if (used_scraps.count(K->name) > 0 && K->I != "") {
-            F << "<g fill=\"" << bgcol << "\">\n";
-            F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />\n";
-            F << "</g>\n";
+            if (scraps_in_defs) {
+              F << "<g fill=\"" << bgcol << "\">\n";
+              F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />\n";
+              F << "</g>\n";
+            } else {
+              F << "<g fill=\"" << bgcol << "\" transform=\"translate(" << K->I1 << " " << K->I2 << ")\" id=\"" << sanitize_xml_id(K->src_name) << "." <<
+                   sanitize_xml_id(K->src_survey) << ":background:" << K->id << "\">\n";
+              K->Ic.MP.print_svg(F, unique_prefix);
+              F << "</g>\n";
+            }
           }
         }
 
@@ -657,25 +692,47 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
         for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->F != "") {
-            F << "<use x=\"" << K->F1 << "\" y=\"" << K->F2 << "\" xlink:href=\"#F_" << K->name << "_" << unique_prefix << "\" />\n";
+            if (scraps_in_defs)
+              F << "<use x=\"" << K->F1 << "\" y=\"" << K->F2 << "\" xlink:href=\"#F_" << K->name << "_" << unique_prefix << "\" />\n";
+            else {
+              F << "<g transform=\"translate(" << K->F1 << " " << K->F2 << ")\" id=\"" << sanitize_xml_id(K->src_name) << "." <<
+                   sanitize_xml_id(K->src_survey) << ":clipped_content:" << K->id << "\">\n";
+              K->Fc.MP.print_svg(F, unique_prefix);
+              F << "</g>\n";
+            }
           }
         }
 
         for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->E != "") {
-            F << "<use x=\"" << K->E1 << "\" y=\"" << K->E2 << "\" xlink:href=\"#E_" << K->name << "_" << unique_prefix << "\" />\n";
+            if (scraps_in_defs)
+              F << "<use x=\"" << K->E1 << "\" y=\"" << K->E2 << "\" xlink:href=\"#E_" << K->name << "_" << unique_prefix << "\" />\n";
+            else {
+              F << "<g transform=\"translate(" << K->E1 << " " << K->E2 << ")\" id=\"" << sanitize_xml_id(K->src_name) << "." <<
+                   sanitize_xml_id(K->src_survey) << ":unclipped_content:" << K->id << "\">\n";
+              K->Ec.MP.print_svg(F, unique_prefix);
+              F << "</g>\n";
+            }
           }
         }
 
         for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->X != "") {
-            F << "<use x=\"" << K->X1 << "\" y=\"" << K->X2 << "\" xlink:href=\"#X_" << K->name << "_" << unique_prefix << "\" />\n";
+            if (scraps_in_defs)
+              F << "<use x=\"" << K->X1 << "\" y=\"" << K->X2 << "\" xlink:href=\"#X_" << K->name << "_" << unique_prefix << "\" />\n";
+            else {
+              F << "<g transform=\"translate(" << K->X1 << " " << K->X2 << ")\" id=\"" << sanitize_xml_id(K->src_name) << "." <<
+                   sanitize_xml_id(K->src_survey) << ":texts:" << K->id << "\">\n";
+              K->Xc.MP.print_svg(F, unique_prefix);
+              F << "</g>\n";
+            }
           }
         }
 
       }
+      F << "</g>\n";  // end of the layer group
     }
   }
 
@@ -690,7 +747,7 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
 
   // map grid:
   if (LAYOUT.map_grid) {
-    F << "<g stroke=\"#000000\" fill=\"none\" stroke-width=\"0.4\">\n";
+    F << "<g id=\":map_grid:\" stroke=\"#000000\" fill=\"none\" stroke-width=\"0.4\">\n";
     F << "<rect x=\"" << llxo << "\" y=\"" << llyo << 
          "\" width=\"" << urxo-llxo << "\" height=\"" << uryo-llyo << 
          "\" />\n";

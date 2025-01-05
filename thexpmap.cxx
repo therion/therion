@@ -1706,6 +1706,7 @@ if (ENC_NEW.NFSS==0) {
                   }
 
                   SCRAPITEM->sect = 0;
+                  SCRAPITEM->id = sscrap;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
                   if (cs->name != nullptr)
                 	  SCRAPITEM->src_name = cs->name;
@@ -2142,6 +2143,7 @@ if (ENC_NEW.NFSS==0) {
       thdecode_tex(& encb, texb.get_buffer());
       fprintf(plf,"\t\tN => '%s',\n",encb.get_buffer());
       LAYER_ITER->second.N = (strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name);
+      LAYER_ITER->second.Nraw = cmap->map->name;
       if ((chtitle != NULL) && ((cmap->next_item == NULL) || (cmap->next_item->title))) {
         thdecode(& texb,TT_ISO8859_2,chtitle);      
         thdecode_tex(& encb, texb.get_buffer());

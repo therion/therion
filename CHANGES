@@ -1,6 +1,7 @@
 Therion 6.3.2 (in progress):
 
 therion:
+ * SVG maps are now editable (map data is not in <defs> section any more)
  * geomag data updated up to 2030
  * splay shots removed from SHP 2D line layer (to be consistent with PDF;
    splay shots are included in 3D SHP files)
