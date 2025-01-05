@@ -54,6 +54,7 @@ scraprecord::scraprecord() {
   gour_n=0; gour_xmin=0.0; gour_xmax=0.0; gour_ymin=0.0; gour_ymax=0.0;
   src_name = "";
   src_survey = "";
+  id=0;
 }
 
 layerrecord::layerrecord() {
