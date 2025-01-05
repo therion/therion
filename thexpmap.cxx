@@ -1707,6 +1707,11 @@ if (ENC_NEW.NFSS==0) {
 
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
+                  if (cs->name != nullptr)
+                	  SCRAPITEM->src_name = cs->name;
+                  if ((cs->fsptr != nullptr) and (cs->fsptr->name != nullptr))
+                	  SCRAPITEM->src_survey = cs->fsptr->name;
+
                   active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
                   
                   if (export_sections) {

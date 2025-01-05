@@ -65,6 +65,9 @@ struct scraprecord {
   double gour_xmin, gour_xmax, gour_ymin, gour_ymax;
   std::string gour_stream;
 
+  // Scrap identifiers
+  std::string src_name, src_survey;
+
   std::list<surfpictrecord> SKETCHLIST;
   scraprecord();
 };
