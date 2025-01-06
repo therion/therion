@@ -1,4 +1,4 @@
-Therion 6.3.3 (in progress):
+Therion 6.3.3 (2025-01-06):
 
 infrastructure:
  * fix a bug introduced in [#613] preventing building the Windows installer
