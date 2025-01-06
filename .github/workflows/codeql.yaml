@@ -2,7 +2,7 @@ name: CodeQL
 on: [push, pull_request]
 jobs:
   CodeQL:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Enable parallel compilation
       run:  echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
