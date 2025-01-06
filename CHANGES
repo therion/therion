@@ -1,4 +1,4 @@
-Therion 6.3.2 (in progress):
+Therion 6.3.2 (2025-01-06):
 
 therion:
  * SVG maps are now editable (map data is not in <defs> section any more)
@@ -24,6 +24,7 @@ infrastructure:
  * add several ‛diff’ tests, fix CSV database export [#609]
  * CI: fix Windows installer version in GIT forks [#613]
  * removed Ubuntu 20.04 CI job [#616]
+ * support for code coverage generation [#618]
  * Proj 9.5.1 included to the testing script
 
 --------------------------------------------------------------------------------
