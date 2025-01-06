@@ -84,7 +84,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Fetch tags (relevant for forks)
+      - name: Fetch tags (relevant for forks only)
+        if: github.repository != 'therion/therion'
         run: git fetch https://github.com/therion/therion tag 'v*'
       - name: build and create the installation package
         id: build
@@ -109,7 +110,7 @@ jobs:
           cd ../therion.bin
           mv therion-setup.exe therion-setup-$THID.exe
           mv thbook/thbook.pdf thbook-$THID.pdf
-      - uses: 'actions/upload-artifact@v4'
+      - uses: actions/upload-artifact@v4
         with:
           name: therion-setup-msys2-${{ steps.build.outputs.THID_out }}
           path: |
