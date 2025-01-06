@@ -130,7 +130,7 @@ PROJ_VER = $(shell $(CROSS)pkg-config proj --modversion)
 ifneq ($(filter $(PROJ_VER),$(PROJ_UNSUPPORTED)),)
     $(error unsupported Proj version: $(PROJ_VER))
 endif
-PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs --static)
+PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs)
 PROJ_MVER ?= $(shell echo $(PROJ_VER) | sed 's/\..*//')
 CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
 
@@ -143,7 +143,7 @@ TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
 
 
 # linker settings
-LIBS = $(PROJ_LIBS) $(shell $(CROSS)pkg-config fmt --libs --static)
+LIBS = $(PROJ_LIBS) $(shell $(CROSS)pkg-config fmt --libs)
 LDFLAGS = $(LDBFLAGS)
 
 
