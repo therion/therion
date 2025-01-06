@@ -14,7 +14,7 @@ if (NOT BUILD_LOCH)
 endif()
 
 # Tiled Rendering library
-add_library(tr lxTR.h lxTR.cxx)
+add_library(tr STATIC lxTR.h lxTR.cxx)
 target_compile_definitions(tr PUBLIC ${LOCH_DEFINITIONS})
 target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU 
                          PRIVATE enable-warnings)
@@ -25,7 +25,7 @@ if (WIN32)
     target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
     target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
 elseif(${THPLATFORM} STREQUAL LINUX)
-    add_library(R2 lxR2P.h lxR2P.cxx)
+    add_library(R2 STATIC lxR2P.h lxR2P.cxx)
     target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
     target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
 else()
