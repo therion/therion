@@ -348,7 +348,7 @@ thsurvey * thsurvey_get_entrance_fs(thsurvey * s) {
 
 thobjectname thsurvey::get_entrance() {
 	thsurvey * s(this);
-	while ((s != NULL) and s->entrance.is_empty()) s = s->fsptr;
+	while ((s != NULL) && s->entrance.is_empty()) s = s->fsptr;
 	if (s == NULL) s = thsurvey_get_entrance_fs(this);
 	if (s == NULL) return thobjectname();
 	return s->entrance;

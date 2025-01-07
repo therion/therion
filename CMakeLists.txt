@@ -168,7 +168,12 @@ if (BUILD_THERION)
 
     # therion resource file
     if (WIN32)
-        add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/therion.res -O coff
+        if (MSVC)
+            set(THERION_RC_COMMAND ${CMAKE_RC_COMPILER} /fo ${CMAKE_CURRENT_BINARY_DIR}/therion.res ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc)
+        else()
+            set(THERION_RC_COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/therion.res -O coff)
+        endif()
+        add_custom_command(COMMAND ${THERION_RC_COMMAND}
                             OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/therion.res
                             DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc ${CMAKE_CURRENT_SOURCE_DIR}/therion.ico
                             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
