@@ -261,8 +261,19 @@ enddef;
 
 def l_chimney_UIS (expr P) =
   T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.8u);
   pickup PenC;
-  thdraw P dashed evenly scaled optical_zoom;
+  forever:
+    t1 := arctime (cas + mojkrok*1/5) of P;
+    t  := arctime (cas + mojkrok/2) of P;
+    t2 := arctime (cas + mojkrok*4/5) of P;
+    thdraw (subpath (t1,t2) of P);
+    mark_ (P,t,-0.2u);
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
 enddef;
 
 def l_ceilingstep_SKBB (expr P) =
