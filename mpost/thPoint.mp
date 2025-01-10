@@ -197,7 +197,7 @@ def p_rimstonedam_ASF (expr pos,theta,sc,al)=
     thdraw (-.4u,.2u){dir -70}..{dir 70}(.4u,.2u);
 enddef;
 
-def p_anastomosis_UIS (expr pos,theta,sc,al)=
+def p_karren_UIS (expr pos,theta,sc,al)=
     U:=(.5u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -207,7 +207,7 @@ def p_anastomosis_UIS (expr pos,theta,sc,al)=
         {dir 85}(.5u,-.3u);
 enddef;
 
-def p_karren_UIS (expr pos,theta,sc,al)=
+def p_anastomosis_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
