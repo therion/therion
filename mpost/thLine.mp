@@ -259,10 +259,14 @@ def l_overhang_SKBB (expr P) =
 enddef;
 
 
-def l_chimney_UIS (expr P) =
+def l_chimney_SKBB (expr P) =
   T:=identity;
   pickup PenC;
   thdraw P dashed evenly scaled optical_zoom;
+enddef;
+
+def l_chimney_UIS (expr P) =
+  l_ceilingstep_SKBB(reverse P);
 enddef;
 
 def l_ceilingstep_SKBB (expr P) =
