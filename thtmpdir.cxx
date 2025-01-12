@@ -35,7 +35,7 @@
 #include <filesystem>
 
 #ifdef THWIN32
-#include <processthreadsapi.h>
+#include <windows.h>
 auto thgetpid() { return GetCurrentProcessId(); }
 #else
 #include <unistd.h>
