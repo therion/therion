@@ -694,6 +694,18 @@ def p_rope_SKBB (expr pos,r,s,al) =
     thdraw (.1u,.1u);
 enddef;
 
+def p_camp_UIS (expr pos,r,s,al) =
+    U:=(.4u, .5u);
+    T:=identity aligned al scaled s shifted pos;
+
+    pickup PenC;
+    thdraw (-.5u,-.4u)--(.5u,-.4u);
+    pickup PenD;
+    thdraw (-.4u,-.4u)--(0,.5u)--(.4u,-.4u);
+    thfill (-.3u,-.4u)--(0,.30u)--(.3u,-.4u)--cycle;
+    thfill (0,.5u)--(.35u,.45u)--(.07u,.35u)--cycle;
+enddef;
+
 def p_camp_SKBB (expr pos,r,s,al) =
     U:=(.4u, .5u);
     T:=identity aligned al scaled s shifted pos;
