@@ -388,7 +388,7 @@ void thinit::load()
   }
 #endif  
 
-  set_proj_lib_path();
+  set_proj_lib_path(false);  // don't use env in windows therion executable
   thcs_add_default_transformations();
 
   this->tmp_path = "";
@@ -756,9 +756,9 @@ char * thinit::get_path_otftotfm()
   return this->path_otftotfm.get_buffer();
 }
 
-void thinit::set_proj_lib_path() {  // set PROJ library resources path
+void thinit::set_proj_lib_path([[maybe_unused]] bool use_env) {  // set PROJ library resources path; we need use_env for testing different versions of Proj
 #ifdef THWIN32
-  if (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr) {
+  if (!use_env || std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr) {
     const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER);
     // Proj's method to get user-writable directory (filemanager.cpp)
     std::string local_path;

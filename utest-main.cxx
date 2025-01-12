@@ -10,7 +10,7 @@
 
 int main( int argc, char* argv[] ) {
 
-  thini.set_proj_lib_path();
+  thini.set_proj_lib_path(true);  // use env variables on windows
   thcs_add_default_transformations();
 
   printf("utest: using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
