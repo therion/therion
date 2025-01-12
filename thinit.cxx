@@ -758,7 +758,7 @@ char * thinit::get_path_otftotfm()
 
 void thinit::set_proj_lib_path([[maybe_unused]] bool use_env) {  // set PROJ library resources path; we need use_env for testing different versions of Proj
 #ifdef THWIN32
-  if (!use_env || std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr) {
+  if (!use_env || (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr)) {
     const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER);
     // Proj's method to get user-writable directory (filemanager.cpp)
     std::string local_path;
