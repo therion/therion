@@ -3256,6 +3256,20 @@ proc xth_me_show_context_menu {id x y} {
       #DON'T REMOVE - for translation. [mc "value"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel value] -command {xth_me_ctx_change_text value}
     }
+    # dist
+    if {[lsearch -exact {extra} $xth(me,cmds,$id,type)] > -1} {
+      set optdist [xth_me_get_option_value "dist" $opts]
+      set xth(me,ctrl,ctx,dist) [lindex $optdist 0]
+      set xth(me,ctrl,ctxopt,dist) [lindex $optdist 1] 
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel dist] -command {xth_me_ctx_change_text dist}
+    }
+    # from
+    if {[lsearch -exact {extra} $xth(me,cmds,$id,type)] > -1} {
+      set optfrom [xth_me_get_option_value "from" $opts]
+      set xth(me,ctrl,ctx,from) [lindex $optfrom 0]
+      set xth(me,ctrl,ctxopt,from) [lindex $optfrom 1] 
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel from] -command {xth_me_ctx_change_text from}
+    }
     # toggle orientation
     if {[lsearch -exact {station} $xth(me,cmds,$id,type)] == -1} {
       $xth(me,ctxmenu) add checkbutton -label [mc "orientation"] -variable xth(ctrl,me,point,rotid) -command xth_me_cmds_point_change_state
