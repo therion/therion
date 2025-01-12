@@ -1738,3 +1738,34 @@ xtherion:
 
  * Text editor: text undo/redo works with tcltk8.4.3
  * Map editor: line symbols may be split
+
+--------------------------------------------------------------------------------
+Therion 0.2.12 (2003-05-27):
+
+ * 3dtopos not needed any more (removed also from therion.ini file)
+ * layout::grid-size in real distance units
+ * environment variables:
+   THINIT - search paths for (x)therion.ini file
+   THERION - search paths for configuration and source files
+ * centerline - discovery-date + discovery-team
+
+--------------------------------------------------------------------------------
+Therion 0.2.11 (2003-05-05):
+
+ * point->subtype:
+   water-flow: paleo, intermittent, permanent (default)
+   (station: temporary (default))
+
+
+--------------------------------------------------------------------------------
+Therion 0.2.10 (2003-04-09):
+
+ * Installation
+   - just "make" is enough
+   - make xtherion, make thpdf not needed any more
+   - make xtherion, thpdf works on Win32
+ * Layout
+   - transparency on/off
+   - opacity 0.0-100.0
+ * Point symbols
+   - anostomosen -> anastomosis
