@@ -548,6 +548,7 @@ case WM_SIZE:
 		resize();
 		return 0;
 	}
+	break;
 case WM_PALETTECHANGED:
 	/*
 	** Update palette mapping if this *is not* the active window.
@@ -597,6 +598,7 @@ case VK_SPACE:
 	} else {
 		idleFunc = doRedraw;
 	}
+	break;
 default:
 	break;
 	}
