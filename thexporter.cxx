@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -34,21 +34,13 @@
 #include "thexpdb.h"
 #include "thexpsys.h"
 #include "thexptable.h"
+#include "therion.h"
 #include <stdio.h>
 
 
 thexporter::thexporter()
 {
   this->cfgptr = NULL;
-}
-
-
-thexporter::~thexporter()
-{
-  thexporter_list::iterator ii;
-  for(ii = this->xlist.begin(); ii != this->xlist.end(); ii++) {
-    delete (*ii);
-  }
 }
 
 
@@ -62,19 +54,18 @@ void thexporter::parse_system(char * system_cmd)
 {
   if (strlen(system_cmd) == 0)
     ththrow("empty system command not allowed");
-  thexpsys * xp;
-  xp = new thexpsys;
+  auto xp = std::make_unique<thexpsys>();
   xp->src.name = thdb.strstore(thcfg.get_cfg_file()->get_cif_name(),true);
   xp->src.line = thcfg.get_cfg_file()->get_cif_line_number();  
   xp->assign_config(this->cfgptr);
   xp->cmd = thdb.strstore(system_cmd, false);
-  this->xlist.push_back(xp);
+  this->xlist.push_back(std::move(xp));
 }
 
 
 void thexporter::parse_export(int nargs, char ** args) {
 
-  thexport * xp;
+  std::unique_ptr<thexport> xp;
   int expmode; 
 
   if (nargs < 1)
@@ -82,22 +73,22 @@ void thexporter::parse_export(int nargs, char ** args) {
   expmode = thmatch_token(args[0], thtt_exporter);
   switch (expmode) {
     case TT_EXP_MODEL:
-      xp = new thexpmodel;
+      xp = std::make_unique<thexpmodel>();
       xp->export_mode = expmode;
       break;
     case TT_EXP_DATABASE:
-      xp = new thexpdb;
+      xp = std::make_unique<thexpdb>();
       xp->export_mode = expmode;
       break;
     case TT_EXP_CONTLIST:
     case TT_EXP_SURVEYLIST:
     case TT_EXP_CAVELIST:
-      xp = new thexptable;
+      xp = std::make_unique<thexptable>();
       xp->export_mode = expmode;
       break;
     case TT_EXP_MAP:
     case TT_EXP_ATLAS:
-      xp = new thexpmap;
+      xp = std::make_unique<thexpmap>();
       xp->export_mode = expmode;
       break;
     default:
@@ -119,7 +110,7 @@ void thexporter::parse_export(int nargs, char ** args) {
   args++;
   xp->assign_config(this->cfgptr);
   xp->parse(nargs, args);
-  this->xlist.push_back(xp);
+  this->xlist.push_back(std::move(xp));
   
 }
 
@@ -147,7 +138,7 @@ void thexporter::export_db(class thdatabase * dp)
     switch ((*ii)->export_mode) {
       case TT_EXP_MAP:
       case TT_EXP_ATLAS:
-        dynamic_cast<thexpmap*>(*ii)->parse_projection(dp);
+        dynamic_cast<thexpmap*>(ii->get())->parse_projection(dp);
     }
   }    
 

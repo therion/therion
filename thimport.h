@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -208,6 +208,11 @@ class thimport : public thdataobject {
   void import_file();
 
   void import_file_img();
+
+  bool import_shot(struct thsst const & s1s, //
+                   struct thsst const & s2s, //
+                   struct thimg_shot const * sli,
+                   thsurvey * survey);
 
   void parse_calib(char * spec, int enc);
   

@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -44,6 +44,7 @@
 #include "thtexfonts.h"
 #include "thlang.h"
 #include "thfilehandle.h"
+#include "therion.h"
 #include <filesystem>
 
 #include <fmt/printf.h>
@@ -394,7 +395,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   FILE * pltf;
   char station_name[14];
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -676,7 +677,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
       
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -768,8 +769,8 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
                   fseek(xf.get(), 0, SEEK_SET);
                   if (fsz > 0) {
                     char * cdata = new char [fsz];
-                    thassert(fread((void *) cdata, 1, fsz, xf.get()) == fsz);
-                    fwrite((void *) cdata, 1, fsz, texf.get());
+                    thassert(fread(cdata, 1, fsz, xf.get()) == fsz);
+                    fwrite(cdata, 1, fsz, texf.get());
                     delete [] cdata;
                   }
                 }
@@ -925,7 +926,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
       
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -1658,16 +1659,20 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             expf_sfc.m_height = csrf->grid_ny;
             expf_sfc.m_calib[0] = csrf->grid_ox;
             expf_sfc.m_calib[1] = csrf->grid_oy;
-            expf_sfc.m_calib[2] = csrf->grid_dx;
-            expf_sfc.m_calib[3] = 0.0;
-            expf_sfc.m_calib[4] = 0.0;
-            expf_sfc.m_calib[5] = csrf->grid_dy;
+            //expf_sfc.m_calib[2] = csrf->grid_dx;
+            //expf_sfc.m_calib[3] = 0.0;
+            //expf_sfc.m_calib[4] = 0.0;
+            //expf_sfc.m_calib[5] = csrf->grid_dy;
+            expf_sfc.m_calib[2] = (csrf->grid_dxx - csrf->grid_ox) / double(csrf->grid_nx-1);
+            expf_sfc.m_calib[3] = (csrf->grid_dyx - csrf->grid_ox) / double(csrf->grid_ny-1);
+            expf_sfc.m_calib[4] = (csrf->grid_dxy - csrf->grid_oy) / double(csrf->grid_nx-1);
+            expf_sfc.m_calib[5] = (csrf->grid_dyy - csrf->grid_oy) / double(csrf->grid_ny-1);
 
             lxFileDbl * cdata = new lxFileDbl[csrf->grid_size];
             for(i = 0; i < (unsigned long) csrf->grid_size; i++) {
               cdata[i] = csrf->grid[i];
             }
-            expf_sfc.m_dataPtr = expf.m_surfacesData.AppendData((void *) cdata, csrf->grid_size * sizeof(lxFileDbl));
+            expf_sfc.m_dataPtr = expf.m_surfacesData.AppendData(reinterpret_cast<const uint8_t*>(cdata), csrf->grid_size * sizeof(lxFileDbl));
             expf.m_surfaces.push_back(expf_sfc);
             delete [] cdata;
             
@@ -1729,7 +1734,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
             }
             expf_scrap.m_numPoints = d3d->nvertices;
-            expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+            expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
             thdb3dfc * fcp;
             thdb3dfx * fxp;
             for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
@@ -1765,7 +1770,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               tdata[i] = *tli;
             }
             expf_scrap.m_num3Angles = tlist.size();
-            expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+            expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
             delete [] pdata;
             delete [] tdata;
             expf.m_scraps.push_back(expf_scrap);
@@ -1801,7 +1806,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
           }
           expf_scrap.m_numPoints = d3d->nvertices;
-          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
           thdb3dfc * fcp;
           thdb3dfx * fxp;
           for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
@@ -1837,7 +1842,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             tdata[i] = *tli;
           }
           expf_scrap.m_num3Angles = tlist.size();
-          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
           delete [] pdata;
           delete [] tdata;
           expf.m_scraps.push_back(expf_scrap);
@@ -1877,7 +1882,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
 
   FILE * out;
   const char * fnm = this->get_output("cave.kml");
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;
@@ -1936,7 +1941,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
           station->x, station->y, station->z, x, y, z);
         fprintf(out, "<Placemark>\n");
         fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
-        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
+        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->get_label(), layout->lang).c_str());
         fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
         fprintf(out, "</Placemark>\n");
       }

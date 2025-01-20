@@ -41,7 +41,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -348,8 +348,8 @@ NR_Point unit_vector(NR_Point const &a)
 }
 
 
-
-NR_Point bezier_pt(unsigned degree, NR_Point const V[], double t);
+template <unsigned int degree>
+NR_Point bezier_pt(NR_Point const V[], double t);
 
 long sp_bezier_fit_cubic(NR_Point bezier[], NR_Point const data[], long len, double error);
 
@@ -915,9 +915,9 @@ NewtonRaphsonRootFind(BezierCurve const Q, NR_Point const &P, double const u)
     }
 
     /* Compute Q(u), Q'(u) and Q''(u). */
-    NR_Point const Q_u  = bezier_pt(3, Q, u);
-    NR_Point const Q1_u = bezier_pt(2, Q1, u);
-    NR_Point const Q2_u = bezier_pt(1, Q2, u);
+    NR_Point const Q_u  = bezier_pt<3>(Q, u);
+    NR_Point const Q1_u = bezier_pt<2>(Q1, u);
+    NR_Point const Q2_u = bezier_pt<1>(Q2, u);
 
     /* Compute f(u)/f'(u), where f is the derivative wrt u of distsq(u) = 0.5 * the square of the
        distance from P to Q(u).  Here we're using Newton-Raphson to find a stationary point in the
@@ -957,7 +957,7 @@ NewtonRaphsonRootFind(BezierCurve const Q, NR_Point const &P, double const u)
     {
         double const diff_lensq = lensq(diff);
         for (double proportion = .125; ; proportion += .125) {
-            if ( lensq( bezier_pt(3, Q, improved_u) - P ) > diff_lensq ) {
+            if ( lensq( bezier_pt<3>(Q, improved_u) - P ) > diff_lensq ) {
                 if ( proportion > 1.0 ) {
                     //g_warning("found proportion %g", proportion);
                     improved_u = u;
@@ -978,7 +978,7 @@ NewtonRaphsonRootFind(BezierCurve const Q, NR_Point const &P, double const u)
 /** 
  * Evaluate a Bezier curve at parameter value \a t.
  * 
- * \param degree The degree of the Bezier curve: 3 for cubic, 2 for quadratic etc.
+ * \tparam degree The degree of the Bezier curve: 3 for cubic, 2 for quadratic etc.
  * \param V The control points for the Bezier curve.  Must have (\a degree+1)
  *    elements.
  * \param t The "parameter" value, specifying whereabouts along the curve to
@@ -994,16 +994,17 @@ NewtonRaphsonRootFind(BezierCurve const Q, NR_Point const &P, double const u)
  * is i * BezierII(i-1, V'), where for all j, V'[j] =
  * V[j + 1] - V[j].
  */
+template <unsigned int degree>
 NR_Point
-bezier_pt(unsigned const degree, NR_Point const V[], double const t)
+bezier_pt(NR_Point const V[], double const t)
 {
+    static_assert(degree < 4, "degree must be less than 4");
     /** Pascal's triangle. */
     static int const pascal[4][4] = {{1},
                                      {1, 1},
                                      {1, 2, 1},
                                      {1, 3, 3, 1}};
     //g_assert( degree < G_N_ELEMENTS(pascal) );
-    g_assert( degree < 5 );
     double const s = 1.0 - t;
 
     /* Calculate powers of t and s. */
@@ -1245,7 +1246,7 @@ compute_max_error_ratio(NR_Point const d[], double const u[], unsigned const len
     unsigned snap_end = 0;
     NR_Point prev = bezCurve[0];
     for (unsigned i = 1; i <= last; i++) {
-        NR_Point const curr = bezier_pt(3, bezCurve, u[i]);
+        NR_Point const curr = bezier_pt<3>(bezCurve, u[i]);
         double const distsq = lensq( curr - d[i] );
         if ( distsq > maxDistsq ) {
             maxDistsq = distsq;
@@ -1299,7 +1300,7 @@ static double
 compute_hook(NR_Point const &a, NR_Point const &b, double const u, BezierCurve const bezCurve,
              double const tolerance)
 {
-    NR_Point const P = bezier_pt(3, bezCurve, u);
+    NR_Point const P = bezier_pt<3>(bezCurve, u);
     NR_Point const diff = .5 * (a + b) - P;
     double const dist = L2(diff);
     if (dist < tolerance) {

@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -30,7 +30,6 @@
 #include "thconfig.h"
 #include <stdio.h>
 #include <string.h>
-#include "thparse.h"
 #include "thdatabase.h"
 #include "thdataobject.h"
 #include "thsurvey.h"
@@ -38,6 +37,7 @@
 #include <vector>
 #include "thchenc.h"
 #include "thmap.h"
+#include "therion.h"
 
 #include <fmt/printf.h>
 

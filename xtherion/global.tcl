@@ -22,7 +22,7 @@
 ## 
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 ## --------------------------------------------------------------------
 
 package require msgcat
@@ -43,6 +43,7 @@ set xth(gui,help) ".xth_help"
 set xth(gui,message) ".xthmsg"
 #set xth(gui,minsize) {480 300}
 set xth(gui,minsize) {720 576}
+set xth(gui,init_app_normalized) 1
 set xth(gui,balloons) 0
 set xth(gui,toolbar) 1
 set xth(te,template) {}
@@ -245,7 +246,7 @@ set xth(gui,bindinsdel) 1
 set xth(gui,me,pointsizectrl) 0
 
 # platform dependent settings
-case $tcl_platform(platform) {
+switch -- $tcl_platform(platform) {
   unix {
     set xth(gui,sbwidth) 9
     set xth(gui,sbwidthb) 1
@@ -289,15 +290,6 @@ case $tcl_platform(platform) {
     set xth(gui,cursor) arrow
     set xth(app,sencoding) [encoding system]
     set xth(gui,bindinsdel) 0
-    if {[catch {
-      set fid [open "|cmd.exe /c" r]
-      read $fid;
-      close $fid
-    }]} {
-      set xth(gui,compcmd) "command.com /c $xth(gui,compcmd)"
-    } else {
-      set xth(gui,compcmd) "cmd.exe /c $xth(gui,compcmd)"
-    }
   }
   macintosh {
     set xth(kb_meta) Meta
@@ -311,7 +303,7 @@ case $tcl_platform(platform) {
 }
 
 
-case $tcl_platform(os) {
+switch -- $tcl_platform(os) {
   Darwin {
     set xth(gui,rmb) 2
   }

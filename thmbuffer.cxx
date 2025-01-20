@@ -21,12 +21,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thmbuffer.h"
 
+#include <algorithm>
 #include <cstring>
 
 thmbuffer::mblock::mblock(size_t min_size, size_t last_size)
@@ -87,7 +88,7 @@ char * thmbuffer::appendn(const char * src, size_t n)
     char ** new_buf;
     this->max_size *= 4;
     new_buf = new char* [this->max_size];
-    memcpy(new_buf, this->buf, this->size * sizeof(char*));
+    std::copy_n(this->buf, this->size, new_buf);
     delete [] this->buf;
     this->buf = new_buf;
   }

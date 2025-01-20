@@ -22,16 +22,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #ifndef thlayoutclr_h
 #define thlayoutclr_h
 
-#include "thparse.h"
-#include "thpdfdata.h"
+#include "thstok.h"
 #include <stdio.h>
+#include <string>
 
 enum {
   TT_LAYOUTCLRMODEL_UNKNOWN = 0,
@@ -64,7 +64,7 @@ struct thlayout_color {
   thlayout_color(double c, double m, double y, double k) : R(0.0), G(0.0), B(0.0), A(1.0), C(c), M(m), Y(y), K(k), W(1-k), defined(0), model(TT_LAYOUTCLRMODEL_CMYK) {}
   void copy_color(const thlayout_color& src);
   bool is_defined();
-  void set_color(int output_model, color & clr);
+  void set_color(int output_model, struct color & clr);
   void print_to_file(int output_model, FILE * f);
   std::string print_to_str(int output_model);
   void encode_to_str(int output_model, std::string & str);  

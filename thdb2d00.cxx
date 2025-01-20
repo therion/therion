@@ -21,13 +21,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thdb2d.h"
 #include "thdatabase.h"
-#include "thparse.h"
 #include "thmap.h"
 #include "thscrap.h"
 #include "thsurvey.h"
@@ -35,6 +34,7 @@
 #include "thconfig.h"
 #include <list>
 #include <algorithm>
+#include <cstring>
 #include "thmapstat.h"
 
 void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift) {
@@ -144,7 +144,7 @@ bool thdb2d_compscrap(const thscrap * e1, const thscrap * e2)
     return false;
   if (thisnan(e2->z))
     return true;
-  return e1->z >= e2->z;
+  return e1->z > e2->z;
 }
 
 

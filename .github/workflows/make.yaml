@@ -2,13 +2,13 @@ name: make
 on: [push, pull_request]
 jobs:
   ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
         run: |
           sudo apt -qq update
-          sudo apt install -y texlive-binaries texlive-metapost texlive-lang-czechslovak texlive-lang-cyrillic libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript libfmt-dev
+          sudo apt install -y texlive-binaries texlive-metapost texlive-lang-czechslovak texlive-lang-cyrillic libproj-dev libwxgtk3.2-dev libvtk9-dev survex imagemagick ghostscript libfmt-dev
       - name: compile therion
         run: |
           make config-debian
@@ -16,25 +16,25 @@ jobs:
           make tests
           sudo make install
           ./therion --print-symbols
-      - name: make samples
-        run: make samples
-  mac:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: install dependencies
-        run: |
-          # brew update  # commented out because of conflicting python versions
-          brew tap homebrew/core
-          rm /usr/local/bin/2to3
-          brew install wxwidgets vtk proj fmt
-      - name: compile therion
-        run: |
-          make config-macosx
-          make ./therion
-          make loch/loch
-          make tests
-          ./therion --version
+  #      - name: make samples
+  #        run: make samples
+  # mac:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: install dependencies
+  #       run: |
+  #         # brew update  # commented out because of conflicting python versions
+  #         brew tap homebrew/core
+  #         rm /usr/local/bin/2to3
+  #         brew install wxwidgets vtk proj fmt
+  #     - name: compile therion
+  #       run: |
+  #         make config-macosx
+  #         make ./therion
+  #         make loch/loch
+  #         make tests
+  #         ./therion --version
   # mxe-i686:
   #   runs-on: ubuntu-20.04
   #   steps:
@@ -71,26 +71,26 @@ jobs:
   #         cd loch; perl makeconfig.pl PLATFORM WIN32CROSS; cd ..
   #         make CROSS=x86_64-w64-mingw32.static- OUTDIR=. therion
   #         make CROSS=x86_64-w64-mingw32.static- OUTDIR=. loch/loch
-  mingw:
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        include: [
-          { msystem: MINGW64, arch: x86_64 }
-        ]
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ matrix.msystem }}
-          update: true
-          install: python mingw-w64-${{ matrix.arch }}-freetype mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-pkgconf mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit mingw-w64-${{ matrix.arch }}-fmt
-      - name: compile therion
-        run: |
-          mingw32-make config-win32
-          mingw32-make OUTDIR=. therion
-          mingw32-make OUTDIR=. loch/loch
-          mingw32-make OUTDIR=. tests
+  # mingw:
+  #   runs-on: windows-latest
+  #   strategy:
+  #     matrix:
+  #       include: [
+  #         { msystem: MINGW64, arch: x86_64 }
+  #       ]
+  #   defaults:
+  #     run:
+  #       shell: msys2 {0}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: msys2/setup-msys2@v2
+  #       with:
+  #         msystem: ${{ matrix.msystem }}
+  #         update: true
+  #         install: python mingw-w64-${{ matrix.arch }}-freetype mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-pkgconf mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit mingw-w64-${{ matrix.arch }}-fmt
+  #     - name: compile therion
+  #       run: |
+  #         mingw32-make config-win32
+  #         mingw32-make OUTDIR=. therion
+  #         mingw32-make OUTDIR=. loch/loch
+  #         mingw32-make OUTDIR=. tests

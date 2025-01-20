@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -34,6 +34,7 @@
 #include "thcsdata.h"
 #include "thdatareader.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include "loch/icase.h"
 
 thdata::thdata()
@@ -2373,7 +2374,15 @@ void thdata::set_data_equate(int nargs, char ** args)
     it->psurvey = this->db->get_current_survey();
   } 
 }
-  
+
+void thdata::clear_last_equate_warning()
+{
+	for(auto & eq : this->equate_list) {
+		if (eq.eqid == this->d_last_equate) eq.srcf.line = 0;
+	}
+}
+
+
 
 #define setstflag(casev, flagv) case casev: \
             if (notflag) \

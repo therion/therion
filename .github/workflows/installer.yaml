@@ -8,7 +8,6 @@ jobs:
   #     git_branch: ${{ steps.build.outputs.git_branch }}
   #   env:
   #     THDIR: /home/runner/work/therion
-  #     PROJ_LIB: /home/runner/work/therion/proj-lib
   #   steps:
   #     - uses: actions/checkout@v4
   #       with:
@@ -45,7 +44,7 @@ jobs:
   #             -DCMAKE_CROSSCOMPILING_EMULATOR=wine \
   #             -DBUILD_SHARED_LIBS=OFF ../therion
   #         ninja
-  #         mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/. ../proj-lib
+  #         cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/ ../therion-batteries/lib/
   #         ninja samples
   #         cd ../therion-batteries
   #         wine InnoSetup/ISCC.exe therion.iss
@@ -63,7 +62,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW64, arch: x86_64 }
+          - { msystem: UCRT64, arch: ucrt-x86_64 }
     defaults:
       run:
         shell: msys2 {0}
@@ -72,7 +71,6 @@ jobs:
       git_branch: ${{ steps.build.outputs.git_branch }}
     env:
       THDIR: d:/a/therion
-      PROJ_LIB: d:/a/therion/proj-lib
     steps:
       - uses: msys2/setup-msys2@v2
         with:
@@ -84,6 +82,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Fetch tags (relevant for forks only)
+        if: github.repository != 'therion/therion'
+        run: git fetch https://github.com/therion/therion tag 'v*'
       - name: build and create the installation package
         id: build
         run: |
@@ -100,14 +101,14 @@ jobs:
           cd ../therion.bin
           cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON ../therion
           cmake --build . -j 4
-          mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/. ../proj-lib
+          cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/ ../therion-batteries/lib/
           cmake --build . -t samples deploy -- -j 4
           cd ../therion-batteries
           InnoSetup/ISCC.exe therion.iss
           cd ../therion.bin
           mv therion-setup.exe therion-setup-$THID.exe
           mv thbook/thbook.pdf thbook-$THID.pdf
-      - uses: 'actions/upload-artifact@v4'
+      - uses: actions/upload-artifact@v4
         with:
           name: therion-setup-msys2-${{ steps.build.outputs.THID_out }}
           path: |
@@ -124,7 +125,7 @@ jobs:
           URL="https://uploads.github.com/repos/${{ github.repository }}/releases/${URL}/assets{?name,label}"
           echo "URL=$URL" >> $GITHUB_ENV
       - name: Download binaries
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: therion-setup-msys2-${{ needs.Windows_installer.outputs.THID }}
       - name: Upload installer

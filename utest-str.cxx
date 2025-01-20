@@ -7,6 +7,7 @@
 #include "loch/icase.h"
 #include "thparse.h"
 #include "thcsdata.h"
+#include "thsvg.h"
 
 using namespace std::string_literals;
 
@@ -83,4 +84,14 @@ TEST_CASE("thstok")
         auto values = GENERATE(from_range(std::begin(test_data), std::end(test_data)-1));
         REQUIRE(thcasematch_token(values.s, test_data) == values.tok);
     }
+}
+
+TEST_CASE("sanitize_xml_id", "[string]")
+{
+    CHECK(sanitize_xml_id("") == "_");
+    CHECK(sanitize_xml_id("1a") == "_1a");
+    CHECK(sanitize_xml_id("a1") == "a1");
+    CHECK(sanitize_xml_id(":a1_:") == ":a1_:");
+    CHECK(sanitize_xml_id("@a/b") == "_a_b");
+    CHECK(sanitize_xml_id("!@#$%^&*()[X]") == "___________X_");
 }

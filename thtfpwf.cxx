@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -74,15 +74,14 @@ void thtfpwf::parse(int nfact, char ** sfact)
       break;
     default:
       if ((nfact > 2) && ((nfact % 2) == 0)) {
-        double * coefs = new double [nfact];
+        std::vector<double> coefs(nfact);
         int cidx,spv;
         for(cidx = 0; cidx < nfact; cidx++) {
           thparse_double(spv,coefs[cidx],sfact[cidx]);
           if (spv == TT_SV_UNKNOWN)
             ththrow("invalid number -- {}", sfact[cidx]);
         }
-        this->set(nfact / 2, coefs);
-        delete [] coefs;
+        this->set(nfact / 2, coefs.data());
       }
       else
         ththrow("invalid number of transformation constants");

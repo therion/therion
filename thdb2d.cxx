@@ -21,14 +21,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thdb2d.h"
 #include "thexception.h"
 #include "thdatabase.h"
-#include "thparse.h"
 #include "thtfangle.h"
 #include "tharea.h"
 #include "thmap.h"
@@ -45,6 +44,7 @@
 #include "thtmpdir.h"
 #include "thinit.h"
 #include "thfilehandle.h"
+#include "therion.h"
 #include <list>
 #include <set>
 #include <iterator>
@@ -418,12 +418,6 @@ thscraplo * thdb2d::insert_scraplo()
 { 
   thscraplo dumm;
   return &(* this->scraplo_list.insert(this->scraplo_list.end(),dumm));
-}
-
-thlayoutln * thdb2d::insert_layoutln()
-{
-  thlayoutln dumm;
-  return &(* this->layoutln_list.insert(this->layoutln_list.end(),dumm));
 }
 
 thscrapen * thdb2d::insert_scrapen()
@@ -1034,8 +1028,8 @@ void thdb2d::process_point_references(thpoint * pp)
         optr = this->db->get_object(pp->station_name,pp->fsptr);
         if (optr != NULL) {
           if (optr->get_class_id() == TT_SCRAP_CMD) {
-            if (dynamic_cast<thscrap*>(optr)->proj->type == TT_2DPROJ_NONE) {
-              pp->text = (char *) optr;
+            if (auto& scrap = dynamic_cast<thscrap&>(*optr); scrap.proj->type == TT_2DPROJ_NONE) {
+              pp->data = &scrap;
             } else {
               extend_error = true;
               err_code = "not a none scrap projection";
@@ -1121,7 +1115,7 @@ void thdb2d::log_distortions() {
         i++;
       }
       
-      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist >= s2->maxdist; });
+      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist > s2->maxdist; });
       thlog.printf("\n\n###################### scrap distortions #######################\n");
       thlog.printf(" PROJECTION: %s%s%s\n", 
         thmatch_string(prj->type,thtt_2dproj), 
@@ -2143,14 +2137,14 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
           //  ppoint->ysize *= pscrap->ms;
           switch (ppoint->type) {
             case TT_POINT_TYPE_STATION_NAME:
-              if (ppoint->text == NULL) {
+              if (ppoint->get_text() == nullptr) {
                 neas = pscrap->get_nearest_station(ppoint->point);
                 if (neas == NULL) {
                   ththrow("{} -- unable to determine station name", ppoint->throw_source());
                 } else {
                   ppoint->station_name.name = neas->name;
                   ppoint->station_name.psurvey = neas->survey;
-                  ppoint->text = neas->name;
+                  ppoint->data = std::string(neas->name);
                 }
               }
               break;

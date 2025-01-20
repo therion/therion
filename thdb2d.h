@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -138,7 +138,6 @@ class thdb2d {
   thdb2dxs_list xs_list;  ///< Export scrap list.
   thscraplo_list scraplo_list;  ///< Export map list.
   thscrapen_list scrapen_list;  ///< Export map list.
-  thlayoutln_list layoutln_list;  ///< Export map list.
   thscraplp_list scraplp_list;  ///< Export scrap list.
 
   thdb2d_udef_prop_list m_udef_list;  ///< List of user defined symbol properties.
@@ -278,13 +277,6 @@ class thdb2d {
    */
    
   thscraplo * insert_scraplo();
-  
-  
-  /**
-   * Insert ...
-   */
-   
-  thlayoutln * insert_layoutln();
   
   
   /**

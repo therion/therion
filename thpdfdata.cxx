@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -52,6 +52,9 @@ scraprecord::scraprecord() {
   E1=0.0; E2=0.0; E3=0.0; E4=0.0; 
   X1=0.0; X2=0.0; X3=0.0; X4=0.0; 
   gour_n=0; gour_xmin=0.0; gour_xmax=0.0; gour_ymin=0.0; gour_ymax=0.0;
+  src_name = "";
+  src_survey = "";
+  id=0;
 }
 
 layerrecord::layerrecord() {
@@ -83,6 +86,7 @@ layout::layout() {
   col_preview_above.set(0,0,0);
   own_pages = 0;
   OCG = true;
+  geospatial = true;
   lang = THLANG_UNKNOWN;
   legend_width = 200;
   legend_columns = 2;

@@ -38,6 +38,7 @@ VTKV6 = $(shell tclsh ./getvtkver.tcl version6)
 VTKV9 = $(shell tclsh ./getvtkver.tcl version9)
 VTKLIBS = $(shell tclsh ./getvtkver.tcl libs)
 VTKLIBSUFFIX=$(shell tclsh ./getvtkver.tcl libsuffix)
+VTKVERSION =$(shell tclsh ./getvtkver.tcl)
 ifeq ($(VTKV6),1)
 VTKLIBS = \
     -lvtkCommonExecutionModel$(VTKLIBSUFFIX) \
@@ -86,6 +87,10 @@ ifeq ($(VTKV6),1)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 endif
+#ifeq ($(VTKV9),1)
+#VTKLIBS += -lvtkpng$(VTKLIBSUFFIX) -lvtkjpeg$(VTKLIBSUFFIX)
+#endif
+
 CXXPFLAGS = \
     -std=c++17 \
     -Wno-deprecated \

@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -48,7 +48,6 @@
 #include "thdb1d.h"
 #include "thinit.h"
 #include "thlogfile.h"
-#include "thconvert.h"
 #include "thpdf.h"
 #include "thpdfdata.h"
 #include "thmpost.h"
@@ -64,6 +63,7 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thsurface.h"
+#include "therion.h"
 #include <stdlib.h>
 #include "loch/lxMath.h"
 #include "thsvg.h"
@@ -87,7 +87,7 @@ thexpmap::~thexpmap() {
 }
 
 void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug) {
-  char * lnbuff = new char [4097];
+  std::string lnbuff;
 //  unsigned long lnum = 0;
   thlog.printf("%s",on_title);
   std::ifstream lf(logfpath);
@@ -96,15 +96,14 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
     }
     thlog.printf("can't open %s file for input",logfpath);
     thlog.printf("%s",off_title);
-    delete [] lnbuff;
     return;
   }
   // let's read line by line and print to log file
   bool skip_next = false, skip_this = false, peoln = false;
   while (!(lf.eof())) {
-    lf.getline(lnbuff,4096);
+    std::getline(lf, lnbuff);
     if (mpbug && (!skip_this)) {
-      if (strncmp(lnbuff,"write",5) == 0) {
+      if (lnbuff.substr(0, 5) == "write") {
         skip_next = true;
         skip_this = true;
         peoln = false;
@@ -124,7 +123,6 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
   if (peoln) 
     thlog.printf("\n");
   lf.close();
-  delete [] lnbuff;
   thlog.printf("%s",off_title);
 }
 
@@ -409,11 +407,9 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   size_t i, nst = thdb.db1d.station_vec.size(), nsh = thdb.db1d.leg_vec.size();
   thdb1ds * cs;
   thdataleg * cl;
-  lxVec * stvec;
-  bool * isexp;
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -421,7 +417,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   }
   this->register_output(fnm);
 
-  isexp = new bool [nst];
+  std::vector<bool> isexp(nst);
   size_t nstvec, nstvecsize;
   if (prj->type == TT_2DPROJ_EXTEND)
     nstvec = 2 * nsh;
@@ -430,7 +426,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   nstvecsize = 1;
   if (nstvecsize < nstvec) nstvecsize = nstvec;
   if (nstvecsize < nst) nstvecsize = nst;
-  stvec = new lxVec [nstvecsize];
+  std::vector<lxVec> stvec(nstvecsize);
 
   layoutnan(gxs, 1.0);
   layoutnan(gys, 1.0);
@@ -727,8 +723,6 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   thset_grid(gyo, gxs, ymin - goverlap, ymax + goverlap, gyoo, gyn);
   fprintf(pltf,"set XVIgrid  {%g %g %g 0.0 0.0 %g %ld %ld}\n", gxoo, gyoo, gxs, gxs, gxn+1, gyn+1);
   
-  delete [] isexp;
-  delete [] stvec;
   fclose(pltf);
   
 #ifdef THDEBUG
@@ -739,6 +733,23 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
 }
 
 
+static void fprint_quoted_string(FILE * stream, const char * text) {
+  while (auto q = strchr(text, '"')) {
+    fprintf(stream, "\"%.*s\"", int(q - text), text);
+    text = q + 1;
+  }
+  fprintf(stream, "\"%s\"", text);
+}
+
+static void fprint_scale_option(FILE * pltf, th2ddataobject * obj) {
+  switch (obj->scale) {
+    case TT_2DOBJ_SCALE_XS: fprintf(pltf, " -scale xs"); break;
+    case TT_2DOBJ_SCALE_S: fprintf(pltf, " -scale s"); break;
+    case TT_2DOBJ_SCALE_L: fprintf(pltf, " -scale l"); break;
+    case TT_2DOBJ_SCALE_XL: fprintf(pltf, " -scale xl"); break;
+    case TT_2DOBJ_SCALE_NUMERIC: fprintf(pltf, " -scale %f", obj->scale_numeric); break;
+  }
+}
 
 void thexpmap::export_th2(class thdb2dprj * prj)
 {
@@ -770,7 +781,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 #endif 
 
   FILE * pltf;
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;
@@ -883,7 +894,31 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 #define objname(obj) (obj)->get_name(), (strlen((obj)->fsptr->get_full_name()) > 0 ? "." : ""), (obj)->fsptr->get_full_name()
 
       // export scrap itself
-      fprintf(pltf,"scrap %s%s%s\n\n", objname(scrap));
+      fprintf(pltf,"scrap %s%s%s -projection %s -scale [%g 2.54 m]",
+              objname(scrap), this->projstr, this->layout->scale * 1e4);
+
+      for (auto & [author, date] : scrap->author_map) {
+        auto fullname = author.name.get_n1() + std::string("/") + author.name.get_n2();
+        fprintf(pltf, " -author %s ", date.get_str(TT_DATE_FMT_THERION));
+        fprint_quoted_string(pltf, fullname.c_str());
+      }
+
+      for (auto & [copyright, date] : scrap->copyright_map) {
+        fprintf(pltf, " -copyright %s ", date.get_str(TT_DATE_FMT_THERION));
+        fprint_quoted_string(pltf, copyright.name);
+      }
+
+      if (const char * title; (title = scrap->get_title()) && title[0]) {
+        fprintf(pltf, " -title ");
+        fprint_quoted_string(pltf, title);
+      }
+
+      switch (scrap->d3) {
+        case TT_FALSE: fprintf(pltf, " -walls off"); break;
+        case TT_TRUE: fprintf(pltf, " -walls on"); break;
+      }
+
+      fprintf(pltf,"\n\n");
     
       // export scrap objects
       th2ddataobject * so;
@@ -894,22 +929,101 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               thpoint * pt = dynamic_cast<thpoint*>(so);
               const char * typestr = thmatch_string(pt->type,thtt_point_types);
               fprintf(pltf,"  point %.2f %.2f %s", tf(pt->point->xt, pt->point->yt), typestr);
-              if (pt->subtype != TT_POINT_SUBTYPE_UNKNOWN) {
-                switch (pt->type) {
-                  case TT_POINT_TYPE_U:
-                    fprintf(pltf, ":%s", pt->m_subtype_str);
-                    break;
-                  default:
+              switch (pt->type) {
+                case TT_POINT_TYPE_U:
+                  fprintf(pltf, ":%s", pt->m_subtype_str);
+                  break;
+                default:
+                  if (pt->subtype != TT_POINT_SUBTYPE_UNKNOWN) {
                     fprintf(pltf, ":%s", thmatch_string(pt->subtype, thtt_point_subtypes));
-                }
+                  }
               }
-              if (pt->type == TT_POINT_TYPE_STATION) {
-                if (pt->station_name.id != 0) {
-                  fprintf(pltf," -name %s", pt->station_name.print_name().c_str());
+              if (!pt->station_name.is_empty()) {
+                switch (pt->type) {
+                  case TT_POINT_TYPE_STATION:
+                    fprintf(pltf, " -name %s", pt->station_name.print_name().c_str());
+                    break;
+                  case TT_POINT_TYPE_SECTION:
+                    fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
+                    break;
                 }
               }
               if (strlen(pt->name) > 0) {
                 fprintf(pltf," -id %s%s%s", objname(pt));
+              }
+              if (pt->align != TT_POINT_ALIGN_C) {
+                fprintf(pltf, " -align %s", thmatch_string(pt->align, thtt_point_aligns));
+              }
+              if (!(pt->tags & TT_2DOBJ_TAG_CLIP_AUTO)) {
+                if ((pt->tags & TT_2DOBJ_TAG_CLIP_ON)) {
+                  fprintf(pltf, " -clip on");
+                } else {
+                  fprintf(pltf, " -clip off");
+                }
+              }
+              if (!isnan(pt->orient)) {
+                fprintf(pltf, " -orientation %.1f", pt->orient);
+              }
+              switch (pt->place) {
+                case TT_2DOBJ_PLACE_BOTTOM: fprintf(pltf, " -place bottom"); break;
+                case TT_2DOBJ_PLACE_TOP: fprintf(pltf, " -place top"); break;
+              }
+              fprint_scale_option(pltf, pt);
+              if (const auto* text = pt->get_text()) {
+                switch (pt->type) {
+                  case TT_POINT_TYPE_LABEL:
+                  case TT_POINT_TYPE_REMARK:
+                  case TT_POINT_TYPE_STATION_NAME:
+                  case TT_POINT_TYPE_CONTINUATION:
+                    fprintf(pltf, " -text ");
+                    fprint_quoted_string(pltf, text->c_str());
+                    break;
+                }
+              }
+              if (auto date = pt->get_date()) {
+                fprintf(pltf, " -value %s", date->get_str(TT_DATE_FMT_THERION));
+              }
+
+              auto xsize = pt->xsize;
+
+              switch (pt->type) {
+                case TT_POINT_TYPE_ALTITUDE:
+                  fprintf(pltf, " -value [fix %g]", xsize);
+                  break;
+                case TT_POINT_TYPE_CONTINUATION:
+                  if (!isnan(xsize)) {
+                    fprintf(pltf, " -explored %g", xsize);
+                  }
+                  break;
+                case TT_POINT_TYPE_DIMENSIONS:
+                  fprintf(pltf, " -value [%g %g]", xsize, pt->ysize);
+                  break;
+                case TT_POINT_TYPE_PASSAGE_HEIGHT:
+                  if (isnan(xsize)) {
+                    xsize = pt->ysize;
+                  } else if (!isnan(pt->ysize)) {
+                    fprintf(pltf, " -value [+%g -%g]", xsize, pt->ysize);
+                    break;
+                  }
+                  [[fallthrough]];
+                case TT_POINT_TYPE_HEIGHT:
+                  if ((pt->tags & TT_POINT_TAG_HEIGHT_N)) {
+                    fprintf(pltf, " -value -%g", xsize);
+                  } else if ((pt->tags & TT_POINT_TAG_HEIGHT_P)) {
+                    fprintf(pltf, " -value +%g", xsize);
+                  } else {
+                    fprintf(pltf, " -value %g", xsize);
+                  }
+                  if ((pt->tags &
+                       (TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_PQ |
+                        TT_POINT_TAG_HEIGHT_UQ))) {
+                    fprintf(pltf, "?");
+                  }
+                  break;
+              }
+
+              if (!(pt->tags & TT_2DOBJ_TAG_VISIBILITY_ON)) {
+                fprintf(pltf, " -visibility off");
               }
               fprintf(pltf,"\n\n");
             }
@@ -960,6 +1074,13 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   lsubtype = ln->first_point->subtype;
                 }
               }
+              if (!(ln->tags & TT_2DOBJ_TAG_CLIP_AUTO)) {
+                if ((ln->tags & TT_2DOBJ_TAG_CLIP_ON)) {
+                  fprintf(pltf, " -clip on");
+                } else {
+                  fprintf(pltf, " -clip off");
+                }
+              }
               if (ln->closed != TT_AUTO) {
                 if (ln->closed == TT_TRUE) {
                   fprintf(pltf," -close on");
@@ -967,11 +1088,29 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   fprintf(pltf," -close off");
                 }
               }
+
+              if ((ln->tags & TT_LINE_TAG_DIRECTION_BEGIN)) {
+                if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
+                  fprintf(pltf, " -direction both");
+                } else {
+                  fprintf(pltf, " -direction begin");
+                }
+              } else if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
+                fprintf(pltf, " -direction end");
+              } else if ((ln->tags & TT_LINE_TAG_DIRECTION_POINT)) {
+                fprintf(pltf, " -direction point");
+              }
+
               if (ln->outline != loutline) {
                 fprintf(pltf," -outline %s", thmatch_string(ln->outline,thtt_line_outlines));
               }
               if (strlen(ln->name) > 0) {
                 fprintf(pltf," -id %s%s%s", objname(ln));
+              }
+              if (ln->text) {
+                fprintf(pltf, " -text ");
+                fprint_quoted_string(pltf, ln->text);
+                fprint_scale_option(pltf, ln);
               }
               fprintf(pltf,"\n");
               thdb2dlp * lpt = ln->first_point;
@@ -999,7 +1138,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   lsubtype = lpt->subtype;
                 }
                 if ((lpt->tags & TT_LINEPT_TAG_ALTITUDE) != 0) {
-                  // TODO: altitude tags and others
+                  fprintf(pltf,"    altitude [fix %g]\n", lpt->rsize);
                 }
                 lpt = lpt->nextlp;
               }
@@ -1016,6 +1155,11 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                 fprintf(pltf," -id %s%s%s", objname(ar));
               }
               fprintf(pltf,"\n");
+
+              for (auto const * bln = ar->first_line; bln != nullptr; bln = bln->next_line) {
+                fprintf(pltf, "    %s\n", bln->name.name);
+              }
+
               fprintf(pltf,"  endarea\n\n");
             }
             break;
@@ -1081,11 +1225,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   legenddata ldata;
 
   bool anyprev, anyprevabove = false, anyprevbelow = false;
-  char * prevbf;
-  prevbf = new char [128];
-  prevbf[127] = 0;
   
-  thbuffer aboveprev, belowprev;
+  std::string aboveprev, belowprev;
 
   std::list<scraprecord>::iterator SCRAPITEM;
   scraprecord dummsr;
@@ -1154,7 +1295,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   layoutnan(goz, 0.0);
 
   out.symset = &(this->symset);
-  out.layout = this->layout;
+  out.layout = this->layout.get();
   out.symset->color_model = this->layout->color_model;
   out.ms = this->layout->scale * 2834.64566929;
   // korekcia shiftu na layout origin
@@ -1394,8 +1535,8 @@ if (ENC_NEW.NFSS==0) {
                 if ((op2->get_class_id() == TT_POINT_CMD) &&
                   (dynamic_cast<thpoint*>(op2)->type == TT_POINT_TYPE_SECTION) &&
                   (((dynamic_cast<thpoint*>(op2)->context < 0) && this->symset.is_assigned(SYMP_SECTION)) || ((dynamic_cast<thpoint*>(op2)->context > -1) && this->symset.assigned[dynamic_cast<thpoint*>(op2)->context])) &&
-                  (dynamic_cast<thpoint*>(op2)->text != NULL)) {
-                    cs = (thscrap *) dynamic_cast<thpoint*>(op2)->text;
+                  (dynamic_cast<thpoint*>(op2)->get_scrap() != nullptr)) {
+                    cs = dynamic_cast<thpoint*>(op2)->get_scrap();
                     thdb.db2d.process_projection(cs->proj);
                 }
                 else
@@ -1565,7 +1706,13 @@ if (ENC_NEW.NFSS==0) {
                   }
 
                   SCRAPITEM->sect = 0;
+                  SCRAPITEM->id = sscrap;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
+                  if (cs->name != nullptr)
+                	  SCRAPITEM->src_name = cs->name;
+                  if ((cs->fsptr != nullptr) && (cs->fsptr->full_name != nullptr))
+                	  SCRAPITEM->src_survey = cs->fsptr->full_name;
+
                   active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
                   
                   if (export_sections) {
@@ -1698,7 +1845,6 @@ if (ENC_NEW.NFSS==0) {
   fprintf(mpf,"beginfig(%d);\ns_northarrow(%g);\nendfig;\n",sfig++,this->layout->rotate + rotate_plus);
 
   LAYOUT.scalebar = fmt::sprintf("data.%d",sfig);
-  //std::snprintf(prevbf,127,"%g",sblen);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()).c_str());
 
@@ -1759,7 +1905,7 @@ if (ENC_NEW.NFSS==0) {
   LEGENDLIST.clear();
   if ((this->layout->legend != TT_LAYOUT_LEGEND_OFF) && 
       ((this->export_mode == TT_EXP_ATLAS) || (this->layout->map_header != TT_LAYOUT_MAP_HEADER_OFF))) {
-    this->symset.export_pdf(this->layout,mpf,sfig);
+    this->symset.export_pdf(this->layout.get(),mpf,sfig);
   }
   
   
@@ -1997,6 +2143,7 @@ if (ENC_NEW.NFSS==0) {
       thdecode_tex(& encb, texb.get_buffer());
       fprintf(plf,"\t\tN => '%s',\n",encb.get_buffer());
       LAYER_ITER->second.N = (strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name);
+      LAYER_ITER->second.Nraw = cmap->map->name;
       if ((chtitle != NULL) && ((cmap->next_item == NULL) || (cmap->next_item->title))) {
         thdecode(& texb,TT_ISO8859_2,chtitle);      
         thdecode_tex(& encb, texb.get_buffer());
@@ -2045,23 +2192,19 @@ if (ENC_NEW.NFSS==0) {
             case TT_MAPITEM_BELOW:
               MAP_PREVIEW_DOWN.insert(cbm->m_target->preview_output_number);
               if (!anyprevbelow) {
-                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
-                belowprev += prevbf;
+                belowprev += std::to_string(cbm->m_target->preview_output_number);
                 anyprevbelow = true;
               } else {
-                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
-                belowprev += prevbf;
+                belowprev += std::to_string(cbm->m_target->preview_output_number);
               }
               break;
             case TT_MAPITEM_ABOVE:
               MAP_PREVIEW_UP.insert(cbm->m_target->preview_output_number);
               if (!anyprevabove) {
-                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
-                aboveprev += prevbf;
+                aboveprev += std::to_string(cbm->m_target->preview_output_number);
                 anyprevabove = true;
               } else {
-                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
-                aboveprev += prevbf;
+                aboveprev += std::to_string(cbm->m_target->preview_output_number);
               }
               break;
           }
@@ -2075,16 +2218,14 @@ if (ENC_NEW.NFSS==0) {
   
   // map preview hash
   if (anyprevabove) {
-    fprintf(plf,"\n\n$MAP_PREVIEW{U} = \"%s\";",aboveprev.get_buffer());
+    fprintf(plf,"\n\n$MAP_PREVIEW{U} = \"%s\";",aboveprev.c_str());
   }
   if (anyprevbelow) {
-    fprintf(plf,"\n\n$MAP_PREVIEW{D} = \"%s\";",belowprev.get_buffer());
+    fprintf(plf,"\n\n$MAP_PREVIEW{D} = \"%s\";",belowprev.c_str());
   }
   
   fprintf(plf,"\n\n\n$PATTERN_DEFS = \"./\";\n");
   fclose(plf);
-  
-  delete [] prevbf;
 
   //QUICK_MAP_EXPORT:
 
@@ -2155,7 +2296,7 @@ if (ENC_NEW.NFSS==0) {
     fprintf(tf,"\\scalebartrue\n");
     ldata.scalebar = true;
   }
-  prj->stat.export_pdftex(tf, this->layout, &ldata);
+  prj->stat.export_pdftex(tf, this->layout.get(), &ldata);
   fclose(tf);
 
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
@@ -2247,8 +2388,6 @@ if (ENC_NEW.NFSS==0) {
       if (!quick_map_exp) {
         thconvert_eps();
         thgraphics2pdf();
-
-        if (thtmp.debug) thconvert_old();
       }
 
       thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
@@ -3551,7 +3690,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     cmap = cmap->next_item;
   }
 
-  lkp->export_color_legend(this->layout);
+  lkp->export_color_legend(this->layout.get());
 
 }
 

@@ -21,12 +21,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
 #include "thsymbolset.h"
-#include "thparse.h"
 #include "thpoint.h"
 #include "thline.h"
 #include "tharea.h"
@@ -44,6 +43,7 @@
 #include "thlogfile.h"
 #include "thepsparse.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include <fmt/printf.h>
 
 thsymbolset::thsymbolset()
@@ -58,7 +58,7 @@ thsymbolset::thsymbolset()
 
 
 void thsymbolset_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug = false) {
-  char * lnbuff = new char [4097];
+  std::string lnbuff;
 //  unsigned long lnum = 0;
   thlog.printf("%s",on_title);
   std::ifstream lf(logfpath);
@@ -67,15 +67,14 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
     }
     thlog.printf("can't open %s file for input",logfpath);
     thlog.printf("%s",off_title);
-    delete [] lnbuff;
     return;
   }
   // let's read line by line and print to log file
   bool skip_next = false, skip_this = false, peoln = false;
   while (!(lf.eof())) {
-    lf.getline(lnbuff,4096);
+    std::getline(lf, lnbuff);
     if (mpbug && (!skip_this)) {
-      if (strncmp(lnbuff,"write",5) == 0) {
+      if (lnbuff.substr(0, 5) == "write") {
         skip_next = true;
         skip_this = true;
         peoln = false;
@@ -95,7 +94,6 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
   if (peoln)
     thlog.printf("\n");
   lf.close();
-  delete [] lnbuff;
   thlog.printf("%s",off_title);
 }
 
@@ -533,7 +531,6 @@ void thsymbolset::export_symbol_defaults(FILE * mpf, const char * symset)
   fprintf(mpf,"\n\n\n%% %s symbol set.\n",symset);
   for(int id = 0; id < SYMX_; id++) {
     if (thsymbolset_assign[id]) {
-      this->assigned[id] = true;
       fprintf(mpf,"mapsymbol(\"%s\",\"%s\",false);\n",thsymbolset_mp[id],symset);
     }
   }
@@ -1828,7 +1825,7 @@ void export_all_symbols()
     }
   }
   hf << "</table>\n";
-  hf << "</body></html>" << std::endl;
+  hf << "</body></html>\n";
   hf.close();
 }
 

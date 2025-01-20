@@ -21,12 +21,11 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thinit.h"
-#include "thparse.h"
 #include "thchenc.h"
 #include "therion.h"
 #include "thconfig.h"
@@ -79,10 +78,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# cs-def <id> <proj4id> [other options]\n\n"
 "### User defined coordinate systems transformations ###\n"
 "# cs-trans <from-cs-id> <to-cs-id> <proj-cs-transformation-string>\n\n"
-"### Let PROJ v6+ find the optimal transformation ###\n"
-"# proj-auto off\n\n"
-"### PROJ v6+ handling of missing transformation grids if proj-auto is on ###\n"
-"# proj-missing-grid warn\n\n"
+"### PROJ handling of missing transformation grids ###\n"
+"# proj-missing-grid download\n\n"
 "### Use count registers in TeX to store references to scraps; otherwise define control sequences ###\n"
 "# tex-refs-registers on\n\n"
 "### Command to remove temporary directory ###\n"
@@ -124,7 +121,6 @@ enum {
   TTIC_LOOPC,
   TTIC_TEXT,	
   TTIC_PDF_FONTS,
-  TTIC_PROJ_AUTO,
   TTIC_PROJ_MISSING_GRID,
   TTIC_OTF2PFB,
   TTIC_TEX_REFS_REGISTERS,
@@ -155,7 +151,6 @@ static const thstok thtt_initcmd[] = {
   {"otf2pfb", TTIC_OTF2PFB},
   {"pdf-fonts", TTIC_PDF_FONTS},
   {"pdftex-path", TTIC_PATH_PDFTEX},
-  {"proj-auto", TTIC_PROJ_AUTO},
   {"proj-missing-grid", TTIC_PROJ_MISSING_GRID},
   {"source-path", TTIC_PATH_SOURCE},
   {"tex-env",TTIC_TEX_ENV},
@@ -393,7 +388,7 @@ void thinit::load()
   }
 #endif  
 
-  set_proj_lib_path();
+  set_proj_lib_path(false);  // don't use env in windows therion executable
   thcs_add_default_transformations();
 
   this->tmp_path = "";
@@ -436,7 +431,6 @@ void thinit::load()
         case TTIC_OTF2PFB:
         case TTIC_TEX_REFS_REGISTERS:
         case TTIC_TEX_ENV:
-        case TTIC_PROJ_AUTO:
         case TTIC_PROJ_MISSING_GRID:
           if (nargs != 2)
             ththrow("invalid number of command arguments");
@@ -528,13 +522,6 @@ void thinit::load()
           if (sv == TT_UNKNOWN_BOOL)
             ththrow("invalid tex-refs-registers switch -- {}", args[1]);
           tex_refs_registers = (sv == TT_TRUE);
-          break;
-
-        case TTIC_PROJ_AUTO:
-          sv = thmatch_token(args[1], thtt_bool);
-          if (sv == TT_UNKNOWN_BOOL)
-            ththrow("invalid proj-auto switch -- {}", args[1]);
-          thcs_cfg.proj_auto = (sv == TT_TRUE);
           break;
 
         case TTIC_PROJ_MISSING_GRID:
@@ -769,10 +756,24 @@ char * thinit::get_path_otftotfm()
   return this->path_otftotfm.get_buffer();
 }
 
-
-void thinit::set_proj_lib_path() {  // set PROJ library resources path
+void thinit::set_proj_lib_path([[maybe_unused]] bool use_env) {  // set PROJ library resources path; we need use_env for testing different versions of Proj
 #ifdef THWIN32
-  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj-" + std::to_string(PROJ_VER)).c_str());
+  if (!use_env || (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr)) {
+    const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER);
+    // Proj's method to get user-writable directory (filemanager.cpp)
+    std::string local_path;
+    const char *local_app_data = std::getenv("LOCALAPPDATA");
+    if (!local_app_data) {
+      local_app_data = std::getenv("TEMP");
+      if (!local_app_data) {
+        local_app_data = "c:/users";
+      }
+    }
+    local_path = local_app_data;
+    local_path += "/proj";
+    const char* const proj_lib_s[] = {path.c_str(), local_path.c_str()};
+    proj_context_set_search_paths(PJ_DEFAULT_CTX, 2, proj_lib_s);
+  }
 #endif
 }
 

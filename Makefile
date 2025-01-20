@@ -14,13 +14,13 @@ CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern
   thdb2dxm.o thdb2dxs.o thscraplo.o thscraplp.o thscrapen.o \
   thpoint.o thline.o tharea.o thlegenddata.o thmpost.o thsymbolsets.o \
   thjoin.o thmap.o thexpmap.o thlayoutln.o thlayoutclr.o thexpsys.o thexpuni.o \
-  thconvert.o thpdf.o thpdfdbg.o thpdfdata.o thtexfonts.o \
+  thpdf.o thpdfdbg.o thpdfdata.o thtexfonts.o \
   thsymbolset.o thlang.o thmapstat.o thexpdb.o thpic.o thsketch.o thproj.o \
   extern/lxMath.o extern/lxFile.o extern/icase.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
   extern/quickhull/QuickHull.o therion.o
-TESTOBJECTS = utest-main.o utest-proj.o utest-icase.o
+TESTOBJECTS = utest-main.o utest-proj.o utest-str.o
 
 EXT =
 
@@ -130,20 +130,20 @@ PROJ_VER = $(shell $(CROSS)pkg-config proj --modversion)
 ifneq ($(filter $(PROJ_VER),$(PROJ_UNSUPPORTED)),)
     $(error unsupported Proj version: $(PROJ_VER))
 endif
-PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs --static)
+PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs)
 PROJ_MVER ?= $(shell echo $(PROJ_VER) | sed 's/\..*//')
 CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
 
 
 # compiler settings
-CXXFLAGS = -DIMG_API_VERSION=1 -DP2T_STATIC_EXPORTS -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/quickhull -Iextern/img -std=c++17
+CXXFLAGS = -DIMG_API_VERSION=1 -DP2T_STATIC_EXPORTS -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/quickhull -Iextern/img -I$(shell $(CROSS)pkg-config fmt --variable=includedir) -std=c++17
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
 
 
 # linker settings
-LIBS = $(PROJ_LIBS) -lfmt
+LIBS = $(PROJ_LIBS) $(shell $(CROSS)pkg-config fmt --libs)
 LDFLAGS = $(LDBFLAGS)
 
 
@@ -427,8 +427,6 @@ $(OUTDIR)/thconfig.o: thconfig.cxx thconfig.h thbuffer.h thmbuffer.h thinput.h \
  thlogfile.h thinit.h thgeomag.h thgeomagdata.h thcomment.h thdata.h \
  thtfangle.h thtf.h thtflength.h thtfpwf.h thsketch.h thpic.h thwarp.h \
  thcs.h
-$(OUTDIR)/thconvert.o: thconvert.cxx therion.h thpdfdbg.h thexception.h thpdfdata.h \
- thepsparse.h thtexfonts.h
 $(OUTDIR)/thcs.o: thcs.cxx thcs.h thcsdata.h thparse.h thbuffer.h thmbuffer.h \
  thexception.h thproj.h thdatabase.h thdataobject.h thperson.h thdate.h \
  thdataleg.h thobjectname.h therion.h thobjectsrc.h thinfnan.h \
@@ -643,7 +641,7 @@ $(OUTDIR)/thexpmap.o: thexpmap.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
  thlocale.h loch/icase.h thlang.h thlangdata.h thexporter.h thexception.h \
  thtmpdir.h thscrap.h thsketch.h thpic.h thwarp.h thtrans.h thpoint.h \
  th2ddataobject.h thline.h tharea.h thmap.h thconfig.h thinput.h \
- thselector.h thlookup.h thinit.h thlogfile.h thconvert.h thpdf.h \
+ thselector.h thlookup.h thinit.h thlogfile.h thpdf.h \
  thmpost.h thtex.h thcmdline.h thtexfonts.h thsurvey.h thtfpwf.h thdata.h \
  thtfangle.h thtf.h thtflength.h thcsdata.h thproj.h thsurface.h thsvg.h \
  extern/img/img.h thcs.h

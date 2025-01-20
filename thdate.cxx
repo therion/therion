@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -444,7 +444,7 @@ void thdate::join(thdate & dt)
 
 char * thdate::get_str(int fmt) {
   this->print_str(fmt);
-  return this->dstr.begin();
+  return this->dstr.data();
 }
 
 
@@ -602,8 +602,19 @@ void date2tm(int y, int m, int d, int hh, int mm, double ss, tm * info)
 void thdate::print_str(int fmt) {
   unsigned int tl = thdate_bufflen - 1;
   long yyyy, mm, dd;
-  char * dst = this->dstr.begin();
+  char * dst = this->dstr.data();
   const char * sep = " - ";
+  const char * sep_ymd = "-"; // YYYY-MM-DD
+  const char * sep_time = "T";
+
+  switch (fmt) {
+    case TT_DATE_FMT_THERION:
+      fmt = TT_DATE_FMT_ISO;
+      sep = "-";
+      sep_ymd = "."; // YYYY.MM.DD
+      sep_time = "@";
+      break;
+  }
 
   switch (fmt) {
     case TT_DATE_FMT_UTF8_Y:
@@ -669,23 +680,23 @@ void thdate::print_str(int fmt) {
       [[fallthrough]];
     default:
       if (this->ssec >= 0.0)
-        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d:%05.2f",
-          this->syear, this->smonth, this->sday, 
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d%s%02d:%02d:%05.2f",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday, sep_time,
           this->shour, this->smin, this->ssec);
       else if (this->smin >= 0)
-        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
-          this->syear, this->smonth, this->sday, 
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d%s%02d:%02d",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday, sep_time,
           this->shour, this->smin);
       else if (this->shour >= 0)
-        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
-          this->syear, this->smonth, this->sday, 
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d%s%02d:%02d",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday, sep_time,
           this->shour, 0);
       else if (this->sday > 0)
-        std::snprintf(dst,tl,"%04d-%02d-%02d",
-          this->syear, this->smonth, this->sday);
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday);
       else if (this->smonth > 0)
-        std::snprintf(dst,tl,"%04d-%02d",
-          this->syear, this->smonth);
+        std::snprintf(dst,tl,"%04d%s%02d",
+          this->syear, sep_ymd, this->smonth);
       else if (this->syear >= 0)
         std::snprintf(dst,tl,"%04d",
           this->syear);
@@ -694,23 +705,23 @@ void thdate::print_str(int fmt) {
       dst += strlen(dst);
       
       if (this->esec >= 0.0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d:%05.2f", sep,
-          this->eyear, this->emonth, this->eday, 
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d%s%02d:%02d:%05.2f", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday, sep_time, 
           this->ehour, this->emin, this->esec);
       else if (this->emin >= 0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
-          this->eyear, this->emonth, this->eday, 
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d%s%02d:%02d", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday, sep_time, 
           this->ehour, this->emin);
       else if (this->ehour >= 0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
-          this->eyear, this->emonth, this->eday, 
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d%s%02d:%02d", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday, sep_time, 
           this->ehour, 0);
       else if (this->eday > 0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02d", sep,
-          this->eyear, this->emonth, this->eday);
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday);
       else if (this->emonth > 0)
-        std::snprintf(dst,tl,"%s%04d-%02d", sep,
-          this->eyear, this->emonth);
+        std::snprintf(dst,tl,"%s%04d%s%02d", sep,
+          this->eyear, sep_ymd, this->emonth);
       else if (this->eyear >= 0)
         std::snprintf(dst,tl,"%s%04d", sep,
           this->eyear);

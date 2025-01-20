@@ -21,7 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
@@ -36,6 +36,7 @@
 #include "thdate.h"
 #include "thscrap.h"
 #include "thobjectname.h"
+#include "therion.h"
 #include <string>
 #include <cstdio>
 
@@ -56,18 +57,6 @@ thpoint::thpoint()
   this->xsize = thnan;
   this->ysize = thnan;
   this->align = TT_POINT_ALIGN_C;
-
-  this->text = NULL;
-}
-
-
-thpoint::~thpoint()
-{
-  if (this->type == TT_POINT_TYPE_DATE) {
-    thdate * dp = (thdate *) this->text;
-    delete dp;
-    this->text = NULL;
-  }
 }
 
 
@@ -294,8 +283,7 @@ void thpoint::parse_type(char * tstr)
   this->ysize = thnan;
   switch (this->type) {
     case TT_POINT_TYPE_DATE:
-      if (this->type == TT_POINT_TYPE_DATE)
-        this->text = (char *) new thdate;
+      this->data = thdate();
       break;
     case TT_POINT_TYPE_ALTITUDE:
       this->xsize = 0.0;
@@ -413,7 +401,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     case TT_POINT_TYPE_LABEL:
     case TT_POINT_TYPE_REMARK:
     case TT_POINT_TYPE_STATION_NAME:
-      if (this->text != NULL) {
+      if (const auto* text = this->get_text()) {
         switch (this->type) {
           case TT_POINT_TYPE_LABEL:
             macroid = SYMP_LABEL;
@@ -450,7 +438,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         fprintf(out->file,"%s etex,",
           ((this->type == TT_POINT_TYPE_STATION_NAME) && (!this->station_name.is_empty()))
           ? utf2tex(thobjectname_print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level)).c_str()
-          : ths2tex(this->text, out->layout->lang).c_str());
+          : ths2tex(*text, out->layout->lang).c_str());
         if (this->type == TT_POINT_TYPE_STATION_NAME)
           postprocess_label = "p_label_mode_station";
         else
@@ -643,7 +631,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->layout->export_mptex_font_size(out->file, this, false);
 
         fprintf(out->file,"%s etex,",
-            utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_LOCALE)).c_str());
+            utf2tex(this->get_date()->get_str(TT_DATE_FMT_LOCALE)).c_str());
         postprocess_label = "p_label_mode_date";
       }
       postprocess = false;
@@ -751,10 +739,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       macroid = SYMP_CONTINUATION;
       {
         std::string tmp;
-        if ((this->text != NULL) && (strlen(this->text) > 0)) {
+        if (const auto* text = this->get_text(); text != nullptr && !text->empty()) {
           if (tmp.length() > 0)
             tmp += " -- ";
-          tmp += this->text;
+          tmp += *text;
         }
         if (tmp.length() > 0) {
           attr_text = "btex \\thcomment ";
@@ -1005,9 +993,9 @@ void thpoint::parse_text(char * ss) {
       break;
   }
   if (strlen(ss) > 0)
-    this->text = this->db->strstore(ss);
+    this->data = std::string(ss);
   else
-    this->text = NULL;
+    this->data = std::monostate();
 }
 
 
@@ -1104,7 +1092,6 @@ void thpoint::parse_value(char * ss, bool is_dist) {
   double dv, dv2;
   int sign, sign2;
   thtflength lentf;
-  thdate * dp;
 
   switch (this->type) {
 
@@ -1279,8 +1266,7 @@ void thpoint::parse_value(char * ss, bool is_dist) {
     case TT_POINT_TYPE_DATE:
       if (npar != 1)
         ththrow("invalid date -- {}",ss);
-      dp = (thdate *) this->text;
-      dp->parse(pars[0]);
+      this->get_date()->parse(pars[0]);
       this->tags |= TT_POINT_TAG_DATE;
       break;
   }
@@ -1384,7 +1370,21 @@ void thpoint::check_extra()
   }
 }
 
+thdate * thpoint::get_date()
+{
+  if (this->type == TT_POINT_TYPE_DATE) {
+    return std::get_if<thdate>(&this->data);
+  }
+  return nullptr;
+}
 
+std::string * thpoint::get_text() {
+  return std::get_if<std::string>(&this->data);
+}
 
-
-
+thscrap * thpoint::get_scrap() { 
+  if (thscrap** ptr = std::get_if<thscrap*>(&this->data)) {
+    return *ptr;
+  }
+  return nullptr;
+}

@@ -21,7 +21,7 @@
 * 
 * You should have received a copy of the GNU General Public License
 * along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 * --------------------------------------------------------------------
 */
 
@@ -73,14 +73,7 @@ thscrapis::thscrapis(class thscrap * scrap) {
   this->m_scrap = scrap;
   this->firstolseg = NULL;
   this->lastolseg = NULL;
-  this->tri_triangles = NULL;
   this->tri_num = 0;
-}
-
-
-
-thscrapis::~thscrapis() {
-  delete [] this->tri_triangles;
 }
 
 
@@ -1209,7 +1202,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     }
     long trix, newnum;
     if (this->tri_num > 0) {
-      this->tri_triangles = new pthscrapisolpt[this->tri_num][3];
+      this->tri_triangles = std::make_unique<std::array<pthscrapisolpt, 3>[]>(this->tri_num);
       for (trix = 0, newnum = 0; trix < this->tri_num; trix++) {
         p2t::Triangle& t = *triangles[trix];
         p2t::Point& b = *t.GetPoint(1);

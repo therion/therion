@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * -------------------------------------------------------------------- 
  */
 
@@ -386,7 +386,7 @@ void lxData::Rebuild()
 		  tmpDbl = sh_it->m_tLRUD;
 		  td[0] = tmpDbl[0]; td[1] = tmpDbl[1]; td[2] = tmpDbl[2]; td[3] = tmpDbl[3];
 		  lrud.SetVThreshold(sh_it->m_threshold);
-		  lrud.InsertShot(fc, tc, fd, td, NULL);
+		  lrud.InsertShot(fc, tc, fd, td);
 		}
     }
   }

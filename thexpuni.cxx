@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -46,6 +46,7 @@
 #include "thproj.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include "therion.h"
 
 
 static const char * DXFpre = 
@@ -426,7 +427,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
   FILE * out;
   const char * fnm = this->get_output("cave.kml");
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;
@@ -619,7 +620,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
 
   FILE * out;
   const char * fnm = this->get_output("cave.bbox");
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;

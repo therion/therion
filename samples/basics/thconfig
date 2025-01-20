@@ -1,4 +1,7 @@
 encoding  utf-8
+
+require 6.2
+
 source rabbit.th
 #!PROCESS
 #!TITLE 2 Drawing maps in therion
@@ -16,12 +19,19 @@ select pdp@rabbit
 
 export map -projection plan -output rabbit-plan.pdf \
   -layout-map-header 0 0 s
-export map -projection plan -output rabbit-plan.pdf \
+export map -projection plan -output rabbit-plan.svg \
+  -layout-map-header 0 0 s
+export map -projection plan -output rabbit-plan.xhtml \
   -layout-map-header 0 0 s
 
 #!IMAGE rabbit-plan.pdf
 
 export map -projection extended -output rabbit-xelev.pdf \
+  -layout-map-header 0 110 sw -layout water-blue
+
+export map -projection extended -output rabbit-xelev.svg \
+  -layout-map-header 0 110 sw -layout water-blue
+export map -projection extended -output rabbit-xelev.xhtml \
   -layout-map-header 0 110 sw -layout water-blue
 
 #!IMAGE rabbit-xelev.pdf

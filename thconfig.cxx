@@ -22,13 +22,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
 #include "thconfig.h"
 #include "therion.h"
-#include "thparse.h"
 #include "thlang.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -160,7 +159,7 @@ thconfig::thconfig()
   thbuffer * tmpbf = &(this->bf1);
   // set search path according to Windows registers
   tmpbf->guarantee(1024);
-  DWORD type, length = 1024;
+  DWORD type = 0, length = 1024;
   HKEY key;
   bool loaded_ok = true;
 	if (RegOpenKey(HKEY_LOCAL_MACHINE,"SOFTWARE\\Therion",&key) != ERROR_SUCCESS) {

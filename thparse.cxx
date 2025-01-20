@@ -22,11 +22,10 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
-#include "thparse.h"
 #include "therion.h"
 #include "thlang.h"
 #include "thtexfonts.h"
@@ -194,7 +193,7 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
       case 1:
         if (*s2 == separator) {
           state = 0;
-          dest->appendn((char *)s1, idx - idx0);
+          dest->appendn(s1, idx - idx0);
         }
     }
     idx++;
@@ -202,7 +201,7 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
   }
   
   if (state == 1)
-    dest->append((char *)s1);
+    dest->append(s1);
 }
 
 
@@ -233,7 +232,7 @@ void thsplit_paths(thmbuffer * dest, const char * src, char separator)
             break;
 #endif
           state = 0;
-          dest->appendn((char *)s1, idx - idx0);
+          dest->appendn(s1, idx - idx0);
         }
     }
     idx++;
@@ -241,7 +240,7 @@ void thsplit_paths(thmbuffer * dest, const char * src, char separator)
   }
   
   if (state == 1)
-    dest->append((char *)s1);
+    dest->append(s1);
 }
 
 

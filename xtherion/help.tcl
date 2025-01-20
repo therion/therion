@@ -22,7 +22,7 @@
 ## 
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 ## --------------------------------------------------------------------
 
 
@@ -34,7 +34,7 @@ $hm add command -label [mc "Control..."] -underline 0 -font $xth(gui,lfont) \
   -command xth_help_control_show
 $hm add command -label [mc "BAC calculator..."] -underline 0 -font $xth(gui,lfont) \
   -command xth_bac_init
-$hm add command -label [mc "Calibrate bitmap..."] -underline 0 -font $xth(gui,lfont) \
+$hm add command -label [mc "Calibrate bitmap (v5.3–6.2 files)..."] -underline 0 -font $xth(gui,lfont) \
   -command xth_calibrate_bitmap
 $hm add command -label [mc "About..."] -underline 0 -font $xth(gui,lfont) \
   -command {

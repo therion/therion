@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -42,17 +42,13 @@
 
 
 thexport::thexport() {
-  this->layout = new thlayout;
+  this->layout = std::make_unique<thlayout>();
   this->layout->assigndb(&thdb);
   this->layout->id = ++thdb.objid;
   this->outpt = "";
   this->outpt_def = false;
   this->export_mode = 0;
   this->cs = TTCS_LOCAL;
-}
-
-thexport::~thexport() {
-  delete this->layout;
 }
 
 void thexport::assign_config(class thconfig * cptr) 

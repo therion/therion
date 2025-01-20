@@ -22,7 +22,7 @@
 ## 
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 ## --------------------------------------------------------------------
 
 
@@ -431,7 +431,7 @@ proc xth_cp_compile {} {
   $xth(ctrl,cp,stp).gores configure -text [mc "RUNNING"] -fg black -bg yellow
   update idletasks
   catch {
-    set thid [open "|$xth(gui,compcmd) -x $xth(cp,opts) $xth(cp,fname)" r]
+    set thid [open "|$xth(gui,compcmd) -x $xth(cp,opts) \"$xth(cp,fname)\"" r]
     if $xth(gui,compshow) {
       while {![eof $thid]} {
 	$xth(cp,log).txt insert end [read $thid 8]

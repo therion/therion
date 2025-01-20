@@ -21,17 +21,19 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thinput.h"
-#include "thparse.h"
 #include "thchencdata.h"
 #include "therion.h"
 #include "thexception.h"
+#include "thversion.h"
 
 #include <algorithm>
+#include <array>
+#include <cstdio>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -41,15 +43,37 @@ namespace fs = std::filesystem;
 const long thinput::max_line_size = 65535;
 
 
-enum {TT_UNKNOWN_INPUT, TT_INPUT, TT_ENCODING};
+enum {
+  TT_UNKNOWN_INPUT,
+  TT_INPUT,
+  TT_ENCODING,
+  TT_REQUIRE,
+};
 
 
 static const thstok thtt_input[] = {
   {"encoding", TT_ENCODING},
   {"input", TT_INPUT},
+  {"require", TT_REQUIRE},
   {NULL, TT_UNKNOWN_INPUT}
 };
 
+
+/**
+ * Parse the numbers from a MAJOR.MINOR.PATCH version string.
+ * @param version The version to parse
+ * @param strict Whether to fail if parsing is incomplete
+ */
+static auto parse_version(const char * const version, bool strict = false) {
+  std::array<unsigned, 3> parts{};
+  int pos = 0;
+  std::sscanf(version, "%u%n.%u%n.%u%n", &parts[0], &pos, &parts[1], &pos,
+              &parts[2], &pos);
+  if (strict && version[pos] != '\0') {
+    ththrow("Failed to parse version '{}'", version);
+  }
+  return parts;
+}
 
 thinput::ifile::ifile(ifile * fp)
 {
@@ -433,6 +457,16 @@ char * thinput::read_line()
           }
           continue;
           
+        case TT_REQUIRE:
+          if (auto nargs = this->tmpmb.get_size(); nargs != 1) {
+            ththrow("expect exactly one argument for 'require', got {}", nargs);
+          }
+          if (const char * version = *(this->tmpmb.get_buffer());
+              parse_version(version, true) > parse_version(THVERSION)) {
+            ththrow("Need at least Therion {}, got {}", version, THVERSION);
+          }
+          continue;
+
       } // interpret commands
           
     }

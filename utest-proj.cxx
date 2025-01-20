@@ -40,12 +40,23 @@ double p1_jtsk_y = 379033.66;
 double p1_jtsk_x = 1208895.36;
 double p1_jtsk_h = 2025.31;
 
-double p1_utm_e = 401375.238;
-double p1_utm_n = 5421243.277;
+double p1_jtsk03_y = 379033.29;
+double p1_jtsk03_x = 1208895.40;
+double p1_jtsk03_h = 2025.31;
+
+double p1_utm_e = 401375.61;
+double p1_utm_n = 5421243.26;
 double p1_utm_h = 2025.437;
 
-double p1_s42_y = 7401458.68;
-double p1_s42_x = 5423542.23;
+double p1_s42_y = 7401459.88;
+double p1_s42_x = 5423543.01;
+
+double undefined = NAN;
+
+std::vector<axis_orient> ax;
+double scale;
+bool gis_ok;
+
 
 TEST_CASE( "projections: init", "[proj]" ) {
     CHECK(thcs_check(thcs_get_params(TTCS_JTSK03)));
@@ -77,31 +88,32 @@ TEST_CASE( "projections: UTM zones", "[proj]" ) {
     CHECK(thcs2zone(TTCS_JTSK03, 509063.963, 1303089.823,0)==33);
 }
 
-TEST_CASE( "projections: EPSG label", "[proj]" ) {
-#if PROJ_VER < 6
-    CHECK((epsg_labels.count(32634) > 0 && strcmp(epsg_labels[32634],"WGS 84 / UTM zone 34N") == 0));
-#else
-    CHECK(thcs_get_label("+init=epsg:32634") == "WGS 84 / UTM zone 34N");
-#endif
+TEST_CASE( "projections: EPSG label (generated)", "[proj]" ) {
+    CHECK(thcs_get_label(TTCS_EPSG + 32634) == "WGS 84 / UTM zone 34N");
 }
 
-
-TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_JTSK03, TTCS_UTM34N,
-            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_utm_e, 0.01));
-    CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
+TEST_CASE( "projections: custom label (defined)", "[proj]" ) {
+    CHECK(thcs_get_label(TTCS_OSGB_ST) == "OSGB:ST");
 }
 
-TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
+TEST_CASE( "projections: custom label (generated)", "[proj]" ) {
+    CHECK(thcs_get_label(TTCS_LAT_LONG) == "WGS 84");
+}
+
+TEST_CASE( "projections: JTSK03 -- utm", "[proj]" ) {
     thcs2cs(TTCS_JTSK03, TTCS_ETRS34,
-            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
+            p1_jtsk03_y, p1_jtsk03_x, p1_jtsk03_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, p1_jtsk_h, 0.001));
+}
+
+TEST_CASE( "projections: JTSK03 -- utm, NaN z coordinate", "[proj]" ) {
+    thcs2cs(TTCS_JTSK03, TTCS_ETRS34,
+            p1_jtsk03_y, p1_jtsk03_x, undefined, x, y, z);
+    CHECK(coord_equal(x, p1_utm_e, 0.01));
+    CHECK(coord_equal(y, p1_utm_n, 0.01));
+    CHECK(std::isnan(z));
 }
 
 /*
@@ -115,19 +127,9 @@ TEST_CASE( "projections: +krovak +czech -- utm, auto=true", "[proj]" ) {
     CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 } */
 
-TEST_CASE( "projections: iJTSK03 -- utm, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
+TEST_CASE( "projections: iJTSK03 -- utm", "[proj]" ) {
     thcs2cs(TTCS_IJTSK03, TTCS_UTM34N,
-            -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_utm_e, 0.01));
-    CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
-}
-
-TEST_CASE( "projections: iJTSK03 -- utm, auto=false", "[proj]" ) {
-    thcs2cs(TTCS_IJTSK03, TTCS_UTM34N,
-            -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
+            -p1_jtsk03_y, -p1_jtsk03_x, p1_jtsk03_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, p1_jtsk_h, 0.001));
@@ -136,109 +138,69 @@ TEST_CASE( "projections: iJTSK03 -- utm, auto=false", "[proj]" ) {
 TEST_CASE( "projections: latlong -- JTSK03", "[proj]" ) {
     thcs2cs(TTCS_LAT_LONG, TTCS_JTSK03,
         p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z);
-    CHECK(coord_equal(x, p1_jtsk_y, 0.4));
-    CHECK(coord_equal(y, p1_jtsk_x, 0.05));
+    CHECK(coord_equal(x, p1_jtsk03_y, 0.01));
+    CHECK(coord_equal(y, p1_jtsk03_x, 0.01));
 }
 
-TEST_CASE( "projections: JTSK03 -- EPSG_4417, auto=false", "[proj]" ) {
+TEST_CASE( "projections: JTSK03 -- EPSG_4417", "[proj]" ) {
     thcs2cs(TTCS_JTSK03, TTCS_EPSG + 4417,
-        p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
-#if PROJ_VER < 6
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
-#else
-    // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
-    // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
-#endif
+        p1_jtsk03_y, p1_jtsk03_x, p1_jtsk03_h, x, y, z);
+    CHECK(coord_equal(x, p1_s42_y, 2.1));
+    CHECK(coord_equal(y, p1_s42_x, 0.9));
 }
 
-/*
-#include <iostream>
-TEST_CASE( "projections: JTSK03 -- EPSG_4417, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_JTSK03, TTCS_EPSG + 4417,
-        p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-#if PROJ_VER < 6
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
-#else
-    // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
-    // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
-cout << x << " " << y << " " << p1_s42_y << " " << p1_s42_x << endl;
-#endif
-}
-*/
-
-TEST_CASE( "projections: iJTSK03 -- EPSG_4417, auto=true", "[proj]" ) {
-    thcs_cfg.proj_auto = true;
+TEST_CASE( "projections: iJTSK03 -- EPSG_4417", "[proj]" ) {
     thcs2cs(TTCS_IJTSK03, TTCS_EPSG + 4417,
-        -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-#if PROJ_VER < 6
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
-#else
-    // epsg code missing towgs84 parameters; but see "EPSG_32634 -- EPSG_4417 auto=true" which works
-    // however, adding auto to this test doesn't help PROJ to find a suitable transformation from JTSK03 (but works for conversion from therion's built-in UTM34N)
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
-#endif
+        -p1_jtsk03_y, -p1_jtsk03_x, p1_jtsk03_h, x, y, z);
+    CHECK(coord_equal(x, p1_s42_y, 2.1));
+    CHECK(coord_equal(y, p1_s42_x, 0.9));
 }
 
-TEST_CASE( "UTM34N -- EPSG_4417 auto=true", "[proj]" ) {    // UTM34N -> S42
-    thcs_cfg.proj_auto = true;
+TEST_CASE( "UTM34N -- EPSG_4417", "[proj]" ) {    // UTM34N -> S42
     thcs2cs(TTCS_UTM34N, TTCS_EPSG + 4417,
         p1_utm_e, p1_utm_n, p1_utm_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
+    CHECK(coord_equal(x, p1_s42_y, 2.1));
+    CHECK(coord_equal(y, p1_s42_x, 0.9));
 }
 
-TEST_CASE( "EPSG_32634 -- EPSG_4417 auto=true", "[proj]" ) {    // UTM34N -> S42
-    thcs_cfg.proj_auto = true;
-    thcs2cs(TTCS_EPSG + 32634, TTCS_EPSG + 4417,
-        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_s42_y, 1.3));
-    CHECK(coord_equal(y, p1_s42_x, 0.05));
-}
-
-TEST_CASE( "EPSG_32634 -- EPSG_4417 auto=false", "[proj]" ) {   // UTM34N -> S42
-    thcs2cs(TTCS_EPSG + 32634, TTCS_EPSG + 4417,
-        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z);
-    CHECK(coord_equal(x, p1_s42_y, 130));
-    CHECK(coord_equal(y, p1_s42_x, 40));
-}
-
-
-TEST_CASE( "EPSG_4326 -- EPSG_32634 auto=true", "[proj]" ) {  // LATLON -> UTM34N
-    thcs_cfg.proj_auto = true;
+TEST_CASE( "EPSG_4326 -- EPSG_32634", "[proj]" ) {  // LATLON -> UTM34N
     thcs2cs(TTCS_EPSG + 4326, TTCS_EPSG + 32634,
         p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z);
-    thcs_cfg.proj_auto = false;
-    CHECK(coord_equal(x, p1_utm_e, 0.4));
-    CHECK(coord_equal(y, p1_utm_n, 0.02));
-}
-
-TEST_CASE( "EPSG_4326 -- EPSG_32634 auto=false", "[proj]" ) {  // LATLON -> UTM34N
-    thcs2cs(TTCS_EPSG + 4326, TTCS_EPSG + 32634,
-        p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z);
-    CHECK(coord_equal(x, p1_utm_e, 0.4));
-    CHECK(coord_equal(y, p1_utm_n, 0.02));
+    CHECK(coord_equal(x, p1_utm_e, 0.01));
+    CHECK(coord_equal(y, p1_utm_n, 0.01));
 }
 
 // null grid
 TEST_CASE( "s-merc -- EPSG_32634", "[proj]" ) {  // Pseudo Mercator -> UTM34N
     thcs2cs(TTCS_S_MERC, TTCS_EPSG + 32634,
-        2187796.40, 6264051.68, 2025.44, x, y, z);
+        2187796.96, 6264051.66, 2025.44, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, 2025.44, 0.001));
+}
+
+TEST_CASE( "axes -- JTSK", "[proj]" ) {
+    ax = thcs_axesinfo(TTCS_JTSK, scale, gis_ok);
+    CHECK(ax[0] == axis_orient::WEST);
+    CHECK(ax[1] == axis_orient::SOUTH);
+    CHECK(scale == 1.0);
+    CHECK(gis_ok == false);
+}
+
+TEST_CASE( "axes -- EPSG_32634", "[proj]" ) {
+    ax = thcs_axesinfo(TTCS_EPSG + 32634, scale, gis_ok);
+    CHECK(ax[0] == axis_orient::EAST);
+    CHECK(ax[1] == axis_orient::NORTH);
+    CHECK(scale == 1.0);
+    CHECK(gis_ok == true);
+}
+
+TEST_CASE( "axes -- latlong", "[proj]" ) {
+    ax = thcs_axesinfo(TTCS_LAT_LONG, scale, gis_ok);
+    CHECK(ax[0] == axis_orient::NORTH);
+    CHECK(ax[1] == axis_orient::EAST);
+    CHECK(scale == 0.0);
+    CHECK(gis_ok == false);
 }
 
 /*

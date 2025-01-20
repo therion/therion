@@ -93,6 +93,8 @@ Therion uses following data types:
              (not starting with `|-|').
 * {\it ext\_keyword} = keyword that can also contain |+*.,'| characters,
             but not on the first position.
+* {\it restr\_keyword} = keyword limited to |A-Z|, |a-z| and |_| characters because
+            of \MP\ limitations
 * {\it date} = a date (or a time interval) specification in the format\hfil\break
           |YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]] [- YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]]]| or `|-|'
           to leave a date unspecified.
@@ -515,13 +517,13 @@ the command may be used anywhere.
   * |vthreshold <number> <units>| = threshold for interpreting LRUD readings
     as left-right-front-back reading perpendicular to the shot.
 
-    If passeges are horizontal (|inclination < vthreshold|),
+    If passages are horizontal (|inclination < vthreshold|),
     LR is perpendicular to the shot and UD is vertical.
 
     If passages are more or less vertical (|inclination > vthreshold|), even UD
     becomes perpendicular to the shot -- otherwise passages would not look very
     good. In the case of vertical shots, UD is interpreted as north-south
-    dimension from the station to allow tube-like modelling of verticals.
+    dimension from the station to allow tube-like modeling of verticals.
 
   * |extend <spec> [<station> [<station>]]| =
     control how the centerline is extended. |<spec>| is one of the following
@@ -859,7 +861,7 @@ Point is a command for drawing a point map symbol.
 
 
 \options
-  * |subtype <keyword>| = determines the object's subtype. The following
+  * |subtype <restr_keyword>| = determines the object's subtype. The following
     subtypes for given types are supported:
 
     {\it station:}\[if station subtype is not specified, Therion reads it from centreline,
@@ -1075,7 +1077,7 @@ respectively.
     The |direction| and |gradient| options are only accepted as a |[LINE DATA]| 
     command option when set to |point|. Otherwise they are accepted as a |line| 
     command option.
-       * |subtype <keyword>| = determines line subtype. The following
+       * |subtype <restr_keyword>| = determines line subtype. The following
          subtypes are supported for given types:
 
          {\it wall:} |invisible|, |bedrock| (default), |sand|, |clay|,
@@ -1316,7 +1318,7 @@ none, survey
   explanation.
 
   (Note: |break| only changes level of maps of scraps and has no function when
-   used with maps of maps, as they will cause a |break| implicitely)
+   used with maps of maps, as they will cause a |break| implicitly)
 \enddescription
 
 \syntax
@@ -1527,6 +1529,30 @@ endrevise|
   revise must always be specified).
 \endarguments
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `require'.
+
+\description
+  Checks that the version of Therion in use is at least |<version>| and stops
+  with an error if not.
+\enddescription
+
+\syntax
+  |require <version>|
+\endsyntax
+
+\context
+  all
+\endcontext
+
+\arguments
+* |<version>| = The minimum supported Therion version in the form
+  |major[.minor[.patch]]|, e.g.~|6.3|.
+\endarguments
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \subchapter Custom attributes.
@@ -1784,9 +1810,10 @@ draw cross-sections.
 \subsubchapter Additional tools.
 
 \NEW{5.3}{\bf Help/Calibrate bitmap} produces OziExplorer-compatible MAP file based
-on georeferencig data included in a PDF map.\[Calibration information for
+on georeferencing data included in PDF maps produced by Therion versions 5.3--6.2.\NEW{6.3}\[Calibration information for
 nine distinct points is present if the centreline contains
-station(s) fixed using geodetic coordinate system(s).]
+station(s) fixed using geodetic coordinate system(s).]\,\[Therion 6.3+ uses standard
+geospatial PDF files where such a calibration is not needed.]
 
 If the map in PDF format has been converted to raster using an external program,
 the converter uses raster image {\it and} pdf map with the same base name
@@ -1801,8 +1828,8 @@ to a raster format.
 format which needs to be imported using XTherion and can not be processed
 by Therion directly.]
 from PocketTopo application can be imported in the text editor as well as in the map
-editor ({\it File $\to$ Import $\to$ PocketTopo therion export} and
-{\it Background Images $\to$ Insert $\to$ PocketTopo therion export}). The
+editor ({\it File $\to$ Import $\to$ PocketTopo Therion export} and
+{\it Background Images $\to$ Insert $\to$ PocketTopo Therion export}). The
 same file is used for both imports. Importing the sketch does not create scrap
 data directly. The drawing is just displayed on the background like scanned
 bitmaps and should be digitized manually.

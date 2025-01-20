@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
@@ -115,7 +115,7 @@ thattr_obj * thattr::get_object(long user_id)
 }
 
 
-thattr_obj * thattr::insert_object(void * data, long user_id)
+thattr_obj * thattr::insert_object(thdataobject * data, long user_id)
 {
   thattr_obj tmp, * r;
   r = NULL;
@@ -530,7 +530,7 @@ void thattr::export_txt(const char * fname, int /*encoding*/) // TODO unused par
 
   this->analyze_fields();
 
-  f = fopen(fname, "w");
+  f = fopen(fname, "wb");
   if (f == NULL) {
     thwarning(("unable to open file for output -- %s", fname));
     return;
@@ -592,7 +592,7 @@ void thattr::export_kml(const char * fname, const char * name_field, const char 
     return;
   }
   
-  f = fopen(fname, "w");
+  f = fopen(fname, "wb");
   if (f == NULL) {
     thwarning(("unable to open file for output -- %s", fname));
     return;
@@ -667,7 +667,7 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
 
   this->analyze_fields();
 
-  f = fopen(fname, "w");
+  f = fopen(fname, "wb");
   if (f == NULL) {
     thwarning(("unable to open file for output -- %s", fname));
     return;
