@@ -41,14 +41,14 @@ public:
     {}
 };
 
-template <typename FormatStr, typename... Args>
-[[noreturn]] void ththrow(const FormatStr& format, Args&& ...args)
+template <typename... Args>
+[[noreturn]] void ththrow(fmt::format_string<Args...> format, Args&& ...args)
 {
     throw thexception(fmt::format(format, std::forward<Args>(args)...));
 }
 
-template <typename FormatStr, typename... Args>
-[[noreturn]] void threthrow(const FormatStr& format, Args&& ...args)
+template <typename... Args>
+[[noreturn]] void threthrow(fmt::format_string<Args...> format, Args&& ...args)
 {
     try
     {
