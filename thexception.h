@@ -41,6 +41,8 @@ public:
     {}
 };
 
+
+#if __cplusplus >= 202002L
 template <typename... Args>
 [[noreturn]] void ththrow(fmt::format_string<Args...> format, Args&& ...args)
 {
@@ -59,3 +61,23 @@ template <typename... Args>
         throw thexception(fmt::format("{} -- {}", fmt::format(format, std::forward<Args>(args)...), e.what()));
     }
 }
+#else
+template <typename FormatStr, typename... Args>
+[[noreturn]] void ththrow(const FormatStr& format, Args&& ...args)
+{
+    throw thexception(fmt::format(format, std::forward<Args>(args)...));
+}
+
+template <typename FormatStr, typename... Args>
+[[noreturn]] void threthrow(const FormatStr& format, Args&& ...args)
+{
+    try
+    {
+        throw;
+    }
+    catch(const std::exception& e)
+    {
+        throw thexception(fmt::format("{} -- {}", fmt::format(format, std::forward<Args>(args)...), e.what()));
+    }
+}
+#endif
