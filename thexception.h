@@ -37,47 +37,22 @@
 class thexception : public std::runtime_error {
 public:
     explicit thexception(const std::string& msg)
-    : std::runtime_error(msg)
+        : std::runtime_error(msg)
+    {}
+
+    thexception(const std::string& msg, const std::exception& e)
+        : thexception(fmt::format("{} -- {}", msg, e.what()))
     {}
 };
 
-
-#if __cplusplus >= 202002L
+// These definitions are here only so the build does not fail and will be removed in the final version.
 template <typename... Args>
-[[noreturn]] void ththrow(fmt::format_string<Args...> format, Args&& ...args)
+[[noreturn]] void ththrow(const Args&...)
 {
-    throw thexception(fmt::format(format, std::forward<Args>(args)...));
+    throw std::runtime_error("ththrow");
 }
-
 template <typename... Args>
-[[noreturn]] void threthrow(fmt::format_string<Args...> format, Args&& ...args)
+[[noreturn]] void threthrow(const Args&...)
 {
-    try
-    {
-        throw;
-    }
-    catch(const std::exception& e)
-    {
-        throw thexception(fmt::format("{} -- {}", fmt::format(format, std::forward<Args>(args)...), e.what()));
-    }
+    throw std::runtime_error("threthrow");
 }
-#else
-template <typename FormatStr, typename... Args>
-[[noreturn]] void ththrow(const FormatStr& format, Args&& ...args)
-{
-    throw thexception(fmt::format(format, std::forward<Args>(args)...));
-}
-
-template <typename FormatStr, typename... Args>
-[[noreturn]] void threthrow(const FormatStr& format, Args&& ...args)
-{
-    try
-    {
-        throw;
-    }
-    catch(const std::exception& e)
-    {
-        throw thexception(fmt::format("{} -- {}", fmt::format(format, std::forward<Args>(args)...), e.what()));
-    }
-}
-#endif
