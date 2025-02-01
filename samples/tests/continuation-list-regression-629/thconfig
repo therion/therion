@@ -1,0 +1,16 @@
+source
+  centreline
+    fix station0 0 10 0
+    fix station1 0 20 0
+  endcentreline
+  scrap scrap0 -scale [1 m]
+    point 0 10 station -name station0
+    point 0 20 station -name station1
+    point 1 10 continuation
+    point 1 20 continuation -text "With comment"
+  endscrap
+endsource
+
+export continuation-list \
+  -filter off \
+  -output continuations.txt
