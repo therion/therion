@@ -201,6 +201,7 @@ if (BUILD_THERION)
         utest-thlayoutln.cxx
         utest-thobjectsrc.cxx
         utest-thscrapen.cxx
+        utest-thscraplo.cxx
     )
     target_link_libraries(utest PUBLIC therion-common catch2-interface)
     enable_testing()
