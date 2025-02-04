@@ -6,6 +6,8 @@
 #include <catch2/catch.hpp>
 #endif
 
+#include <cstring>
+
 TEST_CASE("thobjectsrc")
 {
     SECTION("default constructor")
