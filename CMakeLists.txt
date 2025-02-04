@@ -198,6 +198,7 @@ if (BUILD_THERION)
         utest-thdb2dab.cxx
         utest-thdouble.cxx
         utest-thobjectsrc.cxx
+        utest-thscrapen.cxx
     )
     target_link_libraries(utest PUBLIC therion-common catch2-interface)
     enable_testing()
