@@ -195,6 +195,7 @@ if (BUILD_THERION)
         utest-main.cxx
         utest-proj.cxx
         utest-str.cxx
+        utest-thdatastation.cxx
         utest-thdb2dab.cxx
         utest-thdouble.cxx
         utest-thlayoutln.cxx
