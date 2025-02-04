@@ -197,6 +197,7 @@ if (BUILD_THERION)
         utest-str.cxx
         utest-thdb2dab.cxx
         utest-thdouble.cxx
+        utest-thlayoutln.cxx
         utest-thobjectsrc.cxx
         utest-thscrapen.cxx
     )
