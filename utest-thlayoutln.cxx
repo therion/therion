@@ -7,6 +7,8 @@
 #include <catch2/catch.hpp>
 #endif
 
+#include <cstring>
+
 TEST_CASE("thlayoutln")
 {
     thlayoutln obj;
