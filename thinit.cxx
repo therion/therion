@@ -603,8 +603,8 @@ void thinit::load()
       }
     }
   }
-  catch (...) {
-    threthrow("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number());
+  catch (const std::exception& e) {
+    throw thexception(fmt::format("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number()), e);
   }
   if (started) {
 #ifdef THDEBUG

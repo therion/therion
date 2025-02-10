@@ -632,8 +632,8 @@ void thconfig::load()
         ththrow("endsource expected");
       }
     }
-    catch (...) {
-      threthrow("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number());
+    catch (const std::exception& e) {
+      throw thexception(fmt::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
     }
   }
   
@@ -779,8 +779,8 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
   }
     
   // put everything into try block and throw exception, if error
-  catch (...) {
-    threthrow("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number());
+  catch (const std::exception& e) {
+    throw thexception(fmt::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
   }
 }
 

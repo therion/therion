@@ -448,8 +448,8 @@ void thdb1d::scan_data()
           lei++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", lei->srcf.name, lei->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", lei->srcf.name, lei->srcf.line), e);
       }
           
       // scan data fixes
@@ -481,8 +481,8 @@ void thdb1d::scan_data()
           fii++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", fii->srcf.name, fii->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", fii->srcf.name, fii->srcf.line), e);
       }
     }
   
@@ -505,8 +505,8 @@ void thdb1d::scan_data()
           eqi++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", eqi->srcf.name, eqi->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", eqi->srcf.name, eqi->srcf.line), e);
       }
 		}
     obi++;
@@ -568,8 +568,8 @@ void thdb1d::scan_data()
           ssi++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", ssi->srcf.name, ssi->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", ssi->srcf.name, ssi->srcf.line), e);
       }
 
       // scan data marks
@@ -593,8 +593,8 @@ void thdb1d::scan_data()
           mii++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", mii->srcf.name, mii->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", mii->srcf.name, mii->srcf.line), e);
       }
         
       // scan extends
@@ -629,8 +629,8 @@ void thdb1d::scan_data()
           xi++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", xi->srcf.name, xi->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", xi->srcf.name, xi->srcf.line), e);
       }
 
       // scan dimensions
@@ -647,8 +647,8 @@ void thdb1d::scan_data()
           di++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", di->srcf.name, di->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", di->srcf.name, di->srcf.line), e);
       }
         
       dp->complete_dimensions();
@@ -3167,8 +3167,8 @@ void thdb1d::process_xelev()
             xi++;
           }
         }
-        catch (...) {
-          threthrow("{} [{}]", xi->srcf.name, xi->srcf.line);
+        catch (const std::exception& e) {
+          throw thexception(fmt::format("{} [{}]", xi->srcf.name, xi->srcf.line), e);
         }
         break;
     }

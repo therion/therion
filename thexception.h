@@ -51,8 +51,3 @@ template <typename... Args>
 {
     throw std::runtime_error("ththrow");
 }
-template <typename... Args>
-[[noreturn]] void threthrow(const Args&...)
-{
-    throw std::runtime_error("threthrow");
-}

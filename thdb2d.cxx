@@ -667,15 +667,17 @@ void thdb2d::process_map_references(thmap * mptr)
           try {
             this->process_map_references(mapp);
           }
-          catch (...) {
+          catch (const std::exception& e) {
             if (citem->name.survey != NULL)
-              threthrow("{} [{}] -- error processing map reference -- {}@{}",
+            throw thexception(fmt::format("{} [{}] -- error processing map reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey),
+                e);
             else
-              threthrow("{} [{}] -- error processing map reference -- {}",
+            throw thexception(fmt::format("{} [{}] -- error processing map reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name),
+                e);
           }
         }
         if (proj_id == -1) {
@@ -1379,13 +1381,6 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 
   pps = prj->first_scrap;  
   while (pps != NULL) {
-  
-//    // no scraps without stations
-//    if (pps->ncp < 1) {
-//      pps->throw_source();
-//      threthrow(("no reference station found in scrap -- %s@%s",
-//        pps->name,pps->fsptr->get_full_name()))
-//    }
     
     switch (prj->type) {
 

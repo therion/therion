@@ -818,11 +818,11 @@ void thdatabase::preprocess() {
           dynamic_cast<thimport*>(obi->get())->import_file();
           break;
       }
-    } catch (...) {
+    } catch (const std::exception& e) {
       (*obi)->throw_source();
       switch ((*obi)->get_class_id()) {
         case TT_IMPORT_CMD:
-          threthrow("file import");
+          throw thexception("file import", e);
         break;
       }
     }

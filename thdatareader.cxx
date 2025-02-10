@@ -239,8 +239,8 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
 
   }
 // put everything into try block and throw exception, if error
-  catch (...) {
-    threthrow("{} [{}]", this->inp.get_cif_name(), this->inp.get_cif_line_number());
+  catch (const std::exception& e) {
+    throw thexception(fmt::format("{} [{}]", this->inp.get_cif_name(), this->inp.get_cif_line_number()), e);
   }
 
   dbptr->end_insert();  
