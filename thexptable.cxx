@@ -290,10 +290,12 @@ void thexptable::process_db(class thdatabase * dbp)
         for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
           if ((*oi)->get_class_id() == TT_POINT_CMD) {
             pt = dynamic_cast<thpoint*>(oi->get());
+            const auto * textptr = pt->get_text();
             if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->get_text() != nullptr) || (!this->filter)) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
               this->m_table.insert_object(nullptr);
-              this->m_table.insert_attribute("Comment",ths2txt(*pt->get_text(), layout->lang).c_str());
+              std::string comment = textptr ? ths2txt(*textptr, layout->lang) : "";
+              this->m_table.insert_attribute("Comment", comment.c_str());
 	            if (!thisnan(pt->xsize))
                       this->m_table.insert_attribute("Explored",pt->xsize);
 	            else
