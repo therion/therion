@@ -78,11 +78,11 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
   thselector_item itm;
   itm.unselect = usid;
   if (nargs < 1)
-    ththrow("not enough command arguments");
+    throw thexception("not enough command arguments");
 
   // set object name
   if (strlen(*args) == 0)
-    ththrow("empty object name not allowed");
+    throw thexception("empty object name not allowed");
   itm.name = this->cfgptr->get_str_buff()->append(*args);
   itm.src_name = this->cfgptr->get_db()->strstore(this->cfgptr->get_cfg_file()->get_cif_name(), true);
   itm.src_ln = this->cfgptr->get_cfg_file()->get_cif_line_number();

@@ -246,19 +246,19 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       
     case TT_DATA_FIX:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- fix");
+        throw thexception("not a command line option -- fix");
       this->cgroup->set_data_fix(cod.nargs, args);
       break;
       
     case TT_DATA_EQUATE:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- equate");
+        throw thexception("not a command line option -- equate");
       this->cgroup->set_data_equate(cod.nargs, args);
       break;
       
     case TT_DATA_FLAGS:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- flags");
+        throw thexception("not a command line option -- flags");
       this->cgroup->set_data_flags(cod.nargs, args);
       break;
 
@@ -268,7 +268,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       
     case TT_DATA_STATION:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- station");
+        throw thexception("not a command line option -- station");
       this->cgroup->set_data_station(cod.nargs, args, argenc);
       break;
       
@@ -289,7 +289,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       
     case TT_DATA_WALLS:
       if (cod.nargs != 1)
-    	  ththrow("invalid number of option arguments -- walls");
+    	  throw thexception("invalid number of option arguments -- walls");
       this->cgroup->d_walls = thmatch_token(*args, thtt_onoffauto);
       if (this->cgroup->d_walls == TT_UNKNOWN_BOOL)
     	  ththrow("invalid walls switch -- {}", *args);
@@ -297,7 +297,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       
     case TT_DATA_SHAPE:
       if (cod.nargs != 1)
-    	  ththrow("invalid number of option arguments -- shape");
+    	  throw thexception("invalid number of option arguments -- shape");
       this->cgroup->d_shape = thmatch_token(*args, thtt_dataleg_shape);
       if (this->cgroup->d_shape == TT_DATALEG_SHAPE_UNKNOWN)
     	  ththrow("unknown shape type -- {}", *args);
@@ -309,19 +309,19 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       
     case TT_DATA_INSTRUMENT:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- instrument");
+        throw thexception("not a command line option -- instrument");
       this->set_data_instrument(cod.nargs, args);
       break;
       
     case TT_DATA_SD:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- sd");
+        throw thexception("not a command line option -- sd");
       this->cgroup->set_data_sd(cod.nargs, args);
       break;
       
     case TT_DATA_DATA:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- data");
+        throw thexception("not a command line option -- data");
       this->cgroup->set_data_data(cod.nargs, args);
       break;
       
@@ -332,7 +332,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_DATA_GRID_ANGLE:
       this->cgroup->dl_declination_north_grid = true;
       if (this->cgroup->cs == TTCS_LOCAL)
-        ththrow("missing coordinate system specification");
+        throw thexception("missing coordinate system specification");
       this->cgroup->set_data_declination(cod.nargs, args);
       break;
 
@@ -343,19 +343,19 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       
     case TT_DATA_UNITS:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- units");
+        throw thexception("not a command line option -- units");
       this->cgroup->set_data_units(cod.nargs, args);
       break;
       
     case TT_DATA_GRADE:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- grade");
+        throw thexception("not a command line option -- grade");
       this->cgroup->set_data_grade(cod.nargs, args);
       break;
         
     case TT_DATA_BREAK:
       if (cod.nargs > 0)
-        ththrow("no arguments allowed after break");
+        throw thexception("no arguments allowed after break");
       this->cgroup->complete_interleaved_data();
       this->cgroup->cd_leg_def = false;
       this->cgroup->d_current = 0;
@@ -363,13 +363,13 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     
     case TT_DATA_CALIBRATE:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- calibrate");
+        throw thexception("not a command line option -- calibrate");
       this->cgroup->set_data_calibration(cod.nargs, args);
       break;
     
     case TT_DATA_TEAM:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- team");
+        throw thexception("not a command line option -- team");
       thencode(&(this->db->buff_enc), *args, argenc);
       temp_person.parse(this->db, this->db->buff_enc.get_buffer());
       this->team_set.insert(temp_person);
@@ -408,7 +408,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
 
     case TT_DATA_DISCOVERY_TEAM:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow("not a command line option -- explo-team");
+        throw thexception("not a command line option -- explo-team");
       thencode(&(this->db->buff_enc), *args, argenc);
       temp_person.parse(this->db, this->db->buff_enc.get_buffer());
       this->discovery_team_set.insert(temp_person);
@@ -568,7 +568,7 @@ void thdata::set_data_calibration(int nargs, char ** args)
 
   nitems = nargs - 1;
   if (nitems > THDATA_MAX_ITEMS)
-    ththrow("too many quantities");
+    throw thexception("too many quantities");
 
   // scan quantities
   bool to_set;
@@ -682,7 +682,7 @@ void thdata::set_data_units(int nargs, char ** args)
 
   nitems = nargs - 1;
   if (nitems > THDATA_MAX_ITEMS)
-    ththrow("too many quantities");
+    throw thexception("too many quantities");
 
   // scan quantities
   bool to_set;
@@ -788,7 +788,7 @@ void thdata::set_data_units(int nargs, char ** args)
       case TT_DATALEG_BEARING:
         this->dlu_bearing = this->dlu_sdangle;
 				if (this->dlu_bearing.get_units() == TT_TFU_PERC)
-					ththrow("percentage bearing specification not allowed");
+					throw thexception("percentage bearing specification not allowed");
         break;
       case TT_DATALEG_GRADIENT:
         this->dlu_gradient = this->dlu_sdangle;
@@ -822,7 +822,7 @@ void thdata::set_data_vtresh(int nargs, char ** args)
 {
 
   if ((nargs < 1) || (nargs > 2))
-    ththrow("invalid number of option arguments -- vthreshold");
+    throw thexception("invalid number of option arguments -- vthreshold");
   int nid;
   thtfangle dlu;
   thparse_double(nid, this->d_vtresh, args[0]);
@@ -841,7 +841,7 @@ void thdata::set_data_vtresh(int nargs, char ** args)
 void thdata::set_data_declination(int nargs, char ** args)
 {
   if (nargs > 2)
-    ththrow("too many option arguments");
+    throw thexception("too many option arguments");
   int nid;
   thparse_double(nid, this->dl_declination, args[0]);
   if (nargs > 1) {
@@ -850,7 +850,7 @@ void thdata::set_data_declination(int nargs, char ** args)
   }
   else 
     if (nid != TT_SV_NAN)
-      ththrow("missing angular units");
+      throw thexception("missing angular units");
   if ((nid != TT_SV_NUMBER) && (nid != TT_SV_NAN))
     ththrow("invalid number -- {}", args[0]);
 }
@@ -858,7 +858,7 @@ void thdata::set_data_declination(int nargs, char ** args)
 void thdata::set_data_infer(int nargs, char ** args)
 {
   if (nargs > 2)
-    ththrow("too many option arguments");
+    throw thexception("too many option arguments");
   int iwhat, ihow;
   iwhat = thmatch_token(args[0],thtt_dataleg_infer);
   ihow = thmatch_token(args[1],thtt_bool);
@@ -915,7 +915,7 @@ void thdata::set_data_sd(int nargs, char ** args)
 
   nitems = nargs - 1;
   if (nitems > THDATA_MAX_ITEMS)
-    ththrow("too many quantities");
+    throw thexception("too many quantities");
 
   // scan quantities
   bool to_set;
@@ -967,7 +967,7 @@ void thdata::set_data_sd(int nargs, char ** args)
   switch (nid) {
     case TT_SV_NUMBER:
       if (nitems == nargs - 1)
-        ththrow("missing standard deviation units");
+        throw thexception("missing standard deviation units");
       switch (sdtype) {
         case 1:
           this->dlu_sdlength.parse_units(args[nitems+1]);
@@ -1045,7 +1045,7 @@ void thdata::set_data_data(int nargs, char ** args)
     
   // second let's detect data order
   if (nargs > THDATA_MAX_ITEMS)
-    ththrow("too many quantities");
+    throw thexception("too many quantities");
   int dix, idd;
   bool err_duplicate = false, err_inimm = false, err_itype = false,
     err_idanl = false;
@@ -1433,7 +1433,7 @@ void thdata::set_data_data(int nargs, char ** args)
           break;
         }
         if ((dix == 1) || (dix == nargs - 1))
-          ththrow("invalid newline position");
+          throw thexception("invalid newline position");
         this->di_newline = true;
         break;
 
@@ -1544,7 +1544,7 @@ void thdata::set_data_data(int nargs, char ** args)
   all_data = all_data &&
       ((this->di_from && this->di_to) || this->di_station);
   if (!all_data)
-    ththrow("not all data for given style");
+    throw thexception("not all data for given style");
    
   if (this->di_interleaved) {
     for(dix = 0; (!err_inimm) && (dix < this->d_nitems) && (this->d_order[dix] != TT_DATALEG_NEWLINE); dix++) {
@@ -1736,7 +1736,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
     if ((carg == nargs) && 
         ((this->d_order[this->d_current] != TT_DATALEG_NEWLINE)
          && (this->d_order[this->d_current] != TT_DATALEG_IGNOREALL)))
-      ththrow("not enough data readings");
+      throw thexception("not enough data readings");
   
     switch(this->d_order[this->d_current]) {
     
@@ -2166,12 +2166,12 @@ void thdata::insert_data_leg(int nargs, char ** args)
   }  // end of data setting
   
   if (carg < nargs)
-    ththrow("too many data readings");
+    throw thexception("too many data readings");
   
   if (to_clear) {
     if (this->di_fromcount && this->di_tocount && 
       (this->cd_leg->fromcounter > this->cd_leg->tocounter))
-      ththrow("negative counter difference");
+      throw thexception("negative counter difference");
 //    if ((this->di_gradient || this->di_backgradient) && (this->di_bearing || this->di_backbearing) &&
 //      (!(thisnan(this->cd_leg->bearing) 
 //      && thisnan(this->cd_leg->backbearing))) &&
@@ -2183,7 +2183,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
       (thisinf(this->cd_leg->backgradient) == 0)) ||
       ((thisinf(this->cd_leg->gradient) == 0) &&
       (thisinf(this->cd_leg->backgradient) != 0))))
-      ththrow("plumbed shot with a gradient reading");
+      throw thexception("plumbed shot with a gradient reading");
     this->d_current = 0;
     this->complete_interleaved_data();
   }
@@ -2234,7 +2234,7 @@ void thdata::complete_interleaved_data()
     if ((!thisnan(this->pd_leg->fromcounter)) &&
       (!thisnan(this->pd_leg->tocounter)) &&
       (this->pd_leg->fromcounter > this->pd_leg->tocounter))
-      ththrow("negative counter difference");
+      throw thexception("negative counter difference");
   }
   
   // set the depth
@@ -2251,7 +2251,7 @@ void thdata::complete_interleaved_data()
 void thdata::start_insert()
 {
   if (this->cgroup->ugroup != NULL)
-    ththrow("missing endgroup");
+    throw thexception("missing endgroup");
   this->complete_interleaved_data();
 }
 
@@ -2270,7 +2270,7 @@ void thdata::set_data_fix(int nargs, char ** args)
 //    case 10:
       break;
     default:
-      ththrow("invalid number of fix option arguments");
+      throw thexception("invalid number of fix option arguments");
   }
   it = this->fix_list.insert(this->fix_list.end(),dumm);
   it->srcf = this->db->csrc;
@@ -2437,7 +2437,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
             if (notflag)
                 it->flags |= TT_STATIONFLAG_NOTFIXED;
             else
-              ththrow("you can not set fixed station flag directly - fix command needs to be used for this");
+              throw thexception("you can not set fixed station flag directly - fix command needs to be used for this");
             break;
           case TT_DATASFLAG_CONT:
             if (notflag) {
@@ -2465,13 +2465,13 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
           //  break;
           case TT_DATASFLAG_EXPLORED:
             if ((it->flags & TT_STATIONFLAG_CONT) == 0)
-              ththrow("missing continuation flag before explored length");
+              throw thexception("missing continuation flag before explored length");
             if (notflag) {
                 it->explored = thnan;
                 break;
             }
             if ((ai + 1) == nargs)
-              ththrow("too few flags - missing explored length");
+              throw thexception("too few flags - missing explored length");
             ai++;
             if (strlen(args[ai]) == 0) {
               it->explored = thnan;
@@ -2484,10 +2484,10 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
 
           case TT_DATASFLAG_ATTR:              
             if ((ai + 1) == nargs)
-              ththrow("too few flags - missing attribute name");
+              throw thexception("too few flags - missing attribute name");
             ai++;
             if (strlen(args[ai]) == 0)
-              ththrow("empty attribute name not allowed");
+              throw thexception("empty attribute name not allowed");
             if (args[ai][0] == '_')
               ththrow("attribute name starting with '_' not allowed -- {}", args[ai]);
             if (!th_is_attr_name(args[ai]))
@@ -2498,7 +2498,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
                 break;
             }
             if ((ai + 1) == nargs)
-              ththrow("too few flags - missing attribute value");
+              throw thexception("too few flags - missing attribute value");
             ai++;            
             if (strlen(args[ai]) > 0) {
               thencode(&(this->db->buff_enc), args[ai], argenc);
@@ -2534,7 +2534,7 @@ void thdata::set_data_flags(int nargs, char ** args)
         if ((fid < nargs - 1) && (!notb))
           notb = true;
         else
-          ththrow("wrong not context");
+          throw thexception("wrong not context");
         break;
       case TT_DATALFLAG_SURFACE:
         if (notb)
@@ -2625,7 +2625,7 @@ void thdata::set_data_extend(int nargs, char ** args)
       this->extend_list.insert(this->extend_list.end(), dumm);
       break;
     default:
-      ththrow("invalid extend specification");
+      throw thexception("invalid extend specification");
   }
 
 
@@ -2635,7 +2635,7 @@ void thdata::set_data_extend(int nargs, char ** args)
 void thdata::set_data_mark(int nargs, char ** args)
 {
   if (nargs < 1)
-	  ththrow("missing option arguments -- mark");
+	  throw thexception("missing option arguments -- mark");
 
   int tmp_mark = thmatch_token(args[nargs - 1], thtt_datamark);
 	if (tmp_mark == TT_DATAMARK_UNKNOWN) {
@@ -2861,7 +2861,7 @@ void thdata::start_group() {
 
 void thdata::end_group() {
   if (this->cgroup->ugroup == NULL) {
-    ththrow("endgroup without startgroup");
+    throw thexception("endgroup without startgroup");
   }
   thdata * tmp = this->cgroup;
   this->cgroup = this->cgroup->ugroup;

@@ -181,7 +181,7 @@ void thdb1d::scan_data()
             lei->from.id = this->insert_station(lei->from, lei->psurvey, dp, 3);
             lei->to.id = this->insert_station(lei->to, lei->psurvey, dp, 3);
             if (((strcmp(lei->from.name,".") == 0) || (strcmp(lei->from.name,"-") == 0)) && ((strcmp(lei->to.name,".") == 0) || (strcmp(lei->to.name,"-") == 0)))
-              ththrow("shot between stations without names not allowed");
+              throw thexception("shot between stations without names not allowed");
             if ((strcmp(lei->from.name,"-") == 0) || (strcmp(lei->to.name,"-") == 0) || (strcmp(lei->from.name,".") == 0) || (strcmp(lei->to.name,".") == 0)) {
               lei->flags |= TT_LEGFLAG_SPLAY;
               lei->walls = TT_FALSE;
@@ -289,7 +289,7 @@ void thdb1d::scan_data()
                   }
                   else {
                     if (thisinf(lei->gradient) != -thisinf(lei->backgradient))
-                      ththrow("invalid plumbed shot");
+                      throw thexception("invalid plumbed shot");
                   }
                 }
               }

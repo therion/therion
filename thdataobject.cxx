@@ -183,7 +183,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           thdata * cobj;
           cobj = dynamic_cast<thdata*>(this);
           if (cobj->cgroup->dl_declination_north_grid && (id == TTCS_LOCAL))
-            ththrow("grid-angle has been defined -- local CS not allowed");
+            throw thexception("grid-angle has been defined -- local CS not allowed");
           cobj->cgroup->cs = id;
           cobj->cgroup->cs_source = this->db->csrc;
         }
@@ -218,12 +218,12 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_GRADE_CMD:
         case TT_LAYOUT_CMD:
           if (cod.nargs > 1)
-            ththrow("multiple option arguments -- title");
+            throw thexception("multiple option arguments -- title");
           thencode(&(this->db->buff_enc), *args, argenc);
           this->title = this->db->strstore(this->db->buff_enc.get_buffer());
           break;
         default:
-          ththrow("title specification not allowed for this object");
+          throw thexception("title specification not allowed for this object");
           break;
       }
       break;
@@ -233,7 +233,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_DATA_CMD:
         case TT_SCRAP_CMD:
           if (cod.nargs > 2)
-            ththrow("too many option arguments -- author");
+            throw thexception("too many option arguments -- author");
           this->dotmp_date.parse(args[0]);
           thencode(&(this->db->buff_enc), args[1], argenc);
           this->dotmp_person.parse(this->db, this->db->buff_enc.get_buffer());
@@ -242,7 +242,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           this->author_map[this->dotmp_author].join(this->dotmp_date);
           break;
         default:
-          ththrow("author specification not allowed for this object");
+          throw thexception("author specification not allowed for this object");
           break;
       }
       break;
@@ -252,7 +252,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_DATA_CMD:
         case TT_SCRAP_CMD:
           if (cod.nargs > 2)
-            ththrow("too many option arguments -- copyright");
+            throw thexception("too many option arguments -- copyright");
           this->dotmp_date.parse(args[0]);
           thencode(&(this->db->buff_enc), args[1], argenc);
           this->dotmp_copyright = 
@@ -262,7 +262,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           this->copyright_map[this->dotmp_copyright].join(this->dotmp_date);
           break;
         default:
-          ththrow("copyright specification not allowed for this object");
+          throw thexception("copyright specification not allowed for this object");
           break;
       }
       break;
@@ -270,11 +270,11 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
     case TT_DATAOBJECT_ATTR:
       switch (this->get_class_id()) {
         case TT_LAYOUT_CMD:
-          ththrow("attribute specification not valid for layout");
+          throw thexception("attribute specification not valid for layout");
           break;
       }
       if (cod.nargs != 2)
-        ththrow("invalid attribute specification -- should be <name> <value>");
+        throw thexception("invalid attribute specification -- should be <name> <value>");
       thencode(&(this->db->buff_enc), args[1], argenc);
       this->parse_attribute(args[0], this->db->buff_enc.get_buffer());
       break;
@@ -530,9 +530,9 @@ void thdataobject::parse_attribute(char * name, char * value) {
 
   // check name
   if ((name == NULL) || (strlen(name) == 0))
-    ththrow("empty attribute name not allowed");
+    throw thexception("empty attribute name not allowed");
   if (name[0] == '_')
-    ththrow("attribute name starting with '_' not allowed");
+    throw thexception("attribute name starting with '_' not allowed");
   if (!th_is_attr_name(name))
     ththrow("invalid characters in attribute name -- {}", name);
 

@@ -70,7 +70,7 @@ bool thpic::exists() {
 void thpic::init(const char * pfname, const char * incfnm)
 {
   if (strlen(pfname) == 0)
-    ththrow("picture file name not specified");
+    throw thexception("picture file name not specified");
 
   std::error_code ec;
   auto pict_path = fs::current_path(ec);

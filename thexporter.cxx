@@ -53,7 +53,7 @@ void thexporter::assign_config(class thconfig * cptr) {
 void thexporter::parse_system(char * system_cmd)
 {
   if (strlen(system_cmd) == 0)
-    ththrow("empty system command not allowed");
+    throw thexception("empty system command not allowed");
   auto xp = std::make_unique<thexpsys>();
   xp->src.name = thdb.strstore(thcfg.get_cfg_file()->get_cif_name(),true);
   xp->src.line = thcfg.get_cfg_file()->get_cif_line_number();  
@@ -69,7 +69,7 @@ void thexporter::parse_export(int nargs, char ** args) {
   int expmode; 
 
   if (nargs < 1)
-    ththrow("not enough export arguments");
+    throw thexception("not enough export arguments");
   expmode = thmatch_token(args[0], thtt_exporter);
   switch (expmode) {
     case TT_EXP_MODEL:

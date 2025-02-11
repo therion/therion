@@ -272,7 +272,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
   double par = tp.pp1;
   int npar = this->mbf.get_size(), prj_type;
   if (npar < 1)
-    ththrow("missing projection type");
+    throw thexception("missing projection type");
   thsplit_strings(& this->mbf2, pars[0], ':');
   switch (this->mbf2.get_size()) {
     case 1:
@@ -302,7 +302,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
     case TT_2DPROJ_ELEV:
       // parse units if necessary
       if (npar > 3)
-        ththrow("too many projection arguments");
+        throw thexception("too many projection arguments");
       if (npar > 1) {
         thparse_double(asv,par,pars[1]);
         index_str_str += ":";
@@ -321,7 +321,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
       break;
     default:
       if (npar > 1)
-        ththrow("too many projection arguments");
+        throw thexception("too many projection arguments");
       break;
   }
   
@@ -560,7 +560,7 @@ void thdb2d::process_map_references(thmap * mptr)
     ththrow("{} -- empty map not allowed", mptr->throw_source());
   }
   if (mptr->projection_id == -1)
-    ththrow("recursive map reference");
+    throw thexception("recursive map reference");
   // let's lock the current map
   mptr->projection_id = -1;
   thdb2dmi * citem = mptr->first_item, * xcitem;
@@ -3622,7 +3622,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   // load data back to therion
   auto af = thopen_file("data.1","r");
   if (!af)
-    ththrow("can't open file data.1");
+    throw thexception("can't open file data.1");
   double n[6] = {};
   com.guarantee(256);
   std::unique_ptr<thline> cln;

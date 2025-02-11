@@ -165,7 +165,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
             
 	        switch(objptr->get_class_id()) {
             case TT_LAYOUT_CMD:
-              ththrow("layout definition not allowed in input files");
+              throw thexception("layout definition not allowed in input files");
               break;
           }
         }
@@ -199,7 +199,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         while (ait < ant) {
           optd = objptr->get_cmd_option_desc(*opts + 1);
           if (configure_cmd && (optd.id == TT_DATAOBJECT_NAME))
-            ththrow("object name configuration not allowed");
+            throw thexception("object name configuration not allowed");
           if (optd.id == TT_DATAOBJECT_UNKNOWN) {
             optd.id = ++ai;
             optd.nargs = 1;

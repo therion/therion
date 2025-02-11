@@ -187,7 +187,7 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
         this->last_point->smooth_orig = csmooth;
       }
       else
-        ththrow("no line point specified");
+        throw thexception("no line point specified");
       break;
 
     case TT_LINE_ORIENT:
@@ -202,7 +202,7 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
         this->last_point->tags |= TT_LINEPT_TAG_ORIENT;
       }
       else
-        ththrow("no line point specified");
+        throw thexception("no line point specified");
       break;
 
     case TT_LINE_SIZE:
@@ -312,7 +312,7 @@ void thline::parse_subtype(char * ss)
 //  int prevcsubtype = this->csubtype;
   if (this->type == TT_LINE_TYPE_U) {
     if (this->last_point != NULL)
-      ththrow("subtype specification not allowed here");
+      throw thexception("subtype specification not allowed here");
     this->parse_u_subtype(ss);
     return;
   }
@@ -372,7 +372,7 @@ void thline::parse_subtype(char * ss)
       break;
   }
   if (!tsok)
-    ththrow("invalid line type - subtype combination");
+    throw thexception("invalid line type - subtype combination");
   if (this->last_point != NULL)
     this->last_point->subtype = this->csubtype;
 }
@@ -490,7 +490,7 @@ void thline::insert_point_mark(char * ss)
   if (!th_is_keyword(ss))
     ththrow("mark not a key word -- {}",ss);
   if (this->last_point == NULL)
-    ththrow("no line point specified");
+    throw thexception("no line point specified");
   this->last_point->mark = this->db->strstore(ss,true);
 }
 
@@ -1254,7 +1254,7 @@ void thline::parse_gradient(char * ss) {
       break;
     case TT_LINE_GRADIENT_POINT:
       if (this->last_point == NULL)
-        ththrow("no line point specified");
+        throw thexception("no line point specified");
       this->tags &= ~(TT_LINE_TAG_GRADIENT_NONE | TT_LINE_TAG_GRADIENT_CENTER | TT_LINE_TAG_GRADIENT_POINT);
       this->tags |= TT_LINE_TAG_GRADIENT_POINT;
       this->last_point->tags |= TT_LINEPT_TAG_GRADIENT;
@@ -1289,7 +1289,7 @@ void thline::parse_direction(char * ss) {
       break;
     case TT_LINE_GRADIENT_POINT:
       if (this->last_point == NULL)
-        ththrow("no line point specified");
+        throw thexception("no line point specified");
       this->tags &= ~(TT_LINE_TAG_DIRECTION_BEGIN | TT_LINE_TAG_DIRECTION_END);
       this->tags |= TT_LINE_TAG_DIRECTION_POINT;
       this->last_point->tags |= TT_LINEPT_TAG_DIRECTION;
@@ -1332,7 +1332,7 @@ void thline::parse_adjust(char * ss) {
   if (this->last_point != NULL)
     this->last_point->adjust = thmatch_token(ss,thtt_line_adjusts);
   else
-    ththrow("no line point specified");
+    throw thexception("no line point specified");
   if (this->last_point->adjust == TT_LINE_ADJUST_UNKNOWN)
     ththrow("invalid adjust specification -- {}",ss);
   if ((thdb.cscrapptr->proj->type == TT_2DPROJ_PLAN) &&
@@ -1345,7 +1345,7 @@ void thline::parse_size(int w, char * ss) {
   int sv;
   double sz;
   if (this->last_point == NULL)
-    ththrow("no line point specified");
+    throw thexception("no line point specified");
   const char * sizestr = NULL;
   switch (w) {
     case TT_LINE_SIZE:
@@ -1390,7 +1390,7 @@ void thline::parse_altitude(char * ss) {
     ththrow("-altitude not valid with type {}", thmatch_string(this->type,thtt_line_types));
 
   if (this->last_point == NULL)
-    ththrow("no line point specified");
+    throw thexception("no line point specified");
 
   thparse_altitude(ss, this->last_point->rsize, this->last_point->lsize);
 
@@ -1413,7 +1413,7 @@ void thline::start_insert() {
   switch (this->type) {
     case TT_LINE_TYPE_U:
       if (this->m_subtype_str == NULL)
-        ththrow("missing subtype specification for line of user defined type");
+        throw thexception("missing subtype specification for line of user defined type");
       this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
       break;
     case TT_LINE_TYPE_SLOPE:
@@ -1427,7 +1427,7 @@ void thline::start_insert() {
         lp = lp->nextlp;
       }
       if (fsize)
-        ththrow("no slope size specification at any line point");
+        throw thexception("no slope size specification at any line point");
       break;
   }
 }

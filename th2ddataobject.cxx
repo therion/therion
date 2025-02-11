@@ -87,7 +87,7 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
     case TT_2DOBJ_SCALE:
       th2dparse_scale(*args, this->scale, this->scale_numeric);
       if (this->get_class_id() == TT_AREA_CMD)
-        ththrow("scale specification for area not allowed");
+        throw thexception("scale specification for area not allowed");
       break;    
 
     case TT_2DOBJ_CLIP:

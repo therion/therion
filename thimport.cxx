@@ -207,7 +207,7 @@ void thimport::self_print_properties(FILE * outf)
 void thimport::set_file_name(char * fnm)
 {
   if (strlen(fnm) == 0)
-    ththrow("file not specified");
+    throw thexception("file not specified");
 
   std::error_code ec;
   const auto impf_path = (std::filesystem::current_path(ec) / thdb.csrc.name).parent_path() / fnm;
@@ -623,7 +623,7 @@ void thimport::import_file_img()
         break;
       case img_BAD:
         img_close(pimg);
-        ththrow("invalid file format");
+        throw thexception("invalid file format");
         break;
     }
   } while (result != img_STOP);

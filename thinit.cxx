@@ -247,7 +247,7 @@ void thinit::check_font_path(const char * fname, int index) {
   char * buff = tmpb.get_buffer();
   l = (long) strlen(buff);
   bool search_sn = true;
-  if (l == 0) ththrow("missing font file name");
+  if (l == 0) throw thexception("missing font file name");
   for(i = (l-1); i >= 0; i--) {
     if ((buff[i] == '/') || (buff[i] == '\\')) {
       if (search_sn) {
@@ -433,28 +433,28 @@ void thinit::load()
         case TTIC_TEX_ENV:
         case TTIC_PROJ_MISSING_GRID:
           if (nargs != 2)
-            ththrow("invalid number of command arguments");
+            throw thexception("invalid number of command arguments");
           break;
         case TTIC_TEXT:
           if (nargs != 4)
-            ththrow("invalid text syntax -- should be: text <language> <text> <translation>");
+            throw thexception("invalid text syntax -- should be: text <language> <text> <translation>");
           break;
         case TTIC_PDF_FONTS:
           if (nargs != 6)
-            ththrow("invalid number of command arguments");
+            throw thexception("invalid number of command arguments");
           break;
         case TTIC_TEX_FONTS:
         case TTIC_TEX_FONTS_OPTIONAL:
           if (nargs != 7)
-            ththrow("invalid number of command arguments");
+            throw thexception("invalid number of command arguments");
           break;
         case TTIC_CS_DEF:
           if (nargs < 2)
-            ththrow("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]");
+            throw thexception("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]");
           break;
         case TTIC_CS_TRANS:
           if (nargs != 4)
-            ththrow("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
+            throw thexception("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
           break;
         default:
           ththrow("invalid initialization command -- {}", args[0]);
@@ -480,19 +480,19 @@ void thinit::load()
           
         case TTIC_PATH_CAVERN:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_cavern.strcpy(args[1]);
           break;
           
         case TTIC_PATH_CONVERT:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_convert.strcpy(args[1]);
           break;
           
         case TTIC_PATH_IDENTIFY:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_identify.strcpy(args[1]);
           break;
 
@@ -541,7 +541,7 @@ void thinit::load()
 
         case TTIC_PATH_MPOST:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_mpost.strcpy(args[1]);
           break;
 
@@ -551,7 +551,7 @@ void thinit::load()
 
         case TTIC_PATH_PDFTEX:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_pdftex.strcpy(args[1]);
           break;
           

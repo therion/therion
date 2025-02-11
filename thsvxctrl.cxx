@@ -424,7 +424,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   thdb1ds * stp;
   img* pimg = img_open(thtmp.get_file_name("data.3d"));
   if (pimg == NULL)
-    ththrow("can't open cavern output");
+    throw thexception("can't open cavern output");
   do {
     result = img_read_item(pimg, &imgpt);
     switch (result) {
@@ -441,7 +441,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
         break;
       case img_BAD:
         img_close(pimg);
-        ththrow("error reading cavern output");
+        throw thexception("error reading cavern output");
         break;
     }
   } while (result != img_STOP);
@@ -575,7 +575,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   thlog.printf("\n####################### cavern log file ########################\n");
   std::ifstream clf(lfnm);
   if (!(clf.is_open()))
-    ththrow("can't open cavern log file for input");
+    throw thexception("can't open cavern log file for input");
   // let's read line by line and print to log file
   size_t chidx, nchs;
   const char * chch;

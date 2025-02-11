@@ -84,7 +84,7 @@ void thtfpwf::parse(int nfact, char ** sfact)
         this->set(nfact / 2, coefs.data());
       }
       else
-        ththrow("invalid number of transformation constants");
+        throw thexception("invalid number of transformation constants");
   }
   if (this->a == 0.0)
     ththrow("invalid scale factor -- {}", this->a);

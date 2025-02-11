@@ -107,7 +107,7 @@ void thexpdb::process_db(class thdatabase * dbp)
       this->export_csv_file(dbp);
       break;
     default:
-      ththrow("unknown database format (use .csv or .sql)");
+      throw thexception("unknown database format (use .csv or .sql)");
   }
 }
 

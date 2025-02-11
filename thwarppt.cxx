@@ -79,7 +79,7 @@ therion::warp::plaquette_algo::insert_line(
     if ( mPairs[i]->m_name == from ) { p1 = mPairs[i].get(); if (p2) break; }
     if ( mPairs[i]->m_name == to   ) { p2 = mPairs[i].get(); if (p1) break; }
   }
-  if ( p1 == NULL || p2 == NULL ) ththrow("plaquette algorithm error");
+  if ( p1 == NULL || p2 == NULL ) throw thexception("plaquette algorithm error");
   mLines.push_back(std::make_unique<therion::warp::line>(t, p1, p2));
 }
 

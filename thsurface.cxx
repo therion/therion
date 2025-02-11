@@ -177,7 +177,7 @@ void thsurface::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lo
     
     case TT_SURFACE_GRID_FLIP:
       if (this->grid != NULL)
-        ththrow("grid-flip specification after grid data not allowed");
+        throw thexception("grid-flip specification after grid data not allowed");
       this->grid_flip = thmatch_token(args[0], thtt_surface_gflip);
       if (this->grid_flip == TT_SURFACE_GFLIP_UNKNOWN)
         ththrow("unknown surface flip mode -- {}", args[0]);
@@ -207,7 +207,7 @@ void thsurface::self_print_properties(FILE * outf)
 void thsurface::parse_picture(char ** args)
 {
   if (strlen(args[0]) == 0)
-    ththrow("picture name not specified");
+    throw thexception("picture name not specified");
 
   std::error_code ec;
   auto pict_path = fs::current_path(ec);
@@ -275,7 +275,7 @@ void thsurface::parse_picture(char ** args)
       
       if (((this->pict_X1 == this->pict_X2) && (this->pict_Y1 == this->pict_Y2)) ||
           ((this->pict_x1 == this->pict_x2) && (this->pict_y1 == this->pict_y2))) {
-        ththrow("duplicate points in picture calibration");
+        throw thexception("duplicate points in picture calibration");
       }
       break;
     
@@ -288,7 +288,7 @@ void thsurface::parse_picture(char ** args)
       thparse_objectname(this->s2, &(thdb.buff_stations), cals[5]);
       this->ssurvey = thdb.get_current_survey();
       if ((this->pict_X1 == this->pict_X2) && (this->pict_Y1 == this->pict_Y2)) {
-        ththrow("duplicate points in picture calibration");
+        throw thexception("duplicate points in picture calibration");
       }
       break;
 
@@ -367,7 +367,7 @@ void thsurface::check_stations()
 void thsurface::parse_grid_setup(char ** args)
 {
   if (this->grid != NULL)
-    ththrow("grid specification after grid data not allowed");
+    throw thexception("grid specification after grid data not allowed");
 
   // nacitame vsetky premenne ktore treba
   double dblv;
@@ -428,7 +428,7 @@ void thsurface::parse_grid_setup(char ** args)
 void thsurface::parse_grid(char * spec)
 {
   if (this->grid_nx == 0)
-    ththrow("grid dimensions not specified");
+    throw thexception("grid dimensions not specified");
   if (this->grid == NULL) {
     this->grid_counter = 0;
     this->grid_size = this->grid_nx * this->grid_ny;
@@ -449,7 +449,7 @@ void thsurface::parse_grid(char * spec)
     if (sv != TT_SV_NUMBER)
       ththrow("number expected -- {}", heights[i]);
     if (this->grid_counter == this->grid_size)
-      ththrow("too many grid data");
+      throw thexception("too many grid data");
     x = this->grid_counter % this->grid_nx;
     y = this->grid_ny - (this->grid_counter / this->grid_nx) - 1;
     switch (this->grid_flip) {
@@ -467,7 +467,7 @@ void thsurface::parse_grid(char * spec)
 
 void thsurface::start_insert() {
   if (this->grid_counter < this->grid_size)
-    ththrow("missing grid data");
+    throw thexception("missing grid data");
 }
 
 thdb3ddata * thsurface::get_3d() {

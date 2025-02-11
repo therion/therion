@@ -185,7 +185,7 @@ void thscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     case TT_SCRAP_PROJECTION:
       projection = this->db->db2d.parse_projection(*args);
       if (!projection.parok)
-        ththrow("invalid parameters of projection");
+        throw thexception("invalid parameters of projection");
       this->proj = projection.prj;
       break;
     
@@ -294,10 +294,10 @@ void thscrap::parse_scale(char * ss)
     }
     if (std::hypot(this->scale_r1x - this->scale_r2x,
       this->scale_r1y - this->scale_r2y) == 0.0)
-      ththrow("zero scale real length");
+      throw thexception("zero scale real length");
     if (std::hypot(this->scale_p1x - this->scale_p2x,
       this->scale_p1y - this->scale_p2y) == 0.0)
-      ththrow("zero scale picture length");        
+      throw thexception("zero scale picture length");        
   } else {
     // let's parse first number
     thparse_double(sv,n1,pars[0]);
@@ -1485,9 +1485,9 @@ void thscrap::parse_sketch(char ** args, int /*argenc*/) // TODO unused paramete
 void thscrap::start_insert() {
   if (this->cs != TTCS_LOCAL) {
     if (this->proj->type != TT_2DPROJ_PLAN)
-      ththrow("coordinate system specification valid only for plan projection");
+      throw thexception("coordinate system specification valid only for plan projection");
     if (!this->scale_p9)
-      ththrow("scrap scaling not valid in this coordinate system");
+      throw thexception("scrap scaling not valid in this coordinate system");
   }
 }
 

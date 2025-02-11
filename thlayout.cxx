@@ -2250,7 +2250,7 @@ void thlayout_map_image::parse(char ** args, const char * cpath) {
   this->m_align = sv;
 
   if (strlen(args[3]) == 0)
-    ththrow("empty image file name not allowed");
+    throw thexception("empty image file name not allowed");
 
   std::string fpath;
   fpath = cpath;

@@ -227,7 +227,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       }
 
       if ((optr->get_class_id() == TT_ENDSURVEY_CMD) && (this->fsurveyptr->id == this->csurveyptr->id)) {
-        ththrow("missing survey before endsurvey command");
+        throw thexception("missing survey before endsurvey command");
       }
 
       // whether csurvey is not the first one
@@ -871,7 +871,7 @@ void thdatabase::preprocess() {
 void thdatabase::insert_equate(int nargs, char ** args)
 {
   if (this->csurveyptr == NULL)
-    ththrow("missing survey before equate command");
+    throw thexception("missing survey before equate command");
   this->csurveyptr->data->set_data_equate(nargs, args);
 }
 

@@ -127,7 +127,7 @@ void thmap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long i
     case TT_MAP_PROJECTION:
       projection = this->db->db2d.parse_projection(*args);
       if (!projection.parok)
-        ththrow("invalid parameters of projection");
+        throw thexception("invalid parameters of projection");
       this->expl_projection = projection.prj;
       break;
     
@@ -178,7 +178,7 @@ thmbuffer mapitmmb;
 void thmap::parse_item(int npar, char ** pars)
 {
   if ((npar != 1) && (npar != 3))
-    ththrow("invalid map item");
+    throw thexception("invalid map item");
   thdb2dmi * citem = this->db->db2d.insert_map_item();
   citem->itm_level = this->last_level;
   citem->source = this->db->csrc;

@@ -108,7 +108,7 @@ thcmd_option_desc thpoint::get_cmd_option_desc(const char * opts)
 void thpoint::start_insert() {
   if (this->type == TT_POINT_TYPE_U) {
     if (this->m_subtype_str == NULL)
-      ththrow("missing subtype specification for point of user defined type");
+      throw thexception("missing subtype specification for point of user defined type");
     this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
   }
 }
@@ -167,7 +167,7 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
 
     case TT_POINT_SCRAP:
       if (this->type != TT_POINT_TYPE_SECTION)
-        ththrow("point not section -- -scrap");
+        throw thexception("point not section -- -scrap");
       thparse_objectname(this->station_name, & this->db->buff_stations, *args);
       break;
 
@@ -222,7 +222,7 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
           thparse_objectname(this->station_name, & this->db->buff_stations, *args, thdb.cscrapptr);
           break;
         default:
-          ththrow("station reference not allowed with this point type");
+          throw thexception("station reference not allowed with this point type");
       }
       break;
 
@@ -296,7 +296,7 @@ void thpoint::parse_type(char * tstr)
 void thpoint::parse_subtype(char * ststr)
 {
   if (this->type == TT_POINT_TYPE_UNKNOWN)
-    ththrow("point type must be specified before subtype");
+    throw thexception("point type must be specified before subtype");
   if (this->type == TT_POINT_TYPE_U) {
     this->parse_u_subtype(ststr);
     return;
@@ -337,7 +337,7 @@ void thpoint::parse_subtype(char * ststr)
       break;
   }
   if (!combok)
-    ththrow("invalid point type - subtype combination");
+    throw thexception("invalid point type - subtype combination");
 }
 
 void thpoint::parse_from(char * estr)

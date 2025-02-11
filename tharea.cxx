@@ -44,7 +44,7 @@ tharea::tharea()
 void tharea::start_insert() {
   if (this->type == TT_AREA_TYPE_U) {
     if (this->m_subtype_str == NULL)
-      ththrow("missing subtype specification for area of user defined type");
+      throw thexception("missing subtype specification for area of user defined type");
     this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
   }
 }
@@ -127,7 +127,7 @@ void tharea::parse_type(char * tstr)
   if (this->type == TT_AREA_TYPE_UNKNOWN)
     ththrow("unknown area type -- {}", tstr);
   if (this->type == TT_AREA_TYPE_DIMENSIONS)
-    ththrow("area dimensions is not supported as ordinary type");
+    throw thexception("area dimensions is not supported as ordinary type");
 }
 
 
@@ -135,12 +135,12 @@ void tharea::parse_type(char * tstr)
 void tharea::parse_subtype(char * ststr)
 {
   if (this->type == TT_AREA_TYPE_UNKNOWN)
-    ththrow("area type must be specified before subtype");
+    throw thexception("area type must be specified before subtype");
   if (this->type == TT_AREA_TYPE_U) {
     this->parse_u_subtype(ststr);
     return;
   } else
-    ththrow("invalid type - subtype combination");
+    throw thexception("invalid type - subtype combination");
 }
 
 void tharea::self_print_properties(FILE * outf)
@@ -165,7 +165,7 @@ void tharea::insert_border_line(int npars, char ** pars)
 {
   thdb2dab * bl;
   if (npars != 1)
-    ththrow("one line name per line allowed");
+    throw thexception("one line name per line allowed");
   bl = this->db->db2d.insert_border_line();
   bl->source = this->db->csrc;
   thparse_objectname(bl->name,& this->db->buff_stations,*pars);
