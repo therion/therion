@@ -258,7 +258,7 @@ void thinit::check_font_path(const char * fname, int index) {
     }
   }
   
-  if (strlen(pshort.get_buffer()) == 0) ththrow("invalid font name -- {}", fname);
+  if (strlen(pshort.get_buffer()) == 0) throw thexception(fmt::format("invalid font name -- {}", fname));
 
   if ( 
 #ifdef THWIN32
@@ -457,7 +457,7 @@ void thinit::load()
             throw thexception("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
           break;
         default:
-          ththrow("invalid initialization command -- {}", args[0]);
+          throw thexception(fmt::format("invalid initialization command -- {}", args[0]));
       }
         
       switch(argid) {
@@ -503,7 +503,7 @@ void thinit::load()
         case TTIC_LANG:
           this->lang = thlang_parse(args[1]);
           if (this->lang == THLANG_UNKNOWN)
-            ththrow("language not supported -- {}",args[1]);
+            throw thexception(fmt::format("language not supported -- {}",args[1]));
           break;
 
         case TTIC_UNITS:
@@ -513,21 +513,21 @@ void thinit::load()
         case TTIC_OTF2PFB:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow("invalid otf2pfb switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid otf2pfb switch -- {}", args[1]));
           ENC_NEW.t1_convert = (sv == TT_TRUE);
           break;
 
         case TTIC_TEX_REFS_REGISTERS:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow("invalid tex-refs-registers switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid tex-refs-registers switch -- {}", args[1]));
           tex_refs_registers = (sv == TT_TRUE);
           break;
 
         case TTIC_PROJ_MISSING_GRID:
           sv = thcs_parse_gridhandling(args[1]);
           if (sv == GRID_INVALID)
-            ththrow("invalid proj-missing-grid switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid proj-missing-grid switch -- {}", args[1]));
           thcs_cfg.proj_auto_grid = sv;
           break;
 
@@ -563,7 +563,7 @@ void thinit::load()
         case TTIC_TEX_FONTS:
           frec.id = get_enc_id(args[1]);
           if (frec.id < 0)
-            ththrow("tex encoding not supported -- {}", args[1]);
+            throw thexception(fmt::format("tex encoding not supported -- {}", args[1]));
           frec.rm = args[2];
           frec.it = args[3];
           frec.bf = args[4];
@@ -587,19 +587,19 @@ void thinit::load()
         case TTIC_TEX_ENV:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow("invalid tex-env switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid tex-env switch -- {}", args[1]));
           this->tex_env = (sv == TT_TRUE);
           break;
           
         case TTIC_LOOPC:
           sv = thmatch_token(args[1], thtt_loopc);
           if (sv == THINIT_LOOPC_UNKNOWN)
-            ththrow("invalid loop-closure switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid loop-closure switch -- {}", args[1]));
           this->loopc = sv;
           break;
           
         default:
-          ththrow("invalid initialization command -- {}", args[0]);
+          throw thexception(fmt::format("invalid initialization command -- {}", args[0]));
       }
     }
   }

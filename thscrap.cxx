@@ -200,13 +200,13 @@ void thscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     case TT_SCRAP_3D:
       this->d3 = thmatch_token(*args, thtt_onoffauto);
       if (this->d3 == TT_UNKNOWN_BOOL)
-        ththrow("invalid -3d switch -- {}", *args);
+        throw thexception(fmt::format("invalid -3d switch -- {}", *args));
       break;
     
     case TT_SCRAP_FLIP:
       this->flip = thmatch_token(*args, thtt_scrap_flips);
       if (this->flip == TT_SCRAP_FLIP_UNKNOWN)
-        ththrow("invalid -flip switch -- {}", *args);
+        throw thexception(fmt::format("invalid -flip switch -- {}", *args));
       break;
 
     case TT_SCRAP_SKETCH:
@@ -237,7 +237,7 @@ void thscrap::parse_scale(char * ss)
   int npar = this->db->db2d.mbf.get_size();
   char ** pars = this->db->db2d.mbf.get_buffer();
   if ((npar < 1) || ((npar > 3) && (npar != 8) && (npar != 9)))
-    ththrow("invalid number of scale arguments -- {}",npar);
+    throw thexception(fmt::format("invalid number of scale arguments -- {}",npar));
   double n1 = 1.0, n2 = 1.0;
   bool p9 = false;
   int sv, ux = 0, n2x = 0;
@@ -262,7 +262,7 @@ void thscrap::parse_scale(char * ss)
 #define parse_scalep9(var,parn) \
     thparse_double(sv,var,pars[parn]); \
     if (sv != TT_SV_NUMBER) \
-      ththrow("real number required -- {}", pars[parn]);
+      throw thexception(fmt::format("real number required -- {}", pars[parn]));
   
   if (ux > 0) {
     lentf.parse_units(pars[ux]);
@@ -302,12 +302,12 @@ void thscrap::parse_scale(char * ss)
     // let's parse first number
     thparse_double(sv,n1,pars[0]);
     if ((sv != TT_SV_NUMBER) || (n1 <= 0.0))
-      ththrow("real positive number required -- {}", pars[0]);
+      throw thexception(fmt::format("real positive number required -- {}", pars[0]));
     // let's parse second number
     if (n2x > 0) {
       thparse_double(sv,n2,pars[n2x]);
       if ((sv != TT_SV_NUMBER) || (n2 <= 0.0))
-        ththrow("real positive number required -- {}", pars[0]);
+        throw thexception(fmt::format("real positive number required -- {}", pars[0]));
       n1 = n2 / n1;
       if (ux > 0)
         n1 = lentf.transform(n1);
@@ -1473,11 +1473,11 @@ void thscrap::parse_sketch(char ** args, int /*argenc*/) // TODO unused paramete
   // X
   thparse_double(sv,sk.m_x,args[1]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    ththrow("invalid	number --	{}", args[1]);
+    throw thexception(fmt::format("invalid	number --	{}", args[1]));
   // Y
   thparse_double(sv,sk.m_y,args[2]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    ththrow("invalid	number --	{}", args[2]);
+    throw thexception(fmt::format("invalid	number --	{}", args[2]));
   this->sketch_list.push_back(std::move(sk));
 }
 

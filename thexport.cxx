@@ -66,7 +66,7 @@ void thexport::parse(int nargs, char ** args)
     oax = ax;
     this->parse_options(ax, nargs, args);
     if (oax == ax)
-      ththrow("unknown option -- \"{}\"", args[ax]);
+      throw thexception(fmt::format("unknown option -- \"{}\"", args[ax]));
   }
 }
 
@@ -84,26 +84,26 @@ void thexport::parse_options(int & argx, int nargs, char ** args)
     case TT_EXP_OPT_OUTPUT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing output file name -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing output file name -- \"{}\"",args[optx]));
       if (strlen(args[argx]) > 0) {
         this->outpt = this->cfgptr->get_db()->strstore(args[argx]);
         outpt_def = true;
       }
       else
-        ththrow("empty file name not allowed -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("empty file name not allowed -- \"{}\"",args[optx]));
       argx++;
       break;
     case TT_EXP_OPT_CS:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing coordiate system -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing coordiate system -- \"{}\"",args[optx]));
       {
         int id = thcs_parse(args[argx]);
         if (id == TTCS_UNKNOWN) {
-          ththrow("unknown coordinate system -- {}", args[argx]);
+          throw thexception(fmt::format("unknown coordinate system -- {}", args[argx]));
         }
         if ((thcfg.outcs != id) && (id == TTCS_LOCAL))
-          ththrow("mixing local and global coordinate system -- {}", args[argx]);
+          throw thexception(fmt::format("mixing local and global coordinate system -- {}", args[argx]));
         this->cs = id;
       }
       argx++;

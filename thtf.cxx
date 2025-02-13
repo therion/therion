@@ -35,7 +35,7 @@ void thtf::parse_scale(char * sstr)
   int sv;
   thparse_double(sv,this->sfactor,sstr);
   if (sv != TT_SV_NUMBER)
-    ththrow("invalid scale factor -- {}", sstr);
+    throw thexception(fmt::format("invalid scale factor -- {}", sstr));
   if (this->sfactor == 0.0)
     throw thexception("invalid scale factor -- 0.0");
 }

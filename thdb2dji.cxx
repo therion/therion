@@ -71,7 +71,7 @@ void thdb2dji::parse_item(char * istr)
   if (npar == 2) {
     this->mark = thdb.strstore(pars[1]);
     if (!th_is_keyword(this->mark))
-      ththrow("line mark not a keyword -- {}",istr);
+      throw thexception(fmt::format("line mark not a keyword -- {}",istr));
   }
   /*
   thdb.buff_enc.strcpy(pars[0]);

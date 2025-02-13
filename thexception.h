@@ -44,10 +44,3 @@ public:
         : thexception(fmt::format("{} -- {}", msg, e.what()))
     {}
 };
-
-// These definitions are here only so the build does not fail and will be removed in the final version.
-template <typename... Args>
-[[noreturn]] void ththrow(const Args&...)
-{
-    throw std::runtime_error("ththrow");
-}

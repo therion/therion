@@ -138,8 +138,8 @@ const thcsdata * thcs_get_data(int cs) {
 
 void thcs_add_cs(char * id, char * proj4id)
 {
-  if (thcs_parse(id) != TTCS_UNKNOWN) ththrow("cs already exists -- {}", id);
-  if (!th_is_extkeyword(id)) ththrow("invalid cs identifier -- {}", id);
+  if (thcs_parse(id) != TTCS_UNKNOWN) throw thexception(fmt::format("cs already exists -- {}", id));
+  if (!th_is_extkeyword(id)) throw thexception(fmt::format("invalid cs identifier -- {}", id));
   thcs_check(proj4id);
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
   pd->params = thdb.strstore(proj4id);
@@ -170,9 +170,9 @@ std::string thcs_get_trans(int from_cs, int to_cs) {
 
 void thcs_add_cs_trans_single(const char * from_cs, const char * to_cs, const char * trans) {
 	int fcs = thcs_parse(from_cs);
-	if (fcs == TTCS_UNKNOWN) ththrow("unknown coordinate system -- {}", from_cs);
+	if (fcs == TTCS_UNKNOWN) throw thexception(fmt::format("unknown coordinate system -- {}", from_cs));
 	int tcs = thcs_parse(to_cs);
-	if (tcs == TTCS_UNKNOWN) ththrow("unknown coordinate system -- {}", to_cs);
+	if (tcs == TTCS_UNKNOWN) throw thexception(fmt::format("unknown coordinate system -- {}", to_cs));
 //	if (strlen(trans) == 0) ththrow("empty transformation specification");
 	thcs_transformations[thcstrans(fcs, tcs)] = thdb.strstore(trans, true);
 }

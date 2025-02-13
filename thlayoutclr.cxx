@@ -154,7 +154,7 @@ void thlayout_color::CMYKtoRGB() {
   	this->B = (1.0 - this->Y) * (1.0 - this->K);
 }
 
-#define invalid_color_spec ththrow("invalid color specification -- {}", str);
+#define invalid_color_spec throw thexception(fmt::format("invalid color specification -- {}", str));
 
 double clrhex2num(char * str, char p) {
 	char src[3];

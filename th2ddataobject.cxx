@@ -103,7 +103,7 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
           this->tags |= TT_2DOBJ_TAG_CLIP_AUTO;
           break;
         default:
-          ththrow("invalid clip -- {}",*args);
+          throw thexception(fmt::format("invalid clip -- {}",*args));
       }
       break;    
 
@@ -117,20 +117,20 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
         case TT_FALSE:
           break;
         default:
-          ththrow("invalid visibility switch -- {}",*args);
+          throw thexception(fmt::format("invalid visibility switch -- {}",*args));
       }
       break;    
 
     case TT_2DOBJ_PLACE:
       this->place = thmatch_token(*args, thtt_2ddataobject_place);
       if (this->place == TT_2DOBJ_PLACE_UNKNOWN)
-        ththrow("invalid place value -- {}",*args);
+        throw thexception(fmt::format("invalid place value -- {}",*args));
       break;    
       
     case TT_2DOBJ_CONTEXT:
       this->context = thsymbolset_get_id(args[0], args[1]);
       if (this->context < 0)
-        ththrow("invalid object context -- {} {}", args[0], args[1]);
+        throw thexception(fmt::format("invalid object context -- {} {}", args[0], args[1]));
       if ((this->context > SYMP_ZZZ) 
          && (this->context != SYMX_POINT_AIRDRAUGHT)
          && (this->context != SYMX_POINT_HEIGHT)
@@ -141,7 +141,7 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
          && (this->context != SYMX_LINE_SURVEY)
          && (this->context != SYMX_LINE_WALL)
          && (this->context != SYMX_LINE_WATERFLOW))
-        ththrow("object context not allowed -- {} {}", args[0], args[1]);
+        throw thexception(fmt::format("object context not allowed -- {} {}", args[0], args[1]));
       break;
 
     default:
@@ -205,7 +205,7 @@ void th2ddataobject::parse_u_subtype(const char * subtype)
   if (th_is_keyword(subtype)) {
     this->m_subtype_str = this->db->strstore(subtype, true);
   } else
-    ththrow("invalid subtype name -- {}", subtype);
+    throw thexception(fmt::format("invalid subtype name -- {}", subtype));
 }
 
 void th2dparse_scale(const char * spec, int & type, double & value)
@@ -215,7 +215,7 @@ void th2dparse_scale(const char * spec, int & type, double & value)
     // try to parse numeric value
     thparse_double(type, value, spec);
     if ((type != TT_SV_NUMBER) || (value <= 0.0)) {
-      ththrow("invalid scale -- {}", spec);
+      throw thexception(fmt::format("invalid scale -- {}", spec));
     } else {
       type = TT_2DOBJ_SCALE_NUMERIC;
     }

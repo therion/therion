@@ -88,7 +88,7 @@ void thendsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned 
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow("invalid keyword -- {}", *args);
+        throw thexception(fmt::format("invalid keyword -- {}", *args));
       break;
       
     default:

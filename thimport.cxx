@@ -170,7 +170,7 @@ void thimport::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_IMPORT_FORMAT:
       this->format = thmatch_token(args[0], thtt_import_fmts);
       if (this->format == TT_IMPORT_FMT_UNKNOWN)
-        ththrow("unknown import format -- {}", args[0]);
+        throw thexception(fmt::format("unknown import format -- {}", args[0]));
       break;
 
     case TT_IMPORT_CALIB:
@@ -180,7 +180,7 @@ void thimport::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_IMPORT_SURVEYS:
       this->surveys = thmatch_token(args[0], thtt_import_surveys);
       if (this->surveys == TT_IMPORT_SURVEYS_UNKNOWN)
-        ththrow("unknown survey structure policy -- {}", args[0]);
+        throw thexception(fmt::format("unknown survey structure policy -- {}", args[0]));
       break;
     
     case TT_IMPORT_FILTER:
@@ -255,7 +255,7 @@ void thimport::import_file()
       this->import_file_img();
       break;
     default:
-      ththrow("unknown file format -- {}", this->fname);
+      throw thexception(fmt::format("unknown file format -- {}", this->fname));
   }
   this->db->lcsobjectptr = tmpobj;
   this->db->csurveyptr = tmpsv;
@@ -522,7 +522,7 @@ void thimport::import_file_img()
   img* pimg = img_open(this->fname);
   if (pimg == NULL) {	
     imgerr = img_error();
-    ththrow("unable to open file {}, error code: {}", this->fname, static_cast<int>(imgerr));
+    throw thexception(fmt::format("unable to open file {}, error code: {}", this->fname, static_cast<int>(imgerr)));
   }
   const auto dummy_station_suffix = std::string{pimg->separator, 'x'};
   do {
@@ -773,11 +773,11 @@ void thimport::parse_calib(char * spec, int /*enc*/) // TODO unused parameter en
   double v[6];
   int sv, i;
   if (mb->get_size() != 6)
-    ththrow("invalid import calibration -- \"{}\"", spec);
+    throw thexception(fmt::format("invalid import calibration -- \"{}\"", spec));
   for(i = 0; i < 6; i++) {
     thparse_double(sv, v[i], args[i]);
     if (sv != TT_SV_NUMBER)
-      ththrow("invalid number -- {}", args[i]);
+      throw thexception(fmt::format("invalid number -- {}", args[i]));
   }
   this->calib_x = v[3] - v[0];
   this->calib_y = v[4] - v[1];

@@ -318,7 +318,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   const char * svxfn = thtmp.get_file_name("data.svx");
   this->svxf = fopen(svxfn,"w");
   if (svxf == NULL)
-    ththrow("can't open survex file for output -- {}", svxfn);
+    throw thexception(fmt::format("can't open survex file for output -- {}", svxfn));
 
   this->meridian_convergence = thcfg.get_outcs_convergence();
   this->lastleggridmccs = TTCS_LOCAL;
@@ -412,7 +412,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   this->transcript_log_file(dbp, thtmp.get_file_name("data.log"));
 
   if (retcode != EXIT_SUCCESS)
-    ththrow("cavern exit code -- {}", retcode);
+    throw thexception(fmt::format("cavern exit code -- {}", retcode));
   else
     this->load_err_file(dbp, thtmp.get_file_name("data.err"));
 

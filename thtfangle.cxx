@@ -65,7 +65,7 @@ void thtfangle::parse_units(char * ustr)
 			}
       [[fallthrough]];
     case TT_TFU_UNKNOWN_ANGLE:
-      ththrow("unknown angle unit -- {}", ustr);
+      throw thexception(fmt::format("unknown angle unit -- {}", ustr));
       break;
   }
   

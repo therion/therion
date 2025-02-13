@@ -125,7 +125,7 @@ void tharea::parse_type(char * tstr)
 {
   this->type = thmatch_token(tstr, thtt_area_types);
   if (this->type == TT_AREA_TYPE_UNKNOWN)
-    ththrow("unknown area type -- {}", tstr);
+    throw thexception(fmt::format("unknown area type -- {}", tstr));
   if (this->type == TT_AREA_TYPE_DIMENSIONS)
     throw thexception("area dimensions is not supported as ordinary type");
 }

@@ -195,6 +195,6 @@ int thparse_encoding(char * encstr)
 {
   int eid = thmatch_token(encstr, thtt_encoding);
   if (eid == TT_UNKNOWN_ENCODING)
-    ththrow("invalid encoding -- {}", encstr);
+    throw thexception(fmt::format("invalid encoding -- {}", encstr));
   return eid;
 }

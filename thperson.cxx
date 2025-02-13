@@ -68,7 +68,7 @@ void thperson::parse(thdatabase * dbp, char * src)
       this->n2 = dbp->strstore((dbp->mbuff_tmp.get_buffer())[1], true);
     }
     else
-      ththrow("invalid name format -- \"{}\"", src);
+      throw thexception(fmt::format("invalid name format -- \"{}\"", src));
   }
   else {
     thsplit_args(&(dbp->mbuff_tmp), src);
@@ -80,7 +80,7 @@ void thperson::parse(thdatabase * dbp, char * src)
       this->n2 = dbp->strstore((dbp->mbuff_tmp.get_buffer())[1], true);
     }
     else
-      ththrow("invalid name format -- \"{}\"", src);
+      throw thexception(fmt::format("invalid name format -- \"{}\"", src));
   }
   
   this->identify(dbp);

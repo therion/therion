@@ -69,20 +69,20 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing format -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expmodel_fmt);
       if (this->format == TT_EXPMODEL_FMT_UNKNOWN)
-        ththrow("unknown format -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
 
     case TT_EXPMODEL_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing encoding -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow("unknown encoding -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
 
@@ -90,10 +90,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_DISABLE:
       argx++;
       if (argx >= nargs)
-        ththrow("missing model entity -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing model entity -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmodel_items);
       if (utmp == TT_EXPMODEL_ITEM_UNKNOWN)
-        ththrow("unknown model entity -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown model entity -- \"{}\"", args[argx]));
       if (optid == TT_EXPMODEL_OPT_ENABLE) {
         this->items |= utmp;
       } else {
@@ -105,10 +105,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_WALLSRC:
       argx++;
       if (argx >= nargs)
-        ththrow("missing wall source -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing wall source -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmodel_wallsrc);
       if (utmp == TT_WSRC_UNKNOWN)
-        ththrow("unknown wall source -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown wall source -- \"{}\"", args[argx]));
       this->wallsrc = utmp;
       argx++;
       break;

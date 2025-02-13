@@ -92,7 +92,7 @@ void thexporter::parse_export(int nargs, char ** args) {
       xp->export_mode = expmode;
       break;
     default:
-      ththrow("unsupported export type -- {}", args[0]);
+      throw thexception(fmt::format("unsupported export type -- {}", args[0]));
   }
   
   xp->src.name = thdb.strstore(thcfg.get_cfg_file()->get_cif_name(),true);

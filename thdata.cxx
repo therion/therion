@@ -292,7 +292,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     	  throw thexception("invalid number of option arguments -- walls");
       this->cgroup->d_walls = thmatch_token(*args, thtt_onoffauto);
       if (this->cgroup->d_walls == TT_UNKNOWN_BOOL)
-    	  ththrow("invalid walls switch -- {}", *args);
+    	  throw thexception(fmt::format("invalid walls switch -- {}", *args));
       break;
       
     case TT_DATA_SHAPE:
@@ -300,7 +300,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     	  throw thexception("invalid number of option arguments -- shape");
       this->cgroup->d_shape = thmatch_token(*args, thtt_dataleg_shape);
       if (this->cgroup->d_shape == TT_DATALEG_SHAPE_UNKNOWN)
-    	  ththrow("unknown shape type -- {}", *args);
+    	  throw thexception(fmt::format("unknown shape type -- {}", *args));
       break;
       
     case TT_DATA_VTRESH:
@@ -399,7 +399,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
             case TT_DATALEG_RIGHT:
               break;
             default:
-              ththrow("unknown team role -- {}", args[prole_i]);
+              throw thexception(fmt::format("unknown team role -- {}", args[prole_i]));
               break;
           }
         }
@@ -710,7 +710,7 @@ void thdata::set_data_units(int nargs, char ** args)
           sdtype = 1;
         else {
           if (sdtype != 1)
-            ththrow("incompatible quantity -- {}", args[iit]);
+            throw thexception(fmt::format("incompatible quantity -- {}", args[iit]));
         }
         break;
       case TT_DATALEG_BEARING:
@@ -719,7 +719,7 @@ void thdata::set_data_units(int nargs, char ** args)
           sdtype = 2;
         else {
           if (sdtype != 2)
-            ththrow("incompatible quantity -- {}", args[iit]);
+            throw thexception(fmt::format("incompatible quantity -- {}", args[iit]));
         }
         break;
       default:
@@ -729,7 +729,7 @@ void thdata::set_data_units(int nargs, char ** args)
           break;
         }
         else 
-          ththrow("invalid quantity -- {}",args[iit]);
+          throw thexception(fmt::format("invalid quantity -- {}",args[iit]));
     }
     if (to_set)
       items[iit] = itid;
@@ -827,13 +827,13 @@ void thdata::set_data_vtresh(int nargs, char ** args)
   thtfangle dlu;
   thparse_double(nid, this->d_vtresh, args[0]);
   if (nid != TT_SV_NUMBER)
-    ththrow("invalid vthreshold -- {}", args[0]);
+    throw thexception(fmt::format("invalid vthreshold -- {}", args[0]));
   if (nargs > 1) {
     dlu.parse_units(args[1]);
     this->d_vtresh = dlu.transform(this->d_vtresh);
   }
   if ((this->d_vtresh < 0.0) || (this->d_vtresh > 90.0))
-    ththrow("vthreshold out of range -- {}", args[0]);
+    throw thexception(fmt::format("vthreshold out of range -- {}", args[0]));
   
 }
 
@@ -852,7 +852,7 @@ void thdata::set_data_declination(int nargs, char ** args)
     if (nid != TT_SV_NAN)
       throw thexception("missing angular units");
   if ((nid != TT_SV_NUMBER) && (nid != TT_SV_NAN))
-    ththrow("invalid number -- {}", args[0]);
+    throw thexception(fmt::format("invalid number -- {}", args[0]));
 }
   
 void thdata::set_data_infer(int nargs, char ** args)
@@ -863,7 +863,7 @@ void thdata::set_data_infer(int nargs, char ** args)
   iwhat = thmatch_token(args[0],thtt_dataleg_infer);
   ihow = thmatch_token(args[1],thtt_bool);
   if (ihow == TT_UNKNOWN_BOOL)
-    ththrow("invalid boolean argument -- {}", args[1]);
+    throw thexception(fmt::format("invalid boolean argument -- {}", args[1]));
   switch (iwhat) {
     case TT_DATALEG_INFER_EQUATES:
       this->dli_equates = (ihow == TT_TRUE);
@@ -872,7 +872,7 @@ void thdata::set_data_infer(int nargs, char ** args)
       this->dli_plumbs = (ihow == TT_TRUE);
       break;
     default:
-      ththrow("invalid argument -- {}", args[0]);
+      throw thexception(fmt::format("invalid argument -- {}", args[0]));
   }
 }
 
@@ -902,7 +902,7 @@ void thdata::set_data_instrument(int nargs, char ** args)
       case TT_DATALEG_RIGHT:
         break;
       default:
-        ththrow("invalid instrument -- {}", args[i]);
+        throw thexception(fmt::format("invalid instrument -- {}", args[i]));
     }
   }
 }
@@ -937,7 +937,7 @@ void thdata::set_data_sd(int nargs, char ** args)
           sdtype = 1;
         else {
           if (sdtype != 1)
-            ththrow("incompatible quantity -- {}", args[iit]);
+            throw thexception(fmt::format("incompatible quantity -- {}", args[iit]));
         }
         break;
       case TT_DATALEG_BEARING:
@@ -946,7 +946,7 @@ void thdata::set_data_sd(int nargs, char ** args)
           sdtype = 2;
         else {
           if (sdtype != 2)
-            ththrow("incompatible quantity -- {}", args[iit]);
+            throw thexception(fmt::format("incompatible quantity -- {}", args[iit]));
         }
         break;
       default:
@@ -956,7 +956,7 @@ void thdata::set_data_sd(int nargs, char ** args)
           break;
         }
         else 
-          ththrow("invalid quantity -- {}",args[iit]);
+          throw thexception(fmt::format("invalid quantity -- {}",args[iit]));
     }
     if (to_set)
       items[iit] = itid;
@@ -983,7 +983,7 @@ void thdata::set_data_sd(int nargs, char ** args)
       break;
     default:
       if (nid != TT_SV_NUMBER)
-        ththrow("invalid value -- {}", args[nitems]);
+        throw thexception(fmt::format("invalid value -- {}", args[nitems]));
   }
   
   // set standard deviations
@@ -1041,7 +1041,7 @@ void thdata::set_data_data(int nargs, char ** args)
   this->reset_data();
   this->d_type = thmatch_token(args[0], thtt_datatype);
   if (this->d_type == TT_DATATYPE_UNKNOWN)
-    ththrow("unknown data type -- {}", args[0]);
+    throw thexception(fmt::format("unknown data type -- {}", args[0]));
     
   // second let's detect data order
   if (nargs > THDATA_MAX_ITEMS)
@@ -1492,18 +1492,18 @@ void thdata::set_data_data(int nargs, char ** args)
         break;        
         
       default:
-        ththrow("invalid identifier -- {}", args[dix]);
+        throw thexception(fmt::format("invalid identifier -- {}", args[dix]));
     }
     
     // catch errors
     if (err_duplicate)
-      ththrow("duplicate identifier -- {}", args[dix]);
+      throw thexception(fmt::format("duplicate identifier -- {}", args[dix]));
     if (err_inimm)
-      ththrow("interleaved and non-interleaved reading mix -- {}", args[dix]);
+      throw thexception(fmt::format("interleaved and non-interleaved reading mix -- {}", args[dix]));
     if (err_itype)
-      ththrow("invalid reading for this style -- {}", args[dix]);
+      throw thexception(fmt::format("invalid reading for this style -- {}", args[dix]));
     if (err_idanl)
-      ththrow("interleaved reading after newline -- {}", args[dix]);
+      throw thexception(fmt::format("interleaved reading after newline -- {}", args[dix]));
    
     // if no errors, no ignoreall - set order  
     this->d_order[dix - 1] = idd;
@@ -1575,7 +1575,7 @@ void thdata::set_data_data(int nargs, char ** args)
       
     }
     if (err_inimm)
-      ththrow("non-interleaved data before newline -- {}", args[dix]);
+      throw thexception(fmt::format("non-interleaved data before newline -- {}", args[dix]));
   }
     
   
@@ -1592,7 +1592,7 @@ void thdata_parse_dim(const char * src, double & d1, double & d2,
   if (!d2ok) {
     thparse_double(sv, d1, src);
     if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-      ththrow("invalid {} reading -- {}", item, src);
+      throw thexception(fmt::format("invalid {} reading -- {}", item, src));
   } else {
     char ** args;
     long nargs;
@@ -1601,29 +1601,29 @@ void thdata_parse_dim(const char * src, double & d1, double & d2,
     nargs = thdb.mbuff_tmp2.get_size();    
     d2ok = false;
     if ((nargs < 1) || (nargs > 2))
-      ththrow("invalid {} reading -- {}", item, src);
+      throw thexception(fmt::format("invalid {} reading -- {}", item, src));
     if (nargs > 1) {
       d2ok = true;
       thparse_double(sv, d2, args[1]);
       if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-        ththrow("invalid {} reading -- {}", item, args[1]);
+        throw thexception(fmt::format("invalid {} reading -- {}", item, args[1]));
     }
     thparse_double(sv, d1, args[0]);
     if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-      ththrow("invalid {} reading -- {}", item, args[0]);
+      throw thexception(fmt::format("invalid {} reading -- {}", item, args[0]));
   }
   
   if (!thisnan(d1)) {
     d1 = ctran->evaluate(d1);
     d1 = utran->transform(d1);
     if (d1 < 0.0)
-      ththrow("negative {} reading -- {}", item, src);
+      throw thexception(fmt::format("negative {} reading -- {}", item, src));
   }
   if (!thisnan(d2)) {
     d2 = ctran->evaluate(d2);
     d2 = utran->transform(d2);
     if (d2 < 0.0)
-      ththrow("negative {} reading -- {}", item, src);
+      throw thexception(fmt::format("negative {} reading -- {}", item, src));
   }
   
 }
@@ -1764,7 +1764,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
         if (icase_equals(args[carg],"b"))
           this->cd_leg->direction = false;
         else if (!icase_equals(args[carg], "f"))
-          ththrow("invalid survey direction -- {}", args[carg]);
+          throw thexception(fmt::format("invalid survey direction -- {}", args[carg]));
         break;
         
       case TT_DATALEG_LENGTH:
@@ -1774,7 +1774,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             val = this->dlc_length.evaluate(val);
             val = this->dlu_length.transform(val);
             if (val < 0.0)
-              ththrow("negative length reading -- {}", args[carg]);
+              throw thexception(fmt::format("negative length reading -- {}", args[carg]));
             else
               this->cd_leg->length = val;
             break;
@@ -1782,7 +1782,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->length = val;
 //            break;
           default:
-            ththrow("invalid length reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid length reading -- {}", args[carg]));
         }
         break;
 
@@ -1793,7 +1793,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
               val = this->dlc_length.evaluate(val);
               val = this->dlu_length.transform(val);
               if (val < 0.0)
-                ththrow("negative length reading -- {}", args[carg]);
+                throw thexception(fmt::format("negative length reading -- {}", args[carg]));
               else
                 this->cd_leg->backlength = val;
               break;
@@ -1801,7 +1801,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
   //            this->cd_leg->length = val;
   //            break;
             default:
-              ththrow("invalid backwards length reading -- {}", args[carg]);
+              throw thexception(fmt::format("invalid backwards length reading -- {}", args[carg]));
           }
           break;
 
@@ -1820,7 +1820,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             if (val >= 360.0)
               val -= 360.0;
             if ((val < 0.0) || (val >= 360.0))
-              ththrow("bearing reading out of range -- {}", args[carg]);
+              throw thexception(fmt::format("bearing reading out of range -- {}", args[carg]));
             else
               this->cd_leg->bearing = val;
             break;
@@ -1828,7 +1828,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             this->cd_leg->bearing = val;
             break;
           default:
-            ththrow("invalid bearing reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid bearing reading -- {}", args[carg]));
         }
         break;
         
@@ -1846,7 +1846,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             if (val >= 360.0)
               val -= 360.0;
             if ((val < 0.0) || (val >= 360.0))
-              ththrow("backwards bearing reading out of range -- {}", args[carg]);
+              throw thexception(fmt::format("backwards bearing reading out of range -- {}", args[carg]));
             else
               this->cd_leg->backbearing = val;
             break;
@@ -1854,7 +1854,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             this->cd_leg->backbearing = val;
             break;
           default:
-            ththrow("invalid backwards bearing reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid backwards bearing reading -- {}", args[carg]));
         }
         break;
         
@@ -1870,7 +1870,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             if ((val >= 269.99999) && (val <= 360.00001))
             	val -= 360.0;
             if ((val <= -90.00001) || (val >= 90.00001))
-              ththrow("gradient reading out of range -- {}", args[carg]);
+              throw thexception(fmt::format("gradient reading out of range -- {}", args[carg]));
             else {
               if (val < -90.0) val = -90.0;
               if (val >  90.0) val =  90.0;
@@ -1883,7 +1883,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             this->cd_leg->gradient = val;
             break;
           default:
-            ththrow("invalid gradient reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid gradient reading -- {}", args[carg]));
         }
         break;
         
@@ -1897,7 +1897,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             val = this->dlc_gradient.evaluate(val);
             val = this->dlu_gradient.transform(val);
             if ((val <= -90.00001) || (val >= 90.00001))
-              ththrow("backwards gradient reading out of range -- {}", args[carg]);
+              throw thexception(fmt::format("backwards gradient reading out of range -- {}", args[carg]));
             else
               this->cd_leg->backgradient = val;
             break;
@@ -1907,7 +1907,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             this->cd_leg->backgradient = val;
             break;
           default:
-            ththrow("invalid backwards gradient reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid backwards gradient reading -- {}", args[carg]));
         }
         break;
         
@@ -1918,7 +1918,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
             val = this->dlc_counter.evaluate(val);
             val = this->dlu_counter.transform(val);
             if (val < 0.0)
-              ththrow("negative counter reading -- {}", args[carg]);
+              throw thexception(fmt::format("negative counter reading -- {}", args[carg]));
             else
               this->cd_leg->counter = val;
             break;
@@ -1926,7 +1926,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->counter = val;
 //            break;
           default:
-            ththrow("invalid counter reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid counter reading -- {}", args[carg]));
         }
         break;
         
@@ -1942,7 +1942,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->fromcounter = val;
 //            break;
           default:
-            ththrow("invalid counter reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid counter reading -- {}", args[carg]));
         }
         break;
         
@@ -1958,7 +1958,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->tocounter = val;
 //            break;
           default:
-            ththrow("invalid counter reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid counter reading -- {}", args[carg]));
         }
         break;
         
@@ -1974,7 +1974,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->depth = val;
 //            break;
           default:
-            ththrow("invalid depth reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid depth reading -- {}", args[carg]));
         }
         break;
         
@@ -1990,7 +1990,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->fromdepth = val;
 //            break;
           default:
-            ththrow("invalid depth reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid depth reading -- {}", args[carg]));
         }
         break;
         
@@ -2006,7 +2006,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->todepth = val;
 //            break;
           default:
-            ththrow("invalid depth reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid depth reading -- {}", args[carg]));
         }
         break;
         
@@ -2022,7 +2022,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->depthchange = val;
 //            break;
           default:
-            ththrow("invalid depth change reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid depth change reading -- {}", args[carg]));
         }
         break;
         
@@ -2038,7 +2038,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->dy = val;
 //            break;
           default:
-            ththrow("invalid northing reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid northing reading -- {}", args[carg]));
         }
         break;
         
@@ -2054,7 +2054,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->dx = val;
 //            break;
           default:
-            ththrow("invalid easting reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid easting reading -- {}", args[carg]));
         }
         break;
         
@@ -2070,7 +2070,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
 //            this->cd_leg->dz = val;
 //            break;
           default:
-            ththrow("invalid altitude reading -- {}", args[carg]);
+            throw thexception(fmt::format("invalid altitude reading -- {}", args[carg]));
         }
         break;
         
@@ -2284,7 +2284,7 @@ void thdata::set_data_fix(int nargs, char ** args)
     if (ai > 2) {
       thparse_double(vid, val, args[ai]);
       if (vid != TT_SV_NUMBER)
-        ththrow("invalid number -- {}", args[ai]);
+        throw thexception(fmt::format("invalid number -- {}", args[ai]));
     }
     switch (ai) {
       case 0:
@@ -2312,7 +2312,7 @@ void thdata::set_data_fix(int nargs, char ** args)
       case 4:
         val = this->dlu_x.transform(val);
         if (val <= 0.0) {
-          ththrow("standard deviation must be positive -- {}", args[ai]);
+          throw thexception(fmt::format("standard deviation must be positive -- {}", args[ai]));
         }
         it->sdx = val;
         it->sdy = val;
@@ -2322,14 +2322,14 @@ void thdata::set_data_fix(int nargs, char ** args)
         if (nargs == 6) {
           val = this->dlu_z.transform(val);
           if (val <= 0.0) {
-            ththrow("standard deviation must be positive -- {}", args[ai]);
+            throw thexception(fmt::format("standard deviation must be positive -- {}", args[ai]));
           }
           it->sdz = val;
         }
         else {
           val = this->dlu_y.transform(val);
           if (val <= 0.0) {
-            ththrow("standard deviation must be positive -- {}", args[ai]);
+            throw thexception(fmt::format("standard deviation must be positive -- {}", args[ai]));
           }
           it->sdy = val;
         }
@@ -2337,7 +2337,7 @@ void thdata::set_data_fix(int nargs, char ** args)
       case 6:
         val = this->dlu_z.transform(val);
         if (val <= 0.0) {
-          ththrow("standard deviation must be positive -- {}", args[ai]);
+          throw thexception(fmt::format("standard deviation must be positive -- {}", args[ai]));
         }
         it->sdz = val;
         break;
@@ -2478,7 +2478,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
             } else {
 	            thparse_length(sv, it->explored, args[ai]);
 	            if (sv == TT_SV_UNKNOWN)
-                      ththrow("invalid explored length specification -- {}", args[ai]);
+                      throw thexception(fmt::format("invalid explored length specification -- {}", args[ai]));
             }
             break;
 
@@ -2489,9 +2489,9 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
             if (strlen(args[ai]) == 0)
               throw thexception("empty attribute name not allowed");
             if (args[ai][0] == '_')
-              ththrow("attribute name starting with '_' not allowed -- {}", args[ai]);
+              throw thexception(fmt::format("attribute name starting with '_' not allowed -- {}", args[ai]));
             if (!th_is_attr_name(args[ai]))
-              ththrow("invalid characters in attribute name -- {}", args[ai]);
+              throw thexception(fmt::format("invalid characters in attribute name -- {}", args[ai]));
             attrname = args[ai];
             if (notflag) {
                 it->attr.erase(attrname);
@@ -2511,7 +2511,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
           case TT_DATASFLAG_NOT:
             break;
           default:
-            ththrow("invalid station flag -- {}", args[ai]);
+            throw thexception(fmt::format("invalid station flag -- {}", args[ai]));
         }
         if (fid == TT_DATASFLAG_NOT)
             notflag = true;
@@ -2565,7 +2565,7 @@ void thdata::set_data_flags(int nargs, char ** args)
         notb = false;
         break;
       default:
-        ththrow("unknown leg flag -- {}", args[fid]);
+        throw thexception(fmt::format("unknown leg flag -- {}", args[fid]));
     }
   }
 }
@@ -2587,7 +2587,7 @@ void thdata::set_data_extend(int nargs, char ** args)
 	    thparse_double(exn, tmpdbl, args[0]);
 		  if (exn == TT_SV_NUMBER) {
 			  if ((tmpdbl < 0.0) || (tmpdbl > 200.0))
-				  ththrow("extend ratio out of range [0..200] -- {}", args[0]);
+				  throw thexception(fmt::format("extend ratio out of range [0..200] -- {}", args[0]));
 				ratio_ok = true;
         if (nargs == 1) {
           this->d_extend_ratio = tmpdbl / 100.0;
@@ -2598,7 +2598,7 @@ void thdata::set_data_extend(int nargs, char ** args)
 		  }
 	  }
 	  if (!ratio_ok)
-	    ththrow("unknown extend flag -- {}", args[0]);
+	    throw thexception(fmt::format("unknown extend flag -- {}", args[0]));
   }
   switch (nargs) {
     case 1:
@@ -2639,7 +2639,7 @@ void thdata::set_data_mark(int nargs, char ** args)
 
   int tmp_mark = thmatch_token(args[nargs - 1], thtt_datamark);
 	if (tmp_mark == TT_DATAMARK_UNKNOWN) {
-	  ththrow("unknown type of station mark -- {}", args[nargs - 1]);
+	  throw thexception(fmt::format("unknown type of station mark -- {}", args[nargs - 1]));
 	}
 		
   if (nargs > 1) {
@@ -2668,7 +2668,7 @@ void thdata::set_data_grade(int nargs, char ** args)
     if (cgrd != NULL)
       cgrd->update_data_sd(this);
     else
-      ththrow("unknown survey grade -- {}", args[gid]);
+      throw thexception(fmt::format("unknown survey grade -- {}", args[gid]));
   }
 }
 

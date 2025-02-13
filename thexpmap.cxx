@@ -146,11 +146,11 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMAP_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing format -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expmap_fmt);
       fmt = args[argx];
       if (this->format == TT_EXPMAP_FMT_UNKNOWN)
-        ththrow("unknown format -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       supform = false;
       switch (this->export_mode) {
@@ -177,28 +177,28 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
           break;
       }
       if (!supform)
-        ththrow("format not supported -- {}",fmt);
+        throw thexception(fmt::format("format not supported -- {}",fmt));
       break;
     case TT_EXPMAP_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing encoding -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow("unknown encoding -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
     case TT_EXPMAP_OPT_PROJECTION:
       argx++;
       if (argx >= nargs)
-        ththrow("missing projection specification -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing projection specification -- \"{}\"",args[optx]));
       this->projstr = thdb.strstore(args[argx],true);
       argx++;
       break;
     case TT_EXPMAP_OPT_LAYOUT:
       argx++;
       if (argx >= nargs)
-        ththrow("missing layout -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing layout -- \"{}\"",args[optx]));
       this->layout->set(thcmd_option_desc(TT_LAYOUT_COPY), &(args[argx]), this->cfgptr->cfg_file.get_cif_encoding(), 0); // = thdb.strstore(args[argx],true);
       this->layoutopts += " -layout ";
       thencode(&(this->cfgptr->bf1), args[argx], this->cfgptr->cfg_file.get_cif_encoding());
@@ -211,10 +211,10 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMAP_OPT_DISABLE:
       argx++;
       if (argx >= nargs)
-        ththrow("missing map entity -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing map entity -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmap_items);
       if (utmp == TT_EXPMAP_ITEM_UNKNOWN)
-        ththrow("unknown map entity -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown map entity -- \"{}\"", args[argx]));
       if (optid == TT_EXPMAP_OPT_ENABLE) {
         this->items |= utmp;
       } else {
@@ -244,10 +244,10 @@ void thexpmap::parse_layout_option(int & argx, int nargs, char ** args) {
   thcmd_option_desc o = this->layout->get_cmd_option_desc(opts);
   
   if (o.id == TT_DATAOBJECT_UNKNOWN)
-    ththrow("unknown layout option -- -{}", opts);
+    throw thexception(fmt::format("unknown layout option -- -{}", opts));
     
   if (argx + o.nargs >= nargs)
-    ththrow("not enough layout option arguments -- -{}", opts);
+    throw thexception(fmt::format("not enough layout option arguments -- -{}", opts));
   
   argx++;  
   
@@ -2371,7 +2371,7 @@ if (ENC_NEW.NFSS==0) {
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      ththrow("metapost exit code -- {}", retcode);
+      throw thexception(fmt::format("metapost exit code -- {}", retcode));
     }
   }
 
@@ -2408,7 +2408,7 @@ if (ENC_NEW.NFSS==0) {
       "######################## pdftex log file #########################\n",
       "##################### end of pdftex log file #####################\n",false);
       if (retcode != EXIT_SUCCESS) {
-        ththrow("pdftex exit code -- {}", retcode);
+        throw thexception(fmt::format("pdftex exit code -- {}", retcode));
       }
 
       // Let's copy results and log-file to working directory
@@ -2501,15 +2501,15 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 			  fprintf(out->file, "warningcheck := 0;\n");
 				if (max > 32767.0) {
 				  minscale = (1.0 / out->layout->scale) * (max / 32767.0);
-					ththrow("scale too large -- maximal scale for this configuration is 1 : {:.0f}", minscale + 1);
+					throw thexception(fmt::format("scale too large -- maximal scale for this configuration is 1 : {:.0f}", minscale + 1));
 				}
 			} else {
-				ththrow("scrap {}@{} defined at {} [{}] is too large to process in metapost in this scale -- maximal scale for this scrap is 1 : {:.0f}", 
+				throw thexception(fmt::format("scrap {}@{} defined at {} [{}] is too large to process in metapost in this scale -- maximal scale for this scrap is 1 : {:.0f}", 
 					scrap->name, 
 					scrap->fsptr->full_name, 
 					scrap->source.name, 
 					scrap->source.line,
-					minscale + 1);
+					minscale + 1));
 			}
 		}
 	}
