@@ -30,6 +30,8 @@
 #include "thsymbolset.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 th2ddataobject::th2ddataobject()
 {
   this->pscrapoptr = NULL;

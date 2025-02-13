@@ -30,6 +30,7 @@
 #include "thexception.h"
 #include <string.h>
 
+#include <fmt/core.h>
 
 void thperson::reset()
 {

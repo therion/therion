@@ -33,6 +33,8 @@
 #include "thinfnan.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 thsurvey::thsurvey()
 {
   this->full_name = "";

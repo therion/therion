@@ -29,6 +29,7 @@
 #include "thexception.h"
 #include "thparse.h"
 
+#include <fmt/core.h>
 
 void thtf::parse_scale(char * sstr)
 {

@@ -35,6 +35,7 @@
 #include "thconfig.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
 
 thmap::thmap()
 {

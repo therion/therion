@@ -29,6 +29,8 @@
 #include "thdatabase.h"
 #include "thexception.h"
 
+#include <fmt/core.h>
+
 thdb2dji::thdb2dji()
 {
   this->prev_item = NULL;

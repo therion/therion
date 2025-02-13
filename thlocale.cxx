@@ -4,6 +4,8 @@
 #include "thlang.h"
 #include "thinit.h"
 
+#include <fmt/core.h>
+
 #define LCBUFFNUM 10
 #define LCBUFFLEN 1024
 char lcbuffmain [LCBUFFNUM * LCBUFFLEN];

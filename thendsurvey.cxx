@@ -29,6 +29,8 @@
 #include "thexception.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 thendsurvey::thendsurvey()
 {
 }

@@ -31,6 +31,8 @@
 #include "thdataobject.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 unsigned long thdatareader_get_opos(bool inlineid, bool cfgid)
 {
   unsigned long opos = 0;

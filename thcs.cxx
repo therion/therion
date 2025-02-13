@@ -30,6 +30,9 @@
 #include "thexception.h"
 #include "thproj.h"
 #include "thdatabase.h"
+
+#include <fmt/core.h>
+
 #include <map>
 #include <string>
 #include <list>

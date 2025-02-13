@@ -34,6 +34,8 @@
 #include "thscrap.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 thline::thline()
 {
   this->type = TT_LINE_TYPE_UNKNOWN;

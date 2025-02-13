@@ -36,6 +36,8 @@
 #include "thcs.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 thdataobject::thdataobject()
 {
   this->db = NULL;

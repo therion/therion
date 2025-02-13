@@ -31,6 +31,9 @@
 #include "thconfig.h"
 #include "thdatabase.h"
 #include "thexception.h"
+
+#include <fmt/core.h>
+
 #include <map>
 
 

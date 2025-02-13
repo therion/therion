@@ -29,18 +29,19 @@
 #pragma once
 
 #include <stdexcept>
-#include <fmt/core.h>
 
 /**
  * Therion exception class.
  */
 class thexception : public std::runtime_error {
 public:
-    explicit thexception(const std::string& msg)
-        : std::runtime_error(msg)
-    {}
-
-    thexception(const std::string& msg, const std::exception& e)
-        : thexception(fmt::format("{} -- {}", msg, e.what()))
-    {}
+    /**
+     * @param msg Exception message.
+     */
+    explicit thexception(const std::string& msg);
+    /**
+     * @param msg Exception message.
+     * @param e Exception to be chained.
+     */
+    thexception(const std::string& msg, const std::exception& e);
 };

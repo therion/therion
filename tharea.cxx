@@ -32,6 +32,8 @@
 #include "thline.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 tharea::tharea()
 {
   this->type = TT_AREA_TYPE_UNKNOWN;

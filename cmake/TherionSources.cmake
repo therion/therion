@@ -157,6 +157,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thendsurvey.cxx
     ${CMAKE_SOURCE_DIR}/thepsparse.cxx
     ${CMAKE_SOURCE_DIR}/therion.cxx
+    ${CMAKE_SOURCE_DIR}/thexception.cxx
     ${CMAKE_SOURCE_DIR}/thexpdb.cxx
     ${CMAKE_SOURCE_DIR}/thexpmap.cxx
     ${CMAKE_SOURCE_DIR}/thexpmodel.cxx
