@@ -572,7 +572,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   std::string lnbuff;
   std::string numbuff;
   unsigned long lnum = 0;
-  thlog.printf("\n####################### cavern log file ########################\n");
+  thlog().printf("\n####################### cavern log file ########################\n");
   std::ifstream clf(lfnm);
   if (!(clf.is_open()))
     ththrow("can't open cavern log file for input");
@@ -586,7 +586,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   while (!(clf.eof())) {
     lnum++;
     std::getline(clf, lnbuff);
-    thlog.printf("%2lu> %s\n",lnum,lnbuff);
+    thlog().printf("%2lu> %s\n",lnum,lnbuff);
     // let's scan the line
     chch = lnbuff.c_str();
     nchs = strlen(chch);
@@ -694,8 +694,8 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
 
   }
   clf.close();
-  thlog.printf("######################### transcription ########################\n%s",tsbuff.get_buffer());
-  thlog.printf("#################### end of cavern log file ####################\n");
+  thlog().printf("######################### transcription ########################\n%s",tsbuff.get_buffer());
+  thlog().printf("#################### end of cavern log file ####################\n");
 }
 
 void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {

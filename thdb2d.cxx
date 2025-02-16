@@ -1116,15 +1116,15 @@ void thdb2d::log_distortions() {
       }
       
       std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist > s2->maxdist; });
-      thlog.printf("\n\n###################### scrap distortions #######################\n");
-      thlog.printf(" PROJECTION: %s%s%s\n", 
+      thlog().printf("\n\n###################### scrap distortions #######################\n");
+      thlog().printf(" PROJECTION: %s%s%s\n", 
         thmatch_string(prj->type,thtt_2dproj), 
         strlen(prj->index) > 0 ? ":" : "",
         strlen(prj->index) > 0 ? prj->index : "");
-      thlog.printf(" AVERAGE  MAXIMAL  SCRAP\n");
+      thlog().printf(" AVERAGE  MAXIMAL  SCRAP\n");
       for(i = 0; i < ns; i++)
-        thlog.printf(" %6.2f%%  %6.2f%%  %s@%s\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name);
-      thlog.printf("################### end of scrap distortions ###################\n");
+        thlog().printf(" %6.2f%%  %6.2f%%  %s@%s\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name);
+      thlog().printf("################### end of scrap distortions ###################\n");
     }
     prjli++;
   }
@@ -1139,16 +1139,16 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
   double z;
   thmap * cm;
   thmap * bm;
-  thlog.printf("\n\n############### export maps & scraps selection #################\n");
+  thlog().printf("\n\n############### export maps & scraps selection #################\n");
   while (cmap != NULL) {
     cm = (thmap *) cmap->map;
     cm->calc_z();
     z = cm->z;
     if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
     if (strlen(cm->name) > 0) {
-    	thlog.printf("M ");
-    	thlog.printf_double("%8.2f", "    -.--", z);
-    	thlog.printf(" %s@%s (%s)\n", cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : "");
+    	thlog().printf("M ");
+    	thlog().printf_double("%8.2f", "    -.--", z);
+    	thlog().printf(" %s@%s (%s)\n", cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : "");
     }
 
 
@@ -1164,18 +1164,18 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
       if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
       cmi = cbm->bm->first_item;
       if ((cm->id != bm->id) && (strlen(bm->name) > 0)) {
-		  thlog.printf("M ");
-		  thlog.printf_double("%8.2f", "    -.--", z);
-    	  thlog.printf(" %s@%s (%s)\n", bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : "");
+		  thlog().printf("M ");
+		  thlog().printf_double("%8.2f", "    -.--", z);
+    	  thlog().printf(" %s@%s (%s)\n", bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : "");
       }
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
           cs = dynamic_cast<thscrap*>(cmi->object);
           z = cs->z;
           if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
-		  thlog.printf("S ");
-		  thlog.printf_double("%8.2f", "    -.--", z);
-          thlog.printf(" %s@%s (%s)\n", cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
+		  thlog().printf("S ");
+		  thlog().printf_double("%8.2f", "    -.--", z);
+          thlog().printf(" %s@%s (%s)\n", cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
         }
         cmi = cmi->next_item;
       }
@@ -1183,7 +1183,7 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
     }
     cmap = cmap->next_item;
   }
-  thlog.printf("########## end of export maps & scraps selection ###############\n");
+  thlog().printf("########## end of export maps & scraps selection ###############\n");
 }
 
 
@@ -1661,13 +1661,13 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 //    if (num_scrap_att < numscraps) {
 //      xscrap = xscraps;
 //      unsigned nxscrap = 0;
-//      thlog.printf("error info -- scraps not attached to extended");
+//      thlog().printf("error info -- scraps not attached to extended");
 //      if (strlen(prj->index) == 0)
-//        thlog.printf(":%s",prj->index);
-//      thlog.printf("projection:\n");
+//        thlog().printf(":%s",prj->index);
+//      thlog().printf("projection:\n");
 //      while(nxscrap < numscraps) {
 //        if (!xscrap->is_attached)
-//          thlog.printf("\t%s@%s\n",xscrap->scrap->name,xscrap->scrap->fsptr->get_full_name());
+//          thlog().printf("\t%s@%s\n",xscrap->scrap->name,xscrap->scrap->fsptr->get_full_name());
 //        xscrap++;
 //        nxscrap++;
 //      }

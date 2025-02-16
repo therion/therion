@@ -76,6 +76,12 @@ class thlogfile {
    
   ~thlogfile();
 
+  // make thlogfile non-copyable
+  thlogfile(const thlogfile&) = delete;
+  thlogfile& operator=(const thlogfile&) = delete;
+  thlogfile(thlogfile&&) = delete;
+  thlogfile& operator=(thlogfile&&) = delete;
+
   /**
    * Print formatted into log file.
    */
@@ -160,10 +166,9 @@ class thlogfile {
 
 
 /**
- * Log file module.
+ * Global log file instance.
  */
- 
-extern thlogfile thlog;
+thlogfile& thlog();
 
 #endif
 

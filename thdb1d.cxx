@@ -2595,11 +2595,11 @@ void thdb1d::print_loops() {
   thdb1ds * ps;
   unsigned long psid, prev_psid, first_psid;
   
-  thlog.printf("\n\n######################### loop errors ##########################\n");
-  thlog.printf(    "REL-ERR ABS-ERR TOTAL-L STS X-ERROR Y-ERROR Z-ERROR STATIONS\n");
+  thlog().printf("\n\n######################### loop errors ##########################\n");
+  thlog().printf(    "REL-ERR ABS-ERR TOTAL-L STS X-ERROR Y-ERROR Z-ERROR STATIONS\n");
   for (i = 0; i < nloops; i++) {
     li = lpr[i].li;
-    thlog.printf("%6.2f%% %s%s %s%s %3ld %s%s %s%s %s%s [",
+    thlog().printf("%6.2f%% %s%s %s%s %3ld %s%s %s%s %s%s [",
       li->src_length > 0.0 ? 100.0 * li->err_length / li->src_length : 0.0,
 			thdeflocale.format_length(li->err_length,1,totlen), thdeflocale.format_length_units(),			
 			thdeflocale.format_length(li->src_length,1,totlen), thdeflocale.format_length_units(),			
@@ -2615,10 +2615,10 @@ void thdb1d::print_loops() {
       psid = ll->leg->from.id;
     ps = &(this->station_vec[psid - 1]);
     first_psid = psid;
-    thlog.printf("%s", ps->name);
+    thlog().printf("%s", ps->name);
     if ((ss == NULL) || (ss->id != ps->survey->id)) {
       ss = ps->survey;
-      thlog.printf("@%s", ss->get_full_name());
+      thlog().printf("@%s", ss->get_full_name());
     }
     prev_psid = psid;
     while (ll != NULL) {
@@ -2630,10 +2630,10 @@ void thdb1d::print_loops() {
 
       if (prev_psid != psid) {
         ps = &(this->station_vec[psid - 1]);
-        thlog.printf(" = %s", ps->name);
+        thlog().printf(" = %s", ps->name);
         if (ss->id != ps->survey->id) {
           ss = ps->survey;
-          thlog.printf("@%s", ss->get_full_name());
+          thlog().printf("@%s", ss->get_full_name());
         }
       }
 
@@ -2642,20 +2642,20 @@ void thdb1d::print_loops() {
       else
         psid = ll->leg->to.id;
       ps = &(this->station_vec[psid - 1]);
-      thlog.printf(" - %s", ps->name);
+      thlog().printf(" - %s", ps->name);
       if (ss->id != ps->survey->id) {
         ss = ps->survey;
-        thlog.printf("@%s", ss->get_full_name());
+        thlog().printf("@%s", ss->get_full_name());
       }
       
       if ((ll->next_leg == NULL) && (!li->open)) {
         if (first_psid != psid) {
           psid = first_psid;
           ps = &(this->station_vec[psid - 1]);
-          thlog.printf(" = %s", ps->name);
+          thlog().printf(" = %s", ps->name);
           if (ss->id != ps->survey->id) {
             ss = ps->survey;
-            thlog.printf("@%s", ss->get_full_name());
+            thlog().printf("@%s", ss->get_full_name());
           }
         }
       }
@@ -2663,9 +2663,9 @@ void thdb1d::print_loops() {
       prev_psid = psid;
       ll = ll->next_leg;
     }
-    thlog.printf("]\n");
+    thlog().printf("]\n");
   }
-  thlog.printf("##################### end of loop errors #######################\n");
+  thlog().printf("##################### end of loop errors #######################\n");
 }
 
 thdb3ddata * thdb1d::get_3d_surface() {
