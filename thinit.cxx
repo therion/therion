@@ -247,7 +247,7 @@ void thinit::check_font_path(const char * fname, int index) {
   char * buff = tmpb.get_buffer();
   l = (long) strlen(buff);
   bool search_sn = true;
-  if (l == 0) ththrow("missing font file name");
+  if (l == 0) throw thexception("missing font file name");
   for(i = (l-1); i >= 0; i--) {
     if ((buff[i] == '/') || (buff[i] == '\\')) {
       if (search_sn) {
@@ -258,7 +258,7 @@ void thinit::check_font_path(const char * fname, int index) {
     }
   }
   
-  if (strlen(pshort.get_buffer()) == 0) ththrow("invalid font name -- {}", fname);
+  if (strlen(pshort.get_buffer()) == 0) throw thexception(fmt::format("invalid font name -- {}", fname));
 
   if ( 
 #ifdef THWIN32
@@ -433,31 +433,31 @@ void thinit::load()
         case TTIC_TEX_ENV:
         case TTIC_PROJ_MISSING_GRID:
           if (nargs != 2)
-            ththrow("invalid number of command arguments");
+            throw thexception("invalid number of command arguments");
           break;
         case TTIC_TEXT:
           if (nargs != 4)
-            ththrow("invalid text syntax -- should be: text <language> <text> <translation>");
+            throw thexception("invalid text syntax -- should be: text <language> <text> <translation>");
           break;
         case TTIC_PDF_FONTS:
           if (nargs != 6)
-            ththrow("invalid number of command arguments");
+            throw thexception("invalid number of command arguments");
           break;
         case TTIC_TEX_FONTS:
         case TTIC_TEX_FONTS_OPTIONAL:
           if (nargs != 7)
-            ththrow("invalid number of command arguments");
+            throw thexception("invalid number of command arguments");
           break;
         case TTIC_CS_DEF:
           if (nargs < 2)
-            ththrow("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]");
+            throw thexception("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]");
           break;
         case TTIC_CS_TRANS:
           if (nargs != 4)
-            ththrow("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
+            throw thexception("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
           break;
         default:
-          ththrow("invalid initialization command -- {}", args[0]);
+          throw thexception(fmt::format("invalid initialization command -- {}", args[0]));
       }
         
       switch(argid) {
@@ -480,19 +480,19 @@ void thinit::load()
           
         case TTIC_PATH_CAVERN:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_cavern.strcpy(args[1]);
           break;
           
         case TTIC_PATH_CONVERT:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_convert.strcpy(args[1]);
           break;
           
         case TTIC_PATH_IDENTIFY:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_identify.strcpy(args[1]);
           break;
 
@@ -503,7 +503,7 @@ void thinit::load()
         case TTIC_LANG:
           this->lang = thlang_parse(args[1]);
           if (this->lang == THLANG_UNKNOWN)
-            ththrow("language not supported -- {}",args[1]);
+            throw thexception(fmt::format("language not supported -- {}",args[1]));
           break;
 
         case TTIC_UNITS:
@@ -513,21 +513,21 @@ void thinit::load()
         case TTIC_OTF2PFB:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow("invalid otf2pfb switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid otf2pfb switch -- {}", args[1]));
           ENC_NEW.t1_convert = (sv == TT_TRUE);
           break;
 
         case TTIC_TEX_REFS_REGISTERS:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow("invalid tex-refs-registers switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid tex-refs-registers switch -- {}", args[1]));
           tex_refs_registers = (sv == TT_TRUE);
           break;
 
         case TTIC_PROJ_MISSING_GRID:
           sv = thcs_parse_gridhandling(args[1]);
           if (sv == GRID_INVALID)
-            ththrow("invalid proj-missing-grid switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid proj-missing-grid switch -- {}", args[1]));
           thcs_cfg.proj_auto_grid = sv;
           break;
 
@@ -541,7 +541,7 @@ void thinit::load()
 
         case TTIC_PATH_MPOST:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_mpost.strcpy(args[1]);
           break;
 
@@ -551,7 +551,7 @@ void thinit::load()
 
         case TTIC_PATH_PDFTEX:
           if (strlen(args[1]) < 1)
-            ththrow("invalid path");
+            throw thexception("invalid path");
           this->path_pdftex.strcpy(args[1]);
           break;
           
@@ -563,7 +563,7 @@ void thinit::load()
         case TTIC_TEX_FONTS:
           frec.id = get_enc_id(args[1]);
           if (frec.id < 0)
-            ththrow("tex encoding not supported -- {}", args[1]);
+            throw thexception(fmt::format("tex encoding not supported -- {}", args[1]));
           frec.rm = args[2];
           frec.it = args[3];
           frec.bf = args[4];
@@ -587,24 +587,24 @@ void thinit::load()
         case TTIC_TEX_ENV:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow("invalid tex-env switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid tex-env switch -- {}", args[1]));
           this->tex_env = (sv == TT_TRUE);
           break;
           
         case TTIC_LOOPC:
           sv = thmatch_token(args[1], thtt_loopc);
           if (sv == THINIT_LOOPC_UNKNOWN)
-            ththrow("invalid loop-closure switch -- {}", args[1]);
+            throw thexception(fmt::format("invalid loop-closure switch -- {}", args[1]));
           this->loopc = sv;
           break;
           
         default:
-          ththrow("invalid initialization command -- {}", args[0]);
+          throw thexception(fmt::format("invalid initialization command -- {}", args[0]));
       }
     }
   }
-  catch (...) {
-    threthrow("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number());
+  catch (const std::exception& e) {
+    throw thexception(fmt::format("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number()), e);
   }
   if (started) {
 #ifdef THDEBUG

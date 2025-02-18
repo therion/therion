@@ -70,7 +70,7 @@ static auto parse_version(const char * const version, bool strict = false) {
   std::sscanf(version, "%u%n.%u%n.%u%n", &parts[0], &pos, &parts[1], &pos,
               &parts[2], &pos);
   if (strict && version[pos] != '\0') {
-    ththrow("Failed to parse version '{}'", version);
+    throw thexception(fmt::format("Failed to parse version '{}'", version));
   }
   return parts;
 }
@@ -279,7 +279,7 @@ void thinput::open_file(char * fname)
   
   if (!ifptr->sh.is_open()) {
     if ((srcfile != NULL) || (this->report_missing)) {
-      ththrow("can't open file for input -- {}", fname);
+      throw thexception(fmt::format("can't open file for input -- {}", fname));
     }
   }
   else {
@@ -459,11 +459,11 @@ char * thinput::read_line()
           
         case TT_REQUIRE:
           if (auto nargs = this->tmpmb.get_size(); nargs != 1) {
-            ththrow("expect exactly one argument for 'require', got {}", nargs);
+            throw thexception(fmt::format("expect exactly one argument for 'require', got {}", nargs));
           }
           if (const char * version = *(this->tmpmb.get_buffer());
               parse_version(version, true) > parse_version(THVERSION)) {
-            ththrow("Need at least Therion {}, got {}", version, THVERSION);
+            throw thexception(fmt::format("Need at least Therion {}, got {}", version, THVERSION));
           }
           continue;
 

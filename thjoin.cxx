@@ -29,6 +29,8 @@
 #include "thexception.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
+
 thjoin::thjoin()
 {
   this->smooth = TT_TRUE;
@@ -101,13 +103,13 @@ void thjoin::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_JOIN_SMOOTH:
       this->smooth = thmatch_token(*args, thtt_bool);
       if (this->smooth == TT_UNKNOWN_BOOL)
-        ththrow("invalid switch -- {}",*args);
+        throw thexception(fmt::format("invalid switch -- {}",*args));
       break;
     
     case TT_JOIN_COUNT:
       thparse_double(sv,dv,*args);
       if ((sv != TT_SV_NUMBER) || (dv <= 1.0) || (dv != double(int(dv))))
-        ththrow("invalid join count -- {}",*args);
+        throw thexception(fmt::format("invalid join count -- {}",*args));
       this->count = int(dv);
       break;
       

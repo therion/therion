@@ -1142,7 +1142,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
               grad.r0 = std::stod(thbuffer[13]);
               grad.r1 = std::stod(thbuffer[14]);
             }
-          } else ththrow("invalid buffer size");
+          } else throw thexception("invalid buffer size");
         } catch (const std::exception& e) {
           therror((e.what()));
         }

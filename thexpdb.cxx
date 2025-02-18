@@ -54,19 +54,19 @@ void thexpdb::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPDB_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing format -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expdb_fmt);
       if (this->format == TT_EXPDB_FMT_UNKNOWN)
-        ththrow("unknown format -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
     case TT_EXPDB_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing encoding -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow("unknown encoding -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
     default:
@@ -107,7 +107,7 @@ void thexpdb::process_db(class thdatabase * dbp)
       this->export_csv_file(dbp);
       break;
     default:
-      ththrow("unknown database format (use .csv or .sql)");
+      throw thexception("unknown database format (use .csv or .sql)");
   }
 }
 

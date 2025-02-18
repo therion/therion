@@ -451,7 +451,7 @@ void thconfig::load()
               this->cfg_file.set_input_sensitivity(false);
             } else {
               if (valuemb.get_size() > 1)
-                ththrow("one file name expected");
+                throw thexception("one file name expected");
               this->append_source(valuemb.get_buffer()[0]);
 #ifdef THWIN32
               this->search_path.strcat(";");
@@ -464,25 +464,25 @@ void thconfig::load()
             
           case TT_SKETCH_WARP:
             if (valuemb.get_size() != 1)
-              ththrow("single sketch-warp switch expected");
+              throw thexception("single sketch-warp switch expected");
             sv = thmatch_token(valuemb.get_buffer()[0],thtt_sketchwarp);
             if (sv == THSKETCH_WARP_UNKNOWN)
-              ththrow("invalid sketch-warp switch -- {}", valuemb.get_buffer()[0]);
+              throw thexception(fmt::format("invalid sketch-warp switch -- {}", valuemb.get_buffer()[0]));
             this->sketch_warp = sv;
             break;
 
           case TT_SKETCH_COLORS:
             if (valuemb.get_size() != 1)
-              ththrow("invalid argument - use sketch-colors <number>");
+              throw thexception("invalid argument - use sketch-colors <number>");
             {
               double dum;
               thparse_double(sv, dum, valuemb.get_buffer()[0]);
               if (sv != TT_SV_NUMBER)
-                ththrow("number expected -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("number expected -- {}", valuemb.get_buffer()[0]));
               int dumi;
               dumi = int(dum);
               if ((dumi < 2) || (dumi > 65536))
-                ththrow("number out of range -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("number out of range -- {}", valuemb.get_buffer()[0]));
               this->sketch_colors = dumi;
             }
             break;
@@ -491,18 +491,18 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               thparse_double(sv, this->tmp3dSMP, valuemb.get_buffer()[0]);
               if ((sv != TT_SV_NUMBER) || (this->tmp3dSMP <= 0.0))
-                ththrow("invalid number -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("invalid number -- {}", valuemb.get_buffer()[0]));
               this->tmp3dWALLSMP = this->tmp3dSMP;
             }
             if (valuemb.get_size() > 1) {
               thparse_double(sv, this->tmp3dWALLSMP, valuemb.get_buffer()[1]);
               if ((sv != TT_SV_NUMBER) || (this->tmp3dWALLSMP <= 0.0))
-                ththrow("invalid number -- {}", valuemb.get_buffer()[1]);
+                throw thexception(fmt::format("invalid number -- {}", valuemb.get_buffer()[1]));
             }
             if (valuemb.get_size() > 2) {
               thparse_double(sv, this->tmp3dMAXDIMD, valuemb.get_buffer()[2]);
               if ((sv != TT_SV_NUMBER) || (this->tmp3dMAXDIMD <= 0.0))
-                ththrow("invalid number -- {}", valuemb.get_buffer()[2]);
+                throw thexception(fmt::format("invalid number -- {}", valuemb.get_buffer()[2]));
             }
             break;
 
@@ -510,10 +510,10 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
               if (sv == TT_UNKNOWN_BOOL)
-                ththrow("invalid auto-join switch -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("invalid auto-join switch -- {}", valuemb.get_buffer()[0]));
               this->auto_join = (sv == TT_TRUE);
             } else {
-              ththrow("missing auto-join switch");
+              throw thexception("missing auto-join switch");
             }
             break;
 
@@ -521,10 +521,10 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
               if (sv == TT_UNKNOWN_BOOL)
-                ththrow("invalid maps switch -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("invalid maps switch -- {}", valuemb.get_buffer()[0]));
               this->use_maps = (sv == TT_TRUE);
             } else {
-              ththrow("missing maps switch");
+              throw thexception("missing maps switch");
             }
             break;
             
@@ -532,10 +532,10 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
               if (sv == TT_UNKNOWN_BOOL)
-                ththrow("invalid maps switch -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("invalid maps switch -- {}", valuemb.get_buffer()[0]));
               this->use_maps_offset = (sv == TT_TRUE);
             } else {
-              ththrow("missing maps-offset switch");
+              throw thexception("missing maps-offset switch");
             }
             break;
 
@@ -543,7 +543,7 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_cfg_log);
               if (sv == TT_LOG_UNKNOWN)
-                ththrow("invalid log switch -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("invalid log switch -- {}", valuemb.get_buffer()[0]));
               switch (sv) {
                 case TT_LOG_ALL:
                     this->log_extend = true;
@@ -556,7 +556,7 @@ void thconfig::load()
                     break;
               }
             } else {
-              ththrow("missing log switch");
+              throw thexception("missing log switch");
             }
             break;
 
@@ -567,24 +567,24 @@ void thconfig::load()
 
           case TT_LANG:
             if (valuemb.get_size() != 1)
-              ththrow("language specification requires single parameter");
+              throw thexception("language specification requires single parameter");
             sv = thlang_parse(valuemb.get_buffer()[0]);
             if (sv == THLANG_UNKNOWN)
-              ththrow("language not supported -- {}",valuemb.get_buffer()[0]);
+              throw thexception(fmt::format("language not supported -- {}",valuemb.get_buffer()[0]));
             this->lang = sv;
             break;
 
           case TT_SYSTEM:
             if (valuemb.get_size() == 0)
-              ththrow("missing system command");
+              throw thexception("missing system command");
             if (valuemb.get_size() > 1)
-              ththrow("single system command expected");
+              throw thexception("single system command expected");
             this->exporter.parse_system(valuemb.get_buffer()[0]);
             break;
 
           case TT_TEXT:
             if ((valuemb.get_size() < 3) || (valuemb.get_size() > 3))
-              ththrow("invalid text syntax -- should be: text <language> <text> <translation>");
+              throw thexception("invalid text syntax -- should be: text <language> <text> <translation>");
             thlang_set_translation(valuemb.get_buffer()[0], valuemb.get_buffer()[1], valuemb.get_buffer()[2]);
             break;
 
@@ -592,14 +592,14 @@ void thconfig::load()
             if (valuemb.get_size() == 1) {
               sv = thcs_parse(valuemb.get_buffer()[0]);
               if (sv == TTCS_UNKNOWN)
-                ththrow("unknown coordinate system -- {}", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("unknown coordinate system -- {}", valuemb.get_buffer()[0]));
               if (!thcs_get_data(sv)->output)
-                ththrow("{} coordinate system not supported for output", valuemb.get_buffer()[0]);
+                throw thexception(fmt::format("{} coordinate system not supported for output", valuemb.get_buffer()[0]));
               this->outcs = sv;
               this->outcs_def.name = this->get_db()->strstore(this->cfg_file.get_cif_name(), true);
               this->outcs_def.line = this->cfg_file.get_cif_line_number();
             } else {
-              ththrow("output coordinate system specification requires single parameter");
+              throw thexception("output coordinate system specification requires single parameter");
             }
             break;
             
@@ -622,18 +622,18 @@ void thconfig::load()
                 break;
 
               default:
-                ththrow("unknown configuration command -- {}", this->cfg_file.get_cmd());
+                throw thexception(fmt::format("unknown configuration command -- {}", this->cfg_file.get_cmd()));
                 
 	          }
         }
         cfgln = this->cfg_file.read_line(); 
       }
       if (source_mode) {
-        ththrow("endsource expected");
+        throw thexception("endsource expected");
       }
     }
-    catch (...) {
-      threthrow("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number());
+    catch (const std::exception& e) {
+      throw thexception(fmt::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
     }
   }
   
@@ -676,7 +676,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
 
     auto objptr = dbptr->create(this->cfg_file.get_cmd(), osrc);
     if (objptr == NULL)
-      ththrow("unknown command -- {}", this->cfg_file.get_cmd());
+      throw thexception(fmt::format("unknown command -- {}", this->cfg_file.get_cmd()));
 
     if (objptr->get_class_id() == TT_LAYOUT_CMD) {
       dynamic_cast<thlayout*>(objptr.get())->m_pconfig = this;
@@ -691,8 +691,8 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     ant = valmb->get_size();
     opts = valmb->get_buffer();
     if (ant < objptr->get_cmd_nargs())
-      ththrow("not enough command arguments -- must be {}",
-        objptr->get_cmd_nargs());
+      throw thexception(fmt::format("not enough command arguments -- must be {}",
+        objptr->get_cmd_nargs()));
     optd.nargs = 1;
 
     // set obligatory arguments
@@ -712,7 +712,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
       }
       else {
         if ((ait + optd.nargs) >= ant)
-          ththrow("not enough option arguments -- {} -- must be {}", *opts, optd.nargs);
+          throw thexception(fmt::format("not enough option arguments -- {} -- must be {}", *opts, optd.nargs));
         opts++;
         ait++;
       }
@@ -733,8 +733,8 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
       while (inside_cmd) {
       
         if ((ln = this->cfg_file.read_line()) == NULL)
-          ththrow("{} [{}] -- {} is missing",this->cfg_file.get_cif_name(),
-            this->cfg_file.get_cif_line_number(),endlnopt);
+          throw thexception(fmt::format("{} [{}] -- {} is missing",this->cfg_file.get_cif_name(),
+            this->cfg_file.get_cif_line_number(),endlnopt));
                       
         thencode(&this->bf1, ln, this->cfg_file.get_cif_encoding());  
         this->cfg_dblines.append(this->bf1.get_buffer());  
@@ -754,8 +754,8 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
           thsplit_args(&this->mbf1, this->bf2.get_buffer());
           if (this->mbf1.get_size() < optd.nargs)
-            ththrow("not enough option arguments -- {} -- must be {}",
-              this->bf1.get_buffer(), optd.nargs);
+            throw thexception(fmt::format("not enough option arguments -- {} -- must be {}",
+              this->bf1.get_buffer(), optd.nargs));
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
             this->cfg_file.get_cif_encoding(),
@@ -779,8 +779,8 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
   }
     
   // put everything into try block and throw exception, if error
-  catch (...) {
-    threthrow("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number());
+  catch (const std::exception& e) {
+    throw thexception(fmt::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
   }
 }
 
@@ -949,9 +949,9 @@ bool thconfig::get_outcs_mag_decl(double year, double & decl)
   if (!this->get_outcs_center(x, y, z))
     return false;
   if (year < 1900.0)
-    ththrow("automatic declination calculation before 1900 not supported, please specify declination explicitly");
+    throw thexception("automatic declination calculation before 1900 not supported, please specify declination explicitly");
   if (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)))
-    ththrow("automatic declination calculation after {} not supported, please specify declination explicitly", thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3));
+    throw thexception(fmt::format("automatic declination calculation after {} not supported, please specify declination explicitly", thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)));
   if ((year < double(thgeomag_minyear)) || (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1))))
     this->m_decl_out_of_geomag_range = true;
   thcs2cs(this->outcs, TTCS_LONG_LAT, x, y, z, lon, lat, alt);

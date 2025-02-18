@@ -1772,7 +1772,7 @@ void export_all_symbols()
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      ththrow("metapost exit code -- {}", retcode);
+      throw thexception(fmt::format("metapost exit code -- {}", retcode));
     }
 
     thconvert_eps();

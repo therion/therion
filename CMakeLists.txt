@@ -198,6 +198,7 @@ if (BUILD_THERION)
         utest-thdatastation.cxx
         utest-thdb2dab.cxx
         utest-thdouble.cxx
+        utest-thexception.cxx
         utest-thlayoutln.cxx
         utest-thobjectid.cxx
         utest-thobjectsrc.cxx

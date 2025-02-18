@@ -72,10 +72,10 @@ void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, thdat
       break;
     }
   if (!th_is_extkeyword(ds.name))
-    ththrow("invalid object name -- {}", ds.name);
+    throw thexception(fmt::format("invalid object name -- {}", ds.name));
   if (ds.survey != NULL)
     if (!th_is_keyword_list(ds.survey, '.'))
-      ththrow("invalid survey name -- {}", ds.survey);
+      throw thexception(fmt::format("invalid survey name -- {}", ds.survey));
   ds.name = sstore->append(ds.name);
   if (ds.survey != NULL)
     ds.survey = sstore->append(ds.survey);
