@@ -105,7 +105,7 @@ extern char * thexecute_cmd;
 template<typename FormatStr, typename... Args>
 void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args)
 {
-  thlog.printf(format, args...);
+  thlog().printf(format, args...);
   if (verbose) {
     fmt::fprintf(f, format, args...);
   }

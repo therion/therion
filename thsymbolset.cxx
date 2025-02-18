@@ -60,13 +60,13 @@ thsymbolset::thsymbolset()
 void thsymbolset_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug = false) {
   std::string lnbuff;
 //  unsigned long lnum = 0;
-  thlog.printf("%s",on_title);
+  thlog().printf("%s",on_title);
   std::ifstream lf(logfpath);
   if (!(lf.is_open())) {{
     thwarning(("can't open %s file for input", logfpath));
     }
-    thlog.printf("can't open %s file for input",logfpath);
-    thlog.printf("%s",off_title);
+    thlog().printf("can't open %s file for input",logfpath);
+    thlog().printf("%s",off_title);
     return;
   }
   // let's read line by line and print to log file
@@ -82,7 +82,7 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
     }
     if (!skip_this) {
       if (!skip_next) {
-        thlog.printf("%s%s", (peoln ? "\n" : ""), lnbuff);
+        thlog().printf("%s%s", (peoln ? "\n" : ""), lnbuff);
         peoln = true;
       } else {
         skip_next = false;
@@ -92,9 +92,9 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
     }
   }
   if (peoln)
-    thlog.printf("\n");
+    thlog().printf("\n");
   lf.close();
-  thlog.printf("%s",off_title);
+  thlog().printf("%s",off_title);
 }
 
 

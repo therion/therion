@@ -978,17 +978,17 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
   double x, y, z, dec;
   bool firstdec = true;
   if (this->get_outcs_center(x, y, z)) {
-    thlog.printf("output coordinate system: %s\n", thcs_get_name(this->outcs));
-    thlog.printf("meridian convergence (deg): %.4f\n", this->get_outcs_convergence());
+    thlog().printf("output coordinate system: %s\n", thcs_get_name(this->outcs));
+    thlog().printf("meridian convergence (deg): %.4f\n", this->get_outcs_convergence());
     if (!thisnan(decsyear)) {
       long min = long(decsyear), max = long(deceyear + 1.0), yyy;
       for(yyy = min; yyy <= max; yyy++) {
         if (firstdec) {
-          thlog.printf("geomag declinations (deg):\n");
+          thlog().printf("geomag declinations (deg):\n");
           firstdec = false;
         }
         if (this->get_outcs_mag_decl(double(yyy), dec)) {
-          thlog.printf("  %4ld.1.1  %.4f\n", yyy, dec);
+          thlog().printf("  %4ld.1.1  %.4f\n", yyy, dec);
         }
       }
     }

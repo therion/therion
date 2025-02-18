@@ -200,6 +200,7 @@ if (BUILD_THERION)
         utest-thdouble.cxx
         utest-thexception.cxx
         utest-thlayoutln.cxx
+        utest-thlogfile.cxx
         utest-thobjectid.cxx
         utest-thobjectsrc.cxx
         utest-thscrapen.cxx

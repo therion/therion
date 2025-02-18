@@ -135,6 +135,10 @@ void thlogfile::log_error() {
 	fprintf(stderr,"error -- unable to write to log file (disk full?, insufficient permissions?)\n");
 }
 
-thlogfile thlog;
+thlogfile& thlog()
+{
+  static thlogfile log; // global instance
+  return log;
+}
 
 
