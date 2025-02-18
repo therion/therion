@@ -61,10 +61,15 @@ if {[string equal $xth(gui,platform) windows]} {
 }
 
 set xth(idirs) $idirs
+set xth(init_logs) {}
 foreach idir $xth(idirs) {
-  catch {source [file join $idir xtherion.ini]}
+  if {![catch {source [file join $idir xtherion.ini]}]} {
+    lappend xth(init_logs) "Loaded .ini file -- [file join $idir xtherion.ini]"
+  }
 }
-catch {source xtherion.ini}
+if {![catch {source xtherion.ini}]} {
+  lappend xth(init_logs) "Loaded .ini file -- [file join [pwd] xtherion.ini]"		
+}
 
 # create xth window
 wm withdraw .

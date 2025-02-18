@@ -33,6 +33,7 @@ if {[string equal -nocase [::msgcat::mclocale] c]} {
 }
 
 set xth(destroyed) 0
+set xth(init_logs) {}
 set xth(prj,name) "therion"
 set xth(prj,title) "therion user interface"
 set xth(gui,main) ".xth"
