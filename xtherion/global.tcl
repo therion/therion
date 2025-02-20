@@ -291,6 +291,15 @@ switch -- $tcl_platform(platform) {
     set xth(gui,cursor) arrow
     set xth(app,sencoding) [encoding system]
     set xth(gui,bindinsdel) 0
+    if {[catch {
+      set fid [open "|cmd.exe /c" r]
+      read $fid;
+      close $fid
+    }]} {
+      set xth(gui,compcmd) "command.com /c $xth(gui,compcmd)"
+    } else {
+      set xth(gui,compcmd) "cmd.exe /c $xth(gui,compcmd)"
+    }
   }
   macintosh {
     set xth(kb_meta) Meta
