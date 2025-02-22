@@ -162,7 +162,7 @@ therion:
    - fix irregularities in vertical grid markers
    - bug with area bedrock
    - various code fixes (NAN on windows, GCC 13 compatibility, includes 
-     reorganization, missing includes, incorect printf arguments)
+     reorganization, missing includes, incorrect printf arguments)
 
 infrastructure:
  * CI fixes
@@ -234,7 +234,7 @@ therion:
 xtherion:
  * added support for converting all eligible poly lines to curves in one
    operation [Mark Dickey]
- * udated Portuguese translation [#473, Rodrigo Severo]
+ * updated Portuguese translation [#473, Rodrigo Severo]
 
 infrastructure, code refactoring:
  * GitHub Actions: upload samples artefacts; fix deprecated actions;
@@ -276,7 +276,7 @@ infrastructure:
    [#457, #458, Matěj Plch]
  * clang-tidy improvements [#452, Matěj Plch]
  * require at least VTK 7 [#444, Matěj Plch]
- * require at leastwxWidgets 3.0.0 [#451, Matěj Plch]
+ * require at least wxWidgets 3.0.0 [#451, Matěj Plch]
  * linking to Proj 9.1.0 added to test_proj.sh
 
 --------------------------------------------------------------------------------
@@ -392,7 +392,7 @@ windows installer:
      dynamically linked (a lot of DLLs are included)
      [this is now the default for releases]
    - built on Linux using MXE cross-compiler; some of the libraries are
-     quite outdated; statically linked; smaller instaler size
+     quite outdated; statically linked; smaller installer size
      [the only option used between 5.4.0 and 6.0.4 to build the installer]
 
 cmake:
@@ -479,7 +479,7 @@ loch:
    [Debian #984363]
 
 xtherion:
- * improved control over vertical positioning of backgroud images
+ * improved control over vertical positioning of background images
 
 infrastructure:
  * fix possible mixing of make and cmake generated files [PR#381]
@@ -626,7 +626,7 @@ therion:
  * mil/mils angle unit deprecation warning [#129]
  * sql export shot length precision increase [#147]
  * bugs fixed
-   - incorect calculation of station position when fixed multiple times
+   - incorrect calculation of station position when fixed multiple times
      [#269,270]
    - memory leaks causing some random behaviour [#278]
    - scale value should default to 1 when omitted from "calibrate" [#263]
@@ -679,7 +679,7 @@ infrastructure:
 Therion 5.5.1 (2020-07-03):
 
 therion:
- * duplicate shot length removed from expored individual team member statistics
+ * duplicate shot length removed from explored individual team member statistics
  * improved Proj support in auto mode (automatic specification of the area of use;
    caching and logging of the used transformations)
  * added support for handling of missing coordinate transformation grids

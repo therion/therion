@@ -212,7 +212,7 @@ class thexpmap : public thexport {
 
   void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj * prj);
-  void export_scrap_backgroud_mesh(class thscrap * cs, class thexpmapmpxs * out, struct scraprecord * r);
+  void export_scrap_background_mesh(class thscrap * cs, class thexpmapmpxs * out, struct scraprecord * r);
 
   void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_uni_scrap(FILE * out, class thscrap * scrap);  
