@@ -103,7 +103,7 @@ void lxSetup::SetLens(double lens)
 void lxSetup::UpdateData()
 {
 
-  // udate data limits
+  // update data limits
   lxVecLimits tmp, tmpZ;
   tmp.valid = false;
   this->data_limits.valid = false;
