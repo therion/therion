@@ -83,20 +83,18 @@ class thlogfile {
   thlogfile& operator=(thlogfile&&) = delete;
 
   /**
+   * Print string into log file.
+   * @param msg Message.
+   */
+  void print(std::string_view msg);
+
+  /**
    * Print formatted into log file.
    */
   template <typename FormatStr, typename... Args>
   void printf(const FormatStr& format, const Args&... args)
   {
-    if (this->is_logging) {
-      if (!this->is_open)
-        this->open_file();
-      if (this->is_open) {
-        fmt::fprintf(this->fileh, format, args...);
-        if (std::fflush(this->fileh) != 0)
-          this->log_error();
-      }
-    }
+    this->print(fmt::sprintf(format, args...));
   }
   
   /**
@@ -112,7 +110,7 @@ class thlogfile {
    * @param fname File name.
    */
    
-  void set_file_name(char *fname);
+  void set_file_name(const char *fname);
   
   
   /**
