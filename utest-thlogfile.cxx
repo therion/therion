@@ -18,19 +18,22 @@ TEST_CASE("thlog()")
 
 TEST_CASE("thlogfile")
 {
-    std::filesystem::remove("test.log");
+    static const std::string file_name = "test.log";
+    std::filesystem::remove(file_name);
 
-    thlogfile log;
-    log.set_file_name("test.log");
-    REQUIRE(strcmp(log.get_file_name(), "test.log") == 0);
-    log.set_logging(true);
-    REQUIRE(log.get_logging());
-    log.print("test\n");
-    log.printf("hello, %s\n", "world");
-    log.printf("test2\n");
+    {
+        thlogfile log;
+        log.set_file_name(file_name.c_str());
+        REQUIRE(log.get_file_name() == file_name);
+        log.set_logging(true);
+        REQUIRE(log.get_logging());
+        log.print("test\n");
+        log.printf("hello, %s\n", "world");
+        log.printf("test2\n");
+    }
 
     std::vector<std::string> lines;
-    std::ifstream test_file("test.log");
+    std::ifstream test_file(file_name);
     std::string line;
     while (std::getline(test_file, line))
     {
