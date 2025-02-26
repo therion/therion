@@ -1773,7 +1773,7 @@ if (ENC_NEW.NFSS==0) {
                   SCRAPITEM->S1 = shx;
                   SCRAPITEM->S2 = shy;
                   
-                  this->export_scrap_backgroud_mesh(cs, &out, &(*SCRAPITEM));                  
+                  this->export_scrap_background_mesh(cs, &out, &(*SCRAPITEM));
                   
                   if ((!export_outlines_only) && (!export_sections) &&
                       (cbm->m_target->fmap->output_number != cbm->m_target->preview_output_number)
@@ -3695,7 +3695,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 }
 
 
-void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scraprecord * r) {
+void thexpmap::export_scrap_background_mesh(thscrap * cs, thexpmapmpxs * out, scraprecord * r) {
 	
 	switch(this->layout->color_crit) {
       case TT_LAYOUT_CCRIT_ALTITUDE:
