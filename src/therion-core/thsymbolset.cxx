@@ -1713,7 +1713,7 @@ void export_all_symbols()
     const auto tmp_handle = thtmp.switch_to_tmpdir();
 
     // run MP
-    thbuffer com;
+    std::string com;
 
     // vypise kodovania
     print_fonts_setup();

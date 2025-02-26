@@ -391,7 +391,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   fclose(svxf);
   
   // run survex
-  thbuffer svxcom;
+  std::string svxcom;
   int retcode;
   svxcom = "\"";
   svxcom += thini.get_path_cavern();
@@ -565,7 +565,7 @@ enum {THSVXLOGNUM_NONE, THSVXLOGNUM_LINE, THSVXLOGNUM_STATION};
 
 void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
 {
-  thbuffer tsbuff;
+  std::string tsbuff;
   thdb1ds * stp;
   std::string lnbuff;
   std::string numbuff;

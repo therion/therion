@@ -314,7 +314,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   }
 
   cis_exp = s_exp;
-  thbuffer stnbuf;
+  std::string stnbuf;
   thdb1ds * tmps;
   for(i = 0; i < nstat; i++, cis_exp++) {
     if ((*cis_exp != 0) || (s_exp[dbp->db1d.station_vec[i].uid - 1] != 0) || 

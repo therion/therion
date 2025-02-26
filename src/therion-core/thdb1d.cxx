@@ -3069,7 +3069,7 @@ void thdb1d::process_xelev()
   thdata * dp;
   thdb1d_tree_node * nodes = this->get_tree_nodes(), * from_node, * to_node;
   thdb1d_tree_arrow * carrow;
-  thbuffer tmpbf;
+  std::string tmpbf;
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {

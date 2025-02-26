@@ -111,7 +111,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
   const char * lkpindex;
   const char * lkpnname;
   char * tmpa[1];
-  thbuffer tmpb;
+  std::string tmpb;
 
   thcmd_option_desc defcod = this->get_default_cod(cod.id);
   switch (cod.id) {
@@ -228,7 +228,7 @@ void thlookup::postprocess_object_references() {
     thlookup_table_row * tr;
     thlookup_table_list::iterator tli;
     thobjectname on;
-    thbuffer tmp;
+    std::string tmp;
     for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
       tr = &(*tli);
       switch (this->m_type) {
@@ -488,7 +488,7 @@ void thlookup::export_color_legend(thlayout * layout) {
 void thlookup_parse_reference(const char * arg, int * type, const char ** index, const char ** nname) {
   // parse lookup type
   thmbuffer mbf;
-  thbuffer normname;
+  std::string normname;
   thsplit_strings(& mbf, arg, ':');
   if ((mbf.get_size() > 2) || (mbf.get_size() < 1))
     throw thexception(fmt::format("invalid lookup id -- {}", arg));

@@ -534,7 +534,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   xmin -= shx; xmax -= shx; gxo -= shx;
   ymin -= shy; ymax -= shy; gyo -= shy;
 
-  thbuffer stname;
+  std::string stname;
   thsurvey * css;
   fprintf(pltf,"set XVIstations {\n");
   for(i = 0; i < nstvec; i++) {
@@ -1208,7 +1208,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   unsigned sscrap = 0;
   thexpmap_xmps exps;
   const char * chtitle;
-  thbuffer tit;
+  std::string tit;
   bool quick_map_exp = false;
   double origin_shx, origin_shy, new_shx, new_shy, srot = 0.0, crot = 1.0, rrot = 0.0;
   thexpmapmpxs out;
@@ -2295,7 +2295,7 @@ if (ENC_NEW.NFSS==0) {
 
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
   auto tmp_handle = thtmp.switch_to_tmpdir();
-  thbuffer com;
+  std::string com;
   
   // vypise kodovania
   print_fonts_setup();
@@ -3338,9 +3338,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 
   img * pimg;
   img_output_version = 4;
-  thbuffer fname;
-  fname = "cave";
-  pimg = img_open_write(fnm, fname.c_str(), 1);
+  pimg = img_open_write(fnm, "cave", 1);
   if (pimg == NULL) {
     thwarning(fmt::format("can't open {} for output",fnm))
     return;
@@ -3442,7 +3440,7 @@ void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
 	
 	img * pimg;
 	pimg = (img *) out;
-	thbuffer stnbuff;
+	std::string stnbuff;
 	
 	double avx = 0.0, avy = 0.0, avz = 0.0, avn = 0.0;
 #define avadd(x,y,z) {avx	+= x; avy += y; avz += z; avn += 1.0;}
