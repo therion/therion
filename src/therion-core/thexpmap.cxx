@@ -3510,7 +3510,7 @@ void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
 			stnbuff = "";
 		}
 		stnbuff += scrap->name;
-		img_write_item(pimg, img_LABEL, 0, stnbuff, avx/avn, avy/avn, avz/avn);
+		img_write_item(pimg, img_LABEL, 0, stnbuff.c_str(), avx/avn, avy/avn, avz/avn);
 	}
 		
 }

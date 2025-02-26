@@ -65,7 +65,7 @@ bool thexpshpf::open()
   fp = this->m_xshp->m_dirname;
   fp += "/";
   fp += this->m_fnm;
-  this->m_fpath = thdb.strstore(fp);
+  this->m_fpath = thdb.strstore(fp.c_str());
 
   this->m_hndl = SHPCreate(this->m_fpath, this->m_type);
   if (this->m_hndl == NULL)

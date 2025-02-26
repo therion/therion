@@ -320,9 +320,9 @@ void thconfig::set_file_name(char * fn)
 }
 
    
-char * thconfig::get_file_name()
+const char * thconfig::get_file_name() const
 {
-  return this->fname;
+  return this->fname.c_str();
 }
   
 
@@ -384,14 +384,14 @@ void thconfig::set_search_path(char * pth)
 }
 
   
-char * thconfig::get_search_path()
+const char * thconfig::get_search_path() const
 {
-  return this->search_path;
+  return this->search_path.c_str();
 }
 
-char * thconfig::get_initialization_path()
+const char * thconfig::get_initialization_path() const
 {
-  return this->init_path;
+  return this->init_path.c_str();
 }
 
 
@@ -427,7 +427,7 @@ void thconfig::load()
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_READ)) {
     this->cfg_file.cmd_sensitivity_on();
     this->cfg_file.sp_scan_off();
-    this->cfg_file.set_file_name(this->fname);
+    this->cfg_file.set_file_name(this->fname.c_str());
     this->cfg_file.print_if_opened(thconfig_pifo, &fstarted);
     this->cfg_file.reset();
     try {

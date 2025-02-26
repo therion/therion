@@ -335,7 +335,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
       if (!stnbuf.empty()) stnbuf.append(".");
       stnbuf.append(dbp->db1d.station_vec[i].name);
       if (!tmps->is_temporary())
-        img_write_item(pimg, img_LABEL, x_exp, stnbuf,
+        img_write_item(pimg, img_LABEL, x_exp, stnbuf.c_str(),
           dbp->db1d.station_vec[i].x, dbp->db1d.station_vec[i].y, dbp->db1d.station_vec[i].z);
       else {
         x_exp |= img_SFLAG_ANON;

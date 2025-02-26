@@ -95,12 +95,6 @@ char * thbuffer::append(const char * src, size_t n)
 }
 
 
-thbuffer::operator char* ()
-{
-  return this->buff;
-}
-
-
 thbuffer::operator char** ()
 {
   return &(this->buff);

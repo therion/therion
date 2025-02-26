@@ -142,7 +142,7 @@ class thconfig {
    * Retrieve config file name.
    */
    
-  char * get_file_name();
+  const char * get_file_name() const;
   
   
   /**
@@ -187,9 +187,9 @@ class thconfig {
    
   void set_search_path(char * pth);
   
-  char * get_search_path();
+  const char * get_search_path() const;
   
-  char * get_initialization_path();
+  const char * get_initialization_path() const;
   
   /**
    * Load input from configuration file.

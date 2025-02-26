@@ -130,10 +130,10 @@ class thbuffer {
   
   
   /**
-   * Type conversion to char*.
+   * @deprecated Use c_str() or data() instead.
    */
    
-  operator char* ();
+  operator char* () = delete;
   
   
   /**
@@ -162,6 +162,7 @@ class thbuffer {
    */
    
   thbuffer & operator+=(const char * src);
+  thbuffer & operator+=(const thbuffer& src) { return operator+=(src.buff); }
   
 
 };

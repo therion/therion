@@ -213,7 +213,7 @@ void thinput::set_file_name(const char * fname)
 
 const char * thinput::get_file_name()
 {
-  return this->file_name;
+  return this->file_name.c_str();
 }
 
 
@@ -236,9 +236,9 @@ void thinput::set_file_suffix(const char * fsx)
 
 void thinput::open_file(const char * fname)
 {
-  char * srcfile = nullptr;
+  const char * srcfile = nullptr;
   if (this->last_ptr->sh.is_open())
-    srcfile = this->last_ptr->name;
+    srcfile = this->last_ptr->name.c_str();
   
   // as first, let's find appropriate ifile
   ifile * ifptr;
@@ -280,7 +280,7 @@ void thinput::open_file(const char * fname)
     else
       ifptr->name = fname;
     ifptr->sh.clear();
-    ifptr->sh.open(ifptr->name); //, ios::in | ios::nocreate
+    ifptr->sh.open(ifptr->name.c_str()); //, ios::in | ios::nocreate
     
     // if not successful, try with suffixes
     sfxid = 0;
@@ -295,7 +295,7 @@ void thinput::open_file(const char * fname)
         ifptr->name = fname;
       ifptr->name += sfx[sfxid];
       ifptr->sh.clear();
-      ifptr->sh.open(ifptr->name); //, ios::in | ios::nocreate
+      ifptr->sh.open(ifptr->name.c_str()); //, ios::in | ios::nocreate
       sfxid++;
     }
     
@@ -385,7 +385,7 @@ void thinput::reset()
   
   // set pointer to the first ifile
   this->last_ptr = this->first_ptr.get();
-  this->open_file(this->file_name);  
+  this->open_file(this->file_name.c_str());  
 }
 
 

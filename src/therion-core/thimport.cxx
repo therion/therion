@@ -392,7 +392,7 @@ const char * thimport::station_name(const char * sn, const char separator, struc
       }
       break;      
     default:
-      l = (long)strlen(bx);
+      l = (long)strlen(bx.c_str());
       rv = buff;
       for(i = 0; i < l; i++) {
         if ((buff[i] == separator) && ((i + 1) < l)) {

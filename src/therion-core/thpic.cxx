@@ -56,7 +56,7 @@ thpic::thpic() {
 
   if (thpic_tmp == NULL) {
     thdb.buff_tmp = thtmp.get_file_name("pic0000.txt");
-    thpic_tmp = thdb.strstore(thdb.buff_tmp);
+    thpic_tmp = thdb.strstore(thdb.buff_tmp.c_str());
   }
 }
 
@@ -179,9 +179,9 @@ const char * thpic::convert(const char * type, const char * ext, const std::stri
   if (retcode == EXIT_SUCCESS) {
     ccom = thtmp.get_file_name(tmpfn.c_str());
     size_t x, l;
-    l = strlen(ccom);
+    l = strlen(ccom.c_str());
     for (x = 0; x < l; x++) if (ccom.c_str()[x] == '\\') ccom.data()[x] = '/';
-    return (thdb.strstore(ccom));
+    return (thdb.strstore(ccom.c_str()));
   } else {
     return NULL;
   }
