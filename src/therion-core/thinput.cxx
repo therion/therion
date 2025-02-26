@@ -126,7 +126,7 @@ void ifile::close()
 bool ifile::is_equal(ifile* f)
 {
   try {
-    return fs::equivalent(name.get_buffer(), f->name.get_buffer());
+    return fs::equivalent(name.c_str(), f->name.c_str());
   } catch(const std::exception& e) {
     thwarning(fmt::format("unable to compare files -- {}", e.what()))
     return false;
@@ -211,7 +211,7 @@ void thinput::set_file_name(const char * fname)
 }
 
 
-char * thinput::get_file_name()
+const char * thinput::get_file_name()
 {
   return this->file_name;
 }
@@ -234,7 +234,7 @@ void thinput::set_file_suffix(const char * fsx)
 }
 
 
-void thinput::open_file(char * fname)
+void thinput::open_file(const char * fname)
 {
   char * srcfile = nullptr;
   if (this->last_ptr->sh.is_open())
@@ -269,8 +269,8 @@ void thinput::open_file(char * fname)
   while ((!ifptr->sh.is_open()) && (ix < paths)) {
 
     // let's try the name without suffixes
-    ifptr_psz = strlen(ifptr->path.get_buffer());
-    ifptr_plc = (ifptr_psz > 0 ? ifptr->path.get_buffer()[ifptr_psz-1] : 0);
+    ifptr_psz = strlen(ifptr->path.c_str());
+    ifptr_plc = (ifptr_psz > 0 ? ifptr->path.c_str()[ifptr_psz-1] : 0);
     if (ifptr_psz > 0) {
       ifptr->name = ifptr->path;
       if (ifptr_plc != '/')
@@ -343,7 +343,7 @@ void thinput::open_file(char * fname)
       this->last_ptr = ifptr;
       if (this->pifo) {
         if (this->pifoproc != nullptr)
-          this->pifoproc(ifptr->name.get_buffer());
+          this->pifoproc(ifptr->name.data());
         if (this->pifoid != nullptr)
           *(this->pifoid) = true;
         this->pifo = false;
@@ -351,7 +351,7 @@ void thinput::open_file(char * fname)
         this->pifoproc = nullptr;
       }
 #ifdef THDEBUG
-      thprint(fmt::format("open file -- {}\n", this->last_ptr->name.get_buffer()));
+      thprint(fmt::format("open file -- {}\n", this->last_ptr->name.c_str()));
 #endif
     }
   }
@@ -363,7 +363,7 @@ void thinput::close_file()
 {
   if (this->last_ptr->sh.is_open()) {
 #ifdef THDEBUG
-    thprint(fmt::format("close file -- {}\n", this->last_ptr->name.get_buffer()));
+    thprint(fmt::format("close file -- {}\n", this->last_ptr->name.c_str()));
 #endif
     this->last_ptr->close();
     if (this->last_ptr->prev_ptr != nullptr) {
@@ -436,19 +436,19 @@ char * thinput::read_line()
     // join backslash ended lines together
     if (*idxptr == '\\') {
       if (mline) {
-        this->linebf.strncat(this->lnbuffer.get(), lnlen - 1);
+        this->linebf.append(this->lnbuffer.get(), lnlen - 1);
       }
       else {
-        this->linebf.strncpy(this->lnbuffer.get(), lnlen - 1);
+        this->linebf.assign(this->lnbuffer.get(), lnlen - 1);
         mline = true;
       }
       continue;
     }
     else {
       if (mline)
-        this->linebf.strncat(this->lnbuffer.get(), lnlen);
+        this->linebf.append(this->lnbuffer.get(), lnlen);
       else
-        this->linebf.strncpy(this->lnbuffer.get(), lnlen);
+        this->linebf.assign(this->lnbuffer.get(), lnlen);
     }
     
     mline = false;
@@ -456,22 +456,22 @@ char * thinput::read_line()
     // we've something regular in the linebf
     // split into cmd & value & interpret commands 
     if (this->cmd_sensitivity) {
-      thsplit_word(&this->cmdbf, &this->valuebf, this->linebf.get_buffer());
-      thsplit_args(&this->tmpmb, this->valuebf.get_buffer());
+      thsplit_word(&this->cmdbf, &this->valuebf, this->linebf.c_str());
+      thsplit_args(&this->tmpmb, this->valuebf.c_str());
       
       // check if comment
-      if (*(this->cmdbf.get_buffer()) == '#')
+      if (*(this->cmdbf.c_str()) == '#')
         continue;
         
       // interpret commands
-      switch (thmatch_token(this->cmdbf.get_buffer(), thtt_input)) {
+      switch (thmatch_token(this->cmdbf.c_str(), thtt_input)) {
       
         case TT_INPUT:
           if (this->input_sensitivity) {
             if (this->tmpmb.get_size() != 1)
               therror(fmt::format("{} [{}] -- one input file name expected -- {}", \
                 this->get_cif_name(), this->get_cif_line_number(), \
-                this->valuebf.get_buffer()))
+                this->valuebf.c_str()))
             else
               this->open_file(*(this->tmpmb.get_buffer()));
           }
@@ -481,13 +481,13 @@ char * thinput::read_line()
           if (this->tmpmb.get_size() != 1)
             therror(fmt::format("{} [{}] -- encoding name expected -- {}", \
               this->get_cif_name(), this->get_cif_line_number(), \
-              this->valuebf.get_buffer()));
+              this->valuebf.c_str()));
           this->last_ptr->encoding = \
             thmatch_token(*(this->tmpmb.get_buffer()), thtt_encoding);
           if (this->last_ptr->encoding == TT_UNKNOWN_ENCODING) {
             therror(fmt::format("{} [{}] -- unknown encoding -- {}", \
               this->get_cif_name(), this->get_cif_line_number(), \
-              this->valuebf.get_buffer()));
+              this->valuebf.c_str()));
             this->last_ptr->encoding = TT_UTF_8;
           }
           continue;
@@ -507,7 +507,7 @@ char * thinput::read_line()
     }
     // otherwise check if comment
     else {
-      idxptr = this->linebf.get_buffer();
+      idxptr = this->linebf.data();
       lnlen = (long)strlen(idxptr);
       while ((lnlen > 0) && (*idxptr < 33)) {
         lnlen--;
@@ -523,40 +523,40 @@ char * thinput::read_line()
   }
   
   if (ln_state == 1)
-    return this->linebf.get_buffer();
+    return this->linebf.data();
   else
     return nullptr;
 }
 
 
-char * thinput::get_cmd()
+const char * thinput::get_cmd()
 {
-  return this->cmdbf.get_buffer();
+  return this->cmdbf.c_str();
 }
 
-char * thinput::get_line()
+const char * thinput::get_line()
 {
-  return this->linebf.get_buffer();
-}
-
-
-char * thinput::get_value()
-{
-  return this->valuebf.get_buffer();
-}
-
-char * thinput::get_cif_name()
-{
-  return this->last_ptr->name.get_buffer();
+  return this->linebf.c_str();
 }
 
 
+const char * thinput::get_value()
+{
+  return this->valuebf.c_str();
+}
 
-char * thinput::get_cif_path()
+const char * thinput::get_cif_name()
+{
+  return this->last_ptr->name.c_str();
+}
+
+
+
+const char * thinput::get_cif_path()
 {
   static thbuffer cifpath;
-  thsplit_fpath(&cifpath, this->last_ptr->name.get_buffer());
-  return cifpath.get_buffer();
+  thsplit_fpath(&cifpath, this->last_ptr->name.c_str());
+  return cifpath.c_str();
 }
 
 std::string thinput::get_cif_abspath(const char * fname_ptr)
@@ -569,7 +569,7 @@ std::string thinput::get_cif_abspath(const char * fname_ptr)
   auto pict_path = std::filesystem::current_path(ec);
   thassert(!ec);
 
-  const auto& last_name = this->last_ptr->name.get_buffer();
+  const auto& last_name = this->last_ptr->name.c_str();
   if (fs::path(last_name).is_absolute())
     pict_path = last_name;
   else 

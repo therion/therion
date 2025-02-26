@@ -234,10 +234,10 @@ void thselector_export_survey_tree_node (FILE * cf, unsigned long level, thdatao
       fprintf(cf," %s %s",ss->get_name(),ss->full_name);
       if (strlen(ss->get_title()) > 0) {
         thdecode_tex(&(thdb.buff_enc), ss->get_title());
-        fprintf(cf," \"%s\"",thdb.buff_enc.get_buffer());
+        fprintf(cf," \"%s\"",thdb.buff_enc.c_str());
         thdecode(&(thdb.buff_enc),TT_ASCII,ss->get_title());
-        thdecode_tex(&(thdb.buff_tmp), thdb.buff_enc.get_buffer());
-        fprintf(cf," \"%s\"",thdb.buff_tmp.get_buffer());
+        thdecode_tex(&(thdb.buff_tmp), thdb.buff_enc.c_str());
+        fprintf(cf," \"%s\"",thdb.buff_tmp.c_str());
       }
       else
         fprintf(cf," \"\" \"\"");
@@ -343,10 +343,10 @@ void thselector_export_map_tree_node (FILE * cf, unsigned long level, unsigned l
   fprintf(cf," %s %s%s%s",optr->get_name(),optr->get_name(), (strlen(optr->fsptr->full_name) > 0 ? "@" : ""), optr->fsptr->full_name);
   if (strlen(optr->get_title()) > 0) {
     thdecode_tex(&(thdb.buff_enc), optr->get_title());
-    fprintf(cf," \"%s\"",thdb.buff_enc.get_buffer());
+    fprintf(cf," \"%s\"",thdb.buff_enc.c_str());
     thdecode(&(thdb.buff_enc),TT_ASCII,optr->get_title());
-    thdecode_tex(&(thdb.buff_tmp), thdb.buff_enc.get_buffer());
-    fprintf(cf," \"%s\"\n",thdb.buff_tmp.get_buffer());
+    thdecode_tex(&(thdb.buff_tmp), thdb.buff_enc.c_str());
+    fprintf(cf," \"%s\"\n",thdb.buff_tmp.c_str());
   }
   else
     fprintf(cf," \"\" \"\"\n");

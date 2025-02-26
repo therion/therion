@@ -164,9 +164,9 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       
     case TT_SURVEY_PERSON_RENAME:
       thencode(&(this->db->buff_enc), args[0], argenc);
-      tmpp1.parse(this->db, this->db->buff_enc.get_buffer());
+      tmpp1.parse(this->db, this->db->buff_enc.c_str());
       thencode(&(this->db->buff_enc), args[1], argenc);
-      tmpp2.parse(this->db, this->db->buff_enc.get_buffer());
+      tmpp2.parse(this->db, this->db->buff_enc.c_str());
       this->person_renames[tmpp1] = tmpp2;
       break;
 
@@ -195,7 +195,7 @@ void thsurvey::self_print_properties(FILE * outf)
   thdataobject::self_print_properties(outf);
   fprintf(outf,"thsurvey:\n");
   fprintf(outf,"\tfull name: \"%s\" (\"%s\")\n", this->full_name,
-    this->reverse_full_name.get_buffer());
+    this->reverse_full_name.c_str());
   if (this->decdef) {
     fprintf(outf,"\tdeclination:\n");
     nval = this->declin.get_size();
@@ -320,7 +320,7 @@ void thsurvey::full_name_reverse()
     if ((*c1 == '.') || ((i1 == fnln) && has_dot)) {
       has_dot = true;
       c3 = this->full_name + si;
-      c2 = this->reverse_full_name.get_buffer() + fnln - i1;
+      c2 = this->reverse_full_name.data() + fnln - i1;
       if (i1 < fnln) {
         c2--;
         *c2 = '.';

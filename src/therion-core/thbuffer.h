@@ -37,8 +37,6 @@
  
 class thbuffer {
 
-  public:
-
   char * buff;  ///< Buffer.
   size_t size;  ///< Buffer size.
 
@@ -73,11 +71,17 @@ class thbuffer {
   
   
   /**
+   * True if strlen() == 0
+   */
+  bool empty() const { return !buff[0]; };
+
+
+  /**
    * Copy given string to buffer and return pointer to it.
    * @param src Given string.
    */
    
-  char * strcpy(const char * src);
+  char * assign(const char * src);
 
 
   /**
@@ -88,7 +92,7 @@ class thbuffer {
    * @param n Source length.
    */
    
-  char * strncpy(const char * src, size_t n);
+  char * assign(const char * src, size_t n);
   
   
   /**
@@ -96,7 +100,7 @@ class thbuffer {
    * @param src Given string.
    */
    
-  char * strcat(const char * src);
+  char * append(const char * src);
   
   
   /**
@@ -105,7 +109,7 @@ class thbuffer {
    * @param src Given string.
    */
    
-  char * strncat(const char * src, size_t n);
+  char * append(const char * src, size_t n);
   
 
   /**
@@ -121,7 +125,8 @@ class thbuffer {
    * Return pointer to the buffer.
    */
    
-  char * get_buffer();
+  char * data();
+  const char * c_str() const { return buff; }
   
   
   /**

@@ -134,7 +134,7 @@ void thexport::dump_body(FILE * xf)
 {
   if (this->outpt_def) {
     thdecode_arg(&(this->cfgptr->bf1), this->outpt);
-    fprintf(xf," -output %s",this->cfgptr->bf1.get_buffer());
+    fprintf(xf," -output %s",this->cfgptr->bf1.c_str());
   }  
 }
 
@@ -142,7 +142,7 @@ void thexport::dump_body(FILE * xf)
 const char * thexport::get_output(const char * defname)
 {
   static thbuffer outptfname;
-  outptfname = this->cfgpath.get_buffer();
+  outptfname = this->cfgpath.c_str();
   if (this->outpt_def) {
     if (thpath_is_absolute(this->outpt))
       return this->outpt;
@@ -151,7 +151,7 @@ const char * thexport::get_output(const char * defname)
   } else {
     outptfname += defname;
   }
-  return outptfname.get_buffer();
+  return outptfname.c_str();
 }
 
 // Generates a lookup table for the checksums of all 8-bit values.

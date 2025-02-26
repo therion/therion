@@ -118,7 +118,7 @@ void thpic::init(const char * pfname, const char * incfnm)
   thprint("running convert\n");
 #endif
 
-  retcode = system(ccom.get_buffer());
+  retcode = system(ccom.c_str());
   if (retcode == EXIT_SUCCESS) {
     FILE * tmp;
     tmp = fopen(thpic_tmp,"r");
@@ -175,12 +175,12 @@ const char * thpic::convert(const char * type, const char * ext, const std::stri
   ccom += tmpf;
   if (isspc) ccom += "\"";
 
-  retcode = system(ccom.get_buffer());
+  retcode = system(ccom.c_str());
   if (retcode == EXIT_SUCCESS) {
     ccom = thtmp.get_file_name(tmpfn.c_str());
     size_t x, l;
     l = strlen(ccom);
-    for (x = 0; x < l; x++) if (ccom.get_buffer()[x] == '\\') ccom.get_buffer()[x] = '/';
+    for (x = 0; x < l; x++) if (ccom.c_str()[x] == '\\') ccom.data()[x] = '/';
     return (thdb.strstore(ccom));
   } else {
     return NULL;

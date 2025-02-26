@@ -174,8 +174,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
             thdecode(&(dbp->buff_enc),enc,str); \
           else \
             dbp->buff_enc = ""; \
-          thdecode_sql(&(dbp->buff_tmp),dbp->buff_enc.get_buffer());}
-#define ESTR (dbp->buff_tmp.get_buffer())
+          thdecode_sql(&(dbp->buff_tmp),dbp->buff_enc.c_str());}
+#define ESTR (dbp->buff_tmp.c_str())
 
 #define CHECK_STRLEN(var,str) {if (strlen(str) > var) var = strlen(str);}
 #define INSERTPERSON \

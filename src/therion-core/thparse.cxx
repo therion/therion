@@ -103,7 +103,7 @@ void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src)
       case 0:
         if (*s2 < 33) {
           state = 1;
-          dword->strncpy((char *)s1, idx - idx0);
+          dword->assign((char *)s1, idx - idx0);
         }
         break;
       case 1:
@@ -119,15 +119,15 @@ void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src)
   
   switch (state) {
     case -1:
-      dword->strcpy("");
-      drest->strcpy("");
+      dword->assign("");
+      drest->assign("");
       break;
     case 0:
-      dword->strcpy((char *)s1);
-      drest->strcpy("");
+      dword->assign((char *)s1);
+      drest->assign("");
       break;
     case 1:
-      drest->strcpy("");
+      drest->assign("");
       break;
     default:
       idx = srcl;
@@ -136,7 +136,7 @@ void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src)
         s2--;
         idx--;
       }
-      drest->strncpy((char *) s1, idx - idx0 + 1);
+      drest->assign((char *) s1, idx - idx0 + 1);
   }
 
 }
@@ -372,7 +372,7 @@ void thsplit_fpath(thbuffer * dest, const char * src)
     s--;
     len--;
   }
-  dest->strncpy(src, len);
+  dest->assign(src, len);
 }
 
 
@@ -550,7 +550,7 @@ void thdecode_c(thbuffer * dest, const char * src)
   unsigned num;
   dest->guarantee(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->get_buffer();
+  dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
     if ((*srcp < 32) || (*srcp > 127)) {
         *dstp = '"';
@@ -600,7 +600,7 @@ void thdecode_tcl(thbuffer * dest, const char * src)
   unsigned num;
   dest->guarantee(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->get_buffer();
+  dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
     if ((*srcp < 32) || (*srcp > 127) || (*srcp == '[') || (*srcp == '[') || (*srcp == '"')) {
         *dstp = '\\';
@@ -635,7 +635,7 @@ void thdecode_mp(thbuffer * dest, const char * src)
   unsigned char * srcp, * dstp;
   dest->guarantee(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->get_buffer();
+  dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
     if (*srcp < 32) {
         *dstp = ' ';
@@ -676,7 +676,7 @@ void thdecode_tex(thbuffer * dest, const char * src)
 //  unsigned num;
   dest->guarantee(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->get_buffer();
+  dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
     switch (*srcp) {
       case '%':
@@ -719,9 +719,9 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
   tmpb = src;
   size_t srcln = strlen(src), srcx = 0, tmpl;
   unsigned char * srcp, * dstp, * wsrcp, *tmpp;
-  dest->strcpy("");  // check buffer size
+  dest->assign("");  // check buffer size
   srcp = (unsigned char*) src;
-  dstp = (unsigned char*) tmpb.get_buffer();
+  dstp = (unsigned char*) tmpb.c_str();
   while (srcx < srcln) {
     switch (*srcp) {
       case '%':
@@ -760,7 +760,7 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
   // end destination string with 0
   srcx = 0;
   srcp = (unsigned char*) src;
-  wsrcp = (unsigned char*) tmpb.get_buffer();
+  wsrcp = (unsigned char*) tmpb.c_str();
   unsigned char single[2];
   bool isutf8;
   dstp = &(single[0]);
@@ -770,7 +770,7 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
   while(srcx < srcln) {
     if (*wsrcp == 0) {
       single[0] = *srcp;
-      dest->strcat((char*) dstp);
+      dest->append((char*) dstp);
       srcx++;
       srcp++;
       wsrcp++;
@@ -783,9 +783,9 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
         isutf8 = isutf8 || (*tmpp > 127);
       }
       if (isutf8) {
-        dest->strcat(utf2tex((char*) wsrcp).c_str());
+        dest->append(utf2tex((char*) wsrcp).c_str());
       } else {
-        dest->strcat((char*) wsrcp);
+        dest->append((char*) wsrcp);
       }
       srcx+=tmpl;
       srcp+=tmpl;
@@ -809,7 +809,7 @@ void thdecode_sql(thbuffer * dest, const char * src)
   }
   dest->guarantee(srcln * 8 + 3);  // check buffer size
   srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->get_buffer();
+  dstp = (unsigned char*) dest->c_str();
   *dstp = '\'';
   dstp++;
   while (srcx < srcln) {
@@ -858,7 +858,7 @@ void thdecode_arg(thbuffer * dest, const char * src)
   }  
   
   if (quickcpy) {
-    dest->strcpy(src);
+    dest->assign(src);
     return;
   }
   
@@ -866,7 +866,7 @@ void thdecode_arg(thbuffer * dest, const char * src)
   dest->guarantee(srcln * 8 + 3);  // check buffer size
   srcx = 0;
   srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->get_buffer();
+  dstp = (unsigned char*) dest->c_str();
   *dstp = '"';
   dstp++;
   while (srcx < srcln) {
@@ -1120,7 +1120,7 @@ const char * thutf82xhtml(const char * src)
   bool inspec;
   char * res;
   tmp.guarantee(sl);
-  res = tmp.get_buffer();
+  res = tmp.data();
 
   inspec = false;
   for(sx = 0, dx = 0; sx < sl; sx++) {
@@ -1202,8 +1202,8 @@ void thparse_length(int & sv, double & dv, const char * src)
   static thbuffer plb;
   char * srcb;
   
-  plb.strcpy(src);  
-  srcb = plb.get_buffer();
+  plb.assign(src);  
+  srcb = plb.data();
     
   // first let's find units index
   bool has_units = false;

@@ -3545,7 +3545,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 #ifdef THDEBUG
   thprint("running metapost\n");
 #endif
-  retcode = system(com.get_buffer());
+  retcode = system(com.c_str());
   thexpmap_log_log_file("data.log",
   "####################### metapost log file ########################\n",
   "#################### end of metapost log file ####################\n",true);
@@ -3560,7 +3560,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   double n[6] = {};
   com.guarantee(256);
   std::unique_ptr<thline> cln;
-  char * buff = com.get_buffer();
+  char * buff = com.data();
   ti = todo.begin();
   while ((fscanf(af.get(),"%32s",buff) > 0) && (ti != todo.end())) {
     if (cnt < 6) {

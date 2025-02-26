@@ -3100,7 +3100,7 @@ void thdb1d::process_xelev()
                   tmpbf += "@";
                   tmpbf += xi->to.survey;
                 }
-                throw thexception(fmt::format("survey shot not found -- {}", tmpbf.get_buffer()));
+                throw thexception(fmt::format("survey shot not found -- {}", tmpbf.c_str()));
               } else {
                 // the leg is in carrow - set its extend
                 if ((xi->extend & TT_EXTENDFLAG_DIRECTION) != 0) {

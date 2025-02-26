@@ -104,8 +104,8 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
              
         // if end_command option, set turn off inside_cmd
         // and insert object into database
-        if ((advanced_end_search && objptr->get_cmd_ends_match(this->bf1.get_buffer())) || 
-            (strcmp(this->bf1.get_buffer(), endlnopt) == 0)) {
+        if ((advanced_end_search && objptr->get_cmd_ends_match(this->bf1.c_str())) || 
+            (strcmp(this->bf1.c_str(), endlnopt) == 0)) {
           inside_cmd = false;
           //this->inp.cmd_sensitivity_on();
           if (!configure_cmd)
@@ -118,12 +118,12 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         }
   
         // let's parse if an option line
-        optd = objptr->get_cmd_option_desc(this->bf1.get_buffer());
+        optd = objptr->get_cmd_option_desc(this->bf1.c_str());
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
-          thsplit_args(&this->mbf1, this->bf2.get_buffer());
+          thsplit_args(&this->mbf1, this->bf2.c_str());
           if (this->mbf1.get_size() < optd.nargs)
             throw thexception(fmt::format("not enough option arguments -- {} -- must be {}",
-              this->bf1.get_buffer(), optd.nargs));
+              this->bf1.c_str(), optd.nargs));
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
             this->inp.get_cif_encoding(),

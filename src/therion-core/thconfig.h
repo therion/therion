@@ -149,7 +149,7 @@ class thconfig {
    * Set input file name.
    */
   
-  void append_source(char * fname, long startln = -1, long endln = -1);
+  void append_source(const char * fname, long startln = -1, long endln = -1);
   
   
   /**

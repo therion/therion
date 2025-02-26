@@ -151,7 +151,7 @@ void thprint_xtherion() {
         tss += " \"";
         tss += tsrc;
         tss += "\" [encoding convertfrom utf-8 \"";
-        tss += tdst.get_buffer();
+        tss += tdst.c_str();
         tss += "\"]\n";
       }
       l++;

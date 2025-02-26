@@ -332,7 +332,7 @@ void thcs2cs(int si, int ti,
 // set CA bundle path; supported since proj 7.2.0
 #ifdef THWIN32
 #if PROJ_VER >= 8
-  std::string ca_path = fmt::format("{}\\lib\\cacert.pem", thcfg.install_path.get_buffer());
+  std::string ca_path = fmt::format("{}\\lib\\cacert.pem", thcfg.install_path.c_str());
   proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
 #endif
 #endif

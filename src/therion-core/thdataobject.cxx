@@ -124,7 +124,7 @@ bool thdataobject::get_cmd_ends_state() {
 }
 
 
-bool thdataobject::get_cmd_ends_match(char * /*cmd*/) {
+bool thdataobject::get_cmd_ends_match(const char * /*cmd*/) {
   return false;
 }
 
@@ -223,7 +223,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           if (cod.nargs > 1)
             throw thexception("multiple option arguments -- title");
           thencode(&(this->db->buff_enc), *args, argenc);
-          this->title = this->db->strstore(this->db->buff_enc.get_buffer());
+          this->title = this->db->strstore(this->db->buff_enc.c_str());
           break;
         default:
           throw thexception("title specification not allowed for this object");
@@ -239,7 +239,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
             throw thexception("too many option arguments -- author");
           this->dotmp_date.parse(args[0]);
           thencode(&(this->db->buff_enc), args[1], argenc);
-          this->dotmp_person.parse(this->db, this->db->buff_enc.get_buffer());
+          this->dotmp_person.parse(this->db, this->db->buff_enc.c_str());
           this->dotmp_author = thdataobject_author(this->dotmp_person,
               this->revision);
           this->author_map[this->dotmp_author].join(this->dotmp_date);
@@ -260,7 +260,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           thencode(&(this->db->buff_enc), args[1], argenc);
           this->dotmp_copyright = 
             thdataobject_copyright(
-            this->db->strstore(this->db->buff_enc.get_buffer(), true), 
+            this->db->strstore(this->db->buff_enc.c_str(), true), 
             this->revision);
           this->copyright_map[this->dotmp_copyright].join(this->dotmp_date);
           break;
@@ -279,7 +279,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
       if (cod.nargs != 2)
         throw thexception("invalid attribute specification -- should be <name> <value>");
       thencode(&(this->db->buff_enc), args[1], argenc);
-      this->parse_attribute(args[0], this->db->buff_enc.get_buffer());
+      this->parse_attribute(args[0], this->db->buff_enc.c_str());
       break;
         
     default:
@@ -407,7 +407,7 @@ void thdataobject::start_insert()
 }
 
 
-void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & dst_y, bool adj_bbox)
+void thdataobject::read_cs(const char * src_x, const char * src_y, double & dst_x, double & dst_y, bool adj_bbox)
 {
 	  // 1. Check compatibility with output CS.
 	  if (thcfg.outcs_def.is_valid()) {
@@ -529,7 +529,7 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
 }
 
 
-void thdataobject::parse_attribute(char * name, char * value) {
+void thdataobject::parse_attribute(const char * name, const char * value) {
 
   // check name
   if ((name == NULL) || (strlen(name) == 0))
