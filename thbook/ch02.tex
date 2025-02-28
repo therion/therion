@@ -890,11 +890,13 @@ Point is a command for drawing a point map symbol.
     numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
     $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
     $xl \equiv 2.0$.
-  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |place <bottom/default/top>| = changes displaying order in the map. Default is 
+    |default|.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
-    station-name, label, remark, date, altitude, height, passage-height.
-  * |visibility <on/off>| = displays/hides the symbol.
+    station-name, label, remark, date, altitude, height, passage-height. Default 
+    is |on|.
+  * |visibility <on/off>| = displays/hides the symbol. Default is |on|.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.\[Example: if you specify
@@ -1120,9 +1122,11 @@ respectively.
     horizontally/ver\-ti\-cally with the previous point. It can't be set on the 
     first point. The result is a horizontal/vertical line segment.
     This option is not allowed in the |plan| projection.
-  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |place <bottom/default/top>| = changes displaying order in the map. Default 
+    is |top| for |ceiling-step| and |chimney|, |default| for all other types.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides the symbol.
+    Default is |on|.
+  * |visibility <on/off>| = displays/hides the symbol. Default is |on|.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.
@@ -1229,9 +1233,11 @@ by each separate line.
 All options can appear as command-like options or as |area| options, i.e., on
 the same line as the |area| command. The last one appearing prevails.
   * the data lines consist of border line references (IDs)
-  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |place <bottom/default/top>| = changes displaying order in the map. Default
+    is |top|.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides the symbol.
+    Default is |on|.
+  * |visibility <on/off>| = displays/hides the symbol. Default is |on|.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.
