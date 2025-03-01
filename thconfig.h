@@ -267,7 +267,7 @@ class thconfig {
 
   bool get_outcs_center(double & x, double & y, double & z);
 
-  bool get_outcs_mag_decl(double year, double & decl);
+  bool get_outcs_mag_decl(double year, double & decl, thobjectsrc src = thobjectsrc());
 
   void log_outcs(double decsyear, double deceyear);
 

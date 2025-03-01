@@ -943,15 +943,23 @@ double thconfig::get_cs_convergence(int cs)
 }
 
 
-bool thconfig::get_outcs_mag_decl(double year, double & decl)
+bool thconfig::get_outcs_mag_decl(double year, double & decl, thobjectsrc src)
 {
   double x, y, z, lat, lon, alt;
   if (!this->get_outcs_center(x, y, z))
     return false;
+  try {
   if (year < 1900.0)
     throw thexception("automatic declination calculation before 1900 not supported, please specify declination explicitly");
   if (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)))
     throw thexception(fmt::format("automatic declination calculation after {} not supported, please specify declination explicitly", thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)));
+  } catch (const std::exception& e) {
+	if (src.is_valid())
+		throw thexception(fmt::format("{} [{}]", src.name, src.line), e);
+	else
+		throw e;
+  }
+
   if ((year < double(thgeomag_minyear)) || (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1))))
     this->m_decl_out_of_geomag_range = true;
   thcs2cs(this->outcs, TTCS_LONG_LAT, x, y, z, lon, lat, alt);

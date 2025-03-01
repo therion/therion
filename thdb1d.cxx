@@ -128,6 +128,7 @@ void thdb1d::scan_data()
   this->max_year = thnan;
 
   obi = this->db->object_list.begin();
+  thobjectsrc min_year_src;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
       dp = dynamic_cast<thdata*>(obi->get());
@@ -139,9 +140,13 @@ void thdb1d::scan_data()
           eyear = dp->date.get_end_year();
         if (thisnan(this->min_year)) {
           this->min_year = syear;
+          min_year_src = dp->source;
           this->max_year = eyear;
         } else {
-          if (this->min_year > syear) this->min_year = syear;
+          if (this->min_year > syear) {
+        	  this->min_year = syear;
+        	  min_year_src = dp->source;
+          }
           if (this->max_year < eyear) this->max_year = eyear;
         }
       }
@@ -154,7 +159,7 @@ void thdb1d::scan_data()
   default_dpdeclin = 0.0;
   default_dpdeclinused = false;
   if (!thisnan(this->min_year)) {
-    thcfg.get_outcs_mag_decl(this->min_year, default_dpdeclin);
+    thcfg.get_outcs_mag_decl(this->min_year, default_dpdeclin, min_year_src);
     default_dpdeclinused = true;
   }
 
@@ -169,8 +174,8 @@ void thdb1d::scan_data()
 
       dpdeclin = 0.0;
       dpdeclindef = false;
-      if (dp->date.is_defined() && (thcfg.get_outcs_mag_decl(dp->date.get_average_year(), dpdeclin)))
-        dpdeclindef = true;      
+      if (dp->date.is_defined() && (thcfg.get_outcs_mag_decl(dp->date.get_average_year(), dpdeclin, dp->source)))
+        dpdeclindef = true;
         
       // scan data shots
       lei = dp->leg_list.begin();
