@@ -1118,7 +1118,16 @@ respectively.
        * |reverse <on/off>| = whether points are given in reverse order.
          Default is |off|.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
-         Auto is default.
+         Deafult is |auto|. This setting only has any effect if both segments that
+         passes through the point affected by the smooth setting are Bezier Curves
+         (the one arriving at it and the one leaving it). On means that the line
+         connection at this point will be smoothed, both by therion and by xTherion.
+         Off means that smoothness at the point is not guaranteded. Auto means that,
+         if both segments that passes through the point are Bezier Curves, Therion
+         will automatically detected if they are smooth and, if they are detected as
+         smooth, Therion will keep them smooth in it's transformations. xTherion
+         always creates Bezier Curves as smooth, even if the previous segment was a
+         straight one.
        * |adjust <horizontal/vertical>| = shifts the line point to be aligned
          horizontally/ver\-ti\-cally with the previous point. It can't be set on the 
          first point. The result is a horizontal/vertical line segment.
