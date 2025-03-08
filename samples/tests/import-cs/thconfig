@@ -1,0 +1,5 @@
+source
+  import data.3d
+endsource
+
+export map -o out.bbox

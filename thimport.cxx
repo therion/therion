@@ -27,6 +27,7 @@
  
 #include "loch/icase.h"
 #include "thimport.h"
+#include "thcsdata.h"
 #include "thexception.h"
 #include "thdata.h"
 #include "thsurvey.h"
@@ -524,6 +525,11 @@ void thimport::import_file_img()
     imgerr = img_error();
     throw thexception(fmt::format("unable to open file {}, error code: {}", this->fname, static_cast<int>(imgerr)));
   }
+
+  if (pimg->cs && this->cs == TTCS_LOCAL) {
+    this->set(TT_DATAOBJECT_CS, &(pimg->cs), TT_UNKNOWN_ENCODING, 0);
+  }
+
   const auto dummy_station_suffix = std::string{pimg->separator, 'x'};
   do {
     result = img_read_item(pimg, &imgpt);

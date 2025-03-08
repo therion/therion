@@ -742,6 +742,7 @@ $(OUTDIR)/thgrade.o: thgrade.cxx thgrade.h thdataobject.h thdatabase.h thmbuffer
  thepsparse.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h thdata.h \
  thtfangle.h thtf.h thtflength.h thtfpwf.h thexception.h
 $(OUTDIR)/thimport.o: thimport.cxx loch/icase.h thimport.h thdataobject.h \
+ thcsdata.h \
  thdatabase.h thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h \
  thdataleg.h thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h \
  loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
