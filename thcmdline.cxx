@@ -121,12 +121,12 @@ void thcmdline::process(int argc, char * argv[])
         break;
 
       case 'L':
-        thlog().logging_off();
+        get_thlogfile().logging_off();
         break;
         
       case 'l':
-        thlog().logging_on();
-        thlog().set_file_name(optarg);
+        get_thlogfile().logging_on();
+        get_thlogfile().set_file_name(optarg);
         break;
         
       //case 'g':

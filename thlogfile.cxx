@@ -28,7 +28,6 @@
 
 #include "thlogfile.h"
 #include "therion.h"
-#include "thinfnan.h"
 #include <string.h>
 
 const char * logfilemode = "w";
@@ -120,15 +119,6 @@ void thlogfile::logging_on()
 {
   this->is_logging = true;
 }
-
-void thlogfile::printf_double(const char * format, const char * nanstr, double dbl)
-{
-	if (thisnan(dbl))
-		this->printf(nanstr);
-	else
-		this->printf(format, dbl);
-}
-
    
 void thlogfile::logging_off()
 {
@@ -148,7 +138,7 @@ void thlogfile::log_error() {
 	fprintf(stderr,"error -- unable to write to log file (disk full?, insufficient permissions?)\n");
 }
 
-thlogfile& thlog()
+thlogfile& get_thlogfile()
 {
   static thlogfile log; // global instance
   return log;

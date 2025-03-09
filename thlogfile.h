@@ -31,7 +31,7 @@
 
 #include "thbuffer.h"
 #include <stdio.h>
-#include <fmt/printf.h>
+#include <string_view>
 
 /**
  * Log file module.
@@ -87,22 +87,6 @@ class thlogfile {
    * @param msg Message.
    */
   void print(std::string_view msg);
-
-  /**
-   * Print formatted into log file.
-   */
-  template <typename FormatStr, typename... Args>
-  void printf(const FormatStr& format, const Args&... args)
-  {
-    this->print(fmt::sprintf(format, args...));
-  }
-  
-  /**
-   * Print double into log file - take concern of nan.
-   */
-
-  void printf_double(const char * format, const char * nanstr, double dbl);
-
   
   /**
    * Set log file name.
@@ -166,7 +150,7 @@ class thlogfile {
 /**
  * Global log file instance.
  */
-thlogfile& thlog();
+thlogfile& get_thlogfile();
 
 #endif
 

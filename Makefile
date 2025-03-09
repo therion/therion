@@ -1,6 +1,6 @@
 # common therion objects
 CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern/shapelib/safileio.o  \
-  thexception.o thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
+  thexception.o thbuffer.o thmbuffer.o thlog.o thlogfile.o thtmpdir.o thlocale.o \
   thparse.o thcmdline.o thconfig.o thinput.o thchenc.o thdatabase.o \
   thdataobject.o thdatareader.o thsurvey.o thendsurvey.o thdata.o \
   thperson.o thtf.o thtfangle.o thtflength.o thtfpwf.o \
@@ -843,7 +843,8 @@ $(OUTDIR)/thline.o: thline.cxx thline.h th2ddataobject.h thdataobject.h \
  thpic.h thwarp.h thtrans.h
 $(OUTDIR)/thlocale.o: thlocale.cxx thlocale.h thparse.h thbuffer.h thmbuffer.h \
  thexception.h thlang.h thlangdata.h thinit.h thinput.h
-$(OUTDIR)/thlogfile.o: thlogfile.cxx thlogfile.h thbuffer.h therion.h thinfnan.h
+$(OUTDIR)/thlog.o: thlog.cxx thlog.h thlogfile.h thbuffer.h
+$(OUTDIR)/thlogfile.o: thlogfile.cxx thlogfile.h thbuffer.h therion.h
 $(OUTDIR)/thlookup.o: thlookup.cxx thlookup.h thdataobject.h thdatabase.h \
  thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h \
