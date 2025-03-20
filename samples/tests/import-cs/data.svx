@@ -1,0 +1,6 @@
+*cs out UTM32N
+*cs UTM32N
+*fix 1 516340 5362667 780
+*fix 2 519298 5362297 560
+*data nosurvey from to
+1 2

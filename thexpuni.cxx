@@ -684,10 +684,11 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
   }
 
   if (has_scrap) {
-    fprintf(out,"%.14f\n",lim.min.x);
-    fprintf(out,"%.14f\n",lim.min.y);
-    fprintf(out,"%.14f\n",lim.max.x);
-    fprintf(out,"%.14f\n",lim.max.y);
+    auto const format = thcfg.reproducible_output ? "%.12f\n" : "%.14f\n";
+    fprintf(out, format, lim.min.x);
+    fprintf(out, format, lim.min.y);
+    fprintf(out, format, lim.max.x);
+    fprintf(out, format, lim.max.y);
   }
   fclose(out);
     
