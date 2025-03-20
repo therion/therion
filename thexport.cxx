@@ -217,23 +217,28 @@ bool thexport::check_crc() {
       continue;
     }
 
-		if (thcfg.crc_verify) {
-			std::uint_fast32_t read_crc = 0;
-      std::ifstream crcif(fmt::format("{}.crc", file.fnm));
-      if (!crcif.is_open()) {
-        file.res = ".crc file not found -- use --generate-output-crc before";
-        ok = false;
-        continue;
-      }
+	  if (thcfg.crc_verify) {
+		  std::uint_fast32_t read_crc = 0;
+		  std::ifstream crcif(fmt::format("{}.crc", file.fnm));
+		  if (!crcif.is_open()) {
+			file.res = ".crc file not found -- use --generate-output-crc before";
+			ok = false;
+			continue;
+		  }
 
-      crcif >> std::hex >> read_crc;
-			if (actual_crc == read_crc) {
+ 		  file.res = fmt::format("CRC32 error: was {:08x}, expected value not found", actual_crc);
+ 		  ok = false;
+		  while (crcif >> std::hex >> read_crc) {
+			  if (actual_crc == read_crc) {
 				file.res = "OK";
-			} else {
+				ok = true;
+				break;
+			  } else {
 				file.res = fmt::format("CRC32 error: was {:08x}, expected {:08x}", actual_crc, read_crc);
 				ok = false;
-			}
-		}
+			  }
+		  }
+	  }
 	}
 	return ok;
 }
