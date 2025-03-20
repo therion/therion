@@ -89,13 +89,13 @@ thexpmap::~thexpmap() {
 void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug) {
   std::string lnbuff;
 //  unsigned long lnum = 0;
-  thlog().printf("%s",on_title);
+  thlog(on_title);
   std::ifstream lf(logfpath);
   if (!(lf.is_open())) {{
     thwarning(("can't open %s file for input", logfpath));
     }
-    thlog().printf("can't open %s file for input",logfpath);
-    thlog().printf("%s",off_title);
+    thlog(fmt::format("can't open {} file for input",logfpath));
+    thlog(off_title);
     return;
   }
   // let's read line by line and print to log file
@@ -111,7 +111,7 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
     }
     if (!skip_this) {
       if (!skip_next) {
-        thlog().printf("%s%s", (peoln ? "\n" : ""), lnbuff);
+        thlog(fmt::format("{}{}", (peoln ? "\n" : ""), lnbuff));
         peoln = true;
       } else {
         skip_next = false;
@@ -121,9 +121,9 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
     } 
   }
   if (peoln) 
-    thlog().printf("\n");
+    thlog("\n");
   lf.close();
-  thlog().printf("%s",off_title);
+  thlog(off_title);
 }
 
 

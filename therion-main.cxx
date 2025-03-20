@@ -121,8 +121,7 @@ int main(int argc, char * argv[]) {
     // print version information
     thprintf(thversion_format, thversion_text);
     thprintf("\n");
-    thlog().printf("  - using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
-                                                         thcs_get_proj_version_headers().c_str());
+    thlog(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     if (thcs_get_proj_version() != thcs_get_proj_version_headers())
       thwarning(("Proj version mismatch: using %s, compiled against %s", thcs_get_proj_version().c_str(),
                                                          thcs_get_proj_version_headers().c_str()));

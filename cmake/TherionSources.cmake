@@ -69,6 +69,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thlibrary.h
     ${CMAKE_SOURCE_DIR}/thline.h
     ${CMAKE_SOURCE_DIR}/thlocale.h
+    ${CMAKE_SOURCE_DIR}/thlog.h
     ${CMAKE_SOURCE_DIR}/thlogfile.h
     ${CMAKE_SOURCE_DIR}/thlookup.h
     ${CMAKE_SOURCE_DIR}/thmap.h
@@ -184,6 +185,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thlibrarydata.cxx
     ${CMAKE_SOURCE_DIR}/thline.cxx
     ${CMAKE_SOURCE_DIR}/thlocale.cxx
+    ${CMAKE_SOURCE_DIR}/thlog.cxx
     ${CMAKE_SOURCE_DIR}/thlogfile.cxx
     ${CMAKE_SOURCE_DIR}/thlookup.cxx
     ${CMAKE_SOURCE_DIR}/thmap.cxx

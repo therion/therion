@@ -33,7 +33,7 @@
 #ifndef therion_h
 #define therion_h
 
-#include "thlogfile.h"
+#include "thlog.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <fmt/printf.h>
@@ -105,7 +105,7 @@ extern char * thexecute_cmd;
 template<typename FormatStr, typename... Args>
 void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args)
 {
-  thlog().printf(format, args...);
+  thlog(fmt::sprintf(format, args...));
   if (verbose) {
     fmt::fprintf(f, format, args...);
   }
