@@ -323,7 +323,9 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_toolMenu->AppendSeparator();
     this->m_toolMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("Camera"));
     this->m_toolMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("Scene"));
-
+    this->m_toolMenu->AppendSeparator();
+    this->m_toolMenu->Append(LXMENU_EXPROT, _("Animation"));
+    
     wxMenu *viewMenu = new wxMenu;
     viewMenu->Append(LXMENU_CAMERA_ADJUST, _("Action"), cameraAdjustMenu);
     viewMenu->AppendCheckItem(LXMENU_CAMERA_AUTOROTATE, _("Rotation"));

@@ -112,6 +112,12 @@ void thexpdb::process_db(class thdatabase * dbp)
 }
 
 
+double sql_double(double x) {
+	if (thisnan(x)) return 0.0;
+	if (thisinf(x) == 1) return 9e99;
+	if (thisinf(x) == -1) return -9e99;
+	return x;
+}
 
 
 
@@ -272,7 +278,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 				fprintf(sqlf,"insert into SCRAPS values "
 				  "(%ld, %ld, '%s', %d, %.5lf, %.5lf);\n ",
 				  scrapp->id, (scrapp->fsptr != NULL ? scrapp->fsptr->id : 0), 
-				  scrapp->name, scrapp->proj->id, scrapp->maxdist, scrapp->avdist);
+				  scrapp->name, scrapp->proj->id, sql_double(scrapp->maxdist), sql_double(scrapp->avdist));
 			} else {
 				CHECK_STRLEN(survey_name,scrapp->name);
 			}
@@ -286,7 +292,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 				fprintf(sqlf,"insert into MAPS values "
 				  "(%ld, %ld, '%s', %s, %d, %.3lf, %.3lf);\n ",
 				  mapp->id, (mapp->fsptr != NULL ? mapp->fsptr->id : 0), 
-				  mapp->name, ESTR, mapp->projection_id, mapp->stat.get_length(), mapp->stat.get_depth()
+				  mapp->name, ESTR, mapp->projection_id, sql_double(mapp->stat.get_length()), sql_double(mapp->stat.get_depth())
 				  );
 				thdb2dmi * cit = mapp->first_item;
 				while (cit != NULL) {
@@ -343,11 +349,11 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
                 fprintf(sqlf,"insert into SHOT values ("
                   "%ld, %ld, %ld, %ld, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f);\n",
                   ++shotx, lei->from.id, lei->to.id, dp->id,
-                  lei->total_length, lei->total_bearing, lei->total_gradient,
-                  thdxyz2length(adx, ady, adz), thdxyz2bearing(adx, ady, adz), thdxyz2clino(adx, ady, adz),
-                  thdxyz2length(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz), 
-                  thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz), 
-                  thdxyz2clino(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)
+                  sql_double(lei->total_length), sql_double(lei->total_bearing), sql_double(lei->total_gradient),
+				  sql_double(thdxyz2length(adx, ady, adz)), sql_double(thdxyz2bearing(adx, ady, adz)), sql_double(thdxyz2clino(adx, ady, adz)),
+				  sql_double(thdxyz2length(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
+				  sql_double(thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
+				  sql_double(thdxyz2clino(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz))
                   );
                 if ((lei->flags & TT_LEGFLAG_SURFACE) != TT_LEGFLAG_NONE)
                   fprintf(sqlf,"insert into SHOT_FLAG values(%ld, 'srf');\n", shotx);
@@ -372,7 +378,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
         fprintf(sqlf,"insert into STATION values "
           "(%ld, %s, %ld, %.2f, %.2f, %.2f);\n",
           (i+1), ESTR, st->survey->id,           
-          st->x, st->y, st->z);
+		  sql_double(st->x), sql_double(st->y), sql_double(st->z));
         if ((st->flags & TT_STATIONFLAG_ENTRANCE) != TT_STATIONFLAG_NONE)
           fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'ent');\n", (i+1));
         if ((st->flags & TT_STATIONFLAG_CONT) != TT_STATIONFLAG_NONE)
