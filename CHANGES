@@ -1,5 +1,41 @@
-Therion 6.3.4 (in progress):
+Therion 6.3.4 (2025-04-08):
 
+therion:
+ * added SKBB chimney symbol
+ * added UIS camp symbol [#624]
+ * on windows, Therion no longer uses PROJ_LIB env variable
+   (it's used only in unit tests to easily switch between Proj versions)
+ * source is now reported when automatic declination calculation is out of range
+ * import coordinate system from 3D file [#648]
+ * improved documentation of valid team roles
+ * bugs fixed:
+   - thbook fixes and updates [#641, #651, #630]
+   - fixed UIS chimney symbol
+   - fixed continuation-list crash [#632]
+   - fixed NaN, Inf values in SQL export
+
+xtherion:
+ * added Help/Logs... menu item and window
+ * context menu update for point extra: dist, from
+ * restructured XTherion chapter in thbook, add a mention of wtherion [#649]
+ * reverted removal of xtherion cmd wrapping on Windows [#639]
+
+loch:
+ * fixed loch crashing on Wayland on non-Debian based distros (patch by Olly Betts)
+
+infrastructure and compiler:
+ * CI: ubuntu-latest -> ubuntu-22.04 [#620]; use Ubuntu 24.04 in 'make' workflow
+ * CI: use windows registry data instead of PROJ_LIB
+ * CI: generate sha-256 checksums for the windows installer, source archives
+   and thbook.pdf
+ * CMake: explicit static linking for img, QuickHull, lxTR, lxR2P [#619]
+ * Make: Ubuntu 24.04 fixes
+ * added support for compilation in Visual Studio [#621]
+ * fixed compatibility with C++17 and C++20 [#628]
+ * fixed missing breaks [#625], fix valid degree in bezier_pt() [#626],
+   simplify thexception [#631], fix lifetime issues of thlogfile [#637],
+   thlogfile::print() improvements [#643], removed thlogfile::printf() [#650]
+ * added simple unit tests [#634]
 
 --------------------------------------------------------------------------------
 
