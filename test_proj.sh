@@ -28,7 +28,7 @@ while getopts "bi:mp:" opt; do
 done
 
 SRCPATH=$(dirname $BASH_SOURCE)
-PROJVER=${PROJVER:-6.3.1 6.3.2 7.0.1 7.2.1 8.0.0 8.2.1 9.0.0 9.5.1}
+PROJVER=${PROJVER:-6.3.1 6.3.2 7.0.1 7.2.1 8.0.0 8.2.1 9.0.0 9.6.0}
 
 URL=https://download.osgeo.org/proj/proj
 
