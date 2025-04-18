@@ -67,6 +67,7 @@
 #include <stdlib.h>
 #include "loch/lxMath.h"
 #include "thsvg.h"
+#include "thlog.h"
 #include "img.h"
 #include <filesystem>
 

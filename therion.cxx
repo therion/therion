@@ -34,6 +34,7 @@
 #include "tharea.h"
 #include "thlang.h"
 #include "thparse.h"
+#include "thlog.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -47,6 +48,30 @@ bool thverbose_mode = true;
 bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
+
+void thfprint(const bool verbose, FILE* f, std::string_view msg)
+{
+  thlog(msg);
+  if (verbose) {
+    fmt::print(f, "{}", msg);
+  }
+}
+
+void thprint2err(std::string_view msg) noexcept
+{
+  try
+  {
+    thfprint(true, stderr, msg);
+  }
+  catch(const std::exception& e)
+  {
+    std::fprintf(stderr, "error occurred while reporting another error: %s\n", e.what());
+  }
+  catch (...)
+  {
+    std::fprintf(stderr, "unknown error occurred while reporting another error\n");
+  }
+}
 
 void thprint_environment() {
   thprintf("\n\nINIT=%s\n",thcfg.get_initialization_path());

@@ -29,6 +29,7 @@
 #include "thproj.h"
 #include "thlogfile.h"
 #include "thcs.h"
+#include "thlog.h"
 #include <string>
 #include <cmath>
 #include <map>
