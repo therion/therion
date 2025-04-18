@@ -2604,7 +2604,7 @@ void thdb1d::print_loops() {
   thlog("REL-ERR ABS-ERR TOTAL-L STS X-ERROR Y-ERROR Z-ERROR STATIONS\n");
   for (i = 0; i < nloops; i++) {
     li = lpr[i].li;
-    thlog(fmt::format("{:6.2}% {}{} {}{} {:3} {}{} {}{} {}{} [",
+    thlog(fmt::format("{:6.2f}% {}{} {}{} {:3} {}{} {}{} {}{} [",
       li->src_length > 0.0 ? 100.0 * li->err_length / li->src_length : 0.0,
 			thdeflocale.format_length(li->err_length,1,totlen), thdeflocale.format_length_units(),			
 			thdeflocale.format_length(li->src_length,1,totlen), thdeflocale.format_length_units(),			

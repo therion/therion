@@ -56,7 +56,7 @@ static void print_double(const double dbl)
 	if (thisnan(dbl))
 		thlog("    -.--");
 	else
-		thlog(fmt::format("{:8.2}", dbl));
+		thlog(fmt::format("{:8.2f}", dbl));
 }
 
 class thprjx_link {
@@ -1133,7 +1133,7 @@ void thdb2d::log_distortions() {
         strlen(prj->index) > 0 ? prj->index : ""));
       thlog(" AVERAGE  MAXIMAL  SCRAP\n");
       for(i = 0; i < ns; i++)
-        thlog(fmt::format(" {:6.2}%  {:6.2}%  {}@{}\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name));
+        thlog(fmt::format(" {:6.2f}%  {:6.2f}%  {}@{}\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name));
       thlog("################### end of scrap distortions ###################\n");
     }
     prjli++;
