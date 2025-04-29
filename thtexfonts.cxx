@@ -574,6 +574,7 @@ if (ENC_NEW.NFSS==0) {
       // This would require to make math fonts scalable with the \size[.] macro
 
       switch (wc) {
+        case  160: T << "~";   break;  // no-break space
         case 8722: T << "--";  break;  // unicode minus
         default:   T << ".";   break;
       }

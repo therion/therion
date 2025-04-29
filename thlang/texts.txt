@@ -4012,7 +4012,7 @@ de: Gesamtlänge
 el: Μήκος
 en: Length
 es: Desarrollo
-fr: Longueur 
+fr: Longueur 
 it: Sviluppo
 mi: Roa a ana
 pl: długość
@@ -4052,7 +4052,7 @@ de: Niveaudifferenz
 el: Βάθος
 en: Depth
 es: Desnivel
-fr: Dénivellation 
+fr: Dénivellation 
 it: Profondità
 mi: Hōhonu a ana, Rētōtanga
 pl: przewyższenie
@@ -4072,7 +4072,7 @@ de: Entdeckung
 el: Εξερευνητές
 en: Explored by
 es: Exploración
-fr: Explorateurs 
+fr: Explorateurs 
 it: Esplorazione
 mi: Kaipokai whenua
 pl: odkryli
@@ -4092,7 +4092,7 @@ de: Entdeckung
 el: Εξερευνητής
 en: Explored by
 es: Exploración
-fr: Explorateur 
+fr: Explorateur 
 it: Esplorazione
 mi: Kaipokai whenua
 pl: odkrył
@@ -4112,7 +4112,7 @@ de: Vermessung
 el: Χαρτογραφήθηκε από τους
 en: Surveyed by
 es: Topografiado por
-fr: Topographes 
+fr: Topographes 
 it: Topografia
 mi: Kairūri
 pl: pomierzyli
@@ -4132,7 +4132,7 @@ de: Vermessung
 el: Χαρτογραφήθηκε από τον
 en: Surveyed by
 es: Topografiado por
-fr: Topographe 
+fr: Topographe 
 it: Topografia
 mi: Kairūri
 pl: mierzył
@@ -4152,7 +4152,7 @@ de: Zeichnung
 el: Σκαρίφημα
 en: Drawn by
 es: Dibujado por
-fr: Dessinateurs 
+fr: Dessinateurs 
 it: Cartografia
 mi: Kaituhi
 pl: rysowali
@@ -4172,7 +4172,7 @@ de: Zeichnung
 el: Σκαρίφημα
 en: Drawn by
 es: Dibujado por
-fr: Dessinateur 
+fr: Dessinateur 
 it: Cartografia
 mi: Kaituhi
 pl: rysował
