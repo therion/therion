@@ -94,13 +94,11 @@ extern bool thverbose_mode;
 extern char * thexecute_cmd;
 
 /**
- * @brief Helper function for universal logging.
+ * @brief Print to the logfile and stdout.
  * 
- * @param verbose print also to stdout
- * @param f output
  * @param msg message to print
  */
-void thfprint(bool verbose, FILE* f, std::string_view msg);
+void thprint(std::string_view msg);
 
 /**
  * @brief Print formatted to stdout.
@@ -111,7 +109,7 @@ void thfprint(bool verbose, FILE* f, std::string_view msg);
 template <typename FormatStr, typename... Args>
 void thprintf(const FormatStr& format, const Args&... args)
 {
-  thfprint(thverbose_mode, stdout, fmt::sprintf(format, args...));
+  thprint(fmt::sprintf(format, args...));
 }
 
 

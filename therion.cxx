@@ -49,7 +49,7 @@ bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
 
-void thfprint(const bool verbose, FILE* f, std::string_view msg)
+static void thprint_impl(const bool verbose, FILE* f, std::string_view msg)
 {
   thlog(msg);
   if (verbose) {
@@ -57,11 +57,16 @@ void thfprint(const bool verbose, FILE* f, std::string_view msg)
   }
 }
 
+void thprint(std::string_view msg)
+{
+  thprint_impl(thverbose_mode, stdout, msg);
+}
+
 void thprint2err(std::string_view msg) noexcept
 {
   try
   {
-    thfprint(true, stderr, msg);
+    thprint_impl(true, stderr, msg);
   }
   catch(const std::exception& e)
   {
