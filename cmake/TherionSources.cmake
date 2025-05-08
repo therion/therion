@@ -86,6 +86,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thpic.h
     ${CMAKE_SOURCE_DIR}/thpoint.h
     ${CMAKE_SOURCE_DIR}/thproj.h
+    ${CMAKE_SOURCE_DIR}/thscan.h
     ${CMAKE_SOURCE_DIR}/thscrap.h
     ${CMAKE_SOURCE_DIR}/thscrapen.h
     ${CMAKE_SOURCE_DIR}/thscrapis.h
@@ -202,6 +203,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thpic.cxx
     ${CMAKE_SOURCE_DIR}/thpoint.cxx
     ${CMAKE_SOURCE_DIR}/thproj.cxx
+    ${CMAKE_SOURCE_DIR}/thscan.cxx
     ${CMAKE_SOURCE_DIR}/thscrap.cxx
     ${CMAKE_SOURCE_DIR}/thscrapen.cxx
     ${CMAKE_SOURCE_DIR}/thscrapis.cxx
