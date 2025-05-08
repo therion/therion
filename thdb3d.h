@@ -131,8 +131,10 @@ struct thdb3ddata {
     
   thdb3dfc * insert_face(int type);
   
-  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz, std::any dt = {});
-  thdb3dvx * insert_vertex(lxVec v, std::any dt = {});
+  std::map<lxVec, thdb3dvx*> vertices_map;
+
+  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz, std::any dt = {}, bool deduplicate = false);
+  thdb3dvx * insert_vertex(lxVec v, std::any dt = {}, bool deduplicate = false);
   
   void export_thm(FILE * out);
   void export_vrml(FILE * out);

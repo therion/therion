@@ -26,6 +26,7 @@
  */
  
 #include "thdb3d.h"
+#include "therion.h"
 #include <math.h>
  
 
@@ -87,14 +88,23 @@ thdb3dfc * thdb3ddata::insert_face(int type) {
   return face;
 }
 
-thdb3dvx * thdb3ddata::insert_vertex(lxVec v, std::any dt) {
-  return this->insert_vertex(v.x, v.y, v.z, std::move(dt));
+thdb3dvx * thdb3ddata::insert_vertex(lxVec v, std::any dt, bool deduplicate) {
+  return this->insert_vertex(v.x, v.y, v.z, std::move(dt), deduplicate);
 }
 
 
-thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz, std::any dt) {
+thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz, std::any dt, bool deduplicate) {
   thdb3dvx * vertex;
-  vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));
+  if (deduplicate) {
+	lxVec cpos = lxVec(vxx, vxy, vxz);
+	auto found_vertex = this->vertices_map.find(cpos);
+	if (found_vertex == this->vertices_map.end()) {
+	  vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));
+	} else {
+	  vertex = found_vertex->second;
+	}
+  } else
+	vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));
   vertex->id = this->nvertices;
   vertex->x = vxx;
   vertex->y = vxy;

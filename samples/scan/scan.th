@@ -1,0 +1,45 @@
+encoding  iso8859-2
+ 
+ survey vysoky -title "Vysoký dóm a Biela chodba"
+ 
+   centerline
+     explo-team "Milan ©téc"
+     explo-team "Miroslav Babiak"
+#     explo-team "Ivan ©ucháò"
+     explo-team "Jozef Oravec?"
+     explo-team "Ferdinand/Jirmer ml."
+     explo-date 1981.10.17
+     team "Milan ©téc"
+     team "Miroslav Babiak"
+     team "Franti¹ek ©ucháò"
+     team "Ján Kormanský"
+     team "©tefan Mlynárik"
+     date 1982.3.20
+     units clino compass degrees
+     data normal from to length compass clino
+ 
+ 111  112   15.65  176    0.5
+ 112  113   20.67   98   -5
+ 113  114    6.7  182   15
+ 114  115   14.28   56    0
+ 115  116    7.6   27  -17.5
+ 116  117   13.8  107    1.5
+ 117  118    9.77   94   -4
+ 118  119    6.01  106    4
+ 119  120   20.55  103   -6
+ 
+ 114  121   14.3  175   13
+ 
+   endcenterline
+
+   scan
+     file scan.stl
+     116 -3.84  1.64  22.16
+     118 -2.80  1.48  0.54
+     120 -2.76  0.0  -23.9
+     #coords x y z
+     coords -z -x y
+   endscan
+
+ endsurvey
+

@@ -47,6 +47,7 @@
 #include "thmap.h"
 #include "thimport.h"
 #include "thsurface.h"
+#include "thscan.h"
 #include "thendscrap.h"
 #include "thconfig.h"
 #include "thproj.h"
@@ -505,6 +506,9 @@ std::unique_ptr<thdataobject> thdatabase::create(const char * oclass,
     case TT_IMPORT_CMD:
       return create<thimport>(osrc);
       
+    case TT_SCAN_CMD:
+      return create<thscan>(osrc);
+
     case TT_SURFACE_CMD:
       return create<thsurface>(osrc);
 
