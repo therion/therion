@@ -328,7 +328,9 @@ void thscan::parse_data_source(char ** args) {
 }
 
 void thscan::parse_calib(int nargs, char** args) {
-  // TODO: zapise calibracne body
+  if (nargs != 4)
+    throw thexception(fmt::format("wrong # of parameters -- expected <station> <x> <y> <z>"));
+
   int sv;
   double coords[3];
   thdatafix_list::iterator it;
