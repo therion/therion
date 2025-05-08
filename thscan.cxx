@@ -120,7 +120,7 @@ thcmd_option_desc thscan::get_cmd_option_desc(const char * opts)
   if (id == TT_SCAN_UNKNOWN)
     return thdataobject::get_cmd_option_desc(opts);
   else switch(id) {
-	case TT_SCAN_COORDS:
+	case TT_SCAN_AXES:
 	  return thcmd_option_desc(id, 3);
 	default:
 	  return thcmd_option_desc(id);
@@ -147,7 +147,7 @@ void thscan::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       this->datasrc_cs = this->cs;
       break;
       
-    case TT_SCAN_COORDS:
+    case TT_SCAN_AXES:
       this->parse_data_source_coords(args);
       break;
     

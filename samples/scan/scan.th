@@ -37,8 +37,7 @@ encoding  iso8859-2
      116 -3.84  1.64  22.16
      118 -2.80  1.48  0.54
      120 -2.76  0.0  -23.9
-     #coords x y z
-     coords -z -x y
+     axes -z -x y
    endscan
 
  endsurvey

@@ -44,7 +44,7 @@
 enum {
   TT_SCAN_UNKNOWN = 2000,
   TT_SCAN_FILE = 2001,
-  TT_SCAN_COORDS = 2002,
+  TT_SCAN_AXES = 2002,
   TT_SCAN_UNITS = 2003,
 };
 
@@ -54,8 +54,7 @@ enum {
  */
  
 static const thstok thtt_scan_opt[] = {
-  {"coordinates", TT_SCAN_COORDS},
-  {"coords", TT_SCAN_COORDS},
+  {"axes", TT_SCAN_AXES},
   {"file", TT_SCAN_FILE},
   {"units", TT_SCAN_UNITS},
   {NULL, TT_SCAN_UNKNOWN},
