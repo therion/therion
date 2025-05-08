@@ -37,7 +37,7 @@
 #include "thinfnan.h"
 #include "thproj.h"
 #include "therion.h"
-#include "extern/stl_reader/stl_reader.h"
+#include "stl_reader.h"
 #include <algorithm>
 #include <filesystem>
 #include <list>

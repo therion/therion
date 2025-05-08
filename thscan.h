@@ -76,7 +76,7 @@ class thscan : public thdataobject {
   thtflength units; //< Source units.
 
   int datasrc_cs; //< Source CS
-  int datasrc_coords[3]; //< Source coordinates order.
+  int datasrc_coords[3] = {}; //< Source coordinates order.
 
   thdb3ddata d3d; //< Output model.
   bool d3dok; //< Output data.
