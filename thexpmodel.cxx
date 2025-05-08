@@ -37,6 +37,7 @@
 #include "thsurface.h"
 #include "loch/lxFile.h"
 #include "thsurface.h"
+#include "thscan.h"
 #include "thconfig.h"
 #include "thcsdata.h"
 #include "thproj.h"
@@ -1644,6 +1645,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   // export povrchov (vsetkych - ak chceme)
   thdb3ddata * tmp3d;
   thsurface * csrf;
+  thscan * cscan;
   survnum = 0;
   if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
     // prejde secky surfaces a exportuje z nich povrchy
@@ -1783,6 +1785,79 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     
   } // WALLS  
   
+  // Export scans
+  if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_SCANS) != 0)) {
+    obi = dbp->object_list.begin();
+    while (obi != dbp->object_list.end()) {
+      if ((*obi)->get_class_id() == TT_SCAN_CMD) {
+    	cscan = dynamic_cast<thscan*>(obi->get());
+        if (cscan->fsptr->is_selected())
+        	d3d = cscan->get_3d();
+        else
+        	d3d = NULL;
+        if ((d3d != NULL) && (d3d->nfaces > 0)) {
+          expf_scrap.m_id = survnum;
+          expf_scrap.m_surveyId = cscan->fsptr->num1;
+          // points & triangles
+          lxFile3Point * pdata = new lxFile3Point [d3d->nvertices];
+          thdb3dvx * vxp;
+          std::list<lxFile3Angle> tlist;
+          lxFile3Angle t3;
+          for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
+            pdata[i].m_c[0] = lxFilePrepDbl(vxp->x);
+            pdata[i].m_c[1] = lxFilePrepDbl(vxp->y);
+            pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
+          }
+          expf_scrap.m_numPoints = d3d->nvertices;
+          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
+          thdb3dfc * fcp;
+          thdb3dfx * fxp;
+          for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
+            switch (fcp->type) {
+              case THDB3DFC_TRIANGLE_STRIP:
+                for(j = 0, fxp = fcp->firstfx; fxp->next->next != NULL; j++, fxp = fxp->next) {
+                  t3.m_v[0] = fxp->vertex->id;
+                  switch (j % 2) {
+                    case 0:
+                      t3.m_v[1] = fxp->next->vertex->id;
+                      t3.m_v[2] = fxp->next->next->vertex->id;
+                      [[fallthrough]];
+                    default:
+                      t3.m_v[2] = fxp->next->vertex->id;
+                      t3.m_v[1] = fxp->next->next->vertex->id;
+                  }
+                  tlist.insert(tlist.end(), t3);
+                }
+                break;
+              case THDB3DFC_TRIANGLES:
+                for(j = 0, fxp = fcp->firstfx; fxp != NULL; j++, fxp = fxp->next->next->next) {
+                  t3.m_v[0] = fxp->vertex->id;
+                  t3.m_v[1] = fxp->next->vertex->id;
+                  t3.m_v[2] = fxp->next->next->vertex->id;
+                  tlist.insert(tlist.end(), t3);
+                }
+                break;
+            }
+          }
+          lxFile3Angle * tdata = new lxFile3Angle[tlist.size()];
+          std::list<lxFile3Angle>::iterator tli;
+          for(i = 0, tli = tlist.begin(); tli != tlist.end(); tli++, i++) {
+            tdata[i] = *tli;
+          }
+          expf_scrap.m_num3Angles = tlist.size();
+          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
+          delete [] pdata;
+          delete [] tdata;
+          expf.m_scraps.push_back(expf_scrap);
+          survnum++;
+        }
+      }
+      obi++;
+    }
+  }
+
+
+
   // SPLAY walls export
   if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_SPLAYS) != 0)) {
     for (size_t ii = 0; ii < nstat; ii++) {

@@ -152,7 +152,8 @@ enum {
   TT_WSRC_CENTERLINE = 1,  
   TT_WSRC_MAPS = 2,
   TT_WSRC_SPLAYS = 4,
-  TT_WSRC_ALL = 7,
+  TT_WSRC_SCANS = 8,
+  TT_WSRC_ALL = 15,
 };
 
 /**
@@ -164,6 +165,7 @@ static const thstok thtt_expmodel_wallsrc[] = {
   {"centerline", TT_WSRC_CENTERLINE},
   {"centreline", TT_WSRC_CENTERLINE},
   {"maps", TT_WSRC_MAPS},
+  {"scans", TT_WSRC_SCANS},
   {"splays", TT_WSRC_SPLAYS},
   {NULL, TT_WSRC_UNKNOWN}
 };

@@ -42,6 +42,7 @@
 #include "thpoint.h"
 #include "thlogfile.h"
 #include "thsurface.h"
+#include "thscan.h"
 #include "thlocale.h"
 #include "thinit.h"
 #include "thconfig.h"
@@ -3002,6 +3003,9 @@ void thdb1d::postprocess_objects()
     switch ((*obi)->get_class_id()) {
       case TT_SURFACE_CMD:
         dynamic_cast<thsurface*>(obi->get())->check_stations();
+        break;
+      case TT_SCAN_CMD:
+        dynamic_cast<thscan*>(obi->get())->check_stations();
         break;
     }
     obi++;
