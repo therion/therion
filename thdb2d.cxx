@@ -45,6 +45,7 @@
 #include "thinit.h"
 #include "thfilehandle.h"
 #include "therion.h"
+#include "thlog.h"
 #include <list>
 #include <set>
 #include <iterator>

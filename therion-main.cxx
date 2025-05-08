@@ -37,6 +37,7 @@
 #include "thlogfile.h"
 #include "thproj.h"
 #include "thdatabase.h"
+#include "thlog.h"
 
 extern const thstok thtt_texts [];
 

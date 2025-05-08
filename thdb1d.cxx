@@ -51,6 +51,7 @@
 #include "thcsdata.h"
 #include "thgeomagdata.h"
 #include "therion.h"
+#include "thlog.h"
 #include "QuickHull.hpp"
 
 //#define THUSESVX
