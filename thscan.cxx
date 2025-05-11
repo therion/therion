@@ -225,12 +225,12 @@ void thscan::transform_coords(double & x, double & y, double & z) {
 }
 
 struct morph3dpt {
-  long m_id;
+  long m_id = 0;
   lxVec m_f;
   lxVec m_t;
-  double m_shift_z;
+  double m_shift_z = 0.0;
   thlintrans m_lt;
-  morph3dpt() : m_id(0), m_f(lxVec(0.0,0.0,0.0)), m_t(lxVec(0.0,0.0,0.0)), m_shift_z(0.0) {}
+  morph3dpt() = default;
 };
 
 struct morph3d {
