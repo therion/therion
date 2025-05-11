@@ -331,7 +331,7 @@ void thscan::parse_data_source(char ** args) {
 
 void thscan::parse_calib(int nargs, char** args) {
   if (nargs != 4)
-    throw thexception(fmt::format("wrong # of parameters -- expected <station> <x> <y> <z>"));
+    throw thexception("wrong # of parameters -- expected <station> <x> <y> <z>");
 
   int sv;
   double coords[3];
@@ -410,8 +410,8 @@ thdb3ddata * thscan::get_3d() {
         //            << "(" << n[0] << ", " << n[1] << ", " << n[2] << ")\n";
     }
   }
-  catch (std::exception& e) {
-	throw thexception(fmt::format("{} -- error reading {} -- {}", this->throw_source(), this->datasrc, e.what()));
+  catch (const std::exception& e) {
+	throw thexception(fmt::format("{} -- error reading {}", this->throw_source(), this->datasrc), e);
   }
 
   // TODO: inicializujeme transformaciu
