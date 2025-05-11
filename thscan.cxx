@@ -65,7 +65,7 @@ static const thstok thtt_scan_coords[] = {
   {"x", TT_SCAN_COORDS_X},
   {"y", TT_SCAN_COORDS_Y},
   {"z", TT_SCAN_COORDS_Z},
-  {NULL, TT_SCAN_COORDS_UNKNOWN},
+  {nullptr, TT_SCAN_COORDS_UNKNOWN},
 };
 
 
@@ -370,7 +370,7 @@ void thscan::check_stations()
 	  // najde stations, error ak nie
 	  fix->station.id = thdb.db1d.get_station_id(fix->station, this->fsptr);
 	  if (fix->station.id == 0) {
-		if (fix->station.survey == NULL)
+		if (fix->station.survey == nullptr)
 		  throw thexception(fmt::format("{} -- station doesn't exist -- {}", this->throw_source(), fix->station.name));
 		else
 		  throw thexception(fmt::format("{} -- station doesn't exist -- {}@{}", this->throw_source(), fix->station.name, fix->station.survey));
@@ -402,7 +402,7 @@ thdb3ddata * thscan::get_3d() {
             v.y = this->units.transform(c[1]);
             v.z = this->units.transform(c[2]);
             this->transform_coords(v.x, v.y, v.z);
-            fc->insert_vertex(this->d3d.insert_vertex(v, NULL, true));
+            fc->insert_vertex(this->d3d.insert_vertex(v, nullptr, true));
         }
         //std::cout << std::endl;
 
@@ -436,7 +436,7 @@ thdb3ddata * thscan::get_3d() {
   // TODO: transformujeme vsetky vrcholy
   thdb3dvx * vx;
   lxVec t;
-  for(vx = this->d3d.firstvx; vx != NULL; vx = vx->next) {
+  for(vx = this->d3d.firstvx; vx != nullptr; vx = vx->next) {
 	t = m3d.forward(lxVec(vx->x, vx->y, vx->z));
 	vx->x = t.x;
 	vx->y = t.y;

@@ -54,7 +54,7 @@ static const thstok thtt_scan_opt[] = {
   {"axes", TT_SCAN_AXES},
   {"file", TT_SCAN_FILE},
   {"units", TT_SCAN_UNITS},
-  {NULL, TT_SCAN_UNKNOWN},
+  {nullptr, TT_SCAN_UNKNOWN},
 };
 
 /**
