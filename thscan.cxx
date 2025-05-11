@@ -281,20 +281,19 @@ void morph3d::initialize() {
 
 
 lxVec morph3d::forward(lxVec v) {
-  std::list<morph3dpt>::iterator ci, pi, ni;
   lxVec tt = lxVec(0.0, 0.0, 0.0), c;
   thvec2 f, t;
   double tw, cw;
   tw = 0.0;
-  for(pi = this->m_points.begin(); pi != this->m_points.end(); pi++) {
-	cw = std::hypot(v.x - pi->m_f.x, v.y - pi->m_f.y, v.z - pi->m_f.z);
+  for(const auto& point : this->m_points) {
+	cw = std::hypot(v.x - point.m_f.x, v.y - point.m_f.y, v.z - point.m_f.z);
 	cw = cw * cw;
 	f.m_x = v.x;
 	f.m_y = v.y;
-	t = pi->m_lt.forward(f);
+	t = point.m_lt.forward(f);
 	c.x = t.m_x;
 	c.y = t.m_y;
-	c.z = v.z + pi->m_shift_z;
+	c.z = v.z + point.m_shift_z;
 	if (cw > 0) {
 	  cw = 1/cw;
 	  tt += cw * c;
@@ -364,16 +363,16 @@ void thscan::self_print_properties(FILE * outf)
 
 void thscan::check_stations()
 {
-  for(auto fix = this->calib.begin(); fix != this->calib.end(); fix++ ) {
-	  if (!fix->station.is_empty()) {
+  for(auto& fix : this->calib) {
+	  if (!fix.station.is_empty()) {
 
 	  // najde stations, error ak nie
-	  fix->station.id = thdb.db1d.get_station_id(fix->station, this->fsptr);
-	  if (fix->station.id == 0) {
-		if (fix->station.survey == nullptr)
-		  throw thexception(fmt::format("{} -- station doesn't exist -- {}", this->throw_source(), fix->station.name));
+	  fix.station.id = thdb.db1d.get_station_id(fix.station, this->fsptr);
+	  if (fix.station.id == 0) {
+		if (fix.station.survey == nullptr)
+		  throw thexception(fmt::format("{} -- station doesn't exist -- {}", this->throw_source(), fix.station.name));
 		else
-		  throw thexception(fmt::format("{} -- station doesn't exist -- {}@{}", this->throw_source(), fix->station.name, fix->station.survey));
+		  throw thexception(fmt::format("{} -- station doesn't exist -- {}@{}", this->throw_source(), fix.station.name, fix.station.survey));
 	  }
 	}
   }
@@ -417,19 +416,18 @@ thdb3ddata * thscan::get_3d() {
 
   // TODO: inicializujeme transformaciu
   morph3d m3d;
-  thdatafix_list::iterator it;
-  for(it = this->calib.begin(); it != this->calib.end(); it++) {
+  for(const auto& fix : this->calib) {
 	lxVec f, t;
-	f.x = this->units.transform(it->x);
-	f.y = this->units.transform(it->y);
-	f.z = this->units.transform(it->z);
+	f.x = this->units.transform(fix.x);
+	f.y = this->units.transform(fix.y);
+	f.z = this->units.transform(fix.z);
 	this->transform_coords(f.x, f.y, f.z);
 	thdb1ds * ts;
-	ts = &(thdb.db1d.station_vec[it->station.id - 1]);
+	ts = &(thdb.db1d.station_vec[fix.station.id - 1]);
 	t.x = ts->x;
 	t.y = ts->y;
 	t.z = ts->z;
-	m3d.insert_point(it->station.id, f, t);
+	m3d.insert_point(fix.station.id, f, t);
   }
   m3d.initialize();
 
