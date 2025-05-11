@@ -26,22 +26,25 @@
  */
  
 #include "thscan.h"
-#include "thexception.h"
-#include "thmbuffer.h"
-#include "thtflength.h"
-#include "thdatabase.h"
+
 #include "thcsdata.h"
-#include <cmath>
+#include "thdatabase.h"
 #include "thdatareader.h"
 #include "thdb1d.h"
-#include "thinfnan.h"
-#include "thproj.h"
 #include "therion.h"
+#include "thexception.h"
+#include "thinfnan.h"
+#include "thmbuffer.h"
+#include "thproj.h"
+#include "thtflength.h"
+#include "thtrans.h"
+
 #include "stl_reader.h"
+
 #include <algorithm>
+#include <cmath>
 #include <filesystem>
 #include <list>
-#include "thtrans.h"
 
 namespace fs = std::filesystem;
 

@@ -28,14 +28,14 @@
  
 #pragma once
 
-#include "thdb3d.h"
 #include "thdataleg.h"
 #include "thdataobject.h"
+#include "thdb3d.h"
 #include "thobjectname.h"
 #include "thtflength.h"
 
-#include <string>
 #include <memory>
+#include <string>
 
 /**
  * scan command options tokens.
