@@ -25,8 +25,7 @@ jobs:
           mkdir build && cd build && \
           cmake -G Ninja \
                 -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/${{ matrix.toolchain }} \
-                -DCMAKE_C_FLAGS="-Werror" \
-                -DCMAKE_CXX_FLAGS="-Werror" \
+                -DENABLE_WERROR=ON \
                 -DUSE_BUNDLED_SHAPELIB=OFF \
                 ${{ matrix.args }} ..
       - run: cmake --build build
@@ -58,7 +57,7 @@ jobs:
           brew install wxwidgets vtk proj xquartz ninja basictex fmt catch2 imagemagick
       - name: Configure CMake
         run: |
-          mkdir build && cd build && cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
+          mkdir build && cd build && cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_WERROR=ON -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
       - name: Run samples
@@ -111,7 +110,7 @@ jobs:
             mingw-w64-${{ matrix.config.arch }}-bwidget
             mingw-w64-${{ matrix.config.arch }}-fmt
             mingw-w64-${{ matrix.config.arch }}-catch
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DENABLE_WERROR=ON -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Set up the batteries
         run: |
