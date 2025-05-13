@@ -371,12 +371,12 @@ void thlintrans::init_backward()
 }
 
 
-thvec2 thlintrans::forward(thvec2 src)
+thvec2 thlintrans::forward(thvec2 src) const
 {
   return (this->m_fmat * src + this->m_shift);
 }
 
-thvec2 thlintrans::backward(thvec2 dst)
+thvec2 thlintrans::backward(thvec2 dst) const
 {
   return (this->m_bmat * (dst - this->m_shift));
 }

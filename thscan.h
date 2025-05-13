@@ -26,21 +26,21 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef thscan_h
-#define thscan_h
+#pragma once
 
-#include "thdb3d.h"
 #include "thdataleg.h"
 #include "thdataobject.h"
+#include "thdb3d.h"
 #include "thobjectname.h"
 #include "thtflength.h"
-#include <string>
+
+#include <array>
 #include <memory>
+#include <string>
 
 /**
  * scan command options tokens.
  */
- 
 enum {
   TT_SCAN_UNKNOWN = 2000,
   TT_SCAN_FILE = 2001,
@@ -48,34 +48,29 @@ enum {
   TT_SCAN_UNITS = 2003,
 };
 
-
 /**
  * scan command options parsing table.
  */
- 
 static const thstok thtt_scan_opt[] = {
   {"axes", TT_SCAN_AXES},
   {"file", TT_SCAN_FILE},
   {"units", TT_SCAN_UNITS},
-  {NULL, TT_SCAN_UNKNOWN},
+  {nullptr, TT_SCAN_UNKNOWN},
 };
-
 
 /**
  * scan class.
  */
-
 class thscan : public thdataobject {
 
-  public:
-
+public:
   // insert here real properties
   std::string datasrc;  //< Geometry source.
   thdatafix_list calib; //< Stations calibration.
   thtflength units; //< Source units.
 
   int datasrc_cs; //< Source CS
-  int datasrc_coords[3] = {}; //< Source coordinates order.
+  std::array<int, 3> datasrc_coords; //< Source coordinates order.
 
   thdb3ddata d3d; //< Output model.
   bool d3dok; //< Output data.
@@ -86,60 +81,44 @@ class thscan : public thdataobject {
   void parse_calib(int nargs, char ** args);  ///< Add fixed station to data.
 
   /**
-   * Standard constructor.
+   * Constructor.
    */
-  
   thscan();
-  
   
   /**
    * Return class identifier.
    */
-  
   int get_class_id() override;
-  
   
   /**
    * Return class name.
    */
-   
   const char * get_class_name() override {return "thscan";};
-  
   
   /**
    * Return true, if son of given class.
    */
-  
   bool is(int class_id) override;
-  
   
   /**
    * Return number of command arguments.
    */
-   
   int get_cmd_nargs() override;
-  
   
   /**
    * Return command name.
    */
-   
   const char * get_cmd_name() override;
-  
   
   /**
    * Return command end option.
    */
-   
   const char * get_cmd_end() override;
-  
   
   /**
    * Return option description.
    */
-   
   thcmd_option_desc get_cmd_option_desc(const char * opts) override;
-  
   
   /**
    * Set command option.
@@ -148,21 +127,16 @@ class thscan : public thdataobject {
    * @param args Option arguments array.
    * @param argenc Arguments encoding.
    */
-   
   void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
-
 
   /**
    * Print object properties.
    */
-   
   void self_print_properties(FILE * outf) override; 
-  
   
   /**
    * check stations.
    */
- 
   void check_stations();
 
   //void start_insert() override;
@@ -172,13 +146,5 @@ class thscan : public thdataobject {
   /**
    * Convert all points in object.
    */
-
   void convert_all_cs() override;
-
-
 };
-
-
-#endif
-
-
