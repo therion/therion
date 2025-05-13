@@ -73,13 +73,11 @@ static const thstok thtt_scan_coords[] = {
 
 
 thscan::thscan()
+  : datasrc_coords{TT_SCAN_COORDS_X, TT_SCAN_COORDS_Y, TT_SCAN_COORDS_Z}
 {
   // replace this by setting real properties initialization
   this->d3dok = false;
   this->datasrc_cs = TTCS_LOCAL;
-  this->datasrc_coords[0] = TT_SCAN_COORDS_X;
-  this->datasrc_coords[1] = TT_SCAN_COORDS_Y;
-  this->datasrc_coords[2] = TT_SCAN_COORDS_Z;
 }
 
 int thscan::get_class_id()
@@ -165,7 +163,7 @@ void thscan::parse_data_source_coords(char ** args) {
   hasx = false;
   hasy = false;
   hasz = false;
-  for(int i = 0; i < 3; i++) {
+  for(size_t i = 0; i < this->datasrc_coords.size(); i++) {
 	this->datasrc_coords[i] = thmatch_token(args[i], thtt_scan_coords);
 	if (this->datasrc_coords[i] == TT_SCAN_COORDS_UNKNOWN)
 	  throw thexception(fmt::format("unknown scan coordinate -- {}", args[i]));
@@ -198,8 +196,8 @@ void thscan::transform_coords(double & x, double & y, double & z) {
   tx = x;
   ty = y;
   tz = z;
-  double v[3];
-  for(int i = 0; i < 3; i++) switch(this->datasrc_coords[i]) {
+  std::array<double, 3> v{};
+  for(size_t i = 0; i < this->datasrc_coords.size(); i++) switch(this->datasrc_coords[i]) {
 	case TT_SCAN_COORDS_X:
 	  v[i] = tx;
 	  break;
@@ -334,14 +332,14 @@ void thscan::parse_calib(int nargs, char** args) {
     throw thexception("wrong # of parameters -- expected <station> <x> <y> <z>");
 
   int sv;
-  double coords[3];
+  std::array<double, 3> coords{};
   thdatafix_list::iterator it;
   it = this->calib.insert(this->calib.end(),thdatafix());
   it->srcf = this->db->csrc;
   it->psurvey = this->db->get_current_survey();
   it->cs = this->cs;
   thparse_objectname(it->station, & this->db->buff_stations, args[0], this);
-  for(int i = 0; i < 3; i++) {
+  for(size_t i = 0; i < coords.size(); i++) {
 	thparse_double(sv, coords[i], args[i+1]);
 	if (sv != TT_SV_NUMBER)
 	  throw thexception(fmt::format("number expected -- {}", args[i+1]));

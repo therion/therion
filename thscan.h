@@ -34,6 +34,7 @@
 #include "thobjectname.h"
 #include "thtflength.h"
 
+#include <array>
 #include <memory>
 #include <string>
 
@@ -69,7 +70,7 @@ public:
   thtflength units; //< Source units.
 
   int datasrc_cs; //< Source CS
-  int datasrc_coords[3] = {}; //< Source coordinates order.
+  std::array<int, 3> datasrc_coords; //< Source coordinates order.
 
   thdb3ddata d3d; //< Output model.
   bool d3dok; //< Output data.
