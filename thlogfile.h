@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -31,7 +31,7 @@
 
 #include "thbuffer.h"
 #include <stdio.h>
-#include <stdarg.h>
+#include <string_view>
 
 /**
  * Log file module.
@@ -75,27 +75,18 @@ class thlogfile {
    */
    
   ~thlogfile();
-  
-  
-  /**
-   * Print formatted into log file.
-   */
-   
-  void vprintf(const char *format, va_list *args);
 
+  // make thlogfile non-copyable
+  thlogfile(const thlogfile&) = delete;
+  thlogfile& operator=(const thlogfile&) = delete;
+  thlogfile(thlogfile&&) = delete;
+  thlogfile& operator=(thlogfile&&) = delete;
 
   /**
-   * Print formatted into log file.
+   * Print string into log file.
+   * @param msg Message.
    */
-   
-  void printf(const char * format, ...);
-  
-  /**
-   * Print double into log file - take concern of nan.
-   */
-
-  void printf_double(const char * format, const char * nanstr, double dbl);
-
+  void print(std::string_view msg);
   
   /**
    * Set log file name.
@@ -103,7 +94,7 @@ class thlogfile {
    * @param fname File name.
    */
    
-  void set_file_name(char *fname);
+  void set_file_name(const char *fname);
   
   
   /**
@@ -157,10 +148,9 @@ class thlogfile {
 
 
 /**
- * Log file module.
+ * Global log file instance.
  */
- 
-extern thlogfile thlog;
+thlogfile& get_thlogfile();
 
 #endif
 

@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -58,6 +58,7 @@ enum {
   TT_DATE_FMT_UTF8_ISO,
   TT_DATE_FMT_UTF8_Y,
   TT_DATE_FMT_SQL_SINGLE,
+  TT_DATE_FMT_THERION,
 };
 
 /**
@@ -70,19 +71,19 @@ class thdate {
 
   public:
 
-  int syear,  ///< Start date year
-    smonth,  ///< Start date month
-    sday,  ///< Start date day
-    shour,  ///< Star date hour
-    smin,  ///< Star date minute
-    eyear,  ///< End date year
-    emonth,  ///< End date month
-    eday,  ///< End date month
-    ehour,  ///< End date hour
-    emin;  ///< End date minute
+  int syear = -1,  ///< Start date year
+    smonth = -1,  ///< Start date month
+    sday = -1,  ///< Start date day
+    shour = -1,  ///< Star date hour
+    smin = -1,  ///< Star date minute
+    eyear = -1,  ///< End date year
+    emonth = -1,  ///< End date month
+    eday = -1,  ///< End date month
+    ehour = -1,  ///< End date hour
+    emin = -1;  ///< End date minute
 
-  double ssec, ///< Start date seconds
-    esec;  ///< End date seconds
+  double ssec = -1.0, ///< Start date seconds
+    esec = -1.0;  ///< End date seconds
     
   std::array<char, thdate_bufflen> dstr = {}; ///< String for given date.
 
@@ -128,7 +129,7 @@ class thdate {
    * Standard constructor.
    */
   
-  thdate();
+  thdate() = default;
   
   
   /**

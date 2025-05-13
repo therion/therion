@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
@@ -34,6 +34,7 @@
 #include "thpoint.h"
 #include "thconfig.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include <cstring>
 
 thwarp::~thwarp() {}
@@ -241,11 +242,12 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
       ptmp = TM.forward(T2.forward(T1.forward(thvec2(double(sketch->m_pic.width), double(y))))); pmin.minimize(ptmp); pmax.maximize(ptmp);
     }
 
-    thvec2 start, * ss(NULL);
+    thvec2 start;
+    std::vector<thvec2> ss;
     mpic_origin = thvec2(pmin.m_x, pmin.m_y);
     mw = long(pmax.m_x + 0.5) - long(pmin.m_x - 0.5);
     mh = long(pmax.m_y + 0.5) - long(pmin.m_y - 0.5);
-    if (mh > 0) ss = new thvec2 [mh];
+    if (mh > 0) ss.resize(mh);
     thprintf("(%.1f Mpix)", double(mw * mh) / 1000000.0);
     sketch->m_pic.rgba_load();
     start = T2.forward(T1.forward(thvec2(0.0, double(mh/2.0))));
@@ -260,7 +262,6 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
           thprintf(" [%.0f%%]", double(counter) / double(mw * mh) * 100.0);
       }
     }
-    delete [] ss;
 
   } else {
 
@@ -276,7 +277,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     pobj = sketch->m_scrap->fs2doptr;
     while (pobj != NULL) {
       if (pobj->get_class_id() == TT_POINT_CMD) {
-        pointp = (thpoint *) pobj;
+        pointp = dynamic_cast<thpoint*>(pobj);
         if (pointp->type == TT_POINT_TYPE_EXTRA) {
           if ((T3.m_scale > 0.0) && (pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
             TM.insert_zoom_point(
@@ -302,21 +303,22 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
       ptmp = TM.forward(T2.forward(T1.forward(thvec2(double(sketch->m_pic.width), double(y))))); pmin.minimize(ptmp); pmax.maximize(ptmp);
     }
 
-    thvec2 start, * ss(NULL);
+    thvec2 start;
+    std::vector<thvec2> ss;
     mpic_origin = thvec2(pmin.m_x, pmin.m_y);
     mw = long(pmax.m_x + 0.5) - long(pmin.m_x - 0.5);
     mh = long(pmax.m_y + 0.5) - long(pmin.m_y - 0.5);
-    if (mh > 0) ss = new thvec2 [mh];
+    if (mh > 0) ss.resize(mh);
     thprintf("(%.1f Mpix)", double(mw * mh) / 1000000.0);
     sketch->m_pic.rgba_load();
     start = T2.forward(T1.forward(thvec2(0.0, double(mh/2.0))));
     this->mpic.rgba_init(mw, mh);
     long ox, oy, x1, y1, x2, y2;
-    thvec2 * pscan, * cscan, newp, newpmin, newpmax;
+    thvec2 newp, newpmin, newpmax;
     thline2 lAB, lBC, lCD, lDA, lCA;
     double dAB, dBC, dCD, dDA, dCA;
-    pscan = new thvec2 [sketch->m_pic.width];
-    cscan = new thvec2 [sketch->m_pic.width];
+    std::vector<thvec2> pscan(sketch->m_pic.width);
+    std::vector<thvec2> cscan(sketch->m_pic.width);
     for(oy = 0; oy < sketch->m_pic.height; oy++) {
       for(ox = 0; ox < sketch->m_pic.width; ox++) {
         cscan[ox] = TM.forward(T2.forward(T1.forward(thvec2(double(ox), double(oy))))) - mpic_origin;
@@ -366,8 +368,6 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
       for(ox = 0; ox < sketch->m_pic.width; ox++)
         pscan[ox] = cscan[ox];
     }
-    delete [] pscan;
-    delete [] cscan;
 
     //for (x = 0; x < mw; x++) {
     //  for (y = 0; y < mh; y++) {
@@ -380,7 +380,6 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     //  }
     //}
 
-    delete [] ss;
   }
 
 

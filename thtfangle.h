@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -30,7 +30,7 @@
 #define thtfangle_h
 
 #include "thtf.h"
-#include "thparse.h"
+#include "thstok.h"
 
 
 enum {TT_TFU_DEG, TT_TFU_DMS, TT_TFU_GRAD, TT_TFU_MIN, TT_TFU_PERC, TT_TFU_UNKNOWN_ANGLE, TT_TFU_MILS};

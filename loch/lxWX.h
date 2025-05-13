@@ -20,14 +20,14 @@
 #define lxBORDER 5
 #endif
 
-#define lxFStaticText(ID) ((wxStaticText *)FindWindow(ID))
-#define lxFRadioBtn(ID) ((wxRadioButton *)FindWindow(ID))
-#define lxFCheckBox(ID) ((wxCheckBox *)FindWindow(ID))
-#define lxFButton(ID) ((wxButton *)FindWindow(ID))
-#define lxFTextCtrl(ID) ((wxTextCtrl*)FindWindow(ID))
-#define lxFSpinCtrl(ID) ((wxSpinCtrl*)FindWindow(ID))
-#define lxFSlider(ID) ((wxSlider*)FindWindow(ID))
-#define lxFChoice(ID) ((wxChoice*)FindWindow(ID))
+#define lxFStaticText(ID) (dynamic_cast<wxStaticText*>(FindWindow(ID)))
+#define lxFRadioBtn(ID) (dynamic_cast<wxRadioButton*>(FindWindow(ID)))
+#define lxFCheckBox(ID) (dynamic_cast<wxCheckBox*>(FindWindow(ID)))
+#define lxFButton(ID) (dynamic_cast<wxButton*>(FindWindow(ID)))
+#define lxFTextCtrl(ID) (dynamic_cast<wxTextCtrl*>(FindWindow(ID)))
+#define lxFSpinCtrl(ID) (dynamic_cast<wxSpinCtrl*>(FindWindow(ID)))
+#define lxFSlider(ID) (dynamic_cast<wxSlider*>(FindWindow(ID)))
+#define lxFChoice(ID) (dynamic_cast<wxChoice*>(FindWindow(ID)))
 
 #define lxNOTTOP wxBOTTOM | wxLEFT | wxRIGHT
 #define lxNOTLEFT wxBOTTOM | wxTOP | wxRIGHT
@@ -66,8 +66,8 @@ extern wxPoint lxPoint;
 
 class lxTBoxPos {
 
-  int m_xOffset, m_yOffset, m_corner;
-  wxWindow * m_winTool, * m_winFrame;
+  int m_xOffset = {}, m_yOffset = {}, m_corner = {};
+  wxWindow * m_winTool = {}, * m_winFrame = {};
 
 public:
 
@@ -128,7 +128,7 @@ protected:
 			_T("No	window associated	with validator") );
 		wxCHECK_MSG( m_validatorWindow->IsKindOf(CLASSINFO(wxTextCtrl)), FALSE,
 			_T("wxNumberValidator is	only for wxTextCtrl's")	);
-		wxCHECK_MSG( ((wxTextCtrl	*)m_validatorWindow)->IsSingleLine(),	FALSE,
+		wxCHECK_MSG( dynamic_cast<wxTextCtrl*>(m_validatorWindow)->IsSingleLine(),	FALSE,
 			_T("Multiline wxTextCtrl	not	allowed	yet")	);
 
 		return TRUE;

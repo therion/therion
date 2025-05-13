@@ -1,0 +1,10 @@
+From,To,Length(m),Azimuth(deg),Clino(deg)
+# Equated stations
+3@b,2@a
+# End equated stations
+1@a,2@a,4.00,0.00,0.00
+2@a,3@a,2.00,0.00,-90.00
+3@b,2@b,3.00,270.00,69.94
+2@b,1@b,2.00,270.00,0.00
+3@b,4@b,9.00,90.00,0.00
+4@b,5@b,3.00,90.00,69.94

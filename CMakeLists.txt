@@ -45,6 +45,9 @@ if (ENABLE_CCACHE)
     endif()
 endif()
 
+option(ENABLE_CODE_COVERAGE "Enable code coverage." OFF)
+include(CodeCoverage)
+
 # determine platform
 if(UNIX AND NOT APPLE)
     set(THPLATFORM LINUX)
@@ -147,6 +150,7 @@ if (BUILD_THERION)
     # therion lib
     add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
     target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}")
+    target_include_directories(therion-common SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/extern/stl_reader)
     target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull)
     target_compile_definitions(therion-common PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
     add_dependencies(therion-common 
@@ -165,7 +169,12 @@ if (BUILD_THERION)
 
     # therion resource file
     if (WIN32)
-        add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/therion.res -O coff
+        if (MSVC)
+            set(THERION_RC_COMMAND ${CMAKE_RC_COMPILER} /fo ${CMAKE_CURRENT_BINARY_DIR}/therion.res ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc)
+        else()
+            set(THERION_RC_COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/therion.res -O coff)
+        endif()
+        add_custom_command(COMMAND ${THERION_RC_COMMAND}
                             OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/therion.res
                             DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc ${CMAKE_CURRENT_SOURCE_DIR}/therion.ico
                             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
@@ -183,11 +192,26 @@ if (BUILD_THERION)
         COMPONENT th-runtime)
 
     # unit tests
-    add_executable(utest utest-proj.cxx utest-icase.cxx utest-thdouble.cxx utest-main.cxx)
+    add_executable(utest 
+        utest-main.cxx
+        utest-proj.cxx
+        utest-str.cxx
+        utest-thdatastation.cxx
+        utest-thdb2dab.cxx
+        utest-thdouble.cxx
+        utest-thexception.cxx
+        utest-thlayoutln.cxx
+        utest-thlogfile.cxx
+        utest-thobjectid.cxx
+        utest-thobjectsrc.cxx
+        utest-thscrapen.cxx
+        utest-thscraplo.cxx
+    )
     target_link_libraries(utest PUBLIC therion-common catch2-interface)
     enable_testing()
-    if (NOT WIN32)
-        add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    if (ENABLE_CODE_COVERAGE)
+        set_property(TEST utest PROPERTY ENVIRONMENT LLVM_PROFILE_FILE=${COVERAGE_FOLDER}/utest.profraw)
     endif()
 
     # updates thlibrarydata.cxx

@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -37,24 +37,18 @@
 #include <cstdint>
 #include <numeric>
 #include <fstream>
-#include <streambuf>
-#include <iomanip>
 #include <fmt/ostream.h>
 
 
 
 thexport::thexport() {
-  this->layout = new thlayout;
+  this->layout = std::make_unique<thlayout>();
   this->layout->assigndb(&thdb);
   this->layout->id = ++thdb.objid;
   this->outpt = "";
   this->outpt_def = false;
   this->export_mode = 0;
   this->cs = TTCS_LOCAL;
-}
-
-thexport::~thexport() {
-  delete this->layout;
 }
 
 void thexport::assign_config(class thconfig * cptr) 
@@ -72,7 +66,7 @@ void thexport::parse(int nargs, char ** args)
     oax = ax;
     this->parse_options(ax, nargs, args);
     if (oax == ax)
-      ththrow("unknown option -- \"{}\"", args[ax]);
+      throw thexception(fmt::format("unknown option -- \"{}\"", args[ax]));
   }
 }
 
@@ -90,26 +84,26 @@ void thexport::parse_options(int & argx, int nargs, char ** args)
     case TT_EXP_OPT_OUTPUT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing output file name -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing output file name -- \"{}\"",args[optx]));
       if (strlen(args[argx]) > 0) {
         this->outpt = this->cfgptr->get_db()->strstore(args[argx]);
         outpt_def = true;
       }
       else
-        ththrow("empty file name not allowed -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("empty file name not allowed -- \"{}\"",args[optx]));
       argx++;
       break;
     case TT_EXP_OPT_CS:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing coordiate system -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing coordiate system -- \"{}\"",args[optx]));
       {
         int id = thcs_parse(args[argx]);
         if (id == TTCS_UNKNOWN) {
-          ththrow("unknown coordinate system -- {}", args[argx]);
+          throw thexception(fmt::format("unknown coordinate system -- {}", args[argx]));
         }
         if ((thcfg.outcs != id) && (id == TTCS_LOCAL))
-          ththrow("mixing local and global coordinate system -- {}", args[argx]);
+          throw thexception(fmt::format("mixing local and global coordinate system -- {}", args[argx]));
         this->cs = id;
       }
       argx++;
@@ -223,23 +217,28 @@ bool thexport::check_crc() {
       continue;
     }
 
-		if (thcfg.crc_verify) {
-			std::uint_fast32_t read_crc = 0;
-      std::ifstream crcif(fmt::format("{}.crc", file.fnm));
-      if (!crcif.is_open()) {
-        file.res = ".crc file not found -- use --generate-output-crc before";
-        ok = false;
-        continue;
-      }
+	  if (thcfg.crc_verify) {
+		  std::uint_fast32_t read_crc = 0;
+		  std::ifstream crcif(fmt::format("{}.crc", file.fnm));
+		  if (!crcif.is_open()) {
+			file.res = ".crc file not found -- use --generate-output-crc before";
+			ok = false;
+			continue;
+		  }
 
-      crcif >> std::hex >> read_crc;
-			if (actual_crc == read_crc) {
+ 		  file.res = fmt::format("CRC32 error: was {:08x}, expected value not found", actual_crc);
+ 		  ok = false;
+		  while (crcif >> std::hex >> read_crc) {
+			  if (actual_crc == read_crc) {
 				file.res = "OK";
-			} else {
+				ok = true;
+				break;
+			  } else {
 				file.res = fmt::format("CRC32 error: was {:08x}, expected {:08x}", actual_crc, read_crc);
 				ok = false;
-			}
-		}
+			  }
+		  }
+	  }
 	}
 	return ok;
 }

@@ -21,17 +21,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
 #include "tharea.h"
 #include "thexception.h"
 #include "thobjectname.h"
-#include "thchenc.h"
 #include "thexpmap.h"
 #include "thline.h"
 #include "thdatabase.h"
+
+#include <fmt/core.h>
 
 tharea::tharea()
 {
@@ -45,7 +46,7 @@ tharea::tharea()
 void tharea::start_insert() {
   if (this->type == TT_AREA_TYPE_U) {
     if (this->m_subtype_str == NULL)
-      ththrow("missing subtype specification for area of user defined type");
+      throw thexception("missing subtype specification for area of user defined type");
     this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
   }
 }
@@ -126,9 +127,9 @@ void tharea::parse_type(char * tstr)
 {
   this->type = thmatch_token(tstr, thtt_area_types);
   if (this->type == TT_AREA_TYPE_UNKNOWN)
-    ththrow("unknown area type -- {}", tstr);
+    throw thexception(fmt::format("unknown area type -- {}", tstr));
   if (this->type == TT_AREA_TYPE_DIMENSIONS)
-    ththrow("area dimensions is not supported as ordinary type");
+    throw thexception("area dimensions is not supported as ordinary type");
 }
 
 
@@ -136,12 +137,12 @@ void tharea::parse_type(char * tstr)
 void tharea::parse_subtype(char * ststr)
 {
   if (this->type == TT_AREA_TYPE_UNKNOWN)
-    ththrow("area type must be specified before subtype");
+    throw thexception("area type must be specified before subtype");
   if (this->type == TT_AREA_TYPE_U) {
     this->parse_u_subtype(ststr);
     return;
   } else
-    ththrow("invalid type - subtype combination");
+    throw thexception("invalid type - subtype combination");
 }
 
 void tharea::self_print_properties(FILE * outf)
@@ -166,7 +167,7 @@ void tharea::insert_border_line(int npars, char ** pars)
 {
   thdb2dab * bl;
   if (npars != 1)
-    ththrow("one line name per line allowed");
+    throw thexception("one line name per line allowed");
   bl = this->db->db2d.insert_border_line();
   bl->source = this->db->csrc;
   thparse_objectname(bl->name,& this->db->buff_stations,*pars);

@@ -24,7 +24,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 #ifndef thwarppme_h
@@ -312,8 +312,8 @@ namespace therion
     struct item 
     {
       protected:
-        double m_theta_l;  //!< left angle
-	double m_theta_r;  //!< right angle
+        double m_theta_l = {};  //!< left angle
+	double m_theta_r = {};  //!< right angle
 
       public:
         /** default cstr is fine */
@@ -435,9 +435,9 @@ namespace therion
         double m_bound;             //!< this basic_pair bound
     
       public:
-        basic_pair * m_ngbh[THWARP_NGBH_DIM];     //!< this basic_pair neighbors
-        point_pair * m_pair[THWARP_PAIR_DIM];  //!< pointer to the point_pairs
-        double m_ndist[THWARP_NGBH_DIM];       //!< neighbors distances
+        basic_pair * m_ngbh[THWARP_NGBH_DIM] = {};     //!< this basic_pair neighbors
+        point_pair * m_pair[THWARP_PAIR_DIM] = {};  //!< pointer to the point_pairs
+        double m_ndist[THWARP_NGBH_DIM] = {};       //!< neighbors distances
         double m_kl;                     //!< left angle differences (from - to)
         double m_kr;                     //!< right angle differences (from - to)
 	double m_dl;                     //!< left end-size ratio (from/to)
@@ -1101,25 +1101,25 @@ namespace therion
 	thvec2 m_bcn;               //!< unit vector BC
 	thvec2 m_abn;               //!< unit vector from A to B
         thvec2 m_abh;               //!< unit orthogonal vector
-        double m_AB_len;            //!< length of AB
+        double m_AB_len = {};            //!< length of AB
 
-        double m_a, m_b, m_c, m_d, m_e, m_f, m_g, m_h; 
-        double m_A0, m_B0, m_C0;
-        double m_D0, m_E0, m_F0;
+        double m_a = {}, m_b = {}, m_c = {}, m_d = {}, m_e = {}, m_f = {}, m_g = {}, m_h = {}; 
+        double m_A0 = {}, m_B0 = {}, m_C0 = {};
+        double m_D0 = {}, m_E0 = {}, m_F0 = {};
 
-        double m_adab;   //!< ad ^ ab
-        double m_bcab;   //!< bc ^ ab
-        double m_adA;    //!< ad ^ A
-        double m_bcB;    //!< bc ^ B
+        double m_adab = {};   //!< ad ^ ab
+        double m_bcab = {};   //!< bc ^ ab
+        double m_adA = {};    //!< ad ^ A
+        double m_bcB = {};    //!< bc ^ B
         thvec2 m_AB;     //!< vector AB = B - A
 	thvec2 m_BA;     //!< vector BA (= -m_AB)
         thvec2 m_C1;
         thvec2 m_C1C;
 
-        double m_AD_len;  //!< length of AD
-        double m_BC_len;  //!< length of BC
+        double m_AD_len = {};  //!< length of AD
+        double m_BC_len = {};  //!< length of BC
 
-        double m_tan, m_ctg, m_cos, m_sin; // coeff for the "normal" direction
+        double m_tan = {}, m_ctg = {}, m_cos = {}, m_sin = {}; // coeff for the "normal" direction
 
 	double (plaquette::* s_map_impl)( const thvec2 & p ) const;
         void (plaquette::* bn_map_impl)( const thvec2 & p, thvec2 & ret ) const;

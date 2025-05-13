@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -30,12 +30,13 @@
 #include "thchenc.h"
 #include "thsurvey.h"
 #include "thconfig.h"
-#include "thparse.h"
 #include "thcsdata.h"
 #include "thdata.h"
 #include "thproj.h"
 #include "thcs.h"
 #include "thdatabase.h"
+
+#include <fmt/core.h>
 
 thdataobject::thdataobject()
 {
@@ -157,7 +158,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
       if (th_is_extkeyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow("invalid keyword -- {}", *args);
+        throw thexception(fmt::format("invalid keyword -- {}", *args));
       break;
 
     case TT_DATAOBJECT_CS:
@@ -167,24 +168,25 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_SURFACE_CMD:
         case TT_IMPORT_CMD:
         case TT_SCRAP_CMD:
+        case TT_SCAN_CMD:
           break;
         default:
-          ththrow("coordinate system specification not valid for {}", this->get_cmd_name());
+          throw thexception(fmt::format("coordinate system specification not valid for {}", this->get_cmd_name()));
           break;  
       }
       {
         int id = thcs_parse(*args);
         if (id == TTCS_UNKNOWN) {
-          ththrow("unknown coordinate system -- {}", *args);
+          throw thexception(fmt::format("unknown coordinate system -- {}", *args));
         }
         if (this->get_class_id() != TT_DATA_CMD) {
           this->cs = id;
           this->cs_source = this->db->csrc;
         } else {
           thdata * cobj;
-          cobj = (thdata *) this;
+          cobj = dynamic_cast<thdata*>(this);
           if (cobj->cgroup->dl_declination_north_grid && (id == TTCS_LOCAL))
-            ththrow("grid-angle has been defined -- local CS not allowed");
+            throw thexception("grid-angle has been defined -- local CS not allowed");
           cobj->cgroup->cs = id;
           cobj->cgroup->cs_source = this->db->csrc;
         }
@@ -197,7 +199,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_SCRAP_CMD:
           break;
         default:
-          ththrow("station-names specification not valid for {}", this->get_cmd_name());
+          throw thexception(fmt::format("station-names specification not valid for {}", this->get_cmd_name()));
           break;  
       }
       if (strlen(args[0]) == 0)
@@ -219,12 +221,12 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_GRADE_CMD:
         case TT_LAYOUT_CMD:
           if (cod.nargs > 1)
-            ththrow("multiple option arguments -- title");
+            throw thexception("multiple option arguments -- title");
           thencode(&(this->db->buff_enc), *args, argenc);
           this->title = this->db->strstore(this->db->buff_enc.get_buffer());
           break;
         default:
-          ththrow("title specification not allowed for this object");
+          throw thexception("title specification not allowed for this object");
           break;
       }
       break;
@@ -234,7 +236,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_DATA_CMD:
         case TT_SCRAP_CMD:
           if (cod.nargs > 2)
-            ththrow("too many option arguments -- author");
+            throw thexception("too many option arguments -- author");
           this->dotmp_date.parse(args[0]);
           thencode(&(this->db->buff_enc), args[1], argenc);
           this->dotmp_person.parse(this->db, this->db->buff_enc.get_buffer());
@@ -243,7 +245,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           this->author_map[this->dotmp_author].join(this->dotmp_date);
           break;
         default:
-          ththrow("author specification not allowed for this object");
+          throw thexception("author specification not allowed for this object");
           break;
       }
       break;
@@ -253,7 +255,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_DATA_CMD:
         case TT_SCRAP_CMD:
           if (cod.nargs > 2)
-            ththrow("too many option arguments -- copyright");
+            throw thexception("too many option arguments -- copyright");
           this->dotmp_date.parse(args[0]);
           thencode(&(this->db->buff_enc), args[1], argenc);
           this->dotmp_copyright = 
@@ -263,7 +265,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           this->copyright_map[this->dotmp_copyright].join(this->dotmp_date);
           break;
         default:
-          ththrow("copyright specification not allowed for this object");
+          throw thexception("copyright specification not allowed for this object");
           break;
       }
       break;
@@ -271,17 +273,17 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
     case TT_DATAOBJECT_ATTR:
       switch (this->get_class_id()) {
         case TT_LAYOUT_CMD:
-          ththrow("attribute specification not valid for layout");
+          throw thexception("attribute specification not valid for layout");
           break;
       }
       if (cod.nargs != 2)
-        ththrow("invalid attribute specification -- should be <name> <value>");
+        throw thexception("invalid attribute specification -- should be <name> <value>");
       thencode(&(this->db->buff_enc), args[1], argenc);
       this->parse_attribute(args[0], this->db->buff_enc.get_buffer());
       break;
         
     default:
-      ththrow("unknown option -- {}", args[0]);
+      throw thexception(fmt::format("unknown option -- {}", args[0]));
 
   }
 }
@@ -385,7 +387,7 @@ bool thdataobject::is_in_survey(thsurvey * psearch)
     
   thsurvey * tmp;
   if (this->get_class_id() == TT_SURVEY_CMD) {
-    tmp = (thsurvey *) this;
+    tmp = dynamic_cast<thsurvey*>(this);
   } else {
     tmp = this->fsptr;
   }
@@ -411,7 +413,7 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 	  if (thcfg.outcs_def.is_valid()) {
 	    if (((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL)) ||
 	      ((this->cs != TTCS_LOCAL) && (thcfg.outcs == TTCS_LOCAL)))
-	        ththrow("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line);
+	        throw thexception(fmt::format("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line));
 	  };
 
 	  // 1. Conversion to numbers.
@@ -424,7 +426,7 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 	    thparse_double(sv, tx, src_x);
 	  }
 	  if (sv != TT_SV_NUMBER)
-	    ththrow("invalid X coordinate -- {}", src_x);
+	    throw thexception(fmt::format("invalid X coordinate -- {}", src_x));
 
 	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
 	    thparse_double_dms(sv, ty, src_y);
@@ -433,7 +435,7 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 	    thparse_double(sv, ty, src_y);
 	  }
 	  if (sv != TT_SV_NUMBER)
-	    ththrow("invalid Y coordinate -- {}", src_y);
+	    throw thexception(fmt::format("invalid Y coordinate -- {}", src_y));
 
 	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->swap) {
 	    tz = tx;
@@ -444,10 +446,10 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 
 	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
 	    if ((tx < - THPI) || (tx > THPI))
-	      ththrow("longitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_y : src_x);
+	      throw thexception(fmt::format("longitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_y : src_x));
 
 	    if ((ty < (- THPI / 2)) || (ty > (THPI / 2)))
-	      ththrow("latitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_x : src_y);
+	      throw thexception(fmt::format("latitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_x : src_y));
 	  }
 
 	  dst_x = tx;
@@ -506,7 +508,7 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
     dst_z = tz;
   } else {
 	if (thcfg.outcs == TTCS_LOCAL)
-      ththrow("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line);
+      throw thexception(fmt::format("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line));
     thcs2cs(src_cs, thcfg.outcs, tx, ty, tz, dst_x, dst_y, dst_z);
   }
 
@@ -531,11 +533,11 @@ void thdataobject::parse_attribute(char * name, char * value) {
 
   // check name
   if ((name == NULL) || (strlen(name) == 0))
-    ththrow("empty attribute name not allowed");
+    throw thexception("empty attribute name not allowed");
   if (name[0] == '_')
-    ththrow("attribute name starting with '_' not allowed");
+    throw thexception("attribute name starting with '_' not allowed");
   if (!th_is_attr_name(name))
-    ththrow("invalid characters in attribute name -- {}", name);
+    throw thexception(fmt::format("invalid characters in attribute name -- {}", name));
 
   this->db->attr.insert_attribute(name, value, long(this->id));
 }

@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * -------------------------------------------------------------------- 
  */
 
@@ -152,7 +152,7 @@ class lxFrame: public wxFrame
 
     lxGLCanvas * canvas;
     wxString m_fileDir, m_fileToOpen, m_fileName;
-    int m_fileType;
+    int m_fileType = {};
     
     struct lxData * data;
     struct lxSetup * setup;
@@ -181,10 +181,10 @@ class lxFrame: public wxFrame
     wxFileHistory * m_fileHistory;
     wxString m_iniDirectory;
 
-    long m_iniUnits;
-    int m_iniStereoGlasses;
-    int m_iniStereoGlassesLast;
-    long m_iniWallsInterpolate;
+    long m_iniUnits = {};
+    int m_iniStereoGlasses = {};
+    int m_iniStereoGlassesLast = {};
+    long m_iniWallsInterpolate = {};
 
     class lxApp * m_app;
 
@@ -266,7 +266,7 @@ class lxApp: public wxGLApp
 
   public:
   
-    class lxFrame * frame;
+    class lxFrame * frame = {};
 
     wxLocale m_locale;
     wxFileName m_path;

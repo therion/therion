@@ -22,13 +22,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #ifndef thdb3d_h
 #define thdb3d_h
 
+#include <any>
 #include <list>
 #include <stdio.h>
 #include "loch/lxMath.h"
@@ -71,11 +72,11 @@ struct thdb3dnm {
 struct thdb3dvx {
   unsigned long id;
   double x, y, z;
-  void * data;
+  std::any data;
   thdb3dnm * normal;
   thdb3dvx * next;
   thdb3dvx() : id(0), x(0.0), y(0.0), z(0.0), 
-    data(NULL), normal(NULL), next(NULL) {}
+    normal(NULL), next(NULL) {}
   lxVec get_vector() {return lxVec(this->x, this->y, this->z);}  
   thdb3dnm * insert_normal(double nx, double ny, double nz);
   thdb3dnm * insert_normal(lxVec n) {return this->insert_normal(n.x, n.y, n.z);};
@@ -84,11 +85,11 @@ struct thdb3dvx {
 
 
 struct thdb3dfx {
-  void * data;
+  std::any data;
   thdb3dnm * normal;
   thdb3dvx * vertex;
   thdb3dfx * next;
-  thdb3dfx() : data(NULL), normal(NULL), vertex(NULL), next(NULL) {}
+  thdb3dfx() : normal(NULL), vertex(NULL), next(NULL) {}
   
   thdb3dnm * insert_normal(double nx, double ny, double nz);
   thdb3dnm * insert_normal(lxVec n) {return this->insert_normal(n.x, n.y, n.z);};
@@ -105,7 +106,7 @@ struct thdb3dfc {
   thdb3dfc() : type(THDB3DFC_TRIANGLES), nvx(0), firstfx(NULL), lastfx(NULL),
     next(NULL) {}
   
-  thdb3dfx * insert_vertex(thdb3dvx * vx = NULL, void * dt = NULL);
+  thdb3dfx * insert_vertex(thdb3dvx * vx = nullptr, std::any dt = {});
   
 };
 
@@ -130,8 +131,10 @@ struct thdb3ddata {
     
   thdb3dfc * insert_face(int type);
   
-  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz, void * dt = NULL);
-  thdb3dvx * insert_vertex(lxVec v, void * dt = NULL);
+  std::map<lxVec, thdb3dvx*> vertices_map;
+
+  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz, std::any dt = {}, bool deduplicate = false);
+  thdb3dvx * insert_vertex(lxVec v, std::any dt = {}, bool deduplicate = false);
   
   void export_thm(FILE * out);
   void export_vrml(FILE * out);

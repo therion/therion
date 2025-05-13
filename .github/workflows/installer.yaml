@@ -1,16 +1,15 @@
 name: Installer
 on: push
 jobs:
-  # Win32_installer_MXE:
+  # Windows_installer_MXE:
   #   runs-on: ubuntu-20.04
   #   outputs:
   #     THID: ${{ steps.build.outputs.THID_out }}
   #     git_branch: ${{ steps.build.outputs.git_branch }}
   #   env:
   #     THDIR: /home/runner/work/therion
-  #     PROJ_LIB: /home/runner/work/therion/proj-lib
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #       with:
   #         fetch-depth: 0
   #     - name: install dependencies
@@ -31,7 +30,7 @@ jobs:
   #       run: |
   #         export PATH=/usr/lib/mxe/usr/bin:$PATH
   #         mkdir -p $HOME/.wine/drive_c/windows
-  #         echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
+  #         echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
   #         wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xz && mv therion-batteries-master ../therion-batteries
   #         if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
   #         echo "THID_out=$THID" >> $GITHUB_OUTPUT
@@ -45,25 +44,25 @@ jobs:
   #             -DCMAKE_CROSSCOMPILING_EMULATOR=wine \
   #             -DBUILD_SHARED_LIBS=OFF ../therion
   #         ninja
-  #         mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/. ../proj-lib
+  #         cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/ ../therion-batteries/lib/
   #         ninja samples
   #         cd ../therion-batteries
   #         wine InnoSetup/ISCC.exe therion.iss
   #         cd ../therion.bin
   #         mv therion-setup.exe therion-setup-$THID.exe
   #         mv thbook/thbook.pdf thbook-$THID.pdf
-  #     - uses: 'actions/upload-artifact@v3'
+  #     - uses: 'actions/upload-artifact@v4'
   #       with:
   #         name: therion-setup-mxe-${{ steps.build.outputs.THID_out }}
   #         path: |
   #           ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
   #           ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
-  Win32_installer:
+  Windows_installer:
     runs-on: windows-latest
     strategy:
       matrix:
         config:
-          - { msystem: MINGW32, arch: i686 }
+          - { msystem: UCRT64, arch: ucrt-x86_64 }
     defaults:
       run:
         shell: msys2 {0}
@@ -72,7 +71,6 @@ jobs:
       git_branch: ${{ steps.build.outputs.git_branch }}
     env:
       THDIR: d:/a/therion
-      PROJ_LIB: d:/a/therion/proj-lib
     steps:
       - uses: msys2/setup-msys2@v2
         with:
@@ -81,17 +79,20 @@ jobs:
           install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.2 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
       - name: prevent git EOL conversion
         run: git config --global core.autocrlf input
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Fetch tags (relevant for forks only)
+        if: github.repository != 'therion/therion'
+        run: git fetch https://github.com/therion/therion tag 'v*'
       - name: build and create the installation package
         id: build
         run: |
           reg add HKCU\\Software\\Therion //v InstallDir //t REG_SZ //d "${THDIR}/therion-batteries"
           mkdir -p $HOME/.therion
-          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
-          if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
+          if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; FID=${THID#?}; else THID=$(git rev-parse --short HEAD); FID=$(git rev-parse HEAD); fi
           echo "THID_out=$THID" >> $GITHUB_OUTPUT
           BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
           BRANCH=${BRANCH_FULL##*/}
@@ -100,41 +101,45 @@ jobs:
           cd ../therion.bin
           cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON ../therion
           cmake --build . -j 4
-          mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/. ../proj-lib
+          cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/ ../therion-batteries/lib/
           cmake --build . -t samples deploy -- -j 4
           cd ../therion-batteries
           InnoSetup/ISCC.exe therion.iss
           cd ../therion.bin
           mv therion-setup.exe therion-setup-$THID.exe
           mv thbook/thbook.pdf thbook-$THID.pdf
-      - uses: 'actions/upload-artifact@v3'
+          curl -L https://github.com/${{ github.repository }}/archive/$THID.tar.gz -o therion-$FID.tar.gz
+          curl -L https://github.com/${{ github.repository }}/archive/$THID.zip -o therion-$FID.zip
+          sha256sum thbook-$THID.pdf therion-$FID.tar.gz therion-$FID.zip therion-setup-$THID.exe > sha256-$THID.txt
+      - uses: actions/upload-artifact@v4
         with:
           name: therion-setup-msys2-${{ steps.build.outputs.THID_out }}
           path: |
             ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
             ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
+            ${{ env.THDIR }}/therion.bin/sha256-${{ steps.build.outputs.THID_out }}.txt
   Release:
     runs-on: ubuntu-latest
-    needs: Win32_installer
-    if: startsWith(github.ref, 'refs/tags/v') && needs.Win32_installer.outputs.git_branch == 'master' && github.event_name == 'push'
+    needs: Windows_installer
+    if: startsWith(github.ref, 'refs/tags/v') && needs.Windows_installer.outputs.git_branch == 'master' && github.event_name == 'push'
     steps:
       - name: get the upload url
         run: |
-          URL=$(curl -s 'https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ needs.Win32_installer.outputs.THID }}' | python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
+          URL=$(curl -s 'https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ needs.Windows_installer.outputs.THID }}' | python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
           URL="https://uploads.github.com/repos/${{ github.repository }}/releases/${URL}/assets{?name,label}"
           echo "URL=$URL" >> $GITHUB_ENV
       - name: Download binaries
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: therion-setup-msys2-${{ needs.Win32_installer.outputs.THID }}
+          name: therion-setup-msys2-${{ needs.Windows_installer.outputs.THID }}
       - name: Upload installer
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.URL }}
-          asset_path: therion-setup-${{ needs.Win32_installer.outputs.THID }}.exe
-          asset_name: therion-setup-${{ needs.Win32_installer.outputs.THID }}.exe
+          asset_path: therion-setup-${{ needs.Windows_installer.outputs.THID }}.exe
+          asset_name: therion-setup-${{ needs.Windows_installer.outputs.THID }}.exe
           asset_content_type: application/exe
       - name: Upload thbook
         uses: actions/upload-release-asset@v1
@@ -142,6 +147,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.URL }}
-          asset_path: thbook-${{ needs.Win32_installer.outputs.THID }}.pdf
-          asset_name: thbook-${{ needs.Win32_installer.outputs.THID }}.pdf
+          asset_path: thbook-${{ needs.Windows_installer.outputs.THID }}.pdf
+          asset_name: thbook-${{ needs.Windows_installer.outputs.THID }}.pdf
           asset_content_type: application/pdf
+      - name: Upload checksums
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ env.URL }}
+          asset_path: sha256-${{ needs.Windows_installer.outputs.THID }}.txt
+          asset_name: sha256-${{ needs.Windows_installer.outputs.THID }}.txt
+          asset_content_type: text/plain

@@ -21,14 +21,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thdb2d.h"
 #include "thexception.h"
 #include "thdatabase.h"
-#include "thparse.h"
 #include "thtfangle.h"
 #include "tharea.h"
 #include "thmap.h"
@@ -41,16 +40,25 @@
 #include <math.h>
 #include "thlayout.h"
 #include "thexpmap.h"
-#include "thconfig.h"
 #include "thtrans.h"
 #include "thtmpdir.h"
 #include "thinit.h"
 #include "thfilehandle.h"
+#include "therion.h"
+#include "thlog.h"
 #include <list>
 #include <set>
 #include <iterator>
 #include <cstdio>
 #include <algorithm>
+
+static void print_double(const double dbl)
+{
+	if (thisnan(dbl))
+		thlog("    -.--");
+	else
+		thlog(fmt::format("{:8.2f}", dbl));
+}
 
 class thprjx_link {
 
@@ -273,7 +281,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
   double par = tp.pp1;
   int npar = this->mbf.get_size(), prj_type;
   if (npar < 1)
-    ththrow("missing projection type");
+    throw thexception("missing projection type");
   thsplit_strings(& this->mbf2, pars[0], ':');
   switch (this->mbf2.get_size()) {
     case 1:
@@ -284,17 +292,17 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
       type_str = pars2[0];
       index_str_str += pars2[1];
       if (!th_is_keyword(pars2[1]))
-        ththrow("projection index not a keyword -- {}", pars2[1]);
+        throw thexception(fmt::format("projection index not a keyword -- {}", pars2[1]));
       break;
     default:
-      ththrow("only one projection index allowed -- {}", pars[0]);
+      throw thexception(fmt::format("only one projection index allowed -- {}", pars[0]));
   } 
   prj_type = thmatch_token(type_str,thtt_2dproj);
   if (prj_type == TT_2DPROJ_UNKNOWN)
-    ththrow("unknown projection type -- {}", pars[0]);
+    throw thexception(fmt::format("unknown projection type -- {}", pars[0]));
   
   if ((prj_type == TT_2DPROJ_NONE) && (index_str_str.length() > 1))
-    ththrow("no projection index allowed -- {}",prjstr);
+    throw thexception(fmt::format("no projection index allowed -- {}",prjstr));
   
   //parse rest arguments
   thtfangle angtf;
@@ -303,26 +311,26 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
     case TT_2DPROJ_ELEV:
       // parse units if necessary
       if (npar > 3)
-        ththrow("too many projection arguments");
+        throw thexception("too many projection arguments");
       if (npar > 1) {
         thparse_double(asv,par,pars[1]);
         index_str_str += ":";
         index_str_str += pars[1];
         if (asv != TT_SV_NUMBER)
-          ththrow("invalid projection parameter -- {}",pars[1]);
+          throw thexception(fmt::format("invalid projection parameter -- {}",pars[1]));
         if (npar > 2) {
           angtf.parse_units(pars[2]);
           par = angtf.transform(par);
         }
         if ((par < 0.0) || (par >= 360.0))
-          ththrow("elevation orientation out of range -- {}", pars[1]);
+          throw thexception(fmt::format("elevation orientation out of range -- {}", pars[1]));
       } else {
         par = 0.0;
       }
       break;
     default:
       if (npar > 1)
-        ththrow("too many projection arguments");
+        throw thexception("too many projection arguments");
       break;
   }
   
@@ -421,12 +429,6 @@ thscraplo * thdb2d::insert_scraplo()
   return &(* this->scraplo_list.insert(this->scraplo_list.end(),dumm));
 }
 
-thlayoutln * thdb2d::insert_layoutln()
-{
-  thlayoutln dumm;
-  return &(* this->layoutln_list.insert(this->layoutln_list.end(),dumm));
-}
-
 thscrapen * thdb2d::insert_scrapen()
 {
   thscrapen dumm;
@@ -452,10 +454,10 @@ void thdb2d::process_references()
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_LINE_CMD:
-        ((thline *)(*obi).get())->preprocess();
+        dynamic_cast<thline*>(obi->get())->preprocess();
         break;
       case TT_LAYOUT_CMD:
-        ((thlayout *)(*obi).get())->process_copy();
+        dynamic_cast<thlayout*>(obi->get())->process_copy();
         break;
     }
     obi++;
@@ -466,19 +468,19 @@ void thdb2d::process_references()
     if ((*obi)->fsptr != NULL) {
       switch ((*obi)->get_class_id()) {
         case TT_AREA_CMD:
-          this->process_area_references((tharea *) obi->get());
+          this->process_area_references(dynamic_cast<tharea*>(obi->get()));
           break;
         case TT_POINT_CMD:
-          this->process_point_references((thpoint *) obi->get());
+          this->process_point_references(dynamic_cast<thpoint*>(obi->get()));
           break;
         case TT_MAP_CMD:
-          this->process_map_references((thmap *) obi->get());
+          this->process_map_references(dynamic_cast<thmap*>(obi->get()));
           break;
         case TT_JOIN_CMD:
-          this->process_join_references((thjoin *) obi->get());
+          this->process_join_references(dynamic_cast<thjoin*>(obi->get()));
           break;
         case TT_SCRAP_CMD:
-          this->process_scrap_references((thscrap *) obi->get());
+          this->process_scrap_references(dynamic_cast<thscrap*>(obi->get()));
       }
     }
     obi++;
@@ -490,7 +492,7 @@ void thdb2d::process_references()
     if ((*obi)->fsptr != NULL) {
       switch ((*obi)->get_class_id()) {
         case TT_MAP_CMD:
-          this->postprocess_map_references((thmap *) obi->get());
+          this->postprocess_map_references(dynamic_cast<thmap*>(obi->get()));
           break;
       }
     }
@@ -514,32 +516,32 @@ void thdb2d::process_area_references(tharea * aptr)
 
     if (optr == NULL) {
       if (cbl->name.survey != NULL)
-        ththrow("{} [{}] -- object does not exist -- {}@{}",
+        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}@{}",
           cbl->source.name, cbl->source.line,
-          cbl->name.name,cbl->name.survey);
+          cbl->name.name,cbl->name.survey));
       else
-        ththrow("{} [{}] -- object does not exist -- {}",
+        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}",
           cbl->source.name, cbl->source.line,
-          cbl->name.name);
+          cbl->name.name));
     }
 
     if (optr->get_class_id() != TT_LINE_CMD) {
       if (cbl->name.survey != NULL)
-        ththrow("{} [{}] -- object is not a line -- {}@{}",
-          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey);
+        throw thexception(fmt::format("{} [{}] -- object is not a line -- {}@{}",
+          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey));
       else
-        ththrow("{} [{}] -- object is not a line -- {}",
-          cbl->source.name, cbl->source.line, cbl->name.name);
+        throw thexception(fmt::format("{} [{}] -- object is not a line -- {}",
+          cbl->source.name, cbl->source.line, cbl->name.name));
     }
 
-    cbl->line = (thline *) optr;
+    cbl->line = dynamic_cast<thline*>(optr);
     if (cbl->line->fscrapptr->id != aptr->fscrapptr->id) {
       if (cbl->name.survey != NULL)
-        ththrow("{} [{}] -- line outside of current scrap -- {}@{}",
-          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey);
+        throw thexception(fmt::format("{} [{}] -- line outside of current scrap -- {}@{}",
+          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey));
       else
-        ththrow("{} [{}] -- line outside of current scrap -- {}",
-          cbl->source.name, cbl->source.line, cbl->name.name);
+        throw thexception(fmt::format("{} [{}] -- line outside of current scrap -- {}",
+          cbl->source.name, cbl->source.line, cbl->name.name));
     }
     cbl = cbl->next_line;
   }
@@ -552,22 +554,22 @@ void thdb2d::process_map_references(thmap * mptr)
 		thdataobject * obj = this->db->get_object(mptr->asoc_survey, mptr->asoc_survey.psurvey);
 		if ((obj == NULL) || (obj->get_class_id() != TT_SURVEY_CMD)) {
 			if (mptr->asoc_survey.survey != NULL) 
-        ththrow("{} [{}] -- invalid survey reference -- {}@{}",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name, mptr->asoc_survey.survey);
+        throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}@{}",
+          mptr->source.name, mptr->source.line, mptr->asoc_survey.name, mptr->asoc_survey.survey));
 			else
-        ththrow("{} [{}] -- invalid survey reference -- {}",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name);
+        throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}",
+          mptr->source.name, mptr->source.line, mptr->asoc_survey.name));
 		}
-		mptr->asoc_survey.psurvey = (thsurvey *) obj;
+		mptr->asoc_survey.psurvey = dynamic_cast<thsurvey*>(obj);
 	}
 
   if (mptr->projection_id > 0)
     return;
   if (mptr->first_item == NULL) {
-    ththrow("{} -- empty map not allowed", mptr->throw_source());
+    throw thexception(fmt::format("{} -- empty map not allowed", mptr->throw_source()));
   }
   if (mptr->projection_id == -1)
-    ththrow("recursive map reference");
+    throw thexception("recursive map reference");
   // let's lock the current map
   mptr->projection_id = -1;
   thdb2dmi * citem = mptr->first_item, * xcitem;
@@ -582,13 +584,13 @@ void thdb2d::process_map_references(thmap * mptr)
     optr = this->db->get_object(citem->name, citem->psurvey);
     if (optr == NULL) {
       if (citem->name.survey != NULL)
-        ththrow("{} [{}] -- object does not exist -- {}@{}",
+        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}@{}",
           citem->source.name, citem->source.line, 
-          citem->name.name,citem->name.survey);
+          citem->name.name,citem->name.survey));
       else
-        ththrow("{} [{}] -- object does not exist -- {}",
+        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}",
           citem->source.name, citem->source.line, 
-          citem->name.name);
+          citem->name.name));
     }
     
     thmap * mapp;
@@ -601,19 +603,19 @@ void thdb2d::process_map_references(thmap * mptr)
 
         if (proj_id == -1) {
           if (mptr->expl_projection == NULL)
-            ththrow("{} [{}] -- no projection for survey", citem->source.name, citem->source.line);
+            throw thexception(fmt::format("{} [{}] -- no projection for survey", citem->source.name, citem->source.line));
           proj_id = mptr->expl_projection->id;
           mptr->is_basic = false;
         } else {
           if (mptr->is_basic) {
             if (citem->name.survey != NULL)
-              ththrow("{} [{}] -- not a scrap reference -- {}@{}",
+              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey));
             else
-              ththrow("{} [{}] -- not a scrap reference -- {}",
+              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name));
           }
         }
 
@@ -624,10 +626,10 @@ void thdb2d::process_map_references(thmap * mptr)
           case TT_2DPROJ_ELEV:
             break;          
           default:
-            ththrow("{} [{}] -- unsupported projection for survey", citem->source.name, citem->source.line);
+            throw thexception(fmt::format("{} [{}] -- unsupported projection for survey", citem->source.name, citem->source.line));
             break;
         }
-        survp = (thsurvey*) optr;
+        survp = dynamic_cast<thsurvey*>(optr);
         
         // vytvorime specialnu mapu s jednym scrapom,
         // ktoremu nastavime centerline io a survey
@@ -668,21 +670,23 @@ void thdb2d::process_map_references(thmap * mptr)
         break;
 
       case TT_MAP_CMD:
-        mapp = (thmap *) optr;
+        mapp = dynamic_cast<thmap*>(optr);
         // if not defined - process recursively
         if (mapp->projection_id == 0) {
           try {
             this->process_map_references(mapp);
           }
-          catch (...) {
+          catch (const std::exception& e) {
             if (citem->name.survey != NULL)
-              threthrow("{} [{}] -- error processing map reference -- {}@{}",
+            throw thexception(fmt::format("{} [{}] -- error processing map reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey),
+                e);
             else
-              threthrow("{} [{}] -- error processing map reference -- {}",
+            throw thexception(fmt::format("{} [{}] -- error processing map reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name),
+                e);
           }
         }
         if (proj_id == -1) {
@@ -692,35 +696,35 @@ void thdb2d::process_map_references(thmap * mptr)
           // check projection
           if (mapp->projection_id != proj_id) {
             if (citem->name.survey != NULL)
-              ththrow("{} [{}] -- incompatible map projection -- {}@{}",
+              throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey));
             else
-              ththrow("{} [{}] -- incompatible map projection -- {}",
+              throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name));
           }
           // check basic
           if (mptr->is_basic) {
             if (citem->name.survey != NULL)
-              ththrow("{} [{}] -- not a scrap reference -- {}@{}",
+              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey));
             else
-              ththrow("{} [{}] -- not a scrap reference -- {}",
+              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name));
           }
         }
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
-            ththrow("{} [{}] -- incompatible map projection -- {}@{}",
+            throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
               citem->source.name, citem->source.line, 
-              citem->name.name,citem->name.survey);
+              citem->name.name,citem->name.survey));
           else
-            ththrow("{} [{}] -- incompatible map projection -- {}",
+            throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}",
               citem->source.name, citem->source.line, 
-              citem->name.name);
+              citem->name.name));
         }
         citem->object = mapp;
         break;
@@ -728,7 +732,7 @@ void thdb2d::process_map_references(thmap * mptr)
 
 
       case TT_SCRAP_CMD:
-        scrapp = (thscrap *) optr;
+        scrapp = dynamic_cast<thscrap*>(optr);
         if (proj_id == -1) {
           proj_id = scrapp->proj->id;
           mptr->is_basic = true;
@@ -736,45 +740,45 @@ void thdb2d::process_map_references(thmap * mptr)
           // check projection
           if (scrapp->proj->id != proj_id) {
             if (citem->name.survey != NULL)
-              ththrow("{} [{}] -- incompatible scrap projection -- {}@{}",
+              throw thexception(fmt::format("{} [{}] -- incompatible scrap projection -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey));
             else
-              ththrow("{} [{}] -- incompatible scrap projection -- {}",
+              throw thexception(fmt::format("{} [{}] -- incompatible scrap projection -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name));
           }
           // check basic
           if (!mptr->is_basic) {
             if (citem->name.survey != NULL)
-              ththrow("{} [{}] -- not a map reference -- {}@{}",
+              throw thexception(fmt::format("{} [{}] -- not a map reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey));
             else
-              ththrow("{} [{}] -- not a map reference -- {}",
+              throw thexception(fmt::format("{} [{}] -- not a map reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name));
           }
           if (citem->m_shift.is_active()) {
             if (citem->name.survey != NULL)
-              ththrow("{} [{}] -- shift is not allowed for scrap -- {}@{}",
+              throw thexception(fmt::format("{} [{}] -- shift is not allowed for scrap -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey);
+                citem->name.name,citem->name.survey));
             else
-              ththrow("{} [{}] -- shift is not allowed for scrap -- {}",
+              throw thexception(fmt::format("{} [{}] -- shift is not allowed for scrap -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name);
+                citem->name.name));
           }
         }
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
-            ththrow("{} [{}] -- incompatible scrap projection -- {}@{}",
+            throw thexception(fmt::format("{} [{}] -- incompatible scrap projection -- {}@{}",
               citem->source.name, citem->source.line, 
-              citem->name.name,citem->name.survey);
+              citem->name.name,citem->name.survey));
           else
-            ththrow("{} [{}] -- incompatible scrap projection -- {}",
+            throw thexception(fmt::format("{} [{}] -- incompatible scrap projection -- {}",
               citem->source.name, citem->source.line, 
-              citem->name.name);
+              citem->name.name));
         }
         citem->object = scrapp;
         break;
@@ -784,13 +788,13 @@ void thdb2d::process_map_references(thmap * mptr)
       default:
         mptr->throw_source();
         if (citem->name.survey != NULL)
-          ththrow("{} [{}] -- invalid map object -- {}@{}",
+          throw thexception(fmt::format("{} [{}] -- invalid map object -- {}@{}",
             citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey);
+            citem->name.name,citem->name.survey));
         else
-          ththrow("{} [{}] -- invalid map object -- {}",
+          throw thexception(fmt::format("{} [{}] -- invalid map object -- {}",
             citem->source.name, citem->source.line, 
-            citem->name.name);
+            citem->name.name));
     }
     citem = citem->next_item;
   }
@@ -806,8 +810,8 @@ void thdb2d::postprocess_map_references(thmap * mptr)
   thdb2dmi * citem = mptr->first_item;
   thdataobject * optr;
   if (mptr->projection_id == -1) {
-	ththrow("{} [{}] -- map cannot contain only previews",
-	  citem->source.name, citem->source.line);
+	throw thexception(fmt::format("{} [{}] -- map cannot contain only previews",
+	  citem->source.name, citem->source.line));
   }
 
   while (citem != NULL) {
@@ -818,41 +822,41 @@ void thdb2d::postprocess_map_references(thmap * mptr)
     optr = this->db->get_object(citem->name, citem->psurvey);
     if (optr == NULL) {
       if (citem->name.survey != NULL)
-        ththrow("{} [{}] -- object does not exist -- {}@{}",
+        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}@{}",
           citem->source.name, citem->source.line, 
-          citem->name.name,citem->name.survey);
+          citem->name.name,citem->name.survey));
       else
-        ththrow("{} [{}] -- object does not exist -- {}",
+        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}",
           citem->source.name, citem->source.line, 
-          citem->name.name);
+          citem->name.name));
     }
     
     thmap * mapp;
     switch (optr->get_class_id()) {
       case TT_MAP_CMD:
-        mapp = (thmap *) optr;
+        mapp = dynamic_cast<thmap*>(optr);
         if (mapp->projection_id != mptr->projection_id) {
           if (citem->name.survey != NULL)
-            ththrow("{} [{}] -- incompatible map projection -- {}@{}",
+            throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
               citem->source.name, citem->source.line, 
-              citem->name.name,citem->name.survey);
+              citem->name.name,citem->name.survey));
           else
-            ththrow("{} [{}] -- incompatible map projection -- {}",
+            throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}",
               citem->source.name, citem->source.line, 
-              citem->name.name);
+              citem->name.name));
         }
         citem->object = optr;
         break;
 
       case TT_SCRAP_CMD:
         if (citem->name.survey != NULL)
-          ththrow("{} [{}] -- not a map reference -- {}@{}",
+          throw thexception(fmt::format("{} [{}] -- not a map reference -- {}@{}",
             citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey);
+            citem->name.name,citem->name.survey));
         else
-          ththrow("{} [{}] -- not a map reference -- {}",
+          throw thexception(fmt::format("{} [{}] -- not a map reference -- {}",
             citem->source.name, citem->source.line, 
-            citem->name.name);
+            citem->name.name));
         break;
 
 
@@ -860,13 +864,13 @@ void thdb2d::postprocess_map_references(thmap * mptr)
       default:
         mptr->throw_source();
         if (citem->name.survey != NULL)
-          ththrow("{} [{}] -- invalid map object -- {}@{}",
+          throw thexception(fmt::format("{} [{}] -- invalid map object -- {}@{}",
             citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey);
+            citem->name.name,citem->name.survey));
         else
-          ththrow("{} [{}] -- invalid map object -- {}",
+          throw thexception(fmt::format("{} [{}] -- invalid map object -- {}",
             citem->source.name, citem->source.line, 
-            citem->name.name);
+            citem->name.name));
     }
     citem = citem->next_item;
   }
@@ -885,33 +889,33 @@ void thdb2d::process_join_references(thjoin * jptr)
     optr = this->db->get_object(citem->name, jptr->fsptr);
     if (optr == NULL) {
       if (citem->name.survey != NULL)
-        ththrow("{} -- object does not exist -- {}@{}", jptr->throw_source(),
-          citem->name.name,citem->name.survey);
+        throw thexception(fmt::format("{} -- object does not exist -- {}@{}", jptr->throw_source(),
+          citem->name.name,citem->name.survey));
       else
-        ththrow("{} -- object does not exist -- {}", jptr->throw_source(),
-          citem->name.name);
+        throw thexception(fmt::format("{} -- object does not exist -- {}", jptr->throw_source(),
+          citem->name.name));
     }
     otype = optr->get_class_id();
 
     if (optr->is(TT_2DDATAOBJECT_CMD) || optr->is(TT_SCRAP_CMD)) {
       if (jptr->proj != NULL) {
         if (optr->is(TT_SCRAP_CMD))
-          cprj = ((thscrap*)optr)->proj;
+          cprj = dynamic_cast<thscrap*>(optr)->proj;
         else
-          cprj = ((th2ddataobject *)optr)->fscrapptr->proj;
+          cprj = dynamic_cast<th2ddataobject*>(optr)->fscrapptr->proj;
         if (cprj->id != jptr->proj->id) {        
           if (citem->name.survey != NULL)
-            ththrow("{} -- projection mishmash -- {}@{}", jptr->throw_source(),
-              citem->name.name,citem->name.survey);
+            throw thexception(fmt::format("{} -- projection mishmash -- {}@{}", jptr->throw_source(),
+              citem->name.name,citem->name.survey));
           else
-            ththrow("{} -- projection mishmash -- {}", jptr->throw_source(),
-              citem->name.name);
+            throw thexception(fmt::format("{} -- projection mishmash -- {}", jptr->throw_source(),
+              citem->name.name));
         }
       } else {
         if (optr->is(TT_SCRAP_CMD))
-          jptr->proj = ((thscrap*)optr)->proj;
+          jptr->proj = dynamic_cast<thscrap*>(optr)->proj;
         else
-          jptr->proj = ((th2ddataobject *)optr)->fscrapptr->proj;
+          jptr->proj = dynamic_cast<th2ddataobject*>(optr)->fscrapptr->proj;
       }
     }    
     
@@ -921,49 +925,49 @@ void thdb2d::process_join_references(thjoin * jptr)
         if (prev_item != NULL) {
           if (!(prev_item->object->is(TT_SCRAP_CMD))) {
             if (citem->name.survey != NULL)
-              ththrow("{} -- scrap can not follow not scrap -- {}@{}:{}", jptr->throw_source(),
-                citem->name.name,citem->name.survey,citem->mark);
+              throw thexception(fmt::format("{} -- scrap can not follow not scrap -- {}@{}:{}", jptr->throw_source(),
+                citem->name.name,citem->name.survey,citem->mark));
             else
-              ththrow("{} -- scrap can not follow not scrap  -- {}:{}", jptr->throw_source(),
-                citem->name.name,citem->mark);
+              throw thexception(fmt::format("{} -- scrap can not follow not scrap  -- {}:{}", jptr->throw_source(),
+                citem->name.name,citem->mark));
           }
           prev_item = prev_item->prev_item;
           if (prev_item != NULL) {
             if (citem->name.survey != NULL)
-              ththrow("{} -- join of more than 2 scraps not supported -- {}@{}:{}", jptr->throw_source(),
-                citem->name.name,citem->name.survey,citem->mark);
+              throw thexception(fmt::format("{} -- join of more than 2 scraps not supported -- {}@{}:{}", jptr->throw_source(),
+                citem->name.name,citem->name.survey,citem->mark));
             else
-              ththrow("{} -- join of more than 2 scraps not supported -- {}:{}", jptr->throw_source(),
-                citem->name.name,citem->mark);
+              throw thexception(fmt::format("{} -- join of more than 2 scraps not supported -- {}:{}", jptr->throw_source(),
+                citem->name.name,citem->mark));
           }
         }
         citem->object = optr;    
         break;
       case TT_POINT_CMD:
-        pointp = (thpoint*) optr;
+        pointp = dynamic_cast<thpoint*>(optr);
         if (citem->mark != NULL) {
           if (citem->name.survey != NULL)
-            ththrow("{} -- mark reference with point -- {}@{}:{}", jptr->throw_source(),
-              citem->name.name,citem->name.survey,citem->mark);
+            throw thexception(fmt::format("{} -- mark reference with point -- {}@{}:{}", jptr->throw_source(),
+              citem->name.name,citem->name.survey,citem->mark));
           else
-            ththrow("{} -- mark reference with point -- {}:{}", jptr->throw_source(),
-              citem->name.name,citem->mark);
+            throw thexception(fmt::format("{} -- mark reference with point -- {}:{}", jptr->throw_source(),
+              citem->name.name,citem->mark));
         }
         citem->point = pointp->point;
         citem->line_point = NULL;
         citem->object = optr;    
         break;
       case TT_LINE_CMD:
-        linep = (thline *) optr;
+        linep = dynamic_cast<thline*>(optr);
         if (citem->mark != NULL) {
           citem->line_point = linep->get_marked_station(citem->mark);
           if (citem->line_point == NULL) {
             if (citem->name.survey != NULL)
-              ththrow("{} -- marked station not found -- {}@{}:{}", jptr->throw_source(),
-                citem->name.name,citem->name.survey,citem->mark);
+              throw thexception(fmt::format("{} -- marked station not found -- {}@{}:{}", jptr->throw_source(),
+                citem->name.name,citem->name.survey,citem->mark));
             else
-              ththrow("{} -- marked station not found -- {}:{}", jptr->throw_source(),
-                citem->name.name,citem->mark);
+              throw thexception(fmt::format("{} -- marked station not found -- {}:{}", jptr->throw_source(),
+                citem->name.name,citem->mark));
           }
           citem->point = citem->line_point->point;
         }
@@ -971,11 +975,11 @@ void thdb2d::process_join_references(thjoin * jptr)
         break;
       default:
         if (citem->name.survey != NULL)
-          ththrow("{} -- invalid join object -- {}@{}", jptr->throw_source(),
-            citem->name.name,citem->name.survey);
+          throw thexception(fmt::format("{} -- invalid join object -- {}@{}", jptr->throw_source(),
+            citem->name.name,citem->name.survey));
         else
-          ththrow("{} -- invalid join object -- {}", jptr->throw_source(),
-            citem->name.name);
+          throw thexception(fmt::format("{} -- invalid join object -- {}", jptr->throw_source(),
+            citem->name.name));
     }
     citem = citem->next_item;
   }  
@@ -998,11 +1002,11 @@ void thdb2d::process_point_references(thpoint * pp)
         }  
         if (pp->station_name.id == 0) {
           if (pp->station_name.survey != NULL)
-            ththrow("{} -- station does not exist -- {}@{}", pp->throw_source(),
-              pp->station_name.name,pp->station_name.survey);
+            throw thexception(fmt::format("{} -- station does not exist -- {}@{}", pp->throw_source(),
+              pp->station_name.name,pp->station_name.survey));
           else
-            ththrow("{} -- station does not exist -- {}", pp->throw_source(),
-              pp->station_name.name);
+            throw thexception(fmt::format("{} -- station does not exist -- {}", pp->throw_source(),
+              pp->station_name.name));
         }
         if (pp->type == TT_POINT_TYPE_STATION)
           pp->fscrapptr->insert_adata(&(this->db->db1d.station_vec[pp->station_name.id - 1]));
@@ -1019,11 +1023,11 @@ void thdb2d::process_point_references(thpoint * pp)
         }  
         if (pp->from_name.id == 0) {
           if (pp->station_name.survey != NULL)
-            ththrow("{} -- station does not exist -- {}@{}", pp->throw_source(),
-              pp->from_name.name,pp->from_name.survey);
+            throw thexception(fmt::format("{} -- station does not exist -- {}@{}", pp->throw_source(),
+              pp->from_name.name,pp->from_name.survey));
           else
-            ththrow("{} -- station does not exist -- {}", pp->throw_source(),
-              pp->from_name.name);
+            throw thexception(fmt::format("{} -- station does not exist -- {}", pp->throw_source(),
+              pp->from_name.name));
         }
       }  
       break;
@@ -1035,8 +1039,8 @@ void thdb2d::process_point_references(thpoint * pp)
         optr = this->db->get_object(pp->station_name,pp->fsptr);
         if (optr != NULL) {
           if (optr->get_class_id() == TT_SCRAP_CMD) {
-            if (((thscrap *)optr)->proj->type == TT_2DPROJ_NONE) {
-              pp->text = (char *) optr;
+            if (auto& scrap = dynamic_cast<thscrap&>(*optr); scrap.proj->type == TT_2DPROJ_NONE) {
+              pp->data = &scrap;
             } else {
               extend_error = true;
               err_code = "not a none scrap projection";
@@ -1052,11 +1056,11 @@ void thdb2d::process_point_references(thpoint * pp)
         }
         if (extend_error) {
           if (pp->station_name.survey != NULL)
-            ththrow("{} -- {} -- {}@{}", pp->throw_source(), err_code,
-              pp->station_name.name,pp->station_name.survey);
+            throw thexception(fmt::format("{} -- {} -- {}@{}", pp->throw_source(), err_code,
+              pp->station_name.name,pp->station_name.survey));
           else
-            ththrow("{} -- {} -- {}", pp->throw_source(), err_code,
-              pp->station_name.name);
+            throw thexception(fmt::format("{} -- {} -- {}", pp->throw_source(), err_code,
+              pp->station_name.name));
         }
       }  
       break;       
@@ -1078,11 +1082,11 @@ void thdb2d::process_scrap_references(thscrap * sptr)
       }  
       if (lp->station_name.id == 0) {
         if (lp->station_name.survey != NULL)
-          ththrow("{} -- invalid station reference -- {}@{}", sptr->throw_source(),
-            lp->station_name.name,lp->station_name.survey);
+          throw thexception(fmt::format("{} -- invalid station reference -- {}@{}", sptr->throw_source(),
+            lp->station_name.name,lp->station_name.survey));
         else
-          ththrow("{} -- invalid station reference -- {}", sptr->throw_source(),
-            lp->station_name.name);
+          throw thexception(fmt::format("{} -- invalid station reference -- {}", sptr->throw_source(),
+            lp->station_name.name));
       }
       
       lp->station = &(this->db->db1d.station_vec[lp->station_name.id - 1]);
@@ -1122,16 +1126,16 @@ void thdb2d::log_distortions() {
         i++;
       }
       
-      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist >= s2->maxdist; });
-      thlog.printf("\n\n###################### scrap distortions #######################\n");
-      thlog.printf(" PROJECTION: %s%s%s\n", 
+      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist > s2->maxdist; });
+      thlog("\n\n###################### scrap distortions #######################\n");
+      thlog(fmt::format(" PROJECTION: {}{}{}\n", 
         thmatch_string(prj->type,thtt_2dproj), 
         strlen(prj->index) > 0 ? ":" : "",
-        strlen(prj->index) > 0 ? prj->index : "");
-      thlog.printf(" AVERAGE  MAXIMAL  SCRAP\n");
+        strlen(prj->index) > 0 ? prj->index : ""));
+      thlog(" AVERAGE  MAXIMAL  SCRAP\n");
       for(i = 0; i < ns; i++)
-        thlog.printf(" %6.2f%%  %6.2f%%  %s@%s\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name);
-      thlog.printf("################### end of scrap distortions ###################\n");
+        thlog(fmt::format(" {:6.2f}%  {:6.2f}%  {}@{}\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name));
+      thlog("################### end of scrap distortions ###################\n");
     }
     prjli++;
   }
@@ -1146,16 +1150,16 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
   double z;
   thmap * cm;
   thmap * bm;
-  thlog.printf("\n\n############### export maps & scraps selection #################\n");
+  thlog("\n\n############### export maps & scraps selection #################\n");
   while (cmap != NULL) {
     cm = (thmap *) cmap->map;
     cm->calc_z();
     z = cm->z;
     if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
     if (strlen(cm->name) > 0) {
-    	thlog.printf("M ");
-    	thlog.printf_double("%8.2f", "    -.--", z);
-    	thlog.printf(" %s@%s (%s)\n", cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : "");
+    	thlog("M ");
+    	print_double(z);
+    	thlog(fmt::format(" {}@{} ({})\n", cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : ""));
     }
 
 
@@ -1171,18 +1175,18 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
       if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
       cmi = cbm->bm->first_item;
       if ((cm->id != bm->id) && (strlen(bm->name) > 0)) {
-		  thlog.printf("M ");
-		  thlog.printf_double("%8.2f", "    -.--", z);
-    	  thlog.printf(" %s@%s (%s)\n", bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : "");
+		    thlog("M ");
+		    print_double(z);
+    	  thlog(fmt::format(" {}@{} ({})\n", bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : ""));
       }
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
-          cs = (thscrap *) cmi->object;
+          cs = dynamic_cast<thscrap*>(cmi->object);
           z = cs->z;
           if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
-		  thlog.printf("S ");
-		  thlog.printf_double("%8.2f", "    -.--", z);
-          thlog.printf(" %s@%s (%s)\n", cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
+		      thlog("S ");
+		      print_double(z);
+          thlog(fmt::format(" {}@{} ({})\n", cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : ""));
         }
         cmi = cmi->next_item;
       }
@@ -1190,7 +1194,7 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
     }
     cmap = cmap->next_item;
   }
-  thlog.printf("########## end of export maps & scraps selection ###############\n");
+  thlog("########## end of export maps & scraps selection ###############\n");
 }
 
 
@@ -1292,7 +1296,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 //  unsigned long searchid;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
-      ppp = (thpoint *)(*obi).get();
+      ppp = dynamic_cast<thpoint*>(obi->get());
       if ((ppp->fscrapptr->proj->id == prj->id) && (ppp->type == TT_POINT_TYPE_STATION) && (ppp->station_name.id != 0)) {
         // let's add control point to given scrap
         cp = ppp->fscrapptr->insert_control_point();
@@ -1386,13 +1390,6 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 
   pps = prj->first_scrap;  
   while (pps != NULL) {
-  
-//    // no scraps without stations
-//    if (pps->ncp < 1) {
-//      pps->throw_source();
-//      threthrow(("no reference station found in scrap -- %s@%s",
-//        pps->name,pps->fsptr->get_full_name()))
-//    }
     
     switch (prj->type) {
 
@@ -1668,13 +1665,13 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 //    if (num_scrap_att < numscraps) {
 //      xscrap = xscraps;
 //      unsigned nxscrap = 0;
-//      thlog.printf("error info -- scraps not attached to extended");
+//      thlog().printf("error info -- scraps not attached to extended");
 //      if (strlen(prj->index) == 0)
-//        thlog.printf(":%s",prj->index);
-//      thlog.printf("projection:\n");
+//        thlog().printf(":%s",prj->index);
+//      thlog().printf("projection:\n");
 //      while(nxscrap < numscraps) {
 //        if (!xscrap->is_attached)
-//          thlog.printf("\t%s@%s\n",xscrap->scrap->name,xscrap->scrap->fsptr->get_full_name());
+//          thlog().printf("\t%s@%s\n",xscrap->scrap->name,xscrap->scrap->fsptr->get_full_name());
 //        xscrap++;
 //        nxscrap++;
 //      }
@@ -1778,7 +1775,7 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
     while (p2dobj != NULL) {
       switch (p2dobj->get_class_id()) {
         case TT_POINT_CMD:
-          ppoint = (thpoint *) p2dobj;
+          ppoint = dynamic_cast<thpoint*>(p2dobj);
           if (!thisnan(ppoint->orient)) {
             ppoint->orient += ps->mr;
             if (ppoint->orient < 0) {
@@ -1816,7 +1813,7 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
           //ppoint->ysize *= ps->ms;
           break;
         case TT_LINE_CMD:
-          pline = (thline *) p2dobj;
+          pline = dynamic_cast<thline*>(p2dobj);
           plp = pline->first_point;
 
           while (plp != NULL) {            
@@ -1877,8 +1874,8 @@ void thdb2d::pp_find_scraps_and_joins(thdb2dprj * prj)
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_SCRAP_CMD)) {
-      if (((thscrap *)(*obi).get())->proj->id == prj->id) {
-        cscrap = (thscrap *)(*obi).get();
+      if (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id) {
+        cscrap = dynamic_cast<thscrap*>(obi->get());
         if (pscrap != NULL)
           pscrap->proj_next_scrap = cscrap;
         else {
@@ -1892,9 +1889,9 @@ void thdb2d::pp_find_scraps_and_joins(thdb2dprj * prj)
     }
     
     if (((*obi)->get_class_id() == TT_JOIN_CMD) &&
-        (((thjoin *)(*obi).get())->proj != NULL) &&
-        (((thjoin *)(*obi).get())->proj->id == prj->id)) {    
-      cjoin = (thjoin *)(*obi).get();
+        (dynamic_cast<thjoin*>(obi->get())->proj != NULL) &&
+        (dynamic_cast<thjoin*>(obi->get())->proj->id == prj->id)) {    
+      cjoin = dynamic_cast<thjoin*>(obi->get());
       if (pjoin != NULL)
         pjoin->proj_next_join = cjoin;
       else {
@@ -2130,7 +2127,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
     while (p2dobj != NULL) {
       switch (p2dobj->get_class_id()) {
         case TT_POINT_CMD:
-          ppoint = (thpoint *) p2dobj;
+          ppoint = dynamic_cast<thpoint*>(p2dobj);
           if (!thisnan(ppoint->orient)) {
             ppoint->orient += pscrap->mr;
             if (ppoint->orient < 0) {
@@ -2144,14 +2141,14 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
           //  ppoint->ysize *= pscrap->ms;
           switch (ppoint->type) {
             case TT_POINT_TYPE_STATION_NAME:
-              if (ppoint->text == NULL) {
+              if (ppoint->get_text() == nullptr) {
                 neas = pscrap->get_nearest_station(ppoint->point);
                 if (neas == NULL) {
-                  ththrow("{} -- unable to determine station name", ppoint->throw_source());
+                  throw thexception(fmt::format("{} -- unable to determine station name", ppoint->throw_source()));
                 } else {
                   ppoint->station_name.name = neas->name;
                   ppoint->station_name.psurvey = neas->survey;
-                  ppoint->text = neas->name;
+                  ppoint->data = std::string(neas->name);
                 }
               }
               break;
@@ -2159,7 +2156,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
               if (ppoint->ysize > 0.0) {
                 neas = pscrap->get_nearest_station(ppoint->point);
                 if (neas == NULL) {
-                  ththrow("{} -- unable to determine altitude", ppoint->throw_source());
+                  throw thexception(fmt::format("{} -- unable to determine altitude", ppoint->throw_source()));
                 } else {
                   ppoint->xsize += neas->z;
                   ppoint->ysize = 0.0;
@@ -2171,7 +2168,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
           }
           break;
         case TT_LINE_CMD:
-          pline = (thline *) p2dobj;
+          pline = dynamic_cast<thline*>(p2dobj);
           plp = pline->first_point;
           while (plp != NULL) {            
             if (!thisnan(plp->orient)) {
@@ -2195,7 +2192,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
                   (plp->lsize > 0.0)) {
                   neas = pscrap->get_nearest_station(plp->point);
                   if (neas == NULL) {
-                    ththrow("{} -- unable to determine altitude", pline->throw_source());
+                    throw thexception(fmt::format("{} -- unable to determine altitude", pline->throw_source()));
                   } else {
                     plp->rsize += neas->z;
                     plp->lsize = 0.0;
@@ -2342,7 +2339,7 @@ void thdb2d::pp_morph_points(thdb2dprj * prj)
     pobj = pscrap->fs2doptr;
     while (pobj != NULL) {
       if (pobj->get_class_id() == TT_POINT_CMD) {
-        pointp = (thpoint *) pobj;
+        pointp = dynamic_cast<thpoint*>(pobj);
         if (pointp->type == TT_POINT_TYPE_EXTRA) {
           pointp->check_extra();
           if ((pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
@@ -2379,10 +2376,10 @@ void thdb2d::pp_morph_points(thdb2dprj * prj)
 
 
 struct joincand {
-	th2ddataobject * obj;
-	thdb2dlp * lp;
-	thdb2dpt * pt;
-	long fileid;
+	th2ddataobject * obj = {};
+	thdb2dlp * lp = {};
+	thdb2dpt * pt = {};
+	long fileid = {};
 };
 
 
@@ -2412,7 +2409,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
 	thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SCRAP_CMD) {
-			scp = (thscrap *)(*obi).get();
+			scp = dynamic_cast<thscrap*>(obi->get());
 			if ((scp->proj->type != TT_2DPROJ_NONE) && (scp->proj->id == prj->id)) {
  			o2d = scp->fs2doptr;
 			while (o2d != NULL) {
@@ -2425,7 +2422,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
 				thline * pln;
 					switch (o2d->get_class_id()) {
 						case TT_LINE_CMD:
-							pln = (thline*) o2d;
+							pln = dynamic_cast<thline*>(o2d);
 							switch (pln->type) {
  								case TT_LINE_TYPE_LABEL:
  								case TT_LINE_TYPE_SECTION:
@@ -2522,8 +2519,8 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             ji->is_active = false;
           break;
         case TT_LINE_CMD:
-          if ((((thline *)ji->object)->first_point != NULL) &&
-             (((thline *)ji->object)->first_point->point != NULL)) {
+          if ((dynamic_cast<thline*>(ji->object)->first_point != NULL) &&
+             (dynamic_cast<thline*>(ji->object)->first_point->point != NULL)) {
             ji->is_active = true;
             nactive++;
           } else
@@ -2538,10 +2535,10 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
   
             // z dvoch scrapov urobime body na ciarach
             if (ccount == 0) {
-              sc1 = (thscrap *) ji->object;
+              sc1 = dynamic_cast<thscrap*>(ji->object);
               ji->is_active = false;
               ji = ji->next_item;
-              sc2 = (thscrap *) ji->object;
+              sc2 = dynamic_cast<thscrap*>(ji->object);
               ji->is_active = false;
             }
             
@@ -2713,15 +2710,15 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
           if (ji->is_active && 
               (ji->object->get_class_id() == TT_LINE_CMD)) {
             if (l1 == NULL)
-              l1 = ((thline *)ji->object);
+              l1 = dynamic_cast<thline*>(ji->object);
             else
-              l2 = ((thline *)ji->object);
+              l2 = dynamic_cast<thline*>(ji->object);
           }  
           ji = ji->next_item;
         }
         
         if (l2 == NULL) {
-          ththrow("{} -- can not determine any join point", jptr->throw_source());
+          throw thexception(fmt::format("{} -- can not determine any join point", jptr->throw_source()));
         }
         
         // teraz najde spolocny bod kriviek l1 a l2
@@ -2758,15 +2755,15 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
         if (ji->is_active &&
             (ji->point == NULL) &&
             (ji->object->get_class_id() == TT_LINE_CMD)) {
-          if (std::hypot(((thline*)ji->object)->first_point->point->xt - searchpt->xt,
-              ((thline*)ji->object)->first_point->point->yt - searchpt->yt) <
-              std::hypot(((thline*)ji->object)->last_point->point->xt - searchpt->xt,
-              ((thline*)ji->object)->last_point->point->yt - searchpt->yt)) {
-            ji->point = ((thline*)ji->object)->first_point->point;
-            ji->line_point = ((thline*)ji->object)->first_point;
+          if (std::hypot(dynamic_cast<thline*>(ji->object)->first_point->point->xt - searchpt->xt,
+              dynamic_cast<thline*>(ji->object)->first_point->point->yt - searchpt->yt) <
+              std::hypot(dynamic_cast<thline*>(ji->object)->last_point->point->xt - searchpt->xt,
+              dynamic_cast<thline*>(ji->object)->last_point->point->yt - searchpt->yt)) {
+            ji->point = dynamic_cast<thline*>(ji->object)->first_point->point;
+            ji->line_point = dynamic_cast<thline*>(ji->object)->first_point;
           } else {
-            ji->point = ((thline*)ji->object)->last_point->point;
-            ji->line_point = ((thline*)ji->object)->last_point;
+            ji->point = dynamic_cast<thline*>(ji->object)->last_point->point;
+            ji->line_point = dynamic_cast<thline*>(ji->object)->last_point;
           }
         }
         ji = ji->next_item;
@@ -2858,10 +2855,10 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
     ji = jlist;
     while ((!has_target) && (ji != NULL)) {
       if ((ji->object->get_class_id() == TT_POINT_CMD) &&
-          (((thpoint*)ji->object)->cpoint != NULL)) {
+          (dynamic_cast<thpoint*>(ji->object)->cpoint != NULL)) {
         has_target = true;
-        tx = ((thpoint*)ji->object)->cpoint->tx;
-        ty = ((thpoint*)ji->object)->cpoint->ty;
+        tx = dynamic_cast<thpoint*>(ji->object)->cpoint->tx;
+        ty = dynamic_cast<thpoint*>(ji->object)->cpoint->ty;
       }
       ji = ji->next_list_item;
     }
@@ -2885,7 +2882,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
     std::set<thscrap *> join_scraps;
     while (ji != NULL) {
       if ((ji->object->get_class_id() != TT_POINT_CMD) ||
-          (((thpoint*)ji->object)->cpoint == NULL)) {
+          (dynamic_cast<thpoint*>(ji->object)->cpoint == NULL)) {
         cp = ji->point->pscrap->insert_control_point();
         cp->pt = ji->point;
         cp->tx = tx;
@@ -2959,10 +2956,10 @@ void thdb2d::pp_smooth_lines(thdb2dprj * prj)
     optr = pscrap->fs2doptr;
     while (optr != NULL) {
       if ((optr->get_class_id() == TT_LINE_CMD)
-        && (((thline *)optr)->first_point != NULL)
-        && (((thline *)optr)->first_point->nextlp != NULL)) {
+        && (dynamic_cast<thline*>(optr)->first_point != NULL)
+        && (dynamic_cast<thline*>(optr)->first_point->nextlp != NULL)) {
         
-        pt = ((thline *) optr)->first_point->nextlp;
+        pt = dynamic_cast<thline*>(optr)->first_point->nextlp;
         while (pt->nextlp != NULL) {
           if ((pt->smooth == TT_TRUE) &&
               (pt->cp2 != NULL) && (pt->nextlp->cp1 != NULL))
@@ -3144,7 +3141,7 @@ void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
     while (so != NULL) {
       switch (so->get_class_id()) {
         case TT_LINE_CMD:
-          lp = ((thline*)so)->first_point;
+          lp = dynamic_cast<thline*>(so)->first_point;
           while (lp != NULL) {
             numcdist += 1.0;
             if (lp->cp1 != NULL) {
@@ -3164,10 +3161,10 @@ void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
             while (so2 != NULL) {
               switch(so2->get_class_id()) {
                 case TT_POINT_CMD:
-                  calcdist(((thpoint*)so2)->point,lp->point);
+                  calcdist(dynamic_cast<thpoint*>(so2)->point,lp->point);
                   break;
                 case TT_LINE_CMD:
-                  lp2 = ((thline*)so2)->first_point;
+                  lp2 = dynamic_cast<thline*>(so2)->first_point;
                   while (lp2 != NULL) {
                     calcdist(lp->point, lp2->point);
                     lp2 = lp2->nextlp;
@@ -3185,12 +3182,12 @@ void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
           while (so2 != NULL) {
             switch(so2->get_class_id()) {
               case TT_POINT_CMD:
-                calcdist(((thpoint*)so)->point,((thpoint*)so2)->point);
+                calcdist(dynamic_cast<thpoint*>(so)->point,dynamic_cast<thpoint*>(so2)->point);
                 break;
               case TT_LINE_CMD:
-                lp2 = ((thline*)so2)->first_point;
+                lp2 = dynamic_cast<thline*>(so2)->first_point;
                 while (lp2 != NULL) {
-                  calcdist(((thpoint*)so)->point, lp2->point);
+                  calcdist(dynamic_cast<thpoint*>(so)->point, lp2->point);
                   lp2 = lp2->nextlp;
                 }
                 break;
@@ -3237,7 +3234,7 @@ bool thdb2d::pp_process_adjustments(thdb2dprj * prj)
     while (so != NULL) {
       if (so->get_class_id() == TT_LINE_CMD) {
         
-        ln = (thline*) so;
+        ln = dynamic_cast<thline*>(so);
         
         // vertical adjustment
         // 1. skusi ci je nejaky adjustment
@@ -3422,8 +3419,8 @@ thdb2dprj * thdb2d::get_projection(int id) {
 
 
 struct area_proc {
-  tharea * area;
-  double x, y, a, s;
+  tharea * area = {};
+  double x = {}, y = {}, a = {}, s = {};
 };
 
 void thdb2d::process_areas_in_projection(thdb2dprj * prj)
@@ -3462,7 +3459,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   for (cscrap = prj->first_scrap; cscrap != NULL; cscrap = cscrap->proj_next_scrap) {
     for (obj = cscrap->fs2doptr; obj != NULL; obj = obj->nscrapoptr) {
       if (obj->get_class_id() == TT_AREA_CMD) {
-        carea = (tharea*) obj;
+        carea = dynamic_cast<tharea*>(obj);
         cnt = 0;
         for (bln = carea->first_line; bln != NULL; bln = bln->next_line) {
           line = bln->line;
@@ -3628,13 +3625,13 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   "####################### metapost log file ########################\n",
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
-    ththrow("metapost exit code -- {}", retcode);
+    throw thexception(fmt::format("metapost exit code -- {}", retcode));
   }
 
   // load data back to therion
   auto af = thopen_file("data.1","r");
   if (!af)
-    ththrow("can't open file data.1");
+    throw thexception("can't open file data.1");
   double n[6] = {};
   com.guarantee(256);
   std::unique_ptr<thline> cln;

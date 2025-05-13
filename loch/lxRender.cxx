@@ -720,7 +720,7 @@ void lxRenderFile::RenderBMPHeader() {
     wxUint32  h_res, v_res;   // image resolution in dpi
     wxUint32  num_clrs;       // number of colors used
     wxUint32  num_signif_clrs;// number of significant colors
-  } hdr;
+  } hdr = {};
 
 
   double imgRes;

@@ -26,7 +26,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
@@ -34,12 +34,13 @@
 #define thwarppt_h
 #define THERION
 
-#include <vector>
-
 #include "thtrans.h"
 #include "thwarppme.h"
 #include "thwarppdef.h"
 
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace therion
 {
@@ -63,9 +64,9 @@ namespace therion
     {
       private:
         bool m_initialized;          //!< whether the map has been initialized
-        std::vector< therion::warp::point_pair * > mPairs;         //!< vector of point pairs
-        std::vector< therion::warp::line * > mLines;         //!< vector of legs (lines)
-        std::vector< therion::warp::basic_pair * > mPlaquettes; //!< vector of 4-plaquettes
+        std::vector<std::unique_ptr<therion::warp::basic_pair>> mPlaquettes; //!< vector of 4-plaquettes
+        std::vector<std::unique_ptr<therion::warp::point_pair>> mPairs;         //!< vector of point pairs
+        std::vector<std::unique_ptr<therion::warp::line>> mLines;         //!< vector of legs (lines)
        
         double m_bound3;   //!< bound for triangles
         double m_bound4;   //!< bound for plaquettes
@@ -89,15 +90,6 @@ namespace therion
          * @param bound4   bound for plaquettes
          */
         plaquette_algo( double bound3, double bound4 );
-        
-        /** dstr
-         */
-        ~plaquette_algo();
-        
-        /** clear internal mapping data
-         */
-        void reset( );
-    
     
         /** accessor to the "from" origin 
          * @return origin in the "from" image

@@ -21,14 +21,15 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thendscrap.h"
 #include "thexception.h"
-#include "thchenc.h"
 #include "thdatabase.h"
+
+#include <fmt/core.h>
 
 thendscrap::thendscrap()
 {
@@ -89,7 +90,7 @@ void thendscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned l
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow("invalid keyword -- {}", *args);
+        throw thexception(fmt::format("invalid keyword -- {}", *args));
       break;
       
     default:

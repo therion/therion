@@ -43,7 +43,7 @@ void lxLRUD::SetProfile(int sec_type)
 }
 
 
-void lxLRUD::InsertShot(double * from, double * to, double * fromLRUD, double * toLRUD, void * usrData)
+void lxLRUD::InsertShot(double * from, double * to, double * fromLRUD, double * toLRUD, std::any usrData)
 {
 
   lxLRUDShot shot;
@@ -66,7 +66,7 @@ void lxLRUD::InsertShot(double * from, double * to, double * fromLRUD, double * 
   shot.xfrom = this->i.GetStationID(shot.from, true);
   shot.xto = this->i.GetStationID(shot.to, true);
   
-  shot.usr_data = usrData;
+  shot.usr_data = std::move(usrData);
 
   this->i.shots.insert(this->i.shots.end(), shot);
 
@@ -126,13 +126,13 @@ xcNAGet(FR,fr,tl)
 
 
 struct xcNode {
-  size_t id;
+  size_t id = {};
   lxVec p;
   std::list<xcNodeArrow> arrows;
 };
 
 struct xcSeriesStart {
-  double prob;
+  double prob = {};
   xcNodeArrow arrow;
 };
 

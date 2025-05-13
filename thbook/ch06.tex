@@ -25,8 +25,8 @@ If you want to compile Therion from source code and run it, you need
 * GNU make or CMake
 * Perl
 * Python 3
-* PROJ library (\www{https://proj.org/}). Supported versions are:
-  v4: 4.9.3; v5: 5.1.0 and newer; v6: 6.2.1 and newer; 7.0.1 and newer.
+* PROJ library (\www{https://proj.org/}). Supported versions are
+  6.3.1 and newer (except 7.0.0).
 * fmt (\www{https://github.com/fmtlib/fmt}).
 * Tcl/Tk 8.4.3 and newer (\www{https://www.tcl.tk}) with
   {\it BWidget} widget set  \hfil\break
@@ -73,11 +73,12 @@ For Windows consider using MinGW and MSYS2 (\www{https://www.msys2.org/}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
-Installing dependencies to compile Therion on Ubuntu 20.04 or 22.04:
+Installing dependencies to compile Therion on Ubuntu 22.04:
 
 {\rightskip 0pt plus 3cm
   |sudo apt install|
   |bwidget|
+  |catch2|
   |cmake|
   |gcc|
   |ghostscript|
@@ -94,7 +95,32 @@ Installing dependencies to compile Therion on Ubuntu 20.04 or 22.04:
   |tcl-dev|
   |texlive-binaries|
   |texlive-metapost|
-  |zlib1g-dev|.
+  |zlib1g-dev|
+\par}
+
+Installing dependencies on Ubuntu 24.10:
+
+{\rightskip 0pt plus 3cm
+  |sudo apt install|
+  |bwidget|
+  |catch2|
+  |cmake|
+  |gcc|
+  |ghostscript|
+  |imagemagick|
+  |lcdf-typetools|
+  |libfmt-dev|
+  |libfreetype-dev|
+  |libjpeg-dev|
+  |libpng-dev|
+  |libproj-dev|
+  |libtk-img-dev|
+  |libvtk9-dev|
+  |libwxgtk3.2-dev|
+  |tcl-dev|
+  |texlive-binaries|
+  |texlive-metapost|
+  |zlib1g-dev|
 \par}
 
 Installing dependencies in Fedora 37:
@@ -103,6 +129,7 @@ Installing dependencies in Fedora 37:
   |sudo dnf install|
   |brotli-devel|
   |bwidget|
+  |catch2-devel|
   |cmake|
   |fmt-devel|
   |g++|
@@ -146,7 +173,7 @@ Here is a selection of parameters which can be used with cmake:
   |-G Ninja| to use {\it Ninja} build system instead of make,
   or |-G "MSYS Makefiles"| to build using {\it make} under MSYS2
 * {\catcode`\=12|-DUSE_BUNDLED_SHAPELIB=OFF|} = use the system Shapelib library
-* {\catcode`\=12|-DUSE_BUNDLED_CATCH2=OFF|} = use the system Catch2 library
+* {\catcode`\=12|-DUSE_BUNDLED_CATCH2=ON|} = use the bundled version of Catch2 library
 * {\catcode`\=12|-DECM_ENABLE_SANITIZERS=<option>|} = use runtime sanitizers, relevant options:
 
   |address| -- detects invalid memory accesses, use-after-free, double free, memory leaks, useful for debugging
@@ -174,11 +201,14 @@ Here is a selection of parameters which can be used with cmake:
 
 \endlist
 
-The following cmake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
+The following CMake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
 th-docs, loch-docs.
 
 \subsubchapter Legacy approach: using make.
 
+\NEW{6.3}This method is deprecated, use CMake instead.
+
+\iffalse
 \list
 * unpack the source distribution |therion-6.*.tar.gz|
 * |cd therion|
@@ -190,7 +220,7 @@ th-docs, loch-docs.
 
 {\it Make parameters}
 
-Therion's {\it makefile} may take some optional parameters.
+Therion's {\it Makefile} may take some optional parameters.
 
 \list
 * |config-linux|, |config-macosx|, |config-win32| = configure Therion for a
@@ -201,6 +231,7 @@ Therion's {\it makefile} may take some optional parameters.
 * |install| = install Therion
 * |clean| = delete all temporary files
 \endlist
+\fi
 
 \subsubchapter Hacker's guide.
 
@@ -225,6 +256,7 @@ Therion on multiple platforms.
 
 {\it Adding new translations}
 
+\nobreak
 Therion supports translation of map labels.
 Suppose you want to add a new language |xx|.
 
@@ -281,6 +313,7 @@ and compile Therion executable again.
 
 {\it Updating the geomagnetic model}
 
+\nobreak
 Therion uses the IGRF model to calculate the magnetic declination. Download the
 model in a txt format from \www{https://www.ngdc.noaa.gov/IAGA/vmod/igrf.html}
 and save it in the |geomag/| directory (e.g. |igrfXYcoeffs.txt|).
@@ -407,13 +440,16 @@ supported initialization commands follow.
   Using this option you can change any default therion text translation in output.
   For list of therion texts and available translations, see |thlang/texts.txt| file.
 
-* |cs-def <id> <proj4def>|\NEW{5.4}  %[other options]
+* |cs-def <id> <proj_def>|\NEW{5.4}  %[other options]
 
-  Define a new coordinate system |<id>| using Proj4 syntax.
+  Define a new coordinate system |<id>| using Proj syntax.
+  It is recommended to specify coordinate systems
+  using the EPSG codes directly (e.g.~EPSG:4258),
+  or using Well\discretionary{-}{-}{-}known text (WKT) definition.
 
 * |cs-trans <cs1> <cs2> <proj-pipeline>|\NEW{6.1.0}
 
-  Define a transforamation pipeline between two coordinate systems.
+  Define a transformation pipeline between two coordinate systems.
   \[See \www{https://proj.org/usage/transformation.html} for details of pipelines
   definition.] Both |cs1| and |cs2| can be lists of aliases
   enclosed in brackets.
@@ -429,29 +465,11 @@ supported initialization commands follow.
   |proj-missing-grid| option is set to |download| (otherwise it prints an error message
   and stops).
 
-  This option is ignored if Therion is using PROJ v6 or older.
+  This option is ignored if Therion is using PROJ v6.
 
   Example: {\rightskip 0pt plus 3cm\catcode`\=12
   |cs-trans [jtsk epsg:5513] [etrs34 epsg:25834] "+proj=pipeline +step +inv +proj=krovak +axis=wsu +lat_0=49.5 +lon_0=24.8333333333333 +alpha=30.2881397527778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +step +inv +proj=hgridshift +grids=sk_gku_JTSK03_to_JTSK.tif +step +proj=push +v_3 +step +proj=cart +ellps=bessel +step +proj=helmert +x=485.021 +y=169.465 +z=483.839 +rx=-7.786342 +ry=-4.397554 +rz=-4.102655 +s=0 +convention=coordinate_frame +step +inv +proj=cart +ellps=GRS80 +step +proj=pop +v_3 +step +proj=utm +zone=34 +ellps=GRS80"|
   \par}
-
-
-* |proj-auto <on/off>|\NEW{5.5}
-
-  \penalty50
-  If set |on|, let PROJ v6+ decide which transformation between coordinate systems
-  is optimal.\[In this case
-  the function |proj\_create\_crs\_to\_crs()| is used. Otherwise Therion calls
-  |proj\_create()| function in the PROJ library.] The selected transformations
-  are listed in the |log| file. It is recommended to specify coordinate systems
-  using the EPSG codes directly (e.g.~EPSG:4258).
-
-  If set |off| or if Therion uses PROJ older than v6, the source coordinates are
-  first transformed to |wgs-84|, then from |wgs-84| to the target coordinate
-  system. This might result in a suboptimal precision.
-
-  The default setting is |on|.\NEW{6.1.0} This option is ignored for those pairs of coordinate
-  systems which have a transformation pipeline defined (see |cs-trans|).
 
 * |proj-missing-grid <ignore/warn/fail/cache/download>|\NEW{5.5.1}
 
@@ -491,8 +509,7 @@ supported initialization commands follow.
   lets Proj to download the missing grids from the
   Internet. The grids are used in {\it subsequent} runs (in any mode).
 
-  The default setting is |download|.\NEW{6.1.0} The option |proj-missing-grid| is ignored if
-  |proj-auto| is |off| or Proj v5 or older is used.
+  The default setting is |download|.\NEW{6.1.0}\
   If Proj v6 is used by Therion, the settings
   |cache| and |download| are equivalent to |fail|, as the network
   connectivity is a feature of Proj v7 and later.

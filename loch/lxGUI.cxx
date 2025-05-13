@@ -73,7 +73,29 @@
 #endif
 
 
+#ifdef __WXGTK3__
+# if !(wxUSE_GLCANVAS_EGL-0)
+#  include <stdlib.h>
 
+// The GLX-based wxGLCanvas doesn't work under Wayland, and the code
+// segfaults: https://github.com/wxWidgets/wxWidgets/issues/17702
+//
+// Therefore we force X11 unless we're using the EGL-based wxGLCanvas
+// (which was added in wxWidgets 3.1.5 and hasn't been backported to
+// 3.0.x).
+//
+// Setting GDK_BACKEND=x11 is the recommended workaround, and it seems to
+// work to set it here.  GTK2 doesn't support Wayland, so doesn't need
+// this.
+struct ForceX11 {
+    ForceX11() {
+       setenv("GDK_BACKEND", "x11", 1);
+    }
+};
+static ForceX11 forcex11;
+
+# endif
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 // Main frame
@@ -301,7 +323,9 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_toolMenu->AppendSeparator();
     this->m_toolMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("Camera"));
     this->m_toolMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("Scene"));
-
+    this->m_toolMenu->AppendSeparator();
+    this->m_toolMenu->Append(LXMENU_EXPROT, _("Animation"));
+    
     wxMenu *viewMenu = new wxMenu;
     viewMenu->Append(LXMENU_CAMERA_ADJUST, _("Action"), cameraAdjustMenu);
     viewMenu->AppendCheckItem(LXMENU_CAMERA_AUTOROTATE, _("Rotation"));
@@ -1002,7 +1026,7 @@ void lxFrame::ToggleRotation() {
     this->canvas->m_sCameraAutoRotateSWatch.Start();
     this->setup->StartCameraMovement();
   } else {
-    ((wxStaticText *)(this->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED)))->SetLabel(_T(""));
+    dynamic_cast<wxStaticText*>(this->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED))->SetLabel(_T(""));
   }
 	this->UpdateM2TB();
 }
@@ -1192,6 +1216,7 @@ bool lxApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     // Use a double-buffered visual if available, as it will give much smoother
     // animation.
+    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
     int wx_gl_attribs[] = { 
 			WX_GL_RGBA,
 			WX_GL_DOUBLEBUFFER,

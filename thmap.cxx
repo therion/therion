@@ -21,14 +21,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thmap.h"
 #include "thexception.h"
 #include "thdb2dmi.h"
-#include "thchenc.h"
 #include "thscrap.h"
 #include "thobjectname.h"
 #include "thdb2dmi.h"
@@ -36,6 +35,7 @@
 #include "thconfig.h"
 #include "thdatabase.h"
 
+#include <fmt/core.h>
 
 thmap::thmap()
 {
@@ -128,7 +128,7 @@ void thmap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long i
     case TT_MAP_PROJECTION:
       projection = this->db->db2d.parse_projection(*args);
       if (!projection.parok)
-        ththrow("invalid parameters of projection");
+        throw thexception("invalid parameters of projection");
       this->expl_projection = projection.prj;
       break;
     
@@ -179,7 +179,7 @@ thmbuffer mapitmmb;
 void thmap::parse_item(int npar, char ** pars)
 {
   if ((npar != 1) && (npar != 3))
-    ththrow("invalid map item");
+    throw thexception("invalid map item");
   thdb2dmi * citem = this->db->db2d.insert_map_item();
   citem->itm_level = this->last_level;
   citem->source = this->db->csrc;
@@ -202,22 +202,22 @@ void thmap::parse_item(int npar, char ** pars)
     nw = mapitmmb.get_size();
     ss = mapitmmb.get_buffer();
     if ((nw < 2) || (nw > 3))
-      ththrow("invalid map shift specification -- {}", pars[1]);
+      throw thexception(fmt::format("invalid map shift specification -- {}", pars[1]));
 
     thtflength l;
     thparse_double(sv, citem->m_shift.m_x, ss[0]);
     if (sv != TT_SV_NUMBER)
-      ththrow("not a number -- {}", ss[0]);
+      throw thexception(fmt::format("not a number -- {}", ss[0]));
     thparse_double(sv, citem->m_shift.m_y, ss[1]);
     if (sv != TT_SV_NUMBER)
-      ththrow("not a number -- {}", ss[1]);
+      throw thexception(fmt::format("not a number -- {}", ss[1]));
     if (nw > 2)
       l.parse_units(ss[2]);
     citem->m_shift.m_x = l.transform(citem->m_shift.m_x);
     citem->m_shift.m_y = l.transform(citem->m_shift.m_y);
     citem->m_shift.m_preview = thmatch_token(pars[2],thtt_2dmi);
     if ((citem->m_shift.m_preview == TT_MAPITEM_UNKNOWN) || (citem->m_shift.m_preview == TT_MAPITEM_NORMAL))
-      ththrow("unsupported preview type -- {}", pars[2]);
+      throw thexception(fmt::format("unsupported preview type -- {}", pars[2]));
   }
 }
 
@@ -233,7 +233,7 @@ void thmap::parse_preview(char ** pars)
     case TT_MAPITEM_BELOW:
       break;
     default:
-      ththrow("unsupported preview type -- {}", *pars);
+      throw thexception(fmt::format("unsupported preview type -- {}", *pars));
   }
   thparse_objectname(citem->name,& this->db->buff_stations, pars[1]);
   if (this->last_item == NULL) {
@@ -257,19 +257,23 @@ void thmap::calc_z() {
   while (mi != NULL) {
     if (mi->type == TT_MAPITEM_NORMAL) {
       switch (mi->object->get_class_id()) {
-        case TT_MAP_CMD:
-          ((thmap*)mi->object)->calc_z();
-          if (((thmap*)mi->object)->nz > 0) {
-            this->z += ((thmap*)mi->object)->z;
+        case TT_MAP_CMD: {
+          auto* obj_map = dynamic_cast<thmap*>(mi->object);
+          obj_map->calc_z();
+          if (obj_map->nz > 0) {
+            this->z += obj_map->z;
             this->nz++;
           }
           break;
-        case TT_SCRAP_CMD:
-          if (!thisnan(((thscrap*)mi->object)->z)) {
-            this->z += ((thscrap*)mi->object)->z;
+        }
+        case TT_SCRAP_CMD: {
+          auto* obj_scrap = dynamic_cast<thscrap*>(mi->object);
+          if (!thisnan(obj_scrap->z)) {
+            this->z += obj_scrap->z;
             this->nz++;
           }
           break;
+        }
       }
     }
     mi = mi->next_item;

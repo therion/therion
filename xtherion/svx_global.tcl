@@ -22,7 +22,7 @@
 ## 
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 ## --------------------------------------------------------------------
 
 
@@ -48,7 +48,7 @@ set xth(prj,title) "survex source editor"
 set xth(about,info) "svxedit v1.0 beta\n \u00A9 2002 Stacho Mudrak"
 
 # fonts :-)
-case $tcl_platform(platform) {
+switch -- $tcl_platform(platform) {
   unix {
     set xth(gui,lfont) "Helvetica 10"
     set xth(gui,efont) {fixed 10 roman}

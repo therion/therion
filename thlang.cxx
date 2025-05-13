@@ -21,17 +21,19 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thlang.h"
-#include "thparse.h"
 #include "thlangdatafields.h"
 #include "thinit.h"
 #include "thconfig.h"
 #include "thdatabase.h"
 #include "thexception.h"
+
+#include <fmt/core.h>
+
 #include <map>
 
 
@@ -68,7 +70,7 @@ int thlang_parse(const char * str) {
   // map this to the correct code for backward compatibility.
   if (strcmp(str, "en_UK") == 0) {
     str = "en_GB";
-  } else if (strcmp(str, "cz") == 0) {  // incorect code "cz" used for Czech since 2004
+  } else if (strcmp(str, "cz") == 0) {  // incorrect code "cz" used for Czech since 2004
     str = "cs";
   }
   return thmatch_token(str, thtt_lang);
@@ -99,7 +101,7 @@ void thlang_set_translation(char * lang, char * text, char * translation) {
   int lang_id;
   lang_id = thlang_parse(lang);
   if (lang_id == THLANG_UNKNOWN)
-    ththrow("unknown language -- {}", lang);
+    throw thexception(fmt::format("unknown language -- {}", lang));
   int text_id;
   text_id = thmatch_token(text, thtt_texts);
   if (text_id == -1) {
@@ -109,7 +111,7 @@ void thlang_set_translation(char * lang, char * text, char * translation) {
       (strncmp(text,"area u:",7) == 0)) {
         ulang_map[thlang_str(lang_id, thdb.strstore(text, true))] = thdb.strstore(translation);
     } else
-      ththrow("unknown text -- {}", text);
+      throw thexception(fmt::format("unknown text -- {}", text));
   } else { 
     thlang_translations[text_id][lang_id] = thdb.strstore(translation);
   }

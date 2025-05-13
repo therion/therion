@@ -1,8 +1,28 @@
 ---
-Checks: '-*,modernize-use-override,clang-analyzer-cplusplus*,clang-analyzer-unix*,misc-definitions-in-headers,bugprone*,-bugprone-easily-swappable-parameters,-bugprone-macro-parentheses,-bugprone-narrowing-conversions,-bugprone-suspicious-enum-usage,-bugprone-integer-division,-bugprone-implicit-widening-of-multiplication-result,-bugprone-incorrect-roundings,-bugprone-suspicious-include,-bugprone-unhandled-self-assignment,-bugprone-branch-clone,-bugprone-assignment-in-if-condition,performance-for-range-copy,cppcoreguidelines-no-malloc'
+Checks: '-*,
+        modernize-use-override,
+        clang-analyzer-cplusplus*,
+        clang-analyzer-unix*,
+        misc-definitions-in-headers,
+        bugprone*,
+          -bugprone-easily-swappable-parameters,
+          -bugprone-macro-parentheses,
+          -bugprone-narrowing-conversions,
+          -bugprone-suspicious-enum-usage,
+          -bugprone-integer-division,
+          -bugprone-implicit-widening-of-multiplication-result,
+          -bugprone-incorrect-roundings,
+          -bugprone-suspicious-include,
+          -bugprone-unhandled-self-assignment,
+          -bugprone-branch-clone,
+          -bugprone-assignment-in-if-condition,
+          -bugprone-switch-missing-default-case,
+          -bugprone-chained-comparison,
+        performance-for-range-copy,
+        cppcoreguidelines-no-malloc,
+        cppcoreguidelines-pro-type-member-init'
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
-AnalyzeTemporaryDtors: false
 FormatStyle: none
 CheckOptions:
   - key:             modernize-use-override.IgnoreDestructors

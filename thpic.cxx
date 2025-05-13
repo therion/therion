@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
@@ -33,6 +33,7 @@
 #include "thtmpdir.h"
 #include "thexception.h"
 #include "thconfig.h"
+#include "therion.h"
 #include <filesystem>
 
 #include <fmt/printf.h>
@@ -46,7 +47,6 @@ const char * thpic_tmp(NULL);
 thpic::thpic() {
   this->fname = NULL;
   this->texfname = NULL;
-  this->rgba = NULL;
   this->rgbafn = NULL;
   this->width = -1;
   this->height = -1;
@@ -70,7 +70,7 @@ bool thpic::exists() {
 void thpic::init(const char * pfname, const char * incfnm)
 {
   if (strlen(pfname) == 0)
-    ththrow("picture file name not specified");
+    throw thexception("picture file name not specified");
 
   std::error_code ec;
   auto pict_path = fs::current_path(ec);
@@ -209,8 +209,8 @@ void thpic::rgba_load()
   if (f != NULL) {
     size_t rawsize, readsize;
     rawsize = (size_t)(this->width * this->height * 4);
-    this->rgba = new char [rawsize];
-    readsize = fread(this->rgba, 1, rawsize, f);
+    this->rgba.resize(rawsize);
+    readsize = fread(this->rgba.data(), 1, rawsize, f);
     if (readsize < rawsize) {
       this->rgba_free();
     }
@@ -222,8 +222,7 @@ void thpic::rgba_load()
 
 void thpic::rgba_free()
 {
-  delete [] this->rgba;
-  this->rgba = NULL;
+  this->rgba.clear();
 }
 
 
@@ -232,15 +231,13 @@ void thpic::rgba_init(long w, long h)
 {
   this->width = w;
   this->height = h;
-  long i, s;
-  s = 4 * w * h;
-  this->rgba = new char [s];
-  for(i = 0; i < s; i++) this->rgba[i] = 0;
+  this->rgba.resize(4 * w * h);
+  std::fill(this->rgba.begin(), this->rgba.end(), 0);
 }
 
 void thpic::rgba_save(const char * type, const char * ext, int colors)
 {
-  if (this->rgba == NULL) {
+  if (this->rgba.empty()) {
     this->width = -1;
     this->height = -1;
     this->fname = NULL;
@@ -254,7 +251,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   this->rgbafn = tmp.fname;
   FILE * f;
   f = fopen(tmp.fname,"wb");
-  fwrite(this->rgba,1,4 * this->width * this->height,f);
+  fwrite(this->rgba.data(),1,4 * this->width * this->height,f);
   fclose(f);
   if ((colors > 1) && (!thcfg.reproducible_output))
     this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300 +dither -colors {}", this->width, this->height, colors));
@@ -268,7 +265,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
 void thpic::rgba_set_pixel(long x, long y, char * data)
 {
   char * dst;
-  if ((this->rgba == NULL) || (x < 0) || (x >= this->width) || (y < 0) || (y >= this->height))
+  if ((this->rgba.empty()) || (x < 0) || (x >= this->width) || (y < 0) || (y >= this->height))
     return;
   dst = &(this->rgba[4 * ((this->height - y - 1) * this->width + x)]);
   dst[0] = data[0];
@@ -280,7 +277,7 @@ void thpic::rgba_set_pixel(long x, long y, char * data)
 char * thpic::rgba_get_pixel(long x, long y)
 {
   static unsigned char data[4], * src;
-  if (this->rgba == NULL)
+  if (this->rgba.empty())
     return NULL;
   if ((x < 0) || (x >= this->width) || (y < 0) || (y >= this->height)) {
     data[0] = 255;

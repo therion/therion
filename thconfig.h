@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -110,7 +110,7 @@ class thconfig {
   thexporter exporter;  ///< Data exporter.
   thselector selector;  ///< Database selector.
 
-  double ibbx[4]; ///< Input bounding box.
+  double ibbx[4] = {}; ///< Input bounding box.
   bool ibbx_def; ///< Input bounding box defined.
 
   bool m_decl_out_of_geomag_range; ///< Whether declination out of geomag model range.
@@ -267,7 +267,7 @@ class thconfig {
 
   bool get_outcs_center(double & x, double & y, double & z);
 
-  bool get_outcs_mag_decl(double year, double & decl);
+  bool get_outcs_mag_decl(double year, double & decl, thobjectsrc src = thobjectsrc());
 
   void log_outcs(double decsyear, double deceyear);
 

@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -30,7 +30,7 @@
 #define thtflength_h
 
 #include "thtf.h"
-#include "thparse.h"
+#include "thstok.h"
 
 
 enum {TT_TFU_YD, TT_TFU_FT, TT_TFU_IN, TT_TFU_M, TT_TFU_CM, TT_TFU_MM, TT_TFU_UNKNOWN_LENGTH};
@@ -61,7 +61,7 @@ static const thstok thtt_tfunits_length[] = {
   {"yard", TT_TFU_YD},
   {"yards", TT_TFU_YD},
   {"yd", TT_TFU_YD},
-	{NULL, TT_TFU_UNKNOWN_LENGTH},
+	{nullptr, TT_TFU_UNKNOWN_LENGTH},
 };
 
 

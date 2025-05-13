@@ -496,12 +496,12 @@ point 673.5 734.0 stalactite
 
 point 685.5 670.25 stalactite
 
-line chimney
+line ceiling-step
   697.0 590.5
   671.5 595.0
 endline
 
-line chimney
+line ceiling-step
   737.5 609.5
   720.5 601.5
 endline
@@ -544,35 +544,35 @@ line pit
   smooth off
 endline
 
-line chimney
+line ceiling-step
   782.0 534.0
   759.5 548.0 750.5 581.0 730.5 596.0
   smooth off
 endline
 
-line chimney
+line ceiling-step
   730.5 596.0
   739.5 580.0 746.47 563.63 738.5 553.0
   smooth off
 endline
 
-line chimney -reverse on
+line ceiling-step -reverse on
   787.75 576.0
   788.5 563.5
 endline
 
-line chimney
+line ceiling-step -reverse on
   764.75 596.5
   764.75 596.5 774.5 595.5 782.75 587.75
   smooth off
 endline
 
-line chimney -reverse on
+line ceiling-step
   793.75 517.25
   792.0 541.75
 endline
 
-line chimney
+line ceiling-step
   634.0 524.0
   632.0 505.0
 endline

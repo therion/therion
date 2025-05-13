@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * -------------------------------------------------------------------- 
  */
 
@@ -54,13 +54,13 @@
 
 struct lxDataSurvey {
 
-  size_t m_id, m_parent, m_level;
+  size_t m_id = {}, m_parent = {}, m_level = {};
 
-  const char * m_name, * m_title;
+  const char * m_name = {}, * m_title = {};
 
   std::string m_full_name;
   
-  bool m_selected;
+  bool m_selected = {};
 
 };
 
@@ -99,11 +99,11 @@ struct lxDataTexture {
 
 struct lxDataShot {
 
-  unsigned long from, to;
+  unsigned long from = {}, to = {};
 
-  size_t m_survey_idx;
+  size_t m_survey_idx = {};
   
-  bool surface, invisible, splay, duplicate, m_selected;
+  bool surface = {}, invisible = {}, splay = {}, duplicate = {}, m_selected = {};
   
 };
 

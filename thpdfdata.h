@@ -18,7 +18,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -34,11 +34,12 @@
 enum class shading_mode {off, quick};  // add precise
 
 struct surfpictrecord {
-  const char * filename, * type;
-  double dx, dy, xx, xy, yx, yy, width, height;
+  const char * filename = {}, * type = {};
+  double dx = {}, dy = {}, xx = {}, xy = {}, yx = {}, yy = {}, width = {}, height = {};
 };
 
 struct scraprecord {
+  unsigned int id;
   std::string name,F,B,I,E,X,G,C,P;      // name + files
     // E: scrap content that is not clipped  (walls, surveys, clip off)
     // F: scrap content that will be clipped (most of map features)
@@ -65,13 +66,16 @@ struct scraprecord {
   double gour_xmin, gour_xmax, gour_ymin, gour_ymax;
   std::string gour_stream;
 
+  // Scrap identifiers
+  std::string src_name, src_survey;
+
   std::list<surfpictrecord> SKETCHLIST;
   scraprecord();
 };
 
 struct layerrecord {
   std::set<int> U,D;  // U: preview above references, D: preview below references
-  std::string N,T;    // N: layer name, T: title (creates a title page in the atlas)
+  std::string N,T,Nraw;    // N: layer name, T: title (creates a title page in the atlas), Nraw: map id
   int Z;         // 0 for maps of maps (expanded), 1 for maps of scraps (basic)
   int AltJump;   // reference to the expanded layer with U/D previews in basic layers
   int minx, maxx, miny, maxy;
@@ -85,7 +89,7 @@ struct layerrecord {
 struct legendrecord {
   std::string name, fname, descr;
   converted_data ldata;
-  unsigned idsym, idfig, idnum;
+  unsigned idsym = {}, idfig = {}, idnum = {};
 };
 
 struct colorlegendrecord {
@@ -107,7 +111,7 @@ struct layout {
          northarrow, scalebar, altitudebar, langstr,
          icc_profile_cmyk, icc_profile_rgb, icc_profile_gray;
   bool  excl_pages,title_pages,page_numbering,
-        transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg; 
+        transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg,geospatial;
   double hsize,vsize,overlap,
         hgridsize = 0.0, vgridsize = 0.0,
         hgridorigin, vgridorigin, gridrot = 0.0,

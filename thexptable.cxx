@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -29,23 +29,18 @@
 #include "thexception.h"
 #include "thdatabase.h"
 #include "thdb1d.h"
-#include "thdata.h"
 #include "thexporter.h"
-#include "thinit.h"
 #include "thsurvey.h"
 #include "thscrap.h"
 #include "thdb1d.h"
 #include "thpoint.h"
 #include <stdio.h>
-#include "thchenc.h"
-#include <map>
 #include "thinfnan.h"
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thconfig.h"
 #include "thcs.h"
-#include "thtexfonts.h"
-#include "thlang.h"
+#include "therion.h"
 #include <filesystem>
 
 
@@ -68,59 +63,59 @@ void thexptable::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPTABLE_OPT_ATTRIBUTES:
       argx++;
       if (argx >= nargs)
-        ththrow("missing attributes switch -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing attributes switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid attributes switch -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("invalid attributes switch -- \"{}\"", args[argx]));
       this->expattr = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_LOCATION:
       argx++;
       if (argx >= nargs)
-        ththrow("missing location switch -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing location switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid location switch -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("invalid location switch -- \"{}\"", args[argx]));
       this->exploc = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_FILTER:
       argx++;
       if (argx >= nargs)
-        ththrow("missing filter switch -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing filter switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid filter switch -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("invalid filter switch -- \"{}\"", args[argx]));
       this->filter = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_SURVEYS:
       argx++;
       if (argx >= nargs)
-        ththrow("missing surveys switch -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing surveys switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid surveys switch -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("invalid surveys switch -- \"{}\"", args[argx]));
       this->surveys = (sv == TT_TRUE);
       argx++;
       break;    
     case TT_EXPTABLE_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing format -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_exptable_fmt);
       if (this->format == TT_EXPTABLE_FMT_UNKNOWN)
-        ththrow("unknown format -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
     case TT_EXPTABLE_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing encoding -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow("unknown encoding -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
     default:
@@ -163,7 +158,7 @@ void thexptable::export_survey_entrances(thsurvey * survey)
   if (survey->stat.num_entrances == 0) return;
   // insert survey attributes
   if ((survey->level > 1) && (this->surveys || is_cave))  {
-    this->m_table.insert_object(NULL);          
+    this->m_table.insert_object(nullptr);          
     this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 2) : 0);
     this->m_table.get_object()->m_tree_node_id = (this->surveys ? survey->get_reverse_full_name() : "");
     this->m_table.insert_attribute("Title", ths2txt((strlen(survey->title) > 0) ? survey->title : survey->name, layout->lang).c_str());
@@ -194,7 +189,7 @@ void thexptable::export_survey_entrances(thsurvey * survey)
   if (!is_cave) {
     for(obj = survey->foptr; obj != NULL; obj = obj->nsptr) {
       if (obj->get_class_id() == TT_SURVEY_CMD) {
-        this->export_survey_entrances((thsurvey *) obj);
+        this->export_survey_entrances(dynamic_cast<thsurvey*>(obj));
       }
     }
   }
@@ -207,7 +202,7 @@ void thexptable::export_survey_entrances(thsurvey * survey)
       if ((st->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
         if (((exploc) && (survey->entrance.id > 0) && (survey->stat.num_entrances > 1) && (st->survey->is_in_survey(survey))) ||
           ((survey->entrance.id == 0) && (st->survey->id == survey->id))) {
-            this->m_table.insert_object(NULL);          
+            this->m_table.insert_object(nullptr);          
             this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 1) : 0);
             std::string * tmps = get_tmp_string();
             *tmps = survey->get_reverse_full_name();
@@ -294,11 +289,13 @@ void thexptable::process_db(class thdatabase * dbp)
           i;
         for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
           if ((*oi)->get_class_id() == TT_POINT_CMD) {
-            pt = (thpoint*)(*oi).get();
-            if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->text != NULL) || (!this->filter)) && (pt->fsptr->is_selected())) {
+            pt = dynamic_cast<thpoint*>(oi->get());
+            const auto * textptr = pt->get_text();
+            if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->get_text() != nullptr) || (!this->filter)) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
-              this->m_table.insert_object(NULL);
-              this->m_table.insert_attribute("Comment",ths2txt(pt->text, layout->lang).c_str());
+              this->m_table.insert_object(nullptr);
+              std::string comment = textptr ? ths2txt(*textptr, layout->lang) : "";
+              this->m_table.insert_attribute("Comment", comment.c_str());
 	            if (!thisnan(pt->xsize))
                       this->m_table.insert_attribute("Explored",pt->xsize);
 	            else
@@ -339,7 +336,7 @@ void thexptable::process_db(class thdatabase * dbp)
         for(i = 0; i < nstat; i++) {
           st = &(dbp->db1d.station_vec[i]);
           if (((st->flags & TT_STATIONFLAG_CONT) != 0) && ((st->comment != NULL) || (!this->filter)) && (st->survey->is_selected())) {
-            this->m_table.insert_object(NULL);
+            this->m_table.insert_object(nullptr);
             this->m_table.insert_attribute("Comment",ths2txt(st->comment, layout->lang).c_str());
 	          if (!thisnan(st->explored))
                     this->m_table.insert_attribute("Explored",st->explored);
@@ -372,9 +369,9 @@ void thexptable::process_db(class thdatabase * dbp)
       //duplicate
       for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
         if (((*oi)->get_class_id() == TT_SURVEY_CMD) && (strlen((*oi)->name) > 0)) {
-          srv = (thsurvey*)(*oi).get();
+          srv = dynamic_cast<thsurvey*>(oi->get());
           if (srv->is_selected()) {
-            this->m_table.insert_object(NULL);          
+            this->m_table.insert_object(nullptr);          
             this->m_table.get_object()->m_tree_level = (size_t)(srv->level - 2);
             this->m_table.get_object()->m_tree_node_id = srv->get_reverse_full_name();
             this->m_table.insert_attribute("Title", ths2txt((strlen(srv->title) > 0) ? srv->title : srv->name, layout->lang).c_str());

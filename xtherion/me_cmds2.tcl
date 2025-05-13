@@ -22,7 +22,7 @@
 ## 
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 ## --------------------------------------------------------------------
 
 proc xth_me_cmds_get_option {ln opt} {
@@ -3156,7 +3156,7 @@ proc xth_me_cmds_set_colors {} {
 	  }   
 	}
 	$xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
-	$xth(me,can) itemconfigure lnln$id -fill $col -state normal
+	$xth(me,can) itemconfigure lnln$id -fill $col
 	if {$xth(me,hinactives) && ($col == $dcol)} {
 	  $xth(me,can) itemconfigure ln$id -state hidden  
 	}

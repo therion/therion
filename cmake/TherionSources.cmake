@@ -16,7 +16,6 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thcmdline.h
     ${CMAKE_SOURCE_DIR}/thcomment.h
     ${CMAKE_SOURCE_DIR}/thconfig.h
-    ${CMAKE_SOURCE_DIR}/thconvert.h
     ${CMAKE_SOURCE_DIR}/thcs.h
     ${CMAKE_SOURCE_DIR}/thdata.h
     ${CMAKE_SOURCE_DIR}/thdatabase.h
@@ -70,6 +69,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thlibrary.h
     ${CMAKE_SOURCE_DIR}/thline.h
     ${CMAKE_SOURCE_DIR}/thlocale.h
+    ${CMAKE_SOURCE_DIR}/thlog.h
     ${CMAKE_SOURCE_DIR}/thlogfile.h
     ${CMAKE_SOURCE_DIR}/thlookup.h
     ${CMAKE_SOURCE_DIR}/thmap.h
@@ -86,6 +86,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thpic.h
     ${CMAKE_SOURCE_DIR}/thpoint.h
     ${CMAKE_SOURCE_DIR}/thproj.h
+    ${CMAKE_SOURCE_DIR}/thscan.h
     ${CMAKE_SOURCE_DIR}/thscrap.h
     ${CMAKE_SOURCE_DIR}/thscrapen.h
     ${CMAKE_SOURCE_DIR}/thscrapis.h
@@ -133,7 +134,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thcmdline.cxx
     ${CMAKE_SOURCE_DIR}/thcomment.cxx
     ${CMAKE_SOURCE_DIR}/thconfig.cxx
-    ${CMAKE_SOURCE_DIR}/thconvert.cxx
     ${CMAKE_SOURCE_DIR}/thcs.cxx
     ${CMAKE_SOURCE_DIR}/thdata.cxx
     ${CMAKE_SOURCE_DIR}/thdatabase.cxx
@@ -159,6 +159,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thendsurvey.cxx
     ${CMAKE_SOURCE_DIR}/thepsparse.cxx
     ${CMAKE_SOURCE_DIR}/therion.cxx
+    ${CMAKE_SOURCE_DIR}/thexception.cxx
     ${CMAKE_SOURCE_DIR}/thexpdb.cxx
     ${CMAKE_SOURCE_DIR}/thexpmap.cxx
     ${CMAKE_SOURCE_DIR}/thexpmodel.cxx
@@ -185,6 +186,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thlibrarydata.cxx
     ${CMAKE_SOURCE_DIR}/thline.cxx
     ${CMAKE_SOURCE_DIR}/thlocale.cxx
+    ${CMAKE_SOURCE_DIR}/thlog.cxx
     ${CMAKE_SOURCE_DIR}/thlogfile.cxx
     ${CMAKE_SOURCE_DIR}/thlookup.cxx
     ${CMAKE_SOURCE_DIR}/thmap.cxx
@@ -201,6 +203,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thpic.cxx
     ${CMAKE_SOURCE_DIR}/thpoint.cxx
     ${CMAKE_SOURCE_DIR}/thproj.cxx
+    ${CMAKE_SOURCE_DIR}/thscan.cxx
     ${CMAKE_SOURCE_DIR}/thscrap.cxx
     ${CMAKE_SOURCE_DIR}/thscrapen.cxx
     ${CMAKE_SOURCE_DIR}/thscrapis.cxx

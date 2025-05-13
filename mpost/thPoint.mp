@@ -21,7 +21,7 @@
 %%
 %% You should have received a copy of the GNU General Public License
 %% along with this program; if not, write to the Free Software
-%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+%% Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 %% --------------------------------------------------------------------
 
 pair U;
@@ -692,6 +692,18 @@ def p_rope_SKBB (expr pos,r,s,al) =
     pickup pencircle scaled .18u;
     thdraw (-.2u,.2u);
     thdraw (.1u,.1u);
+enddef;
+
+def p_camp_UIS (expr pos,r,s,al) =
+    U:=(.4u, .5u);
+    T:=identity aligned al scaled s shifted pos;
+
+    pickup PenC;
+    thdraw (-.5u,-.4u)--(.5u,-.4u);
+    pickup PenD;
+    thdraw (-.4u,-.4u)--(0,.5u)--(.4u,-.4u);
+    thfill (-.3u,-.4u)--(0,.30u)--(.3u,-.4u)--cycle;
+    thfill (0,.5u)--(.35u,.45u)--(.07u,.35u)--cycle;
 enddef;
 
 def p_camp_SKBB (expr pos,r,s,al) =

@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -32,6 +32,8 @@
 #include "thsymbolsetlist.h"
 #include "thlayoutclr.h"
 #include <stdio.h>
+#include <vector>
+#include <map>
 
 
 struct thsymbolset_usym {
@@ -47,8 +49,8 @@ struct thsymbolset_usym {
  
 struct thsymbolset {
   
-  bool assigned[thsymbolset_size],        ///< definovane symboly
-    used[thsymbolset_size];               ///< pouzite symboly
+  bool assigned[thsymbolset_size] = {},        ///< definovane symboly
+    used[thsymbolset_size] = {};               ///< pouzite symboly
   thlayout_color color[thsymbolset_size];    ///< Symbol colors.
   int color_model; ///< Output color model.
   

@@ -21,27 +21,22 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thlookup.h"
 #include "thexception.h"
 #include "thchenc.h"
-#include "thdata.h"
-#include "thparse.h"
 #include "thinfnan.h"
 #include "thpdfdata.h"
-#include "thsymbolset.h"
-#include "thtflength.h"
 #include "thlang.h"
-#include "thcsdata.h"
-#include "thconfig.h"
 #include "thscrap.h"
 #include "thmap.h"
-#include "thpdf.h"
+#include "thlayout.h"
 #include "thtexfonts.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include <string.h>
 
 
@@ -126,7 +121,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
-        ththrow("too many arguments -- {}", args[defcod.nargs]);
+        throw thexception(fmt::format("too many arguments -- {}", args[defcod.nargs]));
   }
   
   switch (cod.id) {
@@ -149,7 +144,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       cod.id = TT_DATAOBJECT_NAME;
       thlookup_parse_reference(args[0], &(this->m_type), &lkpindex, &lkpnname);
       if (this->m_type == TT_LAYOUT_CCRIT_UNKNOWN)
-        ththrow("invalid coloring criteria -- {}", args[0]);
+        throw thexception(fmt::format("invalid coloring criteria -- {}", args[0]));
       tmpb = lkpnname;
       tmpa[0] = tmpb.get_buffer();
       args = tmpa;
@@ -184,7 +179,7 @@ void thlookup_table_row::parse(class thlookup * lkp, char * args) {
       default:
         thsplit_args(&mbf2, mbf.get_buffer()[0]);
         if (mbf2.get_size() > 2)
-          ththrow("too many values -- {}", mbf.get_buffer()[0]);
+          throw thexception(fmt::format("too many values -- {}", mbf.get_buffer()[0]));
         if (mbf2.get_size() > 0) {
           cpar = mbf2.get_buffer()[0];
           if (mbf2.get_size() > 1) {
@@ -197,7 +192,7 @@ void thlookup_table_row::parse(class thlookup * lkp, char * args) {
               }
             } else {
               if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-                ththrow("invalid number -- {}", cpar);
+                throw thexception(fmt::format("invalid number -- {}", cpar));
             }
             cpar = mbf2.get_buffer()[1];
             lkp->m_intervals = true;
@@ -211,7 +206,7 @@ void thlookup_table_row::parse(class thlookup * lkp, char * args) {
             }
           } else {
             if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-              ththrow("invalid number -- {}", cpar);
+              throw thexception(fmt::format("invalid number -- {}", cpar));
           }
         }
     }
@@ -225,7 +220,7 @@ void thlookup_table_row::parse(class thlookup * lkp, char * args) {
     this->m_label = thdb.strstore(mbf.get_buffer()[2]);
   }
   if (mbf.get_size() > 3)
-    ththrow("too many arguments -- {}", args);
+    throw thexception(fmt::format("too many arguments -- {}", args));
 }
 
 void thlookup::postprocess_object_references() {
@@ -248,11 +243,11 @@ void thlookup::postprocess_object_references() {
               thwarning(("invalid reference -- %s", tr->m_valueString));
             } else {
               if ((this->m_type == TT_LAYOUT_CCRIT_MAP) && (tr->m_ref->get_class_id() != TT_MAP_CMD))
-                ththrow("not a map reference -- {}", tr->m_valueString);
+                throw thexception(fmt::format("not a map reference -- {}", tr->m_valueString));
               if ((this->m_type == TT_LAYOUT_CCRIT_SCRAP) && (tr->m_ref->get_class_id() != TT_SCRAP_CMD))
-                ththrow("not a scrap reference -- {}", tr->m_valueString);
+                throw thexception(fmt::format("not a scrap reference -- {}", tr->m_valueString));
               if ((this->m_type == TT_LAYOUT_CCRIT_SURVEY) && (tr->m_ref->get_class_id() != TT_SURVEY_CMD))
-                ththrow("not a survey reference -- {}", tr->m_valueString);
+                throw thexception(fmt::format("not a survey reference -- {}", tr->m_valueString));
             }
           }
           break;
@@ -270,7 +265,7 @@ bool scrap_in_map(thscrap * s, thmap * m) {
       if (m->is_basic) {
         if (s->id == mi->object->id) return true;
       } else {
-        if (scrap_in_map(s, (thmap *) mi->object)) return true;
+        if (scrap_in_map(s, dynamic_cast<thmap*>(mi->object))) return true;
       }
     }
     mi = mi->next_item;
@@ -361,7 +356,7 @@ void thlookup::color_scrap(thscrap * s) {
         if (tli->m_ref == NULL) continue;
         // if map contains scrap - set color and break
         // thprintf("%s", s->name);
-        if (scrap_in_map(s, (thmap *) tli->m_ref)) {
+        if (scrap_in_map(s, dynamic_cast<thmap*>(tli->m_ref))) {
           clr = tli->m_color;
           break;
         }
@@ -496,9 +491,9 @@ void thlookup_parse_reference(const char * arg, int * type, const char ** index,
   thbuffer normname;
   thsplit_strings(& mbf, arg, ':');
   if ((mbf.get_size() > 2) || (mbf.get_size() < 1))
-    ththrow("invalid lookup id -- {}", arg);
+    throw thexception(fmt::format("invalid lookup id -- {}", arg));
   if ((mbf.get_size() == 2) && (!th_is_keyword(mbf.get_buffer()[1])))
-    ththrow("invalid lookup id -- {}", arg);
+    throw thexception(fmt::format("invalid lookup id -- {}", arg));
   *type = thmatch_token(mbf.get_buffer()[0], thtt_layout_ccrit);
   if (mbf.get_size() == 2)
     *index = thdb.strstore(mbf.get_buffer()[1]);

@@ -21,16 +21,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thperson.h"
 #include "thdatabase.h"
-#include "thparse.h"
 #include "thexception.h"
 #include <string.h>
 
+#include <fmt/core.h>
 
 void thperson::reset()
 {
@@ -69,7 +69,7 @@ void thperson::parse(thdatabase * dbp, char * src)
       this->n2 = dbp->strstore((dbp->mbuff_tmp.get_buffer())[1], true);
     }
     else
-      ththrow("invalid name format -- \"{}\"", src);
+      throw thexception(fmt::format("invalid name format -- \"{}\"", src));
   }
   else {
     thsplit_args(&(dbp->mbuff_tmp), src);
@@ -81,7 +81,7 @@ void thperson::parse(thdatabase * dbp, char * src)
       this->n2 = dbp->strstore((dbp->mbuff_tmp.get_buffer())[1], true);
     }
     else
-      ththrow("invalid name format -- \"{}\"", src);
+      throw thexception(fmt::format("invalid name format -- \"{}\"", src));
   }
   
   this->identify(dbp);

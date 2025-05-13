@@ -21,16 +21,18 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
 #include "thcs.h"
-#include "thparse.h"
 #include "thcsdata.h"
 #include "thexception.h"
 #include "thproj.h"
 #include "thdatabase.h"
+
+#include <fmt/core.h>
+
 #include <map>
 #include <string>
 #include <list>
@@ -123,24 +125,13 @@ const thcsdata * thcs_get_data(int cs) {
 	rv.params = params;
 	rv.prjname = prjname;
 	strcpy(prjname, thcs_get_name(cs));
-	rv.prjspec = "";
 	rv.swap = false;
 	if (cs > TTCS_ESRI) {
-	  std::snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
-      if (esri_labels.find(cs - TTCS_ESRI) != esri_labels.end()) {
-        rv.prjname = esri_labels[cs - TTCS_ESRI];
-      } else {
-        thcs_get_label(params).copy(prjname, 200, 0);
-      }
+	  std::snprintf(params, sizeof(params), "esri:%d", cs - TTCS_ESRI);
 		return &rv;
 	}
 	if (cs > TTCS_EPSG) {
-	  std::snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
-      if (epsg_labels.find(cs - TTCS_EPSG) != epsg_labels.end()) {
-        rv.prjname = epsg_labels[cs - TTCS_EPSG];
-      } else {
-        thcs_get_label(params).copy(prjname, 200, 0);
-      }
+	  std::snprintf(params, sizeof(params), "epsg:%d", cs - TTCS_EPSG);
 		return &rv;
 	}
   if (cs >= 0) return &(thcsdata_table[cs]);
@@ -150,11 +141,10 @@ const thcsdata * thcs_get_data(int cs) {
 
 void thcs_add_cs(char * id, char * proj4id)
 {
-  if (thcs_parse(id) != TTCS_UNKNOWN) ththrow("cs already exists -- {}", id);
-  if (!th_is_extkeyword(id)) ththrow("invalid cs identifier -- {}", id);
+  if (thcs_parse(id) != TTCS_UNKNOWN) throw thexception(fmt::format("cs already exists -- {}", id));
+  if (!th_is_extkeyword(id)) throw thexception(fmt::format("invalid cs identifier -- {}", id));
   thcs_check(proj4id);
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
-  pd->prjspec = "";
   pd->params = thdb.strstore(proj4id);
   pd->prjname = thdb.strstore(id);
   pd->dms = thcs_islatlong(proj4id);
@@ -183,9 +173,9 @@ std::string thcs_get_trans(int from_cs, int to_cs) {
 
 void thcs_add_cs_trans_single(const char * from_cs, const char * to_cs, const char * trans) {
 	int fcs = thcs_parse(from_cs);
-	if (fcs == TTCS_UNKNOWN) ththrow("unknown coordinate system -- {}", from_cs);
+	if (fcs == TTCS_UNKNOWN) throw thexception(fmt::format("unknown coordinate system -- {}", from_cs));
 	int tcs = thcs_parse(to_cs);
-	if (tcs == TTCS_UNKNOWN) ththrow("unknown coordinate system -- {}", to_cs);
+	if (tcs == TTCS_UNKNOWN) throw thexception(fmt::format("unknown coordinate system -- {}", to_cs));
 //	if (strlen(trans) == 0) ththrow("empty transformation specification");
 	thcs_transformations[thcstrans(fcs, tcs)] = thdb.strstore(trans, true);
 }

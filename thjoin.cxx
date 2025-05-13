@@ -21,15 +21,15 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thjoin.h"
 #include "thexception.h"
-#include "thchenc.h"
-#include "thparse.h"
 #include "thdatabase.h"
+
+#include <fmt/core.h>
 
 thjoin::thjoin()
 {
@@ -103,13 +103,13 @@ void thjoin::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_JOIN_SMOOTH:
       this->smooth = thmatch_token(*args, thtt_bool);
       if (this->smooth == TT_UNKNOWN_BOOL)
-        ththrow("invalid switch -- {}",*args);
+        throw thexception(fmt::format("invalid switch -- {}",*args));
       break;
     
     case TT_JOIN_COUNT:
       thparse_double(sv,dv,*args);
       if ((sv != TT_SV_NUMBER) || (dv <= 1.0) || (dv != double(int(dv))))
-        ththrow("invalid join count -- {}",*args);
+        throw thexception(fmt::format("invalid join count -- {}",*args));
       this->count = int(dv);
       break;
       

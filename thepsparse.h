@@ -14,7 +14,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -68,8 +68,8 @@ struct CGS {  // current graphics state
 };
 
 struct MP_transform {
-  int command;
-  double transf[6];
+  int command = {};
+  double transf[6] = {};
   
   MP_transform();
   void clear();
@@ -78,15 +78,15 @@ struct MP_transform {
 };
 
 struct MP_path_segment {
-  int command;
-  double coord[6];
+  int command = {};
+  double coord[6] = {};
 };
 
 struct MP_path {
   std::vector<MP_path_segment> segments;
-  bool closed;
+  bool closed = {};
 //  bool clip;  mp nevie orezat aj vykreslit
-  int fillstroke;
+  int fillstroke = {};
   MP_transform transformation;
 //  bool transform;
   
@@ -100,14 +100,14 @@ struct MP_path {
 };
 
 struct MP_index {
-  int vector, idx;
+  int vector = {}, idx = {};
 };
 
 struct MP_text {
   std::string text, font;
-  double size, x, y, xx, xy, yx, yy;
+  double size = {}, x = {}, y = {}, xx = {}, xy = {}, yx = {}, yy = {};
   color col;    // color of the associated scrap
-  bool transformed;
+  bool transformed = {};
   
   MP_text();
   void clear();
@@ -195,18 +195,18 @@ struct converted_data {
 
 struct pattern {
   converted_data data;
-  float llx, lly, urx, ury, xstep, ystep;
-  double llx1,lly1,urx1,ury1;
-  double xx, xy, yx, yy, x, y;
+  float llx = {}, lly = {}, urx = {}, ury = {}, xstep = {}, ystep = {};
+  double llx1 = {},lly1 = {},urx1 = {},ury1 = {};
+  double xx = {}, xy = {}, yx = {}, yy = {}, x = {}, y = {};
   std::string name;
-  bool used;
+  bool used = {};
 };
 
 struct gradient {
-  int type;
-  double x0, y0, r0, x1, y1, r1;
+  int type = {};
+  double x0 = {}, y0 = {}, r0 = {}, x1 = {}, y1 = {}, r1 = {};
   color c0, c1;
-  bool used_in_map;
+  bool used_in_map = {};
 };
 
 int thconvert_eps();

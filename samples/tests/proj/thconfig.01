@@ -11,5 +11,5 @@ survey onepoint
 endsurvey
 endsource
 
-cs ijtsk03
+cs epsg:32634
 export database -format sql -o cave-01.sql

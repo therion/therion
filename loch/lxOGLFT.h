@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  *
  */
 #ifndef OGLFT_H
@@ -335,10 +335,10 @@ namespace OGLFT {
     //! display lists. Anyway, you'll be able to get even more fancy
     //! by passing in a function to map the color with, so why balk at
     //! this?)
-    GLfloat foreground_color_[4];
+    GLfloat foreground_color_[4] = {};
 
     //! Background color (what modes would use this?)
-    GLfloat background_color_[4];
+    GLfloat background_color_[4] = {};
 
     //! PHIGS-like horizontal positioning of text.
     enum HorizontalJustification horizontal_justification_ = {};
@@ -1034,7 +1034,7 @@ namespace OGLFT {
      * implement the ColorTess and TextureTess interfaces.
      */
     struct VertexInfo {
-      double v_[3]; //!< Why is this double precision? Because the second
+      double v_[3] = {}; //!< Why is this double precision? Because the second
 		    //!< argument to the routine gluTessVertex is a pointer
 		    //!< to an array of doubles. Otherwise, we could use
 		    //!< single precision everywhere.
@@ -1816,16 +1816,16 @@ namespace OGLFT {
      * texture objects than we have to, so they are always cached.
      */
     struct TextureInfo {
-      GLuint texture_name_;  //!< A bound texture name is an integer in OpenGL.
-      FT_Int left_bearing_,  //!< The left bearing of the transformed glyph.
-	bottom_bearing_;     //!< The bottom bearing of the transformed glyph.
-      int width_,	     //!< The 2**l width of the texture.
-	height_;	     //!< The 2**m height of the texture.
-      GLfloat texture_s_,    //!< The fraction of the texture width occupied
+      GLuint texture_name_ = {};  //!< A bound texture name is an integer in OpenGL.
+      FT_Int left_bearing_ = {},  //!< The left bearing of the transformed glyph.
+	bottom_bearing_ = {};     //!< The bottom bearing of the transformed glyph.
+      int width_ = {},	     //!< The 2**l width of the texture.
+	height_ = {};	     //!< The 2**m height of the texture.
+      GLfloat texture_s_ = {},    //!< The fraction of the texture width occupied
 			     //!< by the glyph.
-	texture_t_;	     //!< The fraction of the texture height occupied
+	texture_t_ = {};	     //!< The fraction of the texture height occupied
                              //!< by the glyph.
-      FT_Vector advance_;    //!< The advance vector of the transformed glyph.
+      FT_Vector advance_ = {};    //!< The advance vector of the transformed glyph.
     };
 
     //! Type of the cache of defined glyph to texture objects mapping.

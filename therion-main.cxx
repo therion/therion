@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -29,7 +29,6 @@
 #include "thcmdline.h"
 #include "thconfig.h"
 #include "thdatareader.h"
-#include "thexception.h"
 #include "thlibrary.h"
 #include "thinit.h"
 #include "thversion.h"
@@ -38,6 +37,7 @@
 #include "thlogfile.h"
 #include "thproj.h"
 #include "thdatabase.h"
+#include "thlog.h"
 
 extern const thstok thtt_texts [];
 
@@ -122,8 +122,7 @@ int main(int argc, char * argv[]) {
     // print version information
     thprintf(thversion_format, thversion_text);
     thprintf("\n");
-    thlog.printf("  - using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
-                                                         thcs_get_proj_version_headers().c_str());
+    thlog(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     if (thcs_get_proj_version() != thcs_get_proj_version_headers())
       thwarning(("Proj version mismatch: using %s, compiled against %s", thcs_get_proj_version().c_str(),
                                                          thcs_get_proj_version_headers().c_str()));
@@ -225,7 +224,7 @@ int main(int argc, char * argv[]) {
     thprintf("\n\nlisting database\n");
     if (thverbose_mode)
       thdb.self_print(stdout);
-    thdb.self_print(thlog.get_fileh());
+    thdb.self_print(get_thlogfile().get_fileh());
     thprintf("\ndatabase listed\n\n");
 #endif   
 

@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -30,7 +30,6 @@
 #define thobjectname_h
 
 #include "thmbuffer.h"
-#include "therion.h"
 
 #include <string>
 
@@ -42,12 +41,12 @@ class thobjectname {
 
   public:
   
-  const char * name,  ///< Object name.
-      * survey;  ///< Survey name.
+  const char * name = {},  ///< Object name.
+      * survey = {};  ///< Survey name.
        
   class thsurvey * psurvey = nullptr; ///< Parent survey.
        
-  unsigned long id;  ///< Object identifier.
+  unsigned long id = {};  ///< Object identifier.
 
   /**
    * Standard constructor.

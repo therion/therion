@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -32,14 +32,12 @@
 #include "thdata.h"
 #include "thsurvey.h"
 #include <stdio.h>
-#include "extern/img.h"
-#include "thchenc.h"
+#include "img.h"
 #include "thscrap.h"
-#include <map>
 #include "thsurface.h"
 #include "loch/lxFile.h"
 #include "thsurface.h"
-#include "thchenc.h"
+#include "thscan.h"
 #include "thconfig.h"
 #include "thcsdata.h"
 #include "thproj.h"
@@ -47,8 +45,8 @@
 #include "thtexfonts.h"
 #include "thlang.h"
 #include "thfilehandle.h"
+#include "therion.h"
 #include <filesystem>
-#include <thread>
 
 #include <fmt/printf.h>
 
@@ -72,20 +70,20 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing format -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expmodel_fmt);
       if (this->format == TT_EXPMODEL_FMT_UNKNOWN)
-        ththrow("unknown format -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
 
     case TT_EXPMODEL_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing encoding -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow("unknown encoding -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
 
@@ -93,10 +91,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_DISABLE:
       argx++;
       if (argx >= nargs)
-        ththrow("missing model entity -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing model entity -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmodel_items);
       if (utmp == TT_EXPMODEL_ITEM_UNKNOWN)
-        ththrow("unknown model entity -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown model entity -- \"{}\"", args[argx]));
       if (optid == TT_EXPMODEL_OPT_ENABLE) {
         this->items |= utmp;
       } else {
@@ -108,10 +106,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_WALLSRC:
       argx++;
       if (argx >= nargs)
-        ththrow("missing wall source -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing wall source -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmodel_wallsrc);
       if (utmp == TT_WSRC_UNKNOWN)
-        ththrow("unknown wall source -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown wall source -- \"{}\"", args[argx]));
       this->wallsrc = utmp;
       argx++;
       break;
@@ -398,7 +396,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   FILE * pltf;
   char station_name[14];
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -680,7 +678,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
       
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -752,7 +750,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     while (obi != dbp->object_list.end()) {
       switch ((*obi)->get_class_id()) {
         case TT_SURFACE_CMD:
-          srfc = ((thsurface*)(*obi).get());
+          srfc = dynamic_cast<thsurface*>(obi->get());
           tmp3d = srfc->get_3d();
           srfc->calibrate();
           tinv = srfc->calib_yy*srfc->calib_xx - srfc->calib_xy*srfc->calib_yx;
@@ -772,8 +770,8 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
                   fseek(xf.get(), 0, SEEK_SET);
                   if (fsz > 0) {
                     char * cdata = new char [fsz];
-                    thassert(fread((void *) cdata, 1, fsz, xf.get()) == fsz);
-                    fwrite((void *) cdata, 1, fsz, texf.get());
+                    thassert(fread(cdata, 1, fsz, xf.get()) == fsz);
+                    fwrite(cdata, 1, fsz, texf.get());
                     delete [] cdata;
                   }
                 }
@@ -929,7 +927,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
       
   FILE * pltf;
 
-  pltf = fopen(fnm,"w");
+  pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
     thwarning(("can't open %s for output",fnm))
@@ -1009,7 +1007,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
     while (obi != dbp->object_list.end()) {
       switch ((*obi)->get_class_id()) {
         case TT_SURFACE_CMD:
-          tmp3d = ((thsurface*)(*obi).get())->get_3d();
+          tmp3d = dynamic_cast<thsurface*>(obi->get())->get_3d();
           if (tmp3d != NULL) {
             tmp3d->exp_shift_x = avx;
             tmp3d->exp_shift_y = avy;
@@ -1350,7 +1348,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
     while (obi != dbp->object_list.end()) {
       switch ((*obi)->get_class_id()) {
         case TT_SURFACE_CMD:
-          tmp3d = ((thsurface*)(*obi).get())->get_3d();
+          tmp3d = dynamic_cast<thsurface*>(obi->get())->get_3d();
           if (tmp3d != NULL) {
             tmp3d->exp_shift_x = avx;
             tmp3d->exp_shift_y = avy;
@@ -1487,7 +1485,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   obi = dbp->object_list.begin();
   while (obi != dbp->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      sptr = (thsurvey*)(*obi).get();
+      sptr = dynamic_cast<thsurvey*>(obi->get());
       if (sptr->is_selected()) {
         sptr->num1 = 1;
       } else {
@@ -1531,7 +1529,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   obi = dbp->object_list.begin();
   while (obi != dbp->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      sptr = (thsurvey*)(*obi).get();
+      sptr = dynamic_cast<thsurvey*>(obi->get());
       if ((sptr->num1 > 0) && (sptr->fsptr != NULL)) {
         tsptr = sptr->fsptr;
         if (tsptr->num1 > 0)
@@ -1558,7 +1556,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   obi = dbp->object_list.begin();
   while (obi != dbp->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      sptr = (thsurvey*)(*obi).get();
+      sptr = dynamic_cast<thsurvey*>(obi->get());
       if (sptr->num1 > 0) {
         sptr->num1 = survnum++;
         expf_survey.m_id = sptr->num1;
@@ -1647,6 +1645,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   // export povrchov (vsetkych - ak chceme)
   thdb3ddata * tmp3d;
   thsurface * csrf;
+  thscan * cscan;
   survnum = 0;
   if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
     // prejde secky surfaces a exportuje z nich povrchy
@@ -1654,7 +1653,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     while (obi != dbp->object_list.end()) {
       switch ((*obi)->get_class_id()) {
         case TT_SURFACE_CMD:
-          csrf = ((thsurface*)(*obi).get());
+          csrf = dynamic_cast<thsurface*>(obi->get());
           tmp3d = csrf->get_3d();
           if ((tmp3d != NULL) && (tmp3d->nfaces > 0)) {
             expf_sfc.m_id = survnum;
@@ -1662,16 +1661,20 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             expf_sfc.m_height = csrf->grid_ny;
             expf_sfc.m_calib[0] = csrf->grid_ox;
             expf_sfc.m_calib[1] = csrf->grid_oy;
-            expf_sfc.m_calib[2] = csrf->grid_dx;
-            expf_sfc.m_calib[3] = 0.0;
-            expf_sfc.m_calib[4] = 0.0;
-            expf_sfc.m_calib[5] = csrf->grid_dy;
+            //expf_sfc.m_calib[2] = csrf->grid_dx;
+            //expf_sfc.m_calib[3] = 0.0;
+            //expf_sfc.m_calib[4] = 0.0;
+            //expf_sfc.m_calib[5] = csrf->grid_dy;
+            expf_sfc.m_calib[2] = (csrf->grid_dxx - csrf->grid_ox) / double(csrf->grid_nx-1);
+            expf_sfc.m_calib[3] = (csrf->grid_dyx - csrf->grid_ox) / double(csrf->grid_ny-1);
+            expf_sfc.m_calib[4] = (csrf->grid_dxy - csrf->grid_oy) / double(csrf->grid_nx-1);
+            expf_sfc.m_calib[5] = (csrf->grid_dyy - csrf->grid_oy) / double(csrf->grid_ny-1);
 
             lxFileDbl * cdata = new lxFileDbl[csrf->grid_size];
             for(i = 0; i < (unsigned long) csrf->grid_size; i++) {
               cdata[i] = csrf->grid[i];
             }
-            expf_sfc.m_dataPtr = expf.m_surfacesData.AppendData((void *) cdata, csrf->grid_size * sizeof(lxFileDbl));
+            expf_sfc.m_dataPtr = expf.m_surfacesData.AppendData(reinterpret_cast<const uint8_t*>(cdata), csrf->grid_size * sizeof(lxFileDbl));
             expf.m_surfaces.push_back(expf_sfc);
             delete [] cdata;
             
@@ -1733,7 +1736,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
             }
             expf_scrap.m_numPoints = d3d->nvertices;
-            expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+            expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
             thdb3dfc * fcp;
             thdb3dfx * fxp;
             for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
@@ -1769,7 +1772,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               tdata[i] = *tli;
             }
             expf_scrap.m_num3Angles = tlist.size();
-            expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+            expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
             delete [] pdata;
             delete [] tdata;
             expf.m_scraps.push_back(expf_scrap);
@@ -1782,18 +1785,19 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     
   } // WALLS  
   
-  // SPLAY walls export
-  if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_SPLAYS) != 0)) {
-    for (size_t ii = 0; ii < nstat; ii++) {
-      if (stnum_orig[ii] > 0) {
-        pst = &(dbp->db1d.station_vec[ii]);
-        if (pst->survey->is_selected())
-        	d3d = pst->get_3d_outline();
+  // Export scans
+  if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_SCANS) != 0)) {
+    obi = dbp->object_list.begin();
+    while (obi != dbp->object_list.end()) {
+      if ((*obi)->get_class_id() == TT_SCAN_CMD) {
+    	cscan = dynamic_cast<thscan*>(obi->get());
+        if (cscan->fsptr->is_selected())
+        	d3d = cscan->get_3d();
         else
         	d3d = NULL;
         if ((d3d != NULL) && (d3d->nfaces > 0)) {
           expf_scrap.m_id = survnum;
-          expf_scrap.m_surveyId = pst->survey->num1;
+          expf_scrap.m_surveyId = cscan->fsptr->num1;
           // points & triangles
           lxFile3Point * pdata = new lxFile3Point [d3d->nvertices];
           thdb3dvx * vxp;
@@ -1805,7 +1809,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
           }
           expf_scrap.m_numPoints = d3d->nvertices;
-          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
           thdb3dfc * fcp;
           thdb3dfx * fxp;
           for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
@@ -1841,7 +1845,79 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             tdata[i] = *tli;
           }
           expf_scrap.m_num3Angles = tlist.size();
-          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
+          delete [] pdata;
+          delete [] tdata;
+          expf.m_scraps.push_back(expf_scrap);
+          survnum++;
+        }
+      }
+      obi++;
+    }
+  }
+
+
+
+  // SPLAY walls export
+  if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_SPLAYS) != 0)) {
+    for (size_t ii = 0; ii < nstat; ii++) {
+      if (stnum_orig[ii] > 0) {
+        pst = &(dbp->db1d.station_vec[ii]);
+        if (pst->survey->is_selected())
+        	d3d = pst->get_3d_outline();
+        else
+        	d3d = NULL;
+        if ((d3d != NULL) && (d3d->nfaces > 0)) {
+          expf_scrap.m_id = survnum;
+          expf_scrap.m_surveyId = pst->survey->num1;
+          // points & triangles
+          lxFile3Point * pdata = new lxFile3Point [d3d->nvertices];
+          thdb3dvx * vxp;
+          std::list<lxFile3Angle> tlist;
+          lxFile3Angle t3;
+          for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
+            pdata[i].m_c[0] = lxFilePrepDbl(vxp->x);
+            pdata[i].m_c[1] = lxFilePrepDbl(vxp->y);
+            pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
+          }
+          expf_scrap.m_numPoints = d3d->nvertices;
+          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
+          thdb3dfc * fcp;
+          thdb3dfx * fxp;
+          for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
+            switch (fcp->type) {
+              case THDB3DFC_TRIANGLE_STRIP:
+                for(j = 0, fxp = fcp->firstfx; fxp->next->next != NULL; j++, fxp = fxp->next) {
+                  t3.m_v[0] = fxp->vertex->id;
+                  switch (j % 2) {
+                    case 0:
+                      t3.m_v[1] = fxp->next->vertex->id;
+                      t3.m_v[2] = fxp->next->next->vertex->id;
+                      [[fallthrough]];
+                    default:
+                      t3.m_v[2] = fxp->next->vertex->id;
+                      t3.m_v[1] = fxp->next->next->vertex->id;
+                  }
+                  tlist.insert(tlist.end(), t3);
+                }
+                break;
+              case THDB3DFC_TRIANGLES:
+                for(j = 0, fxp = fcp->firstfx; fxp != NULL; j++, fxp = fxp->next->next->next) {
+                  t3.m_v[0] = fxp->vertex->id;
+                  t3.m_v[1] = fxp->next->vertex->id;
+                  t3.m_v[2] = fxp->next->next->vertex->id;
+                  tlist.insert(tlist.end(), t3);
+                }
+                break;
+            }
+          }
+          lxFile3Angle * tdata = new lxFile3Angle[tlist.size()];
+          std::list<lxFile3Angle>::iterator tli;
+          for(i = 0, tli = tlist.begin(); tli != tlist.end(); tli++, i++) {
+            tdata[i] = *tli;
+          }
+          expf_scrap.m_num3Angles = tlist.size();
+          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
           delete [] pdata;
           delete [] tdata;
           expf.m_scraps.push_back(expf_scrap);
@@ -1881,7 +1957,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
 
   FILE * out;
   const char * fnm = this->get_output("cave.kml");
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;
@@ -1908,7 +1984,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   thdataobject * obj;
   for(obj = mainsrv->foptr; obj != NULL; obj = obj->nsptr) 
     if (obj->get_class_id() == TT_SURVEY_CMD) {
-      mainsrv = (thsurvey *) obj;
+      mainsrv = dynamic_cast<thsurvey*>(obj);
       break;
     }
 
@@ -1940,7 +2016,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
           station->x, station->y, station->z, x, y, z);
         fprintf(out, "<Placemark>\n");
         fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
-        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
+        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->get_label(), layout->lang).c_str());
         fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
         fprintf(out, "</Placemark>\n");
       }
@@ -2011,7 +2087,7 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
   for(obj = surv->foptr; obj != NULL; obj = obj->nsptr) {
     switch (obj->get_class_id()) {
       case TT_SURVEY_CMD: {
-        thsurvey * subsurv = (thsurvey *) obj;
+        thsurvey * subsurv = dynamic_cast<thsurvey*>(obj);
 
         if ((strlen(subsurv->name) == 0) || !(subsurv->is_selected()))
           break;
@@ -2028,7 +2104,7 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
         double x, y, z;
         bool first_station = true;
         thdataleg_list::iterator legs;
-        thdata * survdata = (thdata *) obj;
+        thdata * survdata = dynamic_cast<thdata*>(obj);
 
         if (survdata->leg_list.empty())  // skip empty data blocks
           break;

@@ -21,11 +21,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thdb3d.h"
+#include "therion.h"
 #include <math.h>
  
 
@@ -87,20 +88,29 @@ thdb3dfc * thdb3ddata::insert_face(int type) {
   return face;
 }
 
-thdb3dvx * thdb3ddata::insert_vertex(lxVec v, void * dt) {
-  return this->insert_vertex(v.x, v.y, v.z, dt);
+thdb3dvx * thdb3ddata::insert_vertex(lxVec v, std::any dt, bool deduplicate) {
+  return this->insert_vertex(v.x, v.y, v.z, std::move(dt), deduplicate);
 }
 
 
-thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz, void * dt) {
+thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz, std::any dt, bool deduplicate) {
   thdb3dvx * vertex;
-  vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));
+  if (deduplicate) {
+	lxVec cpos = lxVec(vxx, vxy, vxz);
+	auto found_vertex = this->vertices_map.find(cpos);
+	if (found_vertex == this->vertices_map.end()) {
+	  vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));
+	} else {
+	  vertex = found_vertex->second;
+	}
+  } else
+	vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));
   vertex->id = this->nvertices;
   vertex->x = vxx;
   vertex->y = vxy;
   vertex->z = vxz;
   this->limits.update(vxx, vxy, vxz);
-  vertex->data = dt;
+  vertex->data = std::move(dt);
   this->nvertices++;
   if (this->lastvx == NULL) {
     this->firstvx = vertex;
@@ -112,7 +122,7 @@ thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz, void * 
   return vertex;
 }
 
-thdb3dfx * thdb3dfc::insert_vertex(thdb3dvx * vx, void * dt) {
+thdb3dfx * thdb3dfc::insert_vertex(thdb3dvx * vx, std::any dt) {
   thdb3dfx * fx;
   fx = &(*thdatabase3d.face_vertex_list.insert(thdatabase3d.face_vertex_list.end(),thdb3dfx()));
   this->nvx++;
@@ -124,7 +134,7 @@ thdb3dfx * thdb3dfc::insert_vertex(thdb3dvx * vx, void * dt) {
     this->lastfx = fx;
   }
   fx->vertex = vx;
-  fx->data = dt;
+  fx->data = std::move(dt);
   return fx;
 }
 

@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -30,15 +30,14 @@
 #include "thconfig.h"
 #include <stdio.h>
 #include <string.h>
-#include "thparse.h"
 #include "thdatabase.h"
 #include "thdataobject.h"
 #include "thsurvey.h"
-#include "th2ddataobject.h"
 #include "thscrap.h"
 #include <vector>
 #include "thchenc.h"
 #include "thmap.h"
+#include "therion.h"
 
 #include <fmt/printf.h>
 
@@ -79,11 +78,11 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
   thselector_item itm;
   itm.unselect = usid;
   if (nargs < 1)
-    ththrow("not enough command arguments");
+    throw thexception("not enough command arguments");
 
   // set object name
   if (strlen(*args) == 0)
-    ththrow("empty object name not allowed");
+    throw thexception("empty object name not allowed");
   itm.name = this->cfgptr->get_str_buff()->append(*args);
   itm.src_name = this->cfgptr->get_db()->strstore(this->cfgptr->get_cfg_file()->get_cif_name(), true);
   itm.src_ln = this->cfgptr->get_cfg_file()->get_cif_line_number();
@@ -104,7 +103,7 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
             itm.recursive = true;
             break;
           case TT_UNKNOWN_BOOL:
-            ththrow("logical value expected -- {}", args[aid]);
+            throw thexception(fmt::format("logical value expected -- {}", args[aid]));
         }
         break;
 
@@ -121,9 +120,9 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
           break;
         }
         if ((sv != TT_SV_NUMBER) || (dum < 0))
-          ththrow("invalid map level -- {}", *args);
+          throw thexception(fmt::format("invalid map level -- {}", *args));
         if (double(int(dum)) != dum)
-          ththrow("invalid map level -- {}", *args);
+          throw thexception(fmt::format("invalid map level -- {}", *args));
         itm.map_level = long(dum);
         break;
 
@@ -135,14 +134,14 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
           break;
         }
         if ((sv != TT_SV_NUMBER) || (dum <= 0))
-          ththrow("invalid chapter level -- {}", *args);
+          throw thexception(fmt::format("invalid chapter level -- {}", *args));
         if (double(int(dum)) != dum)
-          ththrow("invalid chapter level -- {}", *args);
+          throw thexception(fmt::format("invalid chapter level -- {}", *args));
         itm.chapter_level = long(dum);
         break;
         
       default:
-        ththrow("unknown option -- {}", args[aid]);
+        throw thexception(fmt::format("unknown option -- {}", args[aid]));
     }
   }
   
@@ -155,8 +154,8 @@ class thselector_select_item {
   
   public:
 
-  thdataobject * objp;
-  const char * n1, * n2, * n3;
+  thdataobject * objp = {};
+  const char * n1 = {}, * n2 = {}, * n3 = {};
   
   void clear();
   
@@ -209,7 +208,7 @@ void thselector_select_item::parse (thdataobject * op)
     case TT_LAYOUT_CMD:
       return;
     case TT_SURVEY_CMD:
-      sp = (thsurvey *) op;
+      sp = dynamic_cast<thsurvey*>(op);
       this->n1 = "";
       this->n2 = sp->get_reverse_full_name();
       this->n3 = sp->get_full_name();
@@ -228,7 +227,7 @@ void thselector_export_survey_tree_node (FILE * cf, unsigned long level, thdatao
   thsurvey * ss;
   while (optr != NULL) {
     if (optr->get_class_id() == TT_SURVEY_CMD) {
-      ss = (thsurvey *) optr;
+      ss = dynamic_cast<thsurvey*>(optr);
       fprintf(cf,"xth_cp_data_tree_insert %lu", ss->id);
       if (ss->fsptr != NULL)
         fprintf(cf," %lu %lu", ss->fsptr->id, level);
@@ -298,7 +297,7 @@ void thselector_prepare_map_tree_export (thdatabase * db) {
   obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
     if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD)) {
-      mi = ((thmap*)(*obi).get())->first_item;
+      mi = dynamic_cast<thmap*>(obi->get())->first_item;
       while (mi != NULL) {
         if (mi->type == TT_MAPITEM_NORMAL) {
           mi->object->tmp_bool = false;
@@ -322,7 +321,7 @@ void thselector_export_map_tree_node (FILE * cf, unsigned long level, unsigned l
   const char * types = NULL;
   switch (optr->get_class_id()) {
     case TT_MAP_CMD:
-      mptr = (thmap*) optr; //id fid level
+      mptr = dynamic_cast<thmap*>(optr); //id fid level
       types = "map";
       if (mptr->is_basic)
         subtype = 1;
@@ -336,10 +335,10 @@ void thselector_export_map_tree_node (FILE * cf, unsigned long level, unsigned l
     //default:
     //  break;
   }
-  ((thmap*)optr)->nz++;
-  fprintf(cf,"xth_cp_map_tree_insert %s %d %luX%lu",types,subtype,optr->id,((thmap*)optr)->nz);
+  dynamic_cast<thmap*>(optr)->nz++;
+  fprintf(cf,"xth_cp_map_tree_insert %s %d %luX%lu",types,subtype,optr->id,dynamic_cast<thmap*>(optr)->nz);
   if (fmap == NULL)
-    fprintf(cf," p%d %lu",((thmap*)optr)->projection_id,level);
+    fprintf(cf," p%d %lu",dynamic_cast<thmap*>(optr)->projection_id,level);
   else
     fprintf(cf," %luX%lu %lu",fmap->id,fmap->nz,level);
 
@@ -397,13 +396,13 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   thdb_object_list_type::iterator obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_MAP_CMD)
-      ((thmap*)(*obi).get())->nz = 0;
+      dynamic_cast<thmap*>(obi->get())->nz = 0;
     obi++;
   }
 
   obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
-    if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD) && (((thmap*)(*obi).get())->tmp_bool))
+    if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD) && dynamic_cast<thmap*>(obi->get())->tmp_bool)
       thselector_export_map_tree_node(cf,1,(*obi)->id,obi->get(),NULL);
     obi++;
   }
@@ -527,7 +526,7 @@ void thselector::select_db(class thdatabase * db)
       ii->optr = objptr;
       switch (objptr->get_class_id()) {
         case TT_SURVEY_CMD:
-          this->select_survey(&(*ii), (thsurvey *) objptr);
+          this->select_survey(&(*ii), dynamic_cast<thsurvey*>(objptr));
           has_selected_survey = true;
           break;
         default:
@@ -582,7 +581,7 @@ void thselector::select_survey(thselector_item * pitm, class thsurvey * srv)
   thdataobject * cptr = srv->get_first_survey_object();
   while (cptr != NULL) {
     if ((cptr->get_class_id() == TT_SURVEY_CMD) && pitm->recursive)
-      this->select_survey(pitm, (thsurvey *) cptr);
+      this->select_survey(pitm, dynamic_cast<thsurvey*>(cptr));
     //else {
     //  this->select_object(pitm, cptr);
     //}

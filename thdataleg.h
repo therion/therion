@@ -22,14 +22,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #ifndef thdataleg_h
 #define thdataleg_h
 
-#include "thparse.h"
+#include "thstok.h"
 #include "thobjectname.h"
 #include "thobjectsrc.h"
 #include "thinfnan.h"
@@ -401,38 +401,38 @@ class thdataleg {
 
   public:
   
-  bool is_valid;  ///< whether leg is valid.
+  bool is_valid = {};  ///< whether leg is valid.
   
   thobjectsrc srcf;  ///< Source file.
   
-  int data_type,  ///< leg data type
-      flags;  ///< Leg flags.
+  int data_type = {},  ///< leg data type
+      flags = {};  ///< Leg flags.
       
-  unsigned int s_mark,  ///< Type of the station mark
-    extend;  ///< Extend flags: normal, reverse, left, right, break
+  unsigned int s_mark = {},  ///< Type of the station mark
+    extend = {};  ///< Extend flags: normal, reverse, left, right, break
 
-  int walls, shape, gridcs;
+  int walls = {}, shape = {}, gridcs = {};
   
-  bool splay_walls;
+  bool splay_walls = {};
 
-  struct thdb1d_loop * loop; ///< Worst loop leg is a part of.
-  struct thdb1d_traverse * traverse; ///< Centreline traverse, leg is a part of.
+  struct thdb1d_loop * loop = {}; ///< Worst loop leg is a part of.
+  struct thdb1d_traverse * traverse = {}; ///< Centreline traverse, leg is a part of.
 
   thobjectname station, from, to;
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = {};  ///< parent survey
   
-  double length, counter, fromcounter, tocounter, depth, fromdepth,
-    todepth, depthchange, bearing, gradient, dx, dy, dz,
-    backbearing, backgradient, backlength, total_length, total_bearing, total_gradient,
-    total_dx, total_dy, total_dz, adj_dx, adj_dy, adj_dz,
-    from_up, from_down, from_left, from_right,
-    to_up, to_down, to_left, to_right, vtresh, extend_ratio;
+  double length = {}, counter = {}, fromcounter = {}, tocounter = {}, depth = {}, fromdepth = {},
+    todepth = {}, depthchange = {}, bearing = {}, gradient = {}, dx = {}, dy = {}, dz = {},
+    backbearing = {}, backgradient = {}, backlength = {}, total_length = {}, total_bearing = {}, total_gradient = {},
+    total_dx = {}, total_dy = {}, total_dz = {}, adj_dx = {}, adj_dy = {}, adj_dz = {},
+    from_up = {}, from_down = {}, from_left = {}, from_right = {},
+    to_up = {}, to_down = {}, to_left = {}, to_right = {}, vtresh = {}, extend_ratio = {};
     
-  double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
-    dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, implicit_declination, 
-    total_sdx, total_sdy, total_sdz, fxx, txx;
+  double length_sd = {}, counter_sd = {}, depth_sd = {}, bearing_sd = {}, gradient_sd = {},
+    dx_sd = {}, dy_sd = {}, dz_sd = {}, x_sd = {}, y_sd = {}, z_sd = {}, declination = {}, implicit_declination = {}, 
+    total_sdx = {}, total_sdy = {}, total_sdz = {}, fxx = {}, txx = {};
     
-  bool infer_plumbs, infer_equates, direction, adjusted, to_be_adjusted, topofil, plumbed;
+  bool infer_plumbs = {}, infer_equates = {}, direction = {}, adjusted = {}, to_be_adjusted = {}, topofil = {}, plumbed = {};
   
  
   /**

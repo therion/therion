@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -212,7 +212,7 @@ class thexpmap : public thexport {
 
   void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj * prj);
-  void export_scrap_backgroud_mesh(class thscrap * cs, class thexpmapmpxs * out, struct scraprecord * r);
+  void export_scrap_background_mesh(class thscrap * cs, class thexpmapmpxs * out, struct scraprecord * r);
 
   void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_uni_scrap(FILE * out, class thscrap * scrap);  

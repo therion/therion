@@ -1,6 +1,4 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 /*Standard libraries*/
 #ifndef LXDEPCHECK
@@ -15,7 +13,3 @@ extern R2DContext *R2DCreate(int width, int height);
 extern void R2DMakeCurrent(R2DContext * ctx);
 
 extern void R2DDestroy(R2DContext * ctx);
-
-#ifdef __cplusplus
-}
-#endif

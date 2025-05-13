@@ -6,6 +6,7 @@ set vv1 0
 set vv2 0
 
 set searchdirs {/usr /usr/local}
+set brewdirs {/opt/homebrew/Cellar/vtk}
 set gccstr ""
 catch {
     set gccstr [exec sh -c "pkg-config --cflags freetype2"]
@@ -19,7 +20,7 @@ foreach d $searchdirs {
     set ll [glob -nocomplain -directory "$d/include" -types d vtk*]
     foreach l $ll {
 	if {[regexp {vtk-(\d+)\.(\d+)$} $l dum v1 v2]} {
-	    if {($v1 >= $vv1) && ($v2 >= $vv2)} {
+	    if {($v1 > $vv1) || (($v1 == $vv1) && ($v2 >= $vv2))} {
 		set vv1 $v1
 		set vv2 $v2
 		set ver $vv1.$vv2
@@ -47,6 +48,25 @@ foreach d $searchdirs {
 	}
     }
 }
+
+foreach d $brewdirs {
+    set ll [glob -nocomplain -directory "$d" -types d *]
+    foreach l $ll {
+        #puts $l
+	if {[regexp {((\d+)\.(\d+).*)$} $l dum vvv v1 v2]} {
+	    #puts "$dum $v1 $vv1 $v2 $vv2"
+	    if {($v1 > $vv1) || (($v1 == $vv1) && ($v2 >= $vv2))} {
+		set vv1 $v1
+		set vv2 $v2
+		set ver $vvv
+		set suffix ""
+		set incpath "$l/include"
+		set libpath "$l/lib"
+	    }
+	}
+    }
+}
+
 
 switch [lindex $argv 0] {
     incpath {

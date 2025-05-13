@@ -10,14 +10,11 @@
 #include "lxSStats.h"
 #include "lxSetup.h"
 #include "lxGUI.h"
-#include "lxGLC.h"
 #include "lxData.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"
 #endif
-
-#include <cstdio>
 
 enum {
   lxSS_SURVEY_STATS = 4000,
@@ -65,7 +62,7 @@ lxSurveyStatsDlg::lxSurveyStatsDlg(wxWindow *parent)
 		this->SetIcon(wxIcon(loch_xpm));
 #endif
 
-  this->m_mainFrame = (lxFrame *) parent;
+  this->m_mainFrame = dynamic_cast<lxFrame*>(parent);
    
   wxBoxSizer * sizerFrame = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer * sizerTop = new wxBoxSizer(wxVERTICAL);

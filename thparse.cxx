@@ -22,11 +22,10 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
-#include "thparse.h"
 #include "therion.h"
 #include "thlang.h"
 #include "thtexfonts.h"
@@ -194,7 +193,7 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
       case 1:
         if (*s2 == separator) {
           state = 0;
-          dest->appendn((char *)s1, idx - idx0);
+          dest->appendn(s1, idx - idx0);
         }
     }
     idx++;
@@ -202,7 +201,7 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
   }
   
   if (state == 1)
-    dest->append((char *)s1);
+    dest->append(s1);
 }
 
 
@@ -233,7 +232,7 @@ void thsplit_paths(thmbuffer * dest, const char * src, char separator)
             break;
 #endif
           state = 0;
-          dest->appendn((char *)s1, idx - idx0);
+          dest->appendn(s1, idx - idx0);
         }
     }
     idx++;
@@ -241,7 +240,7 @@ void thsplit_paths(thmbuffer * dest, const char * src, char separator)
   }
   
   if (state == 1)
-    dest->append((char *)s1);
+    dest->append(s1);
 }
 
 
@@ -920,13 +919,13 @@ void thparse_altitude(const char * src, double & altv, double & fixv)
       ux = 1;
       break;
     default:
-      ththrow("invalid altitude specification -- {}",src);
+      throw thexception(fmt::format("invalid altitude specification -- {}",src));
   }
 
   if (parsev) {
     thparse_double(sv,altv,pars[0]);
     if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-      ththrow("invalid altitude value -- {}", pars[0]);
+      throw thexception(fmt::format("invalid altitude value -- {}", pars[0]));
     if (sv == TT_SV_NAN)
       altv = 0.0;
   }
@@ -972,7 +971,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
           break;
       }
       if (xdpi != ydpi) {
-        ththrow("X and Y image resolution not equal -- {}", fname);
+        throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
       }
       dpi = xdpi;
       if (dpi < 1.0) {
@@ -1004,7 +1003,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
       }
       fclose(pictf);
       if ((height < 0.0) || (width < 0.0))
-        ththrow("unable to determine image size -- {}", fname);
+        throw thexception(fmt::format("unable to determine image size -- {}", fname));
     } else if (
       (picth[0] == 0x89) && (picth[1] == 0x50) &&
       (picth[2] == 0x4E) && (picth[3] == 0x47) &&
@@ -1018,7 +1017,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
           xdpi = double(scan[4] * 0x1000000 + scan[5] * 0x10000 + scan[6] * 0x100 + scan[7]);
           ydpi = double(scan[8] * 0x1000000 + scan[9] * 0x10000 + scan[10] * 0x100 + scan[11]);
           if (xdpi != ydpi) {
-            ththrow("X and Y image resolution not equal -- {}", fname);
+            throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
           }
           switch (scan[12]) {
             case 1:
@@ -1035,10 +1034,10 @@ void thparse_image(const char * fname, double & width, double & height, double &
       width = std::round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
       height = std::round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
     } else {
-      ththrow("file format not supported -- {}", fname);
+      throw thexception(fmt::format("file format not supported -- {}", fname));
     }
   } else {
-    ththrow("file not found -- {}", fname);
+    throw thexception(fmt::format("file not found -- {}", fname));
   }
 
 #ifdef THDEBUG

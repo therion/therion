@@ -22,13 +22,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
 #include "thlogfile.h"
 #include "therion.h"
-#include "thinfnan.h"
 #include <string.h>
 
 const char * logfilemode = "w";
@@ -81,21 +80,20 @@ void thlogfile::close_file()
   }
 }
   
-
-
-void thlogfile::vprintf(const char *format, va_list *args)
+void thlogfile::print(std::string_view msg)
 {
   if (this->is_logging) {
     if (!this->is_open)
       this->open_file();
     if (this->is_open) {
-      if (vfprintf(this->fileh, format, *args) < 0)
-				this->log_error();
-		}
+      fmt::print(this->fileh, "{}", msg);
+      if (std::fflush(this->fileh) != 0)
+        this->log_error();
+    }
   }
 }
 
-void thlogfile::set_file_name(char *fname)
+void thlogfile::set_file_name(const char *fname)
 {
   size_t fnl = strlen(fname);
   if ((!this->is_open) && (fnl > 0))
@@ -121,15 +119,6 @@ void thlogfile::logging_on()
 {
   this->is_logging = true;
 }
-
-void thlogfile::printf_double(const char * format, const char * nanstr, double dbl)
-{
-	if (thisnan(dbl))
-		this->printf(nanstr);
-	else
-		this->printf(format, dbl);
-}
-
    
 void thlogfile::logging_off()
 {
@@ -143,21 +132,16 @@ FILE * thlogfile::get_fileh()
   return this->fileh;
 }
 
-void thlogfile::printf(const char * format, ...)
-{
-  va_list args;
-  va_start(args, format);
-	this->vprintf(format, &args);
-  va_end(args);
-}
-
-
 void thlogfile::log_error() {
 	this->close_file();
 	this->logging_off();
 	fprintf(stderr,"error -- unable to write to log file (disk full?, insufficient permissions?)\n");
 }
 
-thlogfile thlog;
+thlogfile& get_thlogfile()
+{
+  static thlogfile log; // global instance
+  return log;
+}
 
 

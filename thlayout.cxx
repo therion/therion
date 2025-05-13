@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -29,8 +29,7 @@
 #include "thlookup.h"
 #include "thexception.h"
 #include "thchenc.h"
-#include "thdata.h"
-#include "thparse.h"
+#include "thtfangle.h"
 #include "thinfnan.h"
 #include "thpdfdata.h"
 #include "thsymbolset.h"
@@ -40,9 +39,11 @@
 #include "thconfig.h"
 #include "th2ddataobject.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include <string.h>
 #include <filesystem>
 #include <algorithm>
+#include <cassert>
 
 namespace fs = std::filesystem;
 
@@ -234,6 +235,9 @@ thlayout::thlayout()
   this->def_layers = 0;
   this->layers = true;
 
+  this->def_geospatial = 0;
+  this->geospatial = true;
+
   this->def_grid = 0;
   this->grid = TT_LAYOUT_GRID_OFF;
   
@@ -247,12 +251,8 @@ thlayout::thlayout()
   this->color_labels = false;
   
   this->def_tex_lines = 0;
-  this->first_line = NULL;
-  this->last_line = NULL;
   
   this->lock = false;
-  this->first_copy_src = NULL;
-  this->last_copy_src = NULL;
   
   this->color_preview_below.R = 0.5;
   this->color_preview_below.G = 0.5;
@@ -357,18 +357,18 @@ void thlayout_parse_scale(double * scale,char ** args) {
   int sv;
   thparse_double(sv,dv,args[0]);
   if (sv != TT_SV_NUMBER)
-    ththrow("invalid number -- {}",args[0]);
+    throw thexception(fmt::format("invalid number -- {}",args[0]));
   if (dv <= 0.0)
-    ththrow("positive number expected -- {}",args[0]);
+    throw thexception(fmt::format("positive number expected -- {}",args[0]));
   *scale = dv;
   thparse_double(sv,dv,args[1]);
   if (sv != TT_SV_NUMBER)
-    ththrow("invalid number -- {}",args[1]);
+    throw thexception(fmt::format("invalid number -- {}",args[1]));
   if (dv <= 0.0)
-    ththrow("positive number expected -- {}",args[1]);
+    throw thexception(fmt::format("positive number expected -- {}",args[1]));
   *scale /= dv;  
   if ((*scale > 1.000001e-1) || (*scale < 9.99999e-6))
-    ththrow("scale out of range -- {} {}",args[0], args[1]);
+    throw thexception(fmt::format("scale out of range -- {} {}",args[0], args[1]));
 }
 
 void thlayout_parse_rotate(double & rotate, char * rotstr) {
@@ -383,11 +383,11 @@ void thlayout_parse_rotate(double & rotate, char * rotstr) {
     case 1:
       thparse_double(sv, rotate, args[0]);
       if (sv != TT_SV_NUMBER)
-        ththrow("invalid rotate specification -- {}", rotstr);
+        throw thexception(fmt::format("invalid rotate specification -- {}", rotstr));
       rotate = atf.transform(rotate);
       break;
     default:
-      ththrow("invalid rotate specification -- {}", rotstr);
+      throw thexception(fmt::format("invalid rotate specification -- {}", rotstr));
   }
 }
 
@@ -421,12 +421,11 @@ static const thstok thlayout_mapitems[] = {
 void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
   double dum;
-  thlayout_copy_src dumm;
   int sv, sv2, dum_int;
   const char * tmp1;
   const char * tmp2;
   //bool parsed;
-  thlayout_copy_src * lcp;
+  thlayoutln * last_line = nullptr;
   thcmd_option_desc defcod = this->get_default_cod(cod.id);
   switch (cod.id) {
     case TT_DATAOBJECT_AUTHOR:
@@ -435,7 +434,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
-        ththrow("too many arguments -- {}", args[defcod.nargs]);
+        throw thexception(fmt::format("too many arguments -- {}", args[defcod.nargs]));
   }
   
   switch (cod.id) {
@@ -446,44 +445,40 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SYMBOL_HIDE:
     case TT_LAYOUT_SYMBOL_SHOW:
     case TT_LAYOUT_SYMBOL_COLOR:
+      last_line = &lines.emplace_back();
       if (this->def_tex_lines < 2) {
-        this->first_line = this->db->db2d.insert_layoutln();
-        this->last_line = this->first_line;
         this->def_tex_lines = 2;
-      } else {
-        this->last_line->next_line = this->db->db2d.insert_layoutln();
-        this->last_line = this->last_line->next_line;
       }
       switch(cod.id) {
         case 0:
           if (this->ccode == TT_LAYOUT_CODE_UNKNOWN) {
-            ththrow("unknown option -- {}", *args);
+            throw thexception(fmt::format("unknown option -- {}", *args));
           }
           thencode(&(this->db->buff_enc), *args, argenc);
-          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
-          this->last_line->code = this->ccode;
-          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
+          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->code = this->ccode;
+          last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
             if (!th_is_keyword(*args))
-              ththrow("invalid keyword -- {}", args[0]);
+              throw thexception(fmt::format("invalid keyword -- {}", args[0]));
             thencode(&(this->db->buff_enc), *args, argenc);
-            this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+            last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           }
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
           break;
         case TT_LAYOUT_SYMBOL_ASSIGN:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
-            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          if (!thsymbolset_assign[this->last_line->smid])
-            ththrow("symbol can not be assigned -- {} {}", args[0], args[1]);
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
+            throw thexception(fmt::format("unknown symbol specification -- {} {}", args[0], args[1]));
+          if (!thsymbolset_assign[last_line->smid])
+            throw thexception(fmt::format("symbol can not be assigned -- {} {}", args[0], args[1]));
           if (!th_is_keyword(args[2]))
-            ththrow("invalid keyword -- {}", args[2]);
+            throw thexception(fmt::format("invalid keyword -- {}", args[2]));
           thencode(&(this->db->buff_enc), args[2], argenc);
-          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
+          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
           break;
 //        case TT_LAYOUT_MAP_ITEM:
 //          this->last_line->smid = thmatch_token(args[0],thtt_layout_mapitem);
@@ -496,23 +491,23 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 //          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
 //          break;
         case TT_LAYOUT_SYMBOL_HIDE:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
-            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
+            throw thexception(fmt::format("unknown symbol specification -- {} {}", args[0], args[1]));
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
           break;
         case TT_LAYOUT_SYMBOL_SHOW:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
-            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
+            throw thexception(fmt::format("unknown symbol specification -- {} {}", args[0], args[1]));
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
           break;
         case TT_LAYOUT_SYMBOL_COLOR:
-          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
-          if (this->last_line->smid == -1)
-            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
-          this->last_line->sclr.parse(args[2]);
-          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
+          last_line->smid = thsymbolset_get_id(args[0],args[1]);
+          if (last_line->smid == -1)
+            throw thexception(fmt::format("unknown symbol specification -- {} {}", args[0], args[1]));
+          last_line->sclr.parse(args[2]);
+          last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
           break;
       }
       break;
@@ -523,7 +518,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_SV_NUMBER:
           dum_int = int(dum);
           if ((double(dum_int) != dum) || (dum_int < 0))
-            ththrow("not an integer -- {}", args[1]);
+            throw thexception(fmt::format("not an integer -- {}", args[1]));
           break;
         case TT_SV_ALL:
           dum_int = -1;
@@ -532,7 +527,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           dum_int = 0;
           break;   
         default:
-          ththrow("invalid number or switch -- {}", args[1]);
+          throw thexception(fmt::format("invalid number or switch -- {}", args[1]));
       }
       this->survey_level = dum_int;
       this->def_survey_level = 2;
@@ -544,28 +539,28 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TTL_MAPITEM_EXPLO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow("invalid map-item explo-length switch -- {}",args[1]);
+            throw thexception(fmt::format("invalid map-item explo-length switch -- {}",args[1]));
           this->explo_lens = sv;
           this->def_explo_lens = 2;
           break;
         case TTL_MAPITEM_TOPO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow("invalid map-item topo-length switch -- {}",args[1]);
+            throw thexception(fmt::format("invalid map-item topo-length switch -- {}",args[1]));
           this->topo_lens = sv;
           this->def_topo_lens = 2;
           break;
         case TTL_MAPITEM_CARTO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow("invalid map-item carto-length switch -- {}",args[1]);
+            throw thexception(fmt::format("invalid map-item carto-length switch -- {}",args[1]));
           this->carto_lens = sv;
           this->def_carto_lens = 2;
           break;
         case TTL_MAPITEM_COPY_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow("invalid map-item copyright-length switch -- {}",args[1]);
+            throw thexception(fmt::format("invalid map-item copyright-length switch -- {}",args[1]));
           this->copy_lens = sv;
           this->def_copy_lens = 2;
           break;
@@ -578,7 +573,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             case TT_SV_NUMBER:
               dum_int = int(dum);
               if ((double(dum_int) != dum) || (dum_int < 0))
-                ththrow("not a non-negative integer -- {}", args[1]);
+                throw thexception(fmt::format("not a non-negative integer -- {}", args[1]));
               break;
             case TT_SV_ALL:
               dum_int = -1;
@@ -587,7 +582,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
               dum_int = 0;
               break;   
             default:
-              ththrow("invalid number or switch -- {}", args[1]);
+              throw thexception(fmt::format("invalid number or switch -- {}", args[1]));
           }
           switch (sv2) {
             case TTL_MAPITEM_EXPLO:
@@ -609,7 +604,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           }
           break;
         default:
-          ththrow("unknown statistics -- {}", args[0]);
+          throw thexception(fmt::format("unknown statistics -- {}", args[0]));
       }
       break;
       
@@ -644,10 +639,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_SV_NUMBER:
           dum_int = int(dum);
           if ((double(dum_int) != dum) || (dum_int < 0))
-            ththrow("not a non-negative integer -- {}", args[0]);
+            throw thexception(fmt::format("not a non-negative integer -- {}", args[0]));
           break;
         default:
-          ththrow("invalid number -- {}", args[0]);
+          throw thexception(fmt::format("invalid number -- {}", args[0]));
       }
       this->legend_columns = (unsigned) dum_int;
       this->def_legend_columns = 2;
@@ -684,10 +679,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       for(sv2 = 0; sv2 < 5; sv2++) {
         thparse_double(sv,dum,args[sv2]);
         if ((sv != TT_SV_NUMBER) || (dum <= 0.0)) {
-          ththrow("invalid font size -- {}", args[sv2]);
+          throw thexception(fmt::format("invalid font size -- {}", args[sv2]));
         } else {
           if ((sv2 > 0) && (dum < this->font_setup[sv2-1])) {
-            ththrow("font size should be increasing by scale -- {}", args[sv2]);
+            throw thexception(fmt::format("font size should be increasing by scale -- {}", args[sv2]));
           }
           this->font_setup[sv2] = dum;
         }
@@ -706,7 +701,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_LAYOUT_COLOR_LABELS:
           sv2 = thmatch_token(args[1], thtt_bool);
           if (sv2 == TT_UNKNOWN_BOOL)
-            ththrow("invalid color labels switch (on|off expected) -- {}",args[1]);
+            throw thexception(fmt::format("invalid color labels switch (on|off expected) -- {}",args[1]));
           else {
             this->color_labels = (sv2 == TT_TRUE);
 	    this->def_color_labels = 2;
@@ -732,7 +727,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->color_preview_above.parse(args[1]);
           break;
         default:
-        ththrow("unknown color -- {}",args[0]);
+        throw thexception(fmt::format("unknown color -- {}",args[0]));
       }
       break;
     
@@ -751,7 +746,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_TRANSPARENCY:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid transparency switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid transparency switch -- {}",args[0]));
       this->transparency = (sv == TT_TRUE);
       this->def_transparency = 2;
       break;
@@ -759,7 +754,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SKETCHES:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid sketches switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid sketches switch -- {}",args[0]));
       this->sketches = (sv == TT_TRUE);
       this->def_sketches = 2;
       break;
@@ -767,7 +762,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_LEGEND:
       sv = thmatch_token(args[0],thtt_layout_legend);
       if (sv == TT_LAYOUT_LEGEND_UNKNOWN)
-        ththrow("invalid legend switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid legend switch -- {}",args[0]));
       this->legend = sv;
       this->def_legend = 2;
       break;
@@ -775,7 +770,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_COLOR_LEGEND:
       sv = thmatch_token(args[0],thtt_layout_colorlegend);
       if (sv == TT_LAYOUT_COLORLEGEND_UNKNOWN)
-        ththrow("invalid color-legend switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid color-legend switch -- {}",args[0]));
       this->color_legend = sv;
       this->def_color_legend = 2;
       break;
@@ -783,7 +778,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_COLOR_MODEL:
       sv = thmatch_token(args[0],thtt_layoutclr_model);
       if (sv == TT_LAYOUTCLRMODEL_UNKNOWN)
-        ththrow("invalid color-model switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid color-model switch -- {}",args[0]));
       this->color_model = sv;
       this->def_color_model = 2;
       break;
@@ -806,7 +801,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->def_color_profile_gray = 2;
     	  break;
       default:
-          ththrow("invalid color-profile model -- {}",args[0]);
+          throw thexception(fmt::format("invalid color-profile model -- {}",args[0]));
       }
       break;
       
@@ -820,19 +815,19 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
       thparse_double(sv,this->map_header_x,args[0]);
       if (sv != TT_SV_NUMBER)
-        ththrow("invalid number -- {}",args[0]);
+        throw thexception(fmt::format("invalid number -- {}",args[0]));
       if ((this->map_header_x < -100.0) || (this->map_header_x > 200.0))
-        ththrow("number between 0.0 - 100.0 expected -- {}",args[0]);
+        throw thexception(fmt::format("number between 0.0 - 100.0 expected -- {}",args[0]));
 
       thparse_double(sv,this->map_header_y,args[1]);
       if (sv != TT_SV_NUMBER)
-        ththrow("invalid number -- {}",args[1]);
+        throw thexception(fmt::format("invalid number -- {}",args[1]));
       if ((this->map_header_y < -100.0) || (this->map_header_y > 200.0))
-        ththrow("number between 0.0 - 100.0 expected -- {}",args[1]);
+        throw thexception(fmt::format("number between 0.0 - 100.0 expected -- {}",args[1]));
 
       sv = thmatch_token(args[2],thtt_layout_map_header);
       if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
-        ththrow("invalid map-header switch -- {}",args[2]);
+        throw thexception(fmt::format("invalid map-header switch -- {}",args[2]));
       this->map_header = sv;
       this->def_map_header = 2;
       break;
@@ -848,7 +843,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DEBUG:
       sv = thmatch_token(args[0],thtt_layout_debug);
       if (sv == TT_LAYOUT_DEBUG_UNKNOWN)
-        ththrow("invalid debug switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid debug switch -- {}",args[0]));
       switch (sv) {
         case TT_LAYOUT_DEBUG_ALL:
           this->debug = TTLDBG_JOINS | TTLDBG_STATIONS | TTLDBG_SCRAPNAMES | TTLDBG_STATIONNAMES;
@@ -875,7 +870,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_LANG:
       sv = thlang_parse(args[0]);
       if (sv == THLANG_UNKNOWN)
-        ththrow("language not supported -- {}",args[0]);
+        throw thexception(fmt::format("language not supported -- {}",args[0]));
       this->lang = sv;
       this->def_lang = 2;
       break;
@@ -888,15 +883,23 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_LAYERS:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid layers switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid layers switch -- {}",args[0]));
       this->layers = (sv == TT_TRUE);
       this->def_layers = 2;
+      break;
+
+    case TT_LAYOUT_GEOSPATIAL:
+      sv = thmatch_token(args[0],thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        throw thexception(fmt::format("invalid geospatial switch -- {}",args[0]));
+      this->geospatial = (sv == TT_TRUE);
+      this->def_geospatial = 2;
       break;
 
     case TT_LAYOUT_MAP_HEADER_BG:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid map-header-bg switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid map-header-bg switch -- {}",args[0]));
       this->map_header_bg = (sv == TT_TRUE);
       this->def_map_header_bg = 2;
       break;
@@ -904,7 +907,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_OPACITY:
       thparse_double(sv,dum,args[0]);        
       if ((sv != TT_SV_NUMBER) || (dum < 0.0) || (dum > 100.0))
-        ththrow("invalid opacity value -- {}", args[0]);
+        throw thexception(fmt::format("invalid opacity value -- {}", args[0]));
       this->opacity = dum / 100.0;
       this->def_opacity = 2;
       break;
@@ -912,7 +915,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SURFACE_OPACITY:
       thparse_double(sv,dum,args[0]);        
       if ((sv != TT_SV_NUMBER) || (dum < 0.0) || (dum > 100.0))
-        ththrow("invalid opacity value -- {}", args[0]);
+        throw thexception(fmt::format("invalid opacity value -- {}", args[0]));
       this->surface_opacity = dum / 100.0;
       this->def_surface_opacity = 2;
       break;
@@ -920,7 +923,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SURFACE:
       sv = thmatch_token(args[0],thtt_layout_surface);
       if (sv == TT_LAYOUT_SURFACE_UNKNOWN)
-        ththrow("invalid surface switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid surface switch -- {}",args[0]));
       this->surface = sv;
       this->def_surface = 2;
       break;
@@ -928,7 +931,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_GRID_COORDS:
       sv = thmatch_token(args[0],thtt_layout_gridcoords);
       if (sv == TT_LAYOUT_GRIDCOORDS_UNKNOWN)
-        ththrow("invalid grid-coords switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid grid-coords switch -- {}",args[0]));
       this->grid_coords = sv;
       this->def_grid_coords = 2;
       break;
@@ -936,7 +939,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_NORTH:
       sv = thmatch_token(args[0],thtt_layout_north);
       if (sv == TT_LAYOUT_NORTH_UNKNOWN)
-        ththrow("invalid north switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid north switch -- {}",args[0]));
       this->north = sv;
       this->def_north = 2;
       break;
@@ -944,7 +947,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SMOOTH_SHADING:
       sv = thmatch_token(args[0],thtt_layout_smoothshading);
       if (sv == TT_LAYOUT_SMOOTHSHADING_UNKNOWN)
-        ththrow("invalid smooth-shading switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid smooth-shading switch -- {}",args[0]));
       this->smooth_shading = sv;
       this->def_smooth_shading = 2;
       break;
@@ -952,7 +955,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_GRID:
       sv = thmatch_token(args[0],thtt_layout_grid);
       if (sv == TT_LAYOUT_GRID_UNKNOWN)
-        ththrow("invalid grid switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid grid switch -- {}",args[0]));
       this->grid = (char) sv;
       this->def_grid = 2;
       break;
@@ -964,14 +967,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_CODE:
       sv = thmatch_token(args[0],thtt_layout_code);
       if (sv == TT_LAYOUT_CODE_UNKNOWN)
-        ththrow("invalid code switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid code switch -- {}",args[0]));
       this->ccode = (char) sv;
       break;
       
     case TT_LAYOUT_PAGE_GRID:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid page-grid switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid page-grid switch -- {}",args[0]));
       this->page_grid = (sv == TT_TRUE);
       this->def_page_grid = 2;
       break;
@@ -980,13 +983,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid pages exclusion switch -- {}",args[0]);
+        throw thexception(fmt::format("invalid pages exclusion switch -- {}",args[0]));
       this->excl_pages = (sv == TT_TRUE);
 
       if (strlen(args[1]) > 0)
         this->excl_list = this->db->strstore(args[1]);
       else if (this->excl_pages)
-        ththrow("invalid pages exclusion list -- {}",args[1]);
+        throw thexception(fmt::format("invalid pages exclusion list -- {}",args[1]));
 
       this->def_excl_pages = 2;
       break;
@@ -994,7 +997,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_PAGE_NUMBERS:
       sv = thmatch_token(*args,thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid page numbers switch -- {}",*args);
+        throw thexception(fmt::format("invalid page numbers switch -- {}",*args));
       this->pgsnum = (sv == TT_TRUE);
       this->def_page_numbers = 2;
       break;
@@ -1002,7 +1005,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_TITLE_PAGES:
       sv = thmatch_token(*args,thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow("invalid title-pages switch -- {}",*args);
+        throw thexception(fmt::format("invalid title-pages switch -- {}",*args));
       this->titlep = (sv == TT_TRUE);
       this->def_title_pages = 2;
       break;
@@ -1058,13 +1061,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         //thencode(&(this->db->buff_enc), args[0], argenc);
         this->olx = this->db->strstore(args[0]);
       } else
-        ththrow("invalid label -- {}",args[0]);
+        throw thexception(fmt::format("invalid label -- {}",args[0]));
 
       if (strlen(args[1]) > 0) {
         //thencode(&(this->db->buff_enc), args[1], argenc);
         this->oly = this->db->strstore(args[1]);
       } else
-        ththrow("invalid label -- {}",args[1]);
+        throw thexception(fmt::format("invalid label -- {}",args[1]));
 
       this->def_origin_label = 2;
       break;
@@ -1073,16 +1076,16 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     
       thparse_double(sv,dum,args[0]);        
       if ((sv != TT_SV_NUMBER) || (dum <= 0))
-        ththrow("invalid navigator size -- {}", *args);
+        throw thexception(fmt::format("invalid navigator size -- {}", *args));
       if (double(int(dum)) != dum)
-        ththrow("invalid navigator size -- {}", *args);
+        throw thexception(fmt::format("invalid navigator size -- {}", *args));
       this->navsx = unsigned(dum);
 
       thparse_double(sv,dum,args[1]);        
       if ((sv != TT_SV_NUMBER) || (dum <= 0))
-        ththrow("invalid navigator size -- {}", *args);
+        throw thexception(fmt::format("invalid navigator size -- {}", *args));
       if (double(int(dum)) != dum)
-        ththrow("invalid navigator size -- {}", *args);
+        throw thexception(fmt::format("invalid navigator size -- {}", *args));
       this->navsy = unsigned(dum);
       
       this->def_nav_size = 2;
@@ -1090,34 +1093,28 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       
     case TT_LAYOUT_COPY:
       if (th_is_extkeyword(*args)) {
-        lcp = & ( * thlayout_copy_src_list.insert(thlayout_copy_src_list.end(),dumm));
-        if (this->first_copy_src == NULL) {
-          this->first_copy_src = lcp;
-          this->last_copy_src = lcp;
-        } else {
-          this->last_copy_src->next_src = lcp;
-          this->last_copy_src = lcp;
-        }
-        lcp->srcn = this->db->strstore(*args);
+        auto lcp = &lines.emplace_back();
+        lcp->code = TT_LAYOUT_CODE_COPY;
+        lcp->line = this->db->strstore(*args);
       } else 
-        ththrow("invalid keyword -- {}", *args);
+        throw thexception(fmt::format("invalid keyword -- {}", *args));
       break;
     
     case TT_LAYOUT_NAV_FACTOR:
       thparse_double(sv,this->navf,*args);
       if (sv != TT_SV_NUMBER)
-        ththrow("invalid factor -- {}", *args);
+        throw thexception(fmt::format("invalid factor -- {}", *args));
       if (this->navf <= 0.0)
-        ththrow("negative factor not allowed -- {}", *args);
+        throw thexception(fmt::format("negative factor not allowed -- {}", *args));
       this->def_nav_factor = 2;
       break;
     
     case TT_LAYOUT_OWN_PAGES:
       thparse_double(sv,dum,*args);        
       if ((sv != TT_SV_NUMBER) || (dum <= 0))
-        ththrow("invalid number of own pages -- {}", *args);
+        throw thexception(fmt::format("invalid number of own pages -- {}", *args));
       if (double(int(dum)) != dum)
-        ththrow("invalid number of own pages -- {}", *args);
+        throw thexception(fmt::format("invalid number of own pages -- {}", *args));
       this->ownp = unsigned(dum);
       this->def_own_pages = 2;
       break;
@@ -1271,6 +1268,9 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->def_layers = %d;\n", this->def_layers);
   thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
 
+  thprintf("\tplayout->def_geospatial = %d;\n", this->def_geospatial);
+  thprintf("\tplayout->geospatial = %s;\n",(this->geospatial ? "true" : "false"));
+
   thprintf("\tplayout->def_map_header_bg = %d;\n", this->def_map_header_bg);
   thprintf("\tplayout->map_header_bg = %s;\n",(this->map_header_bg ? "true" : "false"));
 
@@ -1392,9 +1392,8 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->pgsnum = %s;\n",(this->pgsnum ? "true" : "false"));
 
   
-  thlayoutln * ln = this->first_line;
   char last_code = TT_LAYOUT_CODE_UNKNOWN;
-  while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
     switch (ln->code) {
       case TT_LAYOUT_CODE_METAPOST:
       case TT_LAYOUT_CODE_TEX_MAP:
@@ -1435,31 +1434,30 @@ void thlayout::self_print_library() {
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
-              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
-              thprintf("\tplayout->last_line->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
+              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
+              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprintf("\tplayout->get_last_line()->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;
           }
         }
         break;
     }
-    ln = ln->next_line;
   }
   thprintf("\tplayout->def_tex_lines = %d;\n", this->def_tex_lines);
   
@@ -1469,12 +1467,12 @@ void thlayout::self_print_library() {
 void check_num(double num, int nonneg) {
   if (nonneg == 0) {
     if (num < 0) {
-      ththrow("not a non-negative number -- {}", num);
+      throw thexception(fmt::format("not a non-negative number -- {}", num));
     }
   }
   else if (nonneg > 0) {
     if (num <= 0) {
-      ththrow("not a positive number -- {}", num);
+      throw thexception(fmt::format("not a positive number -- {}", num));
     }
   }
 }
@@ -1488,21 +1486,21 @@ void thlayout::parse_len(double & d1, double & d2, double & d3, int nargs, char 
     case 3:
       thparse_double(sv,d3,args[2]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[2]);
+        throw thexception(fmt::format("invalid number -- {}", args[2]));
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
       [[fallthrough]];
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[1]);
+        throw thexception(fmt::format("invalid number -- {}", args[1]));
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
       [[fallthrough]];
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[0]);
+        throw thexception(fmt::format("invalid number -- {}", args[0]));
       d1 = lentf.transform(d1);
       check_num(d1,nonneg);
   }
@@ -1517,42 +1515,42 @@ void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, do
     case 6:
       thparse_double(sv,d6,args[5]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[5]);
+        throw thexception(fmt::format("invalid number -- {}", args[5]));
       d6 = lentf.transform(d6);
       check_num(d6,nonneg);
       [[fallthrough]];
     case 5:
       thparse_double(sv,d5,args[4]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[4]);
+        throw thexception(fmt::format("invalid number -- {}", args[4]));
       d5 = lentf.transform(d5);
       check_num(d5,nonneg);
       [[fallthrough]];
     case 4:
       thparse_double(sv,d4,args[3]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[3]);
+        throw thexception(fmt::format("invalid number -- {}", args[3]));
       d4 = lentf.transform(d4);
       check_num(d4,nonneg);
       [[fallthrough]];
     case 3:
       thparse_double(sv,d3,args[2]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[2]);
+        throw thexception(fmt::format("invalid number -- {}", args[2]));
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
       [[fallthrough]];
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[1]);
+        throw thexception(fmt::format("invalid number -- {}", args[1]));
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
       [[fallthrough]];
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
-        ththrow("invalid number -- {}", args[0]);
+        throw thexception(fmt::format("invalid number -- {}", args[0]));
       d1 = lentf.transform(d1);
       check_num(d1,nonneg);
   }
@@ -1685,9 +1683,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
   bool anyline = false;
   bool anylegend = false;
   const char * last_path = "";
-  if (this->first_line != NULL) {
-    thlayoutln * ln = this->first_line;
-    while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
       if (ln->code == mode) {
         // ak najde \\formattedlegend v \\insertmaps tak anyline bude
         // true
@@ -1702,8 +1698,6 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
         thdecode_utf2tex(&(this->db->buff_enc), ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
-      ln = ln->next_line;
-    }
   }
   
   if (!anyline) {
@@ -1721,9 +1715,7 @@ void thlayout::export_mpost(FILE * o) {
 
   bool anyline = false;
   const char * last_path = "";
-  if (this->first_line != NULL) {
-    thlayoutln * ln = this->first_line;
-    while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
       if (ln->code == TT_LAYOUT_CODE_METAPOST) {
         if (strcmp(ln->path, last_path) != 0) {
           last_path = ln->path;
@@ -1733,8 +1725,6 @@ void thlayout::export_mpost(FILE * o) {
         thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
-      ln = ln->next_line;
-    }
   }
   
   if (!anyline) {
@@ -1745,8 +1735,7 @@ void thlayout::export_mpost(FILE * o) {
 
 
 void thlayout::export_mpost_symbols(FILE * o, thsymbolset * symset) {
-  thlayoutln * ln = this->first_line;
-  while(ln != NULL) {
+  for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
     switch (ln->code) {
       case TT_LAYOUT_CODE_SYMBOL_DEFAULTS:
         symset->export_symbol_defaults(o,ln->line);
@@ -1767,33 +1756,35 @@ void thlayout::export_mpost_symbols(FILE * o, thsymbolset * symset) {
         symset->export_symbol_assign(o,ln->smid,ln->line);
         break;
     }
-    ln = ln->next_line;
   }
 }
 
 
+static bool is_copy_src(thlayoutln const &ll) {
+  return ll.code == TT_LAYOUT_CODE_COPY;
+}
+
 
 void thlayout::process_copy() {
-  thlayout_copy_src * csp;
-  thlayout * srcl;
   // ak je locknuty -> tak warning a koniec
   if (this->lock) {
     thwarning(("%s -- recursive layout copying", this->throw_source().c_str()))
     return;
   }
   this->lock = true;
-  this->last_copy_src = this->first_copy_src;
-  while (this->first_copy_src != NULL) {
-    csp = this->first_copy_src;
+
+  for (auto csp = lines.begin(); csp != lines.end(); ++csp) {
+    if (!is_copy_src(*csp)) {
+      continue;
+    }
+
     // najdeme si layout podla mena
-    csp->srcptr = this->db->get_layout(csp->srcn);
-    if (csp->srcptr == NULL) {
-      thwarning(("%s -- source layout not found -- %s", this->throw_source().c_str(), csp->srcn))
+    thlayout * srcl = this->db->get_layout(csp->line);
+    if (srcl == NULL) {
+      thwarning(("%s -- source layout not found -- %s", this->throw_source().c_str(), csp->line))
     } else {
-      srcl = csp->srcptr;
       // ak ma este nevyriesene zavislosti
-      if (srcl->first_copy_src != NULL)
-        srcl->process_copy();
+      srcl->process_copy();
       
       // teraz skopirujme co nemame a on ma
 #define begcopy(whatx) if ((this->whatx < 2) && (srcl->whatx > 0)) { \
@@ -2064,6 +2055,10 @@ void thlayout::process_copy() {
         this->layers = srcl->layers;
       endcopy
 
+      begcopy(def_geospatial)
+        this->geospatial = srcl->geospatial;
+      endcopy
+
       begcopy(def_map_header_bg)
         this->map_header_bg = srcl->map_header_bg;
       endcopy
@@ -2080,32 +2075,8 @@ void thlayout::process_copy() {
         this->pgsnum = srcl->pgsnum;
       endcopy
 
-      if (srcl->first_line != NULL) {
-
-        // musime ich nakopirovat pred nase
-        thlayoutln * cl, * nl, * newfl = NULL, * newll = NULL;
-        cl = srcl->first_line;
-        while (cl != NULL) {
-          nl = this->db->db2d.insert_layoutln();
-          *nl = *cl;
-          if (newll == NULL) {
-            newfl = nl;
-            newll = nl;
-            newll->next_line = NULL;
-          } else {
-            newll->next_line = nl;
-            newll = nl;
-          }
-          cl = cl->next_line;
-        }        
-        if (this->last_line == NULL) {
-          this->last_line = newll;
-          newll->next_line = NULL;
-        } else {
-          newll->next_line = this->first_line;
-        }
-        this->first_line = newfl;
-      }
+      assert(std::none_of(srcl->lines.begin(), srcl->lines.end(), is_copy_src));
+      this->lines.insert(csp, srcl->lines.begin(), srcl->lines.end());
 
       // copy map images
       thlayout_map_image_list::iterator mit, mits;
@@ -2115,10 +2086,11 @@ void thlayout::process_copy() {
       }
       
     } 
-
-    // pokracujeme v cykle
-    this->first_copy_src = this->first_copy_src->next_src;
   }
+
+  // now remove the processed copy lines
+  lines.remove_if(is_copy_src);
+
   this->lock = false;
 }
 
@@ -2141,6 +2113,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * /*prj*/, double /*x_scale*/, double 
   LAYOUT.page_numbering = this->pgsnum;
   LAYOUT.transparency = this->transparency;
   LAYOUT.OCG = this->layers;
+  LAYOUT.geospatial = this->geospatial;
   LAYOUT.map_header_bg = this->map_header_bg;
   LAYOUT.transparent_map_bg = (this->color_map_bg.A < 1.0);
   //TODO
@@ -2250,9 +2223,6 @@ bool thlayout::is_debug_stationnames() {
   return ((this->debug & TTLDBG_STATIONNAMES) != 0);
 }
 
-std::list <thlayout_copy_src> thlayout_copy_src_list;
-
-
 bool thlayout_map_image::defined() {
   return (strlen(this->m_fn) > 0);
 }
@@ -2264,23 +2234,23 @@ void thlayout_map_image::parse(char ** args, const char * cpath) {
 
   thparse_double(sv,this->m_x,args[0]);
   if (sv != TT_SV_NUMBER)
-    ththrow("invalid number -- {}",args[0]);
+    throw thexception(fmt::format("invalid number -- {}",args[0]));
   if ((this->m_x < -100.0) || (this->m_x > 200.0))
-    ththrow("number between -100.0 - 200.0 expected -- {}",args[0]);
+    throw thexception(fmt::format("number between -100.0 - 200.0 expected -- {}",args[0]));
 
   thparse_double(sv,this->m_y,args[1]);
   if (sv != TT_SV_NUMBER)
-    ththrow("invalid number -- {}",args[1]);
+    throw thexception(fmt::format("invalid number -- {}",args[1]));
   if ((this->m_y < -100.0) || (this->m_y > 200.0))
-    ththrow("number between -100.0 - 200.0 expected -- {}",args[1]);
+    throw thexception(fmt::format("number between -100.0 - 200.0 expected -- {}",args[1]));
 
   sv = thmatch_token(args[2],thtt_layout_map_header);
   if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
-    ththrow("invalid map-image align switch -- {}",args[2]);
+    throw thexception(fmt::format("invalid map-image align switch -- {}",args[2]));
   this->m_align = sv;
 
   if (strlen(args[3]) == 0)
-    ththrow("empty image file name not allowed");
+    throw thexception("empty image file name not allowed");
 
   std::string fpath;
   fpath = cpath;

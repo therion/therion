@@ -21,42 +21,30 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thexpmap.h"
-#include "thexporter.h"
-#include "thexception.h"
 #include "thdatabase.h"
 #include "thdb2d.h"
 #include "thdb2dmi.h"
 #include "thlayout.h"
 #include "thmap.h"
-#include "thsketch.h"
 #include "thconfig.h"
 #include <stdio.h>
-#include "thtmpdir.h"
-#include "thchenc.h"
 #include "thdb1d.h"
-#include "thinit.h"
-#include "thlogfile.h"
-#include "thcmdline.h"
 #include "thsurvey.h"
-#include "thchenc.h"
-#include <fstream>
 #include "thmapstat.h"
-#include "thsurface.h"
 #include <stdlib.h>
-#include "loch/lxMath.h"
 #include "shapefil.h"
 #include "thexpmodel.h"
 #include "thcsdata.h"
-#include <fcntl.h>
 #include <stdlib.h>
 #include <time.h>
-#include <errno.h>
 #include "thcs.h"
+#include "thproj.h"
+#include "therion.h"
 #include <filesystem>
 
 #include "thexpshp.h"
@@ -102,12 +90,14 @@ void thexpshpf::close()
         enc = this->m_xshp->m_expmodel->encoding;
     }
     this->m_attributes.export_dbf(dbfname.c_str(), enc);
-    if ((thcfg.outcs != TTCS_LOCAL) && (strlen(thcs_get_data(thcfg.outcs)->prjspec) > 0)) {
+    if ((thcfg.outcs != TTCS_LOCAL)) {
       FILE * prjf;
       std::string prjname(this->m_fpath);
       prjname += ".prj";
-      prjf = fopen(prjname.c_str(), "w");
-      fprintf(prjf, "%s", thcs_get_data(thcfg.outcs)->prjspec);
+      prjf = fopen(prjname.c_str(), "wb");
+      // none of PJ_WKT2_* is recognized by ogrinfo as of GDAL 3.9.3
+      // see also https://github.com/qgis/QGIS/issues/34007#issuecomment-579525653
+      fprintf(prjf, "%s\n", thcs_get_wkt(thcfg.outcs, true, PJ_WKT1_ESRI).c_str());
       fclose(prjf);
     }
   }
@@ -210,7 +200,7 @@ void thexpshpf::object_insert()
     aptype, (int) l, ax, ay, az, am);
   this->m_object_id = SHPWriteObject(this->m_hndl, -1, obj);
   if (this->m_object_id > -1)
-    this->m_attributes.insert_object(NULL, this->m_object_id);
+    this->m_attributes.insert_object(nullptr, this->m_object_id);
   SHPDestroyObject(obj);
 
   if (lp > 0) {
@@ -423,11 +413,13 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
   slp = scrap->get_polygon();
   while (slp != NULL) {
     if (slp->lnio) {
-      this->m_flines.point_insert(slp->lnx1 + scrap->proj->rshift_x, slp->lny1 + scrap->proj->rshift_y, slp->lnz1 + scrap->proj->rshift_z);
-      this->m_flines.point_insert(slp->lnx2 + scrap->proj->rshift_x, slp->lny2 + scrap->proj->rshift_y, slp->lnz2 + scrap->proj->rshift_z);
-      this->m_flines.object_insert();
-	  this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) scrap->id);
-      this->m_flines.m_attributes.insert_attribute("_TYPE","centerline");
+  	  if (((slp->arrow != NULL) && ((slp->arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) == 0)) || scrap->centerline_io) {
+  		  this->m_flines.point_insert(slp->lnx1 + scrap->proj->rshift_x, slp->lny1 + scrap->proj->rshift_y, slp->lnz1 + scrap->proj->rshift_z);
+  		  this->m_flines.point_insert(slp->lnx2 + scrap->proj->rshift_x, slp->lny2 + scrap->proj->rshift_y, slp->lnz2 + scrap->proj->rshift_z);
+  		  this->m_flines.object_insert();
+  		  this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) scrap->id);
+  		  this->m_flines.m_attributes.insert_attribute("_TYPE","centerline");
+      }
     } else {
       this->m_fpoints.point_insert(slp->stx + scrap->proj->rshift_x,  slp->sty + scrap->proj->rshift_y,  slp->stz + scrap->proj->rshift_z);
       this->m_fpoints.object_insert();
@@ -457,7 +449,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
   while (obj != NULL) {
 		switch (obj->get_class_id()) {
 			case TT_POINT_CMD:
-				ppt = ((thpoint*)obj);
+				ppt = dynamic_cast<thpoint*>(obj);
         this->m_fpoints.point_insert(ppt->point->xt + scrap->proj->rshift_x,  ppt->point->yt + scrap->proj->rshift_y, ppt->point->zt + scrap->proj->rshift_z, ppt->point->at);
         this->m_fpoints.object_insert();
 		this->m_fpoints.m_attributes.insert_attribute("_SCRAP_ID",(long) ppt->fscrapptr->id);
@@ -485,8 +477,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
         switch (ppt->type) {
           case TT_POINT_TYPE_LABEL:
           case TT_POINT_TYPE_REMARK:
-            if ((ppt->text != NULL) && (strlen(ppt->text) > 0))
-              this->m_fpoints.m_attributes.insert_attribute("_TEXT",ppt->text);
+            if (const auto* text = ppt->get_text(); text != nullptr && !text->empty())
+              this->m_fpoints.m_attributes.insert_attribute("_TEXT", text->c_str());
             break;
           case TT_POINT_TYPE_STATION:
             if (ppt->station_name.id > 0) {
@@ -498,7 +490,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
         }
 				break;
 		  case TT_LINE_CMD:
-				pln = ((thline*)obj);
+				pln = dynamic_cast<thline*>(obj);
         sp = 0;
         cp = 1;
   			lp = pln->first_point;
@@ -531,7 +523,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
   			}
 				break;
 		  case TT_AREA_CMD:
-				parea = ((tharea*)obj);
+				parea = dynamic_cast<tharea*>(obj);
         if (parea->m_outline_line == NULL)
           break;
         this->m_fareas.object_clear();
@@ -594,7 +586,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
       if (cbm->mode == TT_MAPITEM_NORMAL) {
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL)
-            xs.xscrap2d((thscrap *) cmi->object, cmap, cbm);
+            xs.xscrap2d(dynamic_cast<thscrap*>(cmi->object), cmap, cbm);
           cmi = cmi->prev_item;  
         }
       }

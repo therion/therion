@@ -7,7 +7,7 @@
 
 Besides the messages from Therion and other programs used, the log file
 contains information about computed values of magnetic declination and meridian
-convergence, loop errors, scrap distortions and transformations beetwen
+convergence, loop errors, scrap distortions and transformations between
 coordinate reference systems chosen by the Proj library.
 
 Absolute loop error is $\sqrt{\Delta x^2+\Delta y^2+\Delta z^2}$, where
@@ -23,6 +23,9 @@ in the scrap. The measure is calculated as $\left\vert d_a-d_b\right\vert\over d
 the distance of points before warping and $d_a$ is the distance of points after
 warping. The maximal and average scrap distortions are calculated as a maximum
 or average of such measures applied to all pairs of points.
+
+The log file also provides information about transformations between coordinate
+systems, either user-specified pipelines or the transformations chosen by the Proj library.
 
 
 \subsubchapter XTherion.

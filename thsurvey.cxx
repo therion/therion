@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -31,8 +31,9 @@
 #include "thdate.h"
 #include "thtfangle.h"
 #include "thinfnan.h"
-#include "thdata.h"
 #include "thdatabase.h"
+
+#include <fmt/core.h>
 
 thsurvey::thsurvey()
 {
@@ -152,7 +153,7 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           break;
 
         default:
-          ththrow("invalid -namespace switch -- {}", *args);
+          throw thexception(fmt::format("invalid -namespace switch -- {}", *args));
 
       }
       break;
@@ -177,7 +178,7 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow("invalid keyword -- {}", *args);
+        throw thexception(fmt::format("invalid keyword -- {}", *args));
       break;
       
     default:
@@ -227,7 +228,6 @@ void thsurvey::parse_declination(char * str)
   thdate dd;
   double decl, //year, 
     dumdt;
-  double * all_data = NULL;
   double data2 [2];
   int nid, idx, dateidx, typedt;
   
@@ -237,7 +237,7 @@ void thsurvey::parse_declination(char * str)
 
   // ak 1 4 6 ... error
   if ((nargs == 1) || (((nargs % 2) == 0) && (nargs > 3)))
-    ththrow("invalid declination specification -- \"{}\"",str);
+    throw thexception(fmt::format("invalid declination specification -- \"{}\"",str));
 
   // ak 0 tak resetuje a nastavi na 0
   if (nargs == 0) {
@@ -253,7 +253,7 @@ void thsurvey::parse_declination(char * str)
   if (nargs == 1) {
     thparse_double(nid, decl, args[0]);
     if (nid != TT_SV_NUMBER)
-      ththrow("invalid declination -- {}", args[0]);
+      throw thexception(fmt::format("invalid declination -- {}", args[0]));
     decl = du.transform(decl);
     data2[0] = 0.0;
     data2[1] = decl;
@@ -263,7 +263,7 @@ void thsurvey::parse_declination(char * str)
     return;
   }
   
-  all_data = new double [nargs];
+  std::vector<double> all_data(nargs);
   nargs = nargs/2;
   dateidx = 0;
   for(idx = 0; idx < nargs; idx++) {
@@ -273,8 +273,7 @@ void thsurvey::parse_declination(char * str)
     if (typedt == TT_SV_NAN) {
       thparse_double(nid, decl, args[2 * idx + 1]);
       if (nid != TT_SV_NUMBER) {
-        delete [] all_data;
-        ththrow("invalid declination -- {}", args[2 * idx + 1]);
+        throw thexception(fmt::format("invalid declination -- {}", args[2 * idx + 1]));
       }
       this->decuds = decl;
     }
@@ -283,16 +282,14 @@ void thsurvey::parse_declination(char * str)
     else {
       try {
         dd.parse(args[2 * idx]);
-      } catch (...) {
-        delete [] all_data;
-        threthrow("invalid declination specification");
+      } catch (const std::exception& e) {
+        throw thexception("invalid declination specification", e);
       }
       all_data[2 * dateidx] = dd.get_start_year();
       // parse declination
       thparse_double(nid, decl, args[2 * idx + 1]);
       if (nid != TT_SV_NUMBER) {
-        delete [] all_data;
-        ththrow("invalid declination -- {}", args[2 * idx + 1]);
+        throw thexception(fmt::format("invalid declination -- {}", args[2 * idx + 1]));
       }
       all_data[2 * dateidx + 1] = du.transform(decl);
       dateidx++;
@@ -306,9 +303,8 @@ void thsurvey::parse_declination(char * str)
     this->declin.set(1,data2);
   } 
   else
-    this->declin.set(dateidx,all_data);
+    this->declin.set(dateidx,all_data.data());
   this->decdef = true;
-  delete [] all_data;
 }
 
 
@@ -342,7 +338,7 @@ thsurvey * thsurvey_get_entrance_fs(thsurvey * s) {
 	o = s->foptr;
 	while (o != NULL) {
 		if (o->get_class_id() == TT_SURVEY_CMD) {
-			s = (thsurvey *)o;
+			s = dynamic_cast<thsurvey*>(o);
 			if (!s->entrance.is_empty()) return s;
 			s = thsurvey_get_entrance_fs(s);
 			if (s != NULL) return s;
@@ -354,7 +350,7 @@ thsurvey * thsurvey_get_entrance_fs(thsurvey * s) {
 
 thobjectname thsurvey::get_entrance() {
 	thsurvey * s(this);
-	while ((s != NULL) and s->entrance.is_empty()) s = s->fsptr;
+	while ((s != NULL) && s->entrance.is_empty()) s = s->fsptr;
 	if (s == NULL) s = thsurvey_get_entrance_fs(this);
 	if (s == NULL) return thobjectname();
 	return s->entrance;

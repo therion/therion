@@ -6,11 +6,11 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
+#include "lxData.h"
 #include "lxSTree.h"
 #include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
-#include "lxData.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"
@@ -58,7 +58,7 @@ void lxModelTreeDlg::OnCommand(wxCommandEvent& event)
 		size_t selcnt = this->m_treeControl->GetSelections(csel);
     	if (selcnt > 0) {
     		for(size_t i = 0; i < selcnt; i++) {
-    			SurveyTreeData * data = (SurveyTreeData *) this->m_treeControl->GetItemData(csel.Item(i));
+    			SurveyTreeData * data = dynamic_cast<SurveyTreeData*>(this->m_treeControl->GetItemData(csel.Item(i)));
         		if (data != NULL) {
         			this->m_mainFrame->data->AddSelectedSurvey(data->m_id);
         		}
@@ -99,7 +99,7 @@ lxModelTreeDlg::lxModelTreeDlg(wxWindow *parent)
 		this->SetIcon(wxIcon(loch_xpm));
 #endif
 
-  this->m_mainFrame = (lxFrame *) parent;
+  this->m_mainFrame = dynamic_cast<lxFrame*>(parent);
    
   wxBoxSizer * sizerFrame = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer * sizerTop = new wxBoxSizer(wxVERTICAL);

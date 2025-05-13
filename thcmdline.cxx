@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
@@ -121,12 +121,12 @@ void thcmdline::process(int argc, char * argv[])
         break;
 
       case 'L':
-        thlog.logging_off();
+        get_thlogfile().logging_off();
         break;
         
       case 'l':
-        thlog.logging_on();
-        thlog.set_file_name(optarg);
+        get_thlogfile().logging_on();
+        get_thlogfile().set_file_name(optarg);
         break;
         
       //case 'g':

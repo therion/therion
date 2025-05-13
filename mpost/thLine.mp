@@ -21,7 +21,7 @@
 %%
 %% You should have received a copy of the GNU General Public License
 %% along with this program; if not, write to the Free Software
-%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+%% Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 %% --------------------------------------------------------------------
 
 % some definitions
@@ -259,10 +259,14 @@ def l_overhang_SKBB (expr P) =
 enddef;
 
 
-def l_chimney_UIS (expr P) =
+def l_chimney_SKBB (expr P) =
   T:=identity;
   pickup PenC;
   thdraw P dashed evenly scaled optical_zoom;
+enddef;
+
+def l_chimney_UIS (expr P) =
+  l_ceilingstep_SKBB(reverse P);
 enddef;
 
 def l_ceilingstep_SKBB (expr P) =

@@ -462,7 +462,7 @@ bool lxGLCanvas::CameraAutoRotate() {
     if (elapsed < 10) wxMilliSleep(10 - elapsed);
     this->m_sCameraAutoRotateCounter++;
     if (this->m_sCameraAutoRotateSWatch.Time() > 1000) {  
-      ((wxStaticText *)(this->frame->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED)))->SetLabel(
+      dynamic_cast<wxStaticText*>(this->frame->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED))->SetLabel(
         wxString::Format(_("Rendering at %.1f fps."), 1000.0 * double(this->m_sCameraAutoRotateCounter) / double(this->m_sCameraAutoRotateSWatch.Time())));
       this->m_sCameraAutoRotateCounter = 0;
       this->m_sCameraAutoRotateSWatch.Start();

@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -31,7 +31,6 @@
 
 
 #include "thperson.h"
-#include "thparse.h"
 #include "thdate.h"
 #include "thlayoutclr.h"
 #include "thobjectsrc.h"
@@ -50,7 +49,7 @@ enum {
   TT_SCRAP_CMD, TT_ENDSCRAP_CMD,
   TT_POINT_CMD, TT_LINE_CMD, TT_AREA_CMD,
   TT_JOIN_CMD, TT_MAP_CMD, TT_SURFACE_CMD,
-  TT_DATA_CMD, TT_IMPORT_CMD, TT_SKETCH_CMD, TT_LOOKUP_CMD,
+  TT_DATA_CMD, TT_IMPORT_CMD, TT_SKETCH_CMD, TT_LOOKUP_CMD, TT_SCAN_CMD,
 };
 
 
@@ -73,6 +72,7 @@ static const thstok thtt_commands[] = {
   {"lookup", TT_LOOKUP_CMD},
   {"map", TT_MAP_CMD},
   {"point", TT_POINT_CMD},
+  {"scan", TT_SCAN_CMD},
   {"scrap", TT_SCRAP_CMD},
   {"sketch", TT_SKETCH_CMD},
   {"surface", TT_SURFACE_CMD},

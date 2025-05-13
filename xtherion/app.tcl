@@ -22,7 +22,7 @@
 ## 
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 ## -------------------------------------------------------------------- 
 
 proc xth_mm2px {mm} {
@@ -601,7 +601,7 @@ proc xth_exit {} {
   global xth
 
   catch {
-    registry set $xth(win32registry) XTherionDir $xth(gui,initdir)
+    registry -64bit set $xth(win32registry) XTherionDir $xth(gui,initdir)
   }
   
   # save all open text editor files

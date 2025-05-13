@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import re, datetime, sys, subprocess, os, requests, json
+import re, datetime, sys, subprocess, requests, json
 
 repo = re.search(r'\:(\w+/\w+)\.', subprocess.check_output('git config --get remote.origin.url', shell=True).decode('ascii')).group(1)
 
@@ -34,7 +34,7 @@ def rel_notes():
   return s
 
 # get the github token
-token = os.getenv('GH_TOKEN')
+token = input('github token: ')
 if not token or not token.startswith('gh'):
   err("couldn't initialize the github token")
 

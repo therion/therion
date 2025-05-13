@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -46,18 +46,18 @@ enum {
 };
 
 struct thdb1d_loop_leg {
-  thdb1d_loop_leg * next_leg, * prev_leg;
-  thdataleg * leg;
-  bool reverse;
+  thdb1d_loop_leg * next_leg = {}, * prev_leg = {};
+  thdataleg * leg = {};
+  bool reverse = {};
 };
 
 struct thdb1d_loop {
-  thdb1d_loop_leg * first_leg, * last_leg;
-  class thdb1ds * from, * to;
-  unsigned long nlegs;
-  unsigned long id;
-  bool open;
-  double err_dx, err_dy, err_dz, err_length, src_length, err;
+  thdb1d_loop_leg * first_leg = {}, * last_leg = {};
+  class thdb1ds * from = {}, * to = {};
+  unsigned long nlegs = {};
+  unsigned long id = {};
+  bool open = {};
+  double err_dx = {}, err_dy = {}, err_dz = {}, err_length = {}, src_length = {}, err = {};
 };
 
 struct thdb1d_traverse {
@@ -230,6 +230,10 @@ class thdb1ds {
 
   thdb3ddata * get_3d_outline();
 
+  /**
+   * Get either the comment - if not empty - or the name.
+   */
+  const char * get_label() const;
 
 };
 

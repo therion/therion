@@ -21,14 +21,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thlayoutclr.h"
-#include "thparse.h"
 #include "thdatabase.h"
 #include "thexception.h"
+#include "thepsparse.h"
 #include <cmath>
 #include <fmt/printf.h>
 
@@ -154,7 +154,7 @@ void thlayout_color::CMYKtoRGB() {
   	this->B = (1.0 - this->Y) * (1.0 - this->K);
 }
 
-#define invalid_color_spec ththrow("invalid color specification -- {}", str);
+#define invalid_color_spec throw thexception(fmt::format("invalid color specification -- {}", str));
 
 double clrhex2num(char * str, char p) {
 	char src[3];

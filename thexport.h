@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -30,10 +30,11 @@
 #define thexport_h
 
 #include <stdio.h>
-#include "thparse.h"
+#include "thbuffer.h"
 #include "thobjectsrc.h"
 #include "thlayout.h"
 #include "loch/icase.h"
+#include <memory>
 
 /**
  * General export options.
@@ -74,7 +75,7 @@ class thexport {
 
   public:
 
-  class thlayout * layout;  ///< Layout pointer.
+  std::unique_ptr<thlayout> layout;  ///< Layout pointer.
   friend class thexporter;
   class thconfig * cfgptr = nullptr;  ///< Current config pointer.
   int export_mode;  ///< Export mode.
@@ -91,7 +92,7 @@ class thexport {
   public:
   
   thexport();  ///< Default constructor.
-  virtual ~thexport();
+  virtual ~thexport() = default;
   
   // These operations are not implemented.
   thexport(const thexport&) = delete;

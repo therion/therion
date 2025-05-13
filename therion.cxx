@@ -21,32 +21,20 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "therion.h"
-#include "thlogfile.h"
-#include "thtmpdir.h"
-#include "thcmdline.h"
 #include "thconfig.h"
-#include "thinput.h"
-#include "thchenc.h"
-#include "thdatareader.h"
-#include "thexception.h"
-#include "thlibrary.h"
 #include "thinit.h"
-#include "thgrade.h"
 #include "thlayout.h"
-#include "thobjectsrc.h"
 #include "thpoint.h"
 #include "thline.h"
 #include "tharea.h"
-#include "thversion.h"
-#include "thtexfonts.h"
 #include "thlang.h"
-#include "thbezier.h"
-#include "thsymbolset.h"
+#include "thparse.h"
+#include "thlog.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -61,31 +49,34 @@ bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
 
-void thprintf(const char *format, ...)
+static void thprint_impl(const bool verbose, FILE* f, std::string_view msg)
 {
-  va_list args;
-  va_start(args, format);
-  thlog.vprintf(format, &args);
-  va_end(args);
-  if (thverbose_mode) {
-    va_start(args, format);
-    vfprintf(stdout, format, args);
-    va_end(args);
+  thlog(msg);
+  if (verbose) {
+    fmt::print(f, "{}", msg);
   }
 }
-  
 
-void thprintf2err(const char *format, ...)
+void thprint(std::string_view msg)
 {
-  va_list args;
-  va_start(args, format);
-  thlog.vprintf(format, &args);
-  va_end(args);
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
+  thprint_impl(thverbose_mode, stdout, msg);
 }
 
+void thprint2err(std::string_view msg) noexcept
+{
+  try
+  {
+    thprint_impl(true, stderr, msg);
+  }
+  catch(const std::exception& e)
+  {
+    std::fprintf(stderr, "error occurred while reporting another error: %s\n", e.what());
+  }
+  catch (...)
+  {
+    std::fprintf(stderr, "unknown error occurred while reporting another error\n");
+  }
+}
 
 void thprint_environment() {
   thprintf("\n\nINIT=%s\n",thcfg.get_initialization_path());

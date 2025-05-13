@@ -21,13 +21,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thobjectname.h"
 #include "thexception.h"
-#include "thparse.h"
 #include "thdatabase.h"
 #include "thdataobject.h"
 #include "thsurvey.h"
@@ -73,10 +72,10 @@ void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, thdat
       break;
     }
   if (!th_is_extkeyword(ds.name))
-    ththrow("invalid object name -- {}", ds.name);
+    throw thexception(fmt::format("invalid object name -- {}", ds.name));
   if (ds.survey != NULL)
     if (!th_is_keyword_list(ds.survey, '.'))
-      ththrow("invalid survey name -- {}", ds.survey);
+      throw thexception(fmt::format("invalid survey name -- {}", ds.survey));
   ds.name = sstore->append(ds.name);
   if (ds.survey != NULL)
     ds.survey = sstore->append(ds.survey);
@@ -130,7 +129,8 @@ std::string thobjectname_print_full_name(const char * oname_ptr, thsurvey * psrv
   std::string rv;
   size_t start = 0;
   if (!oname.empty() && !sname.empty() && (slevel != 0)) {
-    rv = fmt::sprintf("%s@%s", oname, sname);
+    const char sep = (oname.find('@') == oname.npos) ? '@' : '.';
+    rv = fmt::sprintf("%s%c%s", oname, sep, sname);
     start = oname.size() + 1;
   } else if (!oname.empty()) {
     rv = oname;
@@ -154,6 +154,6 @@ std::string thobjectname_print_full_name(const char * oname_ptr, thsurvey * psrv
 
 std::string thobjectname::print_full_name(int slevel)
 {
-  return thobjectname_print_full_name(this->name, this->psurvey, slevel);
+  return thobjectname_print_full_name(this->print_name().c_str(), this->psurvey, slevel);
 }
 

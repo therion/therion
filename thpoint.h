@@ -22,7 +22,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
 
@@ -31,9 +31,11 @@
 
 
 #include "th2ddataobject.h"
-#include "thparse.h"
+#include "thstok.h"
 #include "thdb2dpt.h"
 #include "thobjectname.h"
+
+#include <variant>
 
 /**
  * point command options tokens.
@@ -483,7 +485,7 @@ class thpoint : public th2ddataobject {
     align;  ///< Point align.
   double orient, xsize, ysize;  ///<...
 
-  const char * text;  ///< Point text.
+  std::variant<std::monostate, std::string, thdate, thscrap*> data; ///< Point data.
 
   thdb2dpt * point;  ///< Point coordinates.
 
@@ -510,18 +512,17 @@ class thpoint : public th2ddataobject {
 
   void check_extra();
 
+  thdate * get_date();
+
+  std::string * get_text();
+
+  thscrap * get_scrap();
+
   /**
    * Standard constructor.
    */
 
   thpoint();
-
-
-  /**
-   * Standard destructor.
-   */
-
-  ~thpoint();
 
 
   /**

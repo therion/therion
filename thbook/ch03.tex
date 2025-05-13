@@ -17,15 +17,15 @@ which contains instructions on how the data should be presented.
 \subchapter Configuration file.
 
 The configuration filename can be given as an
-argument to therion. By default Therion searches for file named |thconfig|
-in the current working directory. It is read like any other therion file
+argument to Therion. By default Therion searches for file named |thconfig|
+in the current working directory. It is read like any other Therion file
 (i.e.~one command per line; empty lines or lines starting with `|#|' are ignored;
 lines ended with a backslash continue on the next line.) A list of currently
 supported commands follow.
 
 
 \subsubchapter `system'.
-Allows to execute system commands during therion compilation.\[E.g. to open or
+Allows to execute system commands during Therion compilation.\[E.g. to open or
 refresh external PDF viewer.] Normally Therion waits until the subprocess is
 finished. If you want to continue compilation without break, use |<command> &|
 syntax on Linux and |start <command>| syntax on Windows.
@@ -56,7 +56,7 @@ Works like the |encoding| command in data files---specifies character sets.
 It is not possible to specify more coordinate systems for different outputs (the
 last occurrence of |cs| is used for all output files).
 
-If no |cs| is defined in the configuration file, the first |cs| therion
+If no |cs| is defined in the configuration file, the first |cs| Therion
 encounters in the data files is used as an output |cs|.
 
 Inside
@@ -172,7 +172,7 @@ Works like |input| command in data files---includes other files.
 \description
   Turns processing of maps on (default) or off. If you turn if off,
   all scraps from selected surveys will be used in the output, no map
-  definitions are taken into account. Usefull for debugging map definitions.
+  definitions are taken into account. Useful for debugging map definitions.
 \enddescription
 
 \syntax
@@ -207,7 +207,7 @@ Works like |input| command in data files---includes other files.
 \subsubchapter `text'.
 
 \description
-  Specifies translation of any default therion text in output.
+  Specifies translation of any default Therion text in output.
 \enddescription
 
 \syntax
@@ -260,7 +260,7 @@ available translations, see |thlang/texts.txt| file.
     sketches <on/off>
     layers <on/off>
     grid <off/top/bottom>
-    grid-origin <x> <y> <x> <units>
+    grid-origin <x> <y> <z> <units>
     grid-size <x> <y> <z> <units>
     grid-coords <off/border/all>
     origin <x> <y> <z> <units>
@@ -285,6 +285,7 @@ available translations, see |thlang/texts.txt| file.
     colo[u]r <item> <colour>
     smooth-shading <off/quick>
     debug <on/all/first/second/scrap-names/station-names/off>
+    geospatial <on/off>
     doc-author <string>
     doc-keywords <string>
     doc-subject <string>
@@ -451,7 +452,7 @@ endlayout|
   * |north <true/grid>| = specify default orientation of the map.
     By default, true (astronomical) north is used. It is ignored when used with
     local coordinate system.
-  * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
+  * |grid-origin <x> <y> <z> <units>| = set coordinates of grid
     origin (M, A)
   * |grid-size <x> <y> <z> <units>| = set grid size in real
     units (M, A; default is equal to scalebar size)
@@ -553,7 +554,7 @@ endlayout|
     using the colour of associated scrap.
 
   * \NEW{6.0}|smooth-shading <off/quick>| =
-    set the mode of smooth scrap backgroud shading. By default, altitude and depth
+    set the mode of smooth scrap background shading. By default, altitude and depth
     colour is interpolated across the scrap the |quick| way. Some issues are present if
     transparent symbol colours are used.\[Coloured scrap background is visible underneath
     the semitransparent areas, although only lower-scrap-drawings should be visible.]
@@ -571,6 +572,13 @@ endlayout|
 
   {\it PDF related:}\Nobreak
 
+  * \NEW{6.3}|geospatial <on/off>| = enable/disable geospatial PDF features. When enabled,
+    compatible applications can use this information (e.g.\ Acrobat Reader for length measurements
+    and finding coordinates; GIS applications like GDAL\[Raster GDAL
+    tools like |gdal\_translate| work fine, while vector tools like |ogr2ogr| support
+    Therion maps starting from version 3.10.0. Note that QGIS uses GDAL library to import PDF data.]
+    and QGIS for importing and processing georeferenced data). This feature should be used
+    with |layers on| setting. (M; default: |on|)
   * |doc-author <string>| = set document author (M, A)
   * |doc-keywords <string>| = set document keywords (M, A)
   * |doc-subject <string>| = set document subject (M, A)
@@ -877,7 +885,7 @@ or
         Create reproducible PDF and SVG files.
         No volatile information is included (e.g. creation date or software
         version is omitted from the metadata). \TeX\ variables |\thversion|
-        and |\currentdate| are set to predefined constatnts.
+        and |\currentdate| are set to predefined constants.
         This option enforces the use of Therion loop closure.
 
         To get the same output files on different platforms, it's

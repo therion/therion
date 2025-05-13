@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -29,6 +29,9 @@
 #include "thexception.h"
 #include "thinfnan.h"
 #include "thparse.h"
+
+#include <fmt/core.h>
+
 #include <algorithm>
 
 
@@ -61,34 +64,33 @@ void thtfpwf::parse(int nfact, char ** sfact)
     case 1:
       thparse_double(sv, this->b, *sfact);
       if (sv != TT_SV_NUMBER)
-        ththrow("invalid number -- {}", *sfact);
+        throw thexception(fmt::format("invalid number -- {}", *sfact));
       this->a = 1.0;
       break;
     case 2:
       thparse_double(sv, this->b, sfact[0]);
       if (sv != TT_SV_NUMBER)
-        ththrow("invalid number -- {}", sfact[0]);
+        throw thexception(fmt::format("invalid number -- {}", sfact[0]));
       thparse_double(sv, this->a, sfact[1]);
       if (sv != TT_SV_NUMBER)
-        ththrow("invalid number -- {}", sfact[1]);
+        throw thexception(fmt::format("invalid number -- {}", sfact[1]));
       break;
     default:
       if ((nfact > 2) && ((nfact % 2) == 0)) {
-        double * coefs = new double [nfact];
+        std::vector<double> coefs(nfact);
         int cidx,spv;
         for(cidx = 0; cidx < nfact; cidx++) {
           thparse_double(spv,coefs[cidx],sfact[cidx]);
           if (spv == TT_SV_UNKNOWN)
-            ththrow("invalid number -- {}", sfact[cidx]);
+            throw thexception(fmt::format("invalid number -- {}", sfact[cidx]));
         }
-        this->set(nfact / 2, coefs);
-        delete [] coefs;
+        this->set(nfact / 2, coefs.data());
       }
       else
-        ththrow("invalid number of transformation constants");
+        throw thexception("invalid number of transformation constants");
   }
   if (this->a == 0.0)
-    ththrow("invalid scale factor -- {}", this->a);
+    throw thexception(fmt::format("invalid scale factor -- {}", this->a));
 }
   
 double thtfpwf::evaluate(double value)

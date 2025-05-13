@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -61,7 +61,7 @@ struct thexpuni {
   thexpuni();
   void clear();
 
-  thexpuni_part * m_cpart;
+  thexpuni_part * m_cpart = {};
   std::list<thexpuni_data> m_ring_list;
   void polygon_start_ring(bool outer);
   void polygon_insert_line(thline * ln, bool reverse);

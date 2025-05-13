@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -42,14 +42,16 @@
 #include "thpoint.h"
 #include "thlogfile.h"
 #include "thsurface.h"
+#include "thscan.h"
 #include "thlocale.h"
 #include "thinit.h"
 #include "thconfig.h"
 #include "thtrans.h"
 #include "loch/lxMath.h"
-#include "thcs.h"
-#include "thgeomag.h"
+#include "thcsdata.h"
 #include "thgeomagdata.h"
+#include "therion.h"
+#include "thlog.h"
 #include "QuickHull.hpp"
 
 //#define THUSESVX
@@ -128,9 +130,10 @@ void thdb1d::scan_data()
   this->max_year = thnan;
 
   obi = this->db->object_list.begin();
+  thobjectsrc min_year_src;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       if (dp->date.is_defined()) {
         double syear, eyear;
         syear = dp->date.get_start_year();
@@ -139,9 +142,13 @@ void thdb1d::scan_data()
           eyear = dp->date.get_end_year();
         if (thisnan(this->min_year)) {
           this->min_year = syear;
+          min_year_src = dp->source;
           this->max_year = eyear;
         } else {
-          if (this->min_year > syear) this->min_year = syear;
+          if (this->min_year > syear) {
+        	  this->min_year = syear;
+        	  min_year_src = dp->source;
+          }
           if (this->max_year < eyear) this->max_year = eyear;
         }
       }
@@ -154,7 +161,7 @@ void thdb1d::scan_data()
   default_dpdeclin = 0.0;
   default_dpdeclinused = false;
   if (!thisnan(this->min_year)) {
-    thcfg.get_outcs_mag_decl(this->min_year, default_dpdeclin);
+    thcfg.get_outcs_mag_decl(this->min_year, default_dpdeclin, min_year_src);
     default_dpdeclinused = true;
   }
 
@@ -163,14 +170,14 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       bool dpdeclindef;
       double dpdeclin;
 
       dpdeclin = 0.0;
       dpdeclindef = false;
-      if (dp->date.is_defined() && (thcfg.get_outcs_mag_decl(dp->date.get_average_year(), dpdeclin)))
-        dpdeclindef = true;      
+      if (dp->date.is_defined() && (thcfg.get_outcs_mag_decl(dp->date.get_average_year(), dpdeclin, dp->source)))
+        dpdeclindef = true;
         
       // scan data shots
       lei = dp->leg_list.begin();
@@ -181,7 +188,7 @@ void thdb1d::scan_data()
             lei->from.id = this->insert_station(lei->from, lei->psurvey, dp, 3);
             lei->to.id = this->insert_station(lei->to, lei->psurvey, dp, 3);
             if (((strcmp(lei->from.name,".") == 0) || (strcmp(lei->from.name,"-") == 0)) && ((strcmp(lei->to.name,".") == 0) || (strcmp(lei->to.name,"-") == 0)))
-              ththrow("shot between stations without names not allowed");
+              throw thexception("shot between stations without names not allowed");
             if ((strcmp(lei->from.name,"-") == 0) || (strcmp(lei->to.name,"-") == 0) || (strcmp(lei->from.name,".") == 0) || (strcmp(lei->to.name,".") == 0)) {
               lei->flags |= TT_LEGFLAG_SPLAY;
               lei->walls = TT_FALSE;
@@ -220,8 +227,8 @@ void thdb1d::scan_data()
               else
                 dcc = lei->todepth - lei->fromdepth;
               lei->depthchange = dcc;  
-              if (fabs(dcc) > lei->length)
-                ththrow("length reading is less than change in depth");
+              if (thdefinitely_greater_than(fabs(dcc),lei->length,1e-6))
+                throw thexception(fmt::format("length reading is less than change in depth -- {}", fabs(dcc)-lei->length));
             }
             
             // check backwards compass reading
@@ -289,7 +296,7 @@ void thdb1d::scan_data()
                   }
                   else {
                     if (thisinf(lei->gradient) != -thisinf(lei->backgradient))
-                      ththrow("invalid plumbed shot");
+                      throw thexception("invalid plumbed shot");
                   }
                 }
               }
@@ -448,8 +455,8 @@ void thdb1d::scan_data()
           lei++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", lei->srcf.name, lei->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", lei->srcf.name, lei->srcf.line), e);
       }
           
       // scan data fixes
@@ -481,8 +488,8 @@ void thdb1d::scan_data()
           fii++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", fii->srcf.name, fii->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", fii->srcf.name, fii->srcf.line), e);
       }
     }
   
@@ -493,20 +500,20 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       // scan data equates
       eqi = dp->equate_list.begin();
       try {
         while(eqi != dp->equate_list.end()) {
           prevlsid = this->lsid;
           eqi->station.id = this->insert_station(eqi->station, eqi->psurvey, dp, 1);
-          if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL))
+          if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL) && (eqi->srcf.line > 0))
             thwarning(("%s [%d] -- equate used to define new station (%s@%s)", eqi->srcf.name, eqi->srcf.line, eqi->station.name, eqi->station.survey));
           eqi++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", eqi->srcf.name, eqi->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", eqi->srcf.name, eqi->srcf.line), e);
       }
 		}
     obi++;
@@ -518,14 +525,14 @@ void thdb1d::scan_data()
   while (obi != this->db->object_list.end()) {
 
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      thsurvey * srv = (thsurvey *) (*obi).get();
+      thsurvey * srv = dynamic_cast<thsurvey*>(obi->get());
       if (!srv->entrance.is_empty()) {
         srv->entrance.id = this->get_station_id(srv->entrance, srv);
         if (srv->entrance.id == 0) {
           if (srv->entrance.survey == NULL)
-            ththrow("station doesn't exist -- {}", srv->entrance.name);
+            throw thexception(fmt::format("station doesn't exist -- {}", srv->entrance.name));
           else
-            ththrow("station doesn't exist -- {}@{}", srv->entrance.name, srv->entrance.survey);
+            throw thexception(fmt::format("station doesn't exist -- {}@{}", srv->entrance.name, srv->entrance.survey));
         }
         // set entrance flag & comment to given station
         this->station_vec[srv->entrance.id-1].flags |= TT_STATIONFLAG_ENTRANCE;            
@@ -539,7 +546,7 @@ void thdb1d::scan_data()
 
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
 
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
 
       // scan data stations
       ssi = dp->ss_list.begin();
@@ -548,9 +555,9 @@ void thdb1d::scan_data()
           ssi->station.id = this->get_station_id(ssi->station, ssi->psurvey);
           if (ssi->station.id == 0) {
             if (ssi->station.survey == NULL)
-              ththrow("station doesn't exist -- {}", ssi->station.name);
+              throw thexception(fmt::format("station doesn't exist -- {}", ssi->station.name));
             else
-              ththrow("station doesn't exist -- {}@{}", ssi->station.name, ssi->station.survey);
+              throw thexception(fmt::format("station doesn't exist -- {}@{}", ssi->station.name, ssi->station.survey));
           }
           // set station flags and comment
           else {
@@ -559,7 +566,7 @@ void thdb1d::scan_data()
             this->station_vec[ssi->station.id-1].explored = ssi->explored;
             this->station_vec[ssi->station.id-1].flags |= ssi->flags;            
             // set station attributes
-            this->m_station_attr.insert_object(NULL, (long) ssi->station.id);
+            this->m_station_attr.insert_object(nullptr, (long) ssi->station.id);
             thdatass_attr_map::iterator ami;
             for(ami = ssi->attr.begin(); ami != ssi->attr.end(); ami++) {
               this->m_station_attr.insert_attribute(ami->first.c_str(), ami->second);
@@ -568,8 +575,8 @@ void thdb1d::scan_data()
           ssi++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", ssi->srcf.name, ssi->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", ssi->srcf.name, ssi->srcf.line), e);
       }
 
       // scan data marks
@@ -579,9 +586,9 @@ void thdb1d::scan_data()
           mii->station.id = this->get_station_id(mii->station, mii->psurvey);
           if (mii->station.id == 0) {
             if (mii->station.survey == NULL)
-              ththrow("station doesn't exist -- {}", mii->station.name);
+              throw thexception(fmt::format("station doesn't exist -- {}", mii->station.name));
             else
-              ththrow("station doesn't exist -- {}@{}", mii->station.name, mii->station.survey);
+              throw thexception(fmt::format("station doesn't exist -- {}@{}", mii->station.name, mii->station.survey));
           }
           // set station flags and comment
           else {
@@ -593,8 +600,8 @@ void thdb1d::scan_data()
           mii++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", mii->srcf.name, mii->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", mii->srcf.name, mii->srcf.line), e);
       }
         
       // scan extends
@@ -605,32 +612,32 @@ void thdb1d::scan_data()
             xi->before.id = this->get_station_id(xi->before, xi->psurvey);
             if (xi->before.id == 0) {
               if (xi->before.survey == NULL)
-                ththrow("station doesn't exist -- {}", xi->before.name);
+                throw thexception(fmt::format("station doesn't exist -- {}", xi->before.name));
               else
-                ththrow("station doesn't exist -- {}@{}", xi->before.name, xi->before.survey);
+                throw thexception(fmt::format("station doesn't exist -- {}@{}", xi->before.name, xi->before.survey));
             }
           }
           if (!xi->to.is_empty()) {
             xi->to.id = this->get_station_id(xi->to, xi->psurvey);
             if (xi->to.id == 0) {
               if (xi->to.survey == NULL)
-                ththrow("station doesn't exist -- {}", xi->to.name);
+                throw thexception(fmt::format("station doesn't exist -- {}", xi->to.name));
               else
-                ththrow("station doesn't exist -- {}@{}", xi->to.name, xi->to.survey);
+                throw thexception(fmt::format("station doesn't exist -- {}@{}", xi->to.name, xi->to.survey));
             }
           }
           xi->from.id = this->get_station_id(xi->from, xi->psurvey);
           if (xi->from.id == 0) {
             if (xi->from.survey == NULL)
-              ththrow("station doesn't exist -- {}", xi->from.name);
+              throw thexception(fmt::format("station doesn't exist -- {}", xi->from.name));
             else
-              ththrow("station doesn't exist -- {}@{}", xi->from.name, xi->from.survey);
+              throw thexception(fmt::format("station doesn't exist -- {}@{}", xi->from.name, xi->from.survey));
           }
           xi++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", xi->srcf.name, xi->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", xi->srcf.name, xi->srcf.line), e);
       }
 
       // scan dimensions
@@ -640,15 +647,15 @@ void thdb1d::scan_data()
           di->station.id = this->get_station_id(di->station, di->psurvey);
           if (di->station.id == 0) {
             if (di->station.survey == NULL)
-              ththrow("station doesn't exist -- {}", di->station.name);
+              throw thexception(fmt::format("station doesn't exist -- {}", di->station.name));
             else
-              ththrow("station doesn't exist -- {}@{}", di->station.name, di->station.survey);
+              throw thexception(fmt::format("station doesn't exist -- {}@{}", di->station.name, di->station.survey));
           }
           di++;
         }
       }
-      catch (...) {
-        threthrow("{} [{}]", di->srcf.name, di->srcf.line);
+      catch (const std::exception& e) {
+        throw thexception(fmt::format("{} [{}]", di->srcf.name, di->srcf.line), e);
       }
         
       dp->complete_dimensions();
@@ -740,9 +747,9 @@ unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps,
     }
     if (!(this->db->insert_datastation(on, ps))) {
       if (on.survey != NULL)
-        ththrow("object already exist -- {}@{}", on.name, on.survey);
+        throw thexception(fmt::format("object already exist -- {}@{}", on.name, on.survey));
       else
-        ththrow("object already exist -- {}", on.name);
+        throw thexception(fmt::format("object already exist -- {}", on.name));
     }
   }  
   this->lsid++;
@@ -824,19 +831,19 @@ void thdb1d_equate_nodes(thdb1d * thisdb, thdb1d_tree_node * n1, thdb1d_tree_nod
   thdb1d_tree_node * n3;
   
   if (n1->is_fixed && n2->is_fixed) {
-    ththrow("equate of two fixed stations -- {}@{} and {}@{}",
+    throw thexception(fmt::format("equate of two fixed stations -- {}@{} and {}@{}",
           thisdb->station_vec[n1->id - 1].name,
           thisdb->station_vec[n1->id - 1].survey->get_full_name(),
           thisdb->station_vec[n2->id - 1].name,
-          thisdb->station_vec[n2->id - 1].survey->get_full_name());
+          thisdb->station_vec[n2->id - 1].survey->get_full_name()));
   }
     
   if (n1->id == n2->id) {
-    ththrow("equate of two identical stations -- {}@{} and {}@{}",
+    throw thexception(fmt::format("equate of two identical stations -- {}@{} and {}@{}",
           thisdb->station_vec[n1->id - 1].name,
           thisdb->station_vec[n1->id - 1].survey->get_full_name(),
           thisdb->station_vec[n2->id - 1].name,
-          thisdb->station_vec[n2->id - 1].survey->get_full_name());
+          thisdb->station_vec[n2->id - 1].survey->get_full_name()));
   }
     
   // vymeni ich ak uid1 nie je fixed
@@ -914,7 +921,7 @@ void thdb1d::process_tree()
   int last_eq = -1;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       eqi = dp->equate_list.begin();
       last_eq = -1;
       while(eqi != dp->equate_list.end()) {
@@ -1036,7 +1043,7 @@ void thdb1d::process_tree()
       
       // something is wrong
       if (n2 == NULL) {
-        ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
+        throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
 //#ifdef THDEBUG
 //        thprintf("warning -- not all stations connected to the network\n");
 //#endif
@@ -1044,9 +1051,9 @@ void thdb1d::process_tree()
       }
 
       if ((!n2->is_fixed) && (any_fixed || (component > 0))) {
-        ththrow("can not connect {}@{} to centerline network",
+        throw thexception(fmt::format("can not connect {}@{} to centerline network",
           this->station_vec[n3->id - 1].name,
-          this->station_vec[n3->id - 1].survey->get_full_name());
+          this->station_vec[n3->id - 1].survey->get_full_name()));
       }
       
     
@@ -1323,7 +1330,7 @@ void thdb1d::process_survey_stat() {
   thpoint * pt;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
-      pt = (thpoint *)(*obi).get();
+      pt = dynamic_cast<thpoint*>(obi->get());
       ss = pt->fsptr;
       if ((pt->type == TT_POINT_TYPE_CONTINUATION) && (!thisnan(pt->xsize))) {
         while (ss != NULL) {
@@ -1374,21 +1381,21 @@ struct thlc_series
 
 struct thlc_cross_arrow
 {
-  thlc_cross * target;
-  thlc_cross_arrow * prev_arrow, * next_arrow;
-  thlc_series * series;
-  bool reverse;
+  thlc_cross * target = {};
+  thlc_cross_arrow * prev_arrow = {}, * next_arrow = {};
+  thlc_series * series = {};
+  bool reverse = {};
 };
 
 
 struct thlc_loop
 {
-  thlc_cross * from_cross, * to_cross;
-  thlc_cross_arrow * first_arrow, * last_arrow;
-  unsigned long minid, size, id;
+  thlc_cross * from_cross = {}, * to_cross = {};
+  thlc_cross_arrow * first_arrow = {}, * last_arrow = {};
+  unsigned long minid = {}, size = {}, id = {};
 #ifdef THDEBUG
-  bool is_new;
-  long old_id;
+  bool is_new = {};
+  long old_id = {};
 #endif  
 };
 
@@ -1704,11 +1711,11 @@ void thdb1d::find_loops()
     clcleg->from_uid = this->station_vec[clcleg->from_id - 1].uid;
     clcleg->to_uid = this->station_vec[clcleg->to_id - 1].uid;    
     if (clcleg->from_uid == clcleg->to_uid) {
-      ththrow("shot between two equal stations -- {}@{} and {}@{}",
+      throw thexception(fmt::format("shot between two equal stations -- {}@{} and {}@{}",
           this->station_vec[clcleg->from_id - 1].name,
           this->station_vec[clcleg->from_id - 1].survey->get_full_name(),
           this->station_vec[clcleg->to_id - 1].name,
-          this->station_vec[clcleg->to_id - 1].survey->get_full_name());
+          this->station_vec[clcleg->to_id - 1].survey->get_full_name()));
     }
     from_node = &(nodes[clcleg->from_uid - 1]);
     if ((lastlegseries != long(cleg->series_id)) ||
@@ -2168,7 +2175,7 @@ void thdb1d::close_loops()
   double avg_error = 0.0, avg_error_sum = 0.0;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
         tmps = &(this->station_vec[fii->station.id - 1]);
@@ -2387,6 +2394,9 @@ void thdb1d::close_loops()
 
 
     if (cleg->leg->data_type == TT_DATATYPE_NOSURVEY) {
+      // ignore cleg->reverse
+      froms = &(this->station_vec[this->station_vec[cleg->leg->from.id - 1].uid - 1]);
+      tos = &(this->station_vec[this->station_vec[cleg->leg->to.id - 1].uid - 1]);
       // ak je no-survey, nastavi mu total statistiku
       cleg->leg->total_dx = tos->x - froms->x;
       cleg->leg->total_dy = tos->y - froms->y;
@@ -2415,7 +2425,7 @@ void thdb1d::close_loops()
 		);
 #endif
     if (froms->placed == 0)
-      ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
+      throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
     if (tos->placed == 0) {
       tos->placed += 1;
       if (cleg->reverse) {
@@ -2539,9 +2549,9 @@ void thdb1d::close_loops()
       ps->z = froms->z;
       if (ps->placed == 0) {
 //        ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
-        ththrow("can not connect {}@{} to centerline network",
+        throw thexception(fmt::format("can not connect {}@{} to centerline network",
           this->station_vec[i].name,
-          this->station_vec[i].survey->get_full_name());
+          this->station_vec[i].survey->get_full_name()));
       }
     }
   }
@@ -2584,7 +2594,7 @@ void thdb1d::print_loops() {
     lii++;
   }  
   
-  std::sort(lpr.begin(), lpr.end(), [](const auto& a, const auto& b){ return a.err >= b.err; });
+  std::sort(lpr.begin(), lpr.end(), [](const auto& a, const auto& b){ return a.err > b.err; });
   
   thdb1d_loop_leg * ll;
   thsurvey * ss;   
@@ -2592,18 +2602,18 @@ void thdb1d::print_loops() {
   thdb1ds * ps;
   unsigned long psid, prev_psid, first_psid;
   
-  thlog.printf("\n\n######################### loop errors ##########################\n");
-  thlog.printf(    "REL-ERR ABS-ERR TOTAL-L STS X-ERROR Y-ERROR Z-ERROR STATIONS\n");
+  thlog("\n\n######################### loop errors ##########################\n");
+  thlog("REL-ERR ABS-ERR TOTAL-L STS X-ERROR Y-ERROR Z-ERROR STATIONS\n");
   for (i = 0; i < nloops; i++) {
     li = lpr[i].li;
-    thlog.printf("%6.2f%% %s%s %s%s %3ld %s%s %s%s %s%s [",
+    thlog(fmt::format("{:6.2f}% {}{} {}{} {:3} {}{} {}{} {}{} [",
       li->src_length > 0.0 ? 100.0 * li->err_length / li->src_length : 0.0,
 			thdeflocale.format_length(li->err_length,1,totlen), thdeflocale.format_length_units(),			
 			thdeflocale.format_length(li->src_length,1,totlen), thdeflocale.format_length_units(),			
 			li->nlegs,
 			thdeflocale.format_length(li->err_dx,1,totlen), thdeflocale.format_length_units(),			
 			thdeflocale.format_length(li->err_dy,1,totlen), thdeflocale.format_length_units(),			
-			thdeflocale.format_length(li->err_dz,1,totlen), thdeflocale.format_length_units());
+			thdeflocale.format_length(li->err_dz,1,totlen), thdeflocale.format_length_units()));
     ll = li->first_leg;
     ss = NULL;
     if (ll->reverse)
@@ -2612,10 +2622,10 @@ void thdb1d::print_loops() {
       psid = ll->leg->from.id;
     ps = &(this->station_vec[psid - 1]);
     first_psid = psid;
-    thlog.printf("%s", ps->name);
+    thlog(ps->name);
     if ((ss == NULL) || (ss->id != ps->survey->id)) {
       ss = ps->survey;
-      thlog.printf("@%s", ss->get_full_name());
+      thlog(fmt::format("@{}", ss->get_full_name()));
     }
     prev_psid = psid;
     while (ll != NULL) {
@@ -2627,10 +2637,10 @@ void thdb1d::print_loops() {
 
       if (prev_psid != psid) {
         ps = &(this->station_vec[psid - 1]);
-        thlog.printf(" = %s", ps->name);
+        thlog(fmt::format(" = {}", ps->name));
         if (ss->id != ps->survey->id) {
           ss = ps->survey;
-          thlog.printf("@%s", ss->get_full_name());
+          thlog(fmt::format("@{}", ss->get_full_name()));
         }
       }
 
@@ -2639,20 +2649,20 @@ void thdb1d::print_loops() {
       else
         psid = ll->leg->to.id;
       ps = &(this->station_vec[psid - 1]);
-      thlog.printf(" - %s", ps->name);
+      thlog(fmt::format(" - {}", ps->name));
       if (ss->id != ps->survey->id) {
         ss = ps->survey;
-        thlog.printf("@%s", ss->get_full_name());
+        thlog(fmt::format("@{}", ss->get_full_name()));
       }
       
       if ((ll->next_leg == NULL) && (!li->open)) {
         if (first_psid != psid) {
           psid = first_psid;
           ps = &(this->station_vec[psid - 1]);
-          thlog.printf(" = %s", ps->name);
+          thlog(fmt::format(" = {}", ps->name));
           if (ss->id != ps->survey->id) {
             ss = ps->survey;
-            thlog.printf("@%s", ss->get_full_name());
+            thlog(fmt::format("@{}", ss->get_full_name()));
           }
         }
       }
@@ -2660,9 +2670,9 @@ void thdb1d::print_loops() {
       prev_psid = psid;
       ll = ll->next_leg;
     }
-    thlog.printf("]\n");
+    thlog("]\n");
   }
-  thlog.printf("##################### end of loop errors #######################\n");
+  thlog("##################### end of loop errors #######################\n");
 }
 
 thdb3ddata * thdb1d::get_3d_surface() {
@@ -2708,7 +2718,7 @@ thdb3ddata * thdb1d::get_3d() {
           this->station_vec[id].x, \
           this->station_vec[id].y, \
           this->station_vec[id].z, \
-          (void *) &(this->station_vec[id])); \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2727,11 +2737,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_data.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+      fc->insert_vertex(station_in[last_st], *tlegs);
       
       // tu vygeneruje LRUD obalku
       
@@ -2821,7 +2831,7 @@ thdb3ddata * thdb1d::get_3d() {
           (*tlegs)->leg->from_left * secXz -
           (*tlegs)->leg->from_down * secYz + 
           secx[j] * ((*tlegs)->leg->from_left + (*tlegs)->leg->from_right) * secXz +
-          secy[j] * ((*tlegs)->leg->from_up + (*tlegs)->leg->from_down) * secYz,
+          secy[j] * ((*tlegs)->leg->from_up + (*tlegs)->leg->from_down) * secYz
 #else
           fromst->x + 
           (secx[j] < 0.5 ? (*tlegs)->leg->from_left : (*tlegs)->leg->from_right) * (secx[j] - 0.5) / 0.5 * secXx +
@@ -2831,9 +2841,9 @@ thdb3ddata * thdb1d::get_3d() {
           (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYy,
           fromst->z + 
           (secx[j] < 0.5 ? (*tlegs)->leg->from_left : (*tlegs)->leg->from_right) * (secx[j] - 0.5) / 0.5 * secXz +
-          (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYz,
+          (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYz
 #endif          
-          NULL);
+          );
 
         tsecvx[j] = this->d3_walls.insert_vertex(
 #ifdef SYMPASSAGES
@@ -2851,7 +2861,7 @@ thdb3ddata * thdb1d::get_3d() {
           (*tlegs)->leg->to_left * secXz -
           (*tlegs)->leg->to_down * secYz + 
           secx[j] * ((*tlegs)->leg->to_left + (*tlegs)->leg->to_right) * secXz +
-          secy[j] * ((*tlegs)->leg->to_up + (*tlegs)->leg->to_down) * secYz,
+          secy[j] * ((*tlegs)->leg->to_up + (*tlegs)->leg->to_down) * secYz
 #else
           tost->x + 
           (secx[j] < 0.5 ? (*tlegs)->leg->to_left : (*tlegs)->leg->to_right) * (secx[j] - 0.5) / 0.5 * secXx +
@@ -2861,9 +2871,9 @@ thdb3ddata * thdb1d::get_3d() {
           (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYy,
           tost->z + 
           (secx[j] < 0.5 ? (*tlegs)->leg->to_left : (*tlegs)->leg->to_right) * (secx[j] - 0.5) / 0.5 * secXz +
-          (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYz,
+          (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYz
 #endif          
-          NULL);
+          );
 
       }
 
@@ -2892,23 +2902,23 @@ thdb3ddata * thdb1d::get_3d() {
        tsecvx[j]->insert_normal(v3.x, v3.y, v3.z);
        
        if (j > 1) {
-         endsfc->insert_vertex(fsecvx[0],NULL);
-         endsfc->insert_vertex(fsecvx[j - 1],NULL);
-         endsfc->insert_vertex(fsecvx[j],NULL);
-         endsfc->insert_vertex(tsecvx[0],NULL);
-         endsfc->insert_vertex(tsecvx[j],NULL);
-         endsfc->insert_vertex(tsecvx[j - 1],NULL);
+         endsfc->insert_vertex(fsecvx[0]);
+         endsfc->insert_vertex(fsecvx[j - 1]);
+         endsfc->insert_vertex(fsecvx[j]);
+         endsfc->insert_vertex(tsecvx[0]);
+         endsfc->insert_vertex(tsecvx[j]);
+         endsfc->insert_vertex(tsecvx[j - 1]);
        }
        
        prevj = j;
       }      
       // vlozime triangle strip
       for(j = 0; j < secn; j++) {
-        secfc->insert_vertex(fsecvx[j],NULL);
-        secfc->insert_vertex(tsecvx[j],NULL);
+        secfc->insert_vertex(fsecvx[j]);
+        secfc->insert_vertex(tsecvx[j]);
       }
-      secfc->insert_vertex(fsecvx[0],NULL);
-      secfc->insert_vertex(tsecvx[0],NULL);
+      secfc->insert_vertex(fsecvx[0]);
+      secfc->insert_vertex(tsecvx[0]);
       
       // koniec generovania LRUD obalky
       SKIP_WALLS:;
@@ -2925,7 +2935,7 @@ thdb3ddata * thdb1d::get_3d() {
           this->station_vec[id].x, \
           this->station_vec[id].y, \
           this->station_vec[id].z, \
-          (void *) &(this->station_vec[id])); \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2939,11 +2949,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_surface.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+      fc->insert_vertex(station_in[last_st], *tlegs);
     }
   }
   
@@ -2957,7 +2967,7 @@ thdb3ddata * thdb1d::get_3d() {
           this->station_vec[id].x, \
           this->station_vec[id].y, \
           this->station_vec[id].z, \
-          (void *) &(this->station_vec[id])); \
+          &(this->station_vec[id])); \
       } \
     }
   
@@ -2971,11 +2981,11 @@ thdb3ddata * thdb1d::get_3d() {
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_splay.insert_face(THDB3DFC_LINE_STRIP);
-        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+        fc->insert_vertex(station_in[cur_st], *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
-      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+      fc->insert_vertex(station_in[last_st], *tlegs);
     }
   }
 
@@ -2993,7 +3003,10 @@ void thdb1d::postprocess_objects()
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_SURFACE_CMD:
-        ((thsurface*)(*obi).get())->check_stations();
+        dynamic_cast<thsurface*>(obi->get())->check_stations();
+        break;
+      case TT_SCAN_CMD:
+        dynamic_cast<thscan*>(obi->get())->check_stations();
         break;
     }
     obi++;
@@ -3060,7 +3073,7 @@ void thdb1d::process_xelev()
     switch ((*obi)->get_class_id()) {
       case TT_DATA_CMD:
         try {
-          dp = (thdata *)(*obi).get();
+          dp = dynamic_cast<thdata*>(obi->get());
           xi = dp->extend_list.begin();
           while(xi != dp->extend_list.end()) {
             if (!xi->to.is_empty()) {
@@ -3085,7 +3098,7 @@ void thdb1d::process_xelev()
                   tmpbf += "@";
                   tmpbf += xi->to.survey;
                 }
-                ththrow("survey shot not found -- {}", tmpbf.get_buffer());
+                throw thexception(fmt::format("survey shot not found -- {}", tmpbf.get_buffer()));
               } else {
                 // the leg is in carrow - set its extend
                 if ((xi->extend & TT_EXTENDFLAG_DIRECTION) != 0) {
@@ -3164,8 +3177,8 @@ void thdb1d::process_xelev()
             xi++;
           }
         }
-        catch (...) {
-          threthrow("{} [{}]", xi->srcf.name, xi->srcf.line);
+        catch (const std::exception& e) {
+          throw thexception(fmt::format("{} [{}]", xi->srcf.name, xi->srcf.line), e);
         }
         break;
     }
@@ -3560,7 +3573,7 @@ thdb3ddata * thdb1ds::get_3d_outline() {
   thdb1d_tree_arrow * a;
   thdb1ds * tt;
   n = &(thdb.db1d.tree_nodes[this->uid - 1]);
-  Vector3<double> fv(this->x, this->y, this->z), tv, txv;
+  Vector3<double> fv(this->x, this->y, this->z), tv = {}, txv = {};
 
   // TODO: Add points to point cloud
 	// traverse all splay shots from given station, calculate normalized position and add
@@ -3572,14 +3585,12 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 	//if (tt->temps == TT_TEMPSTATION_FEATURE) continue;
 	tv = Vector3<double>(tt->x, tt->y, tt->z);
 	txv = tv - fv;
-	try {
-		txv.normalize();
-		pointCloud.push_back(txv);
-		originalPointCloud.push_back(tv);
-		originalPointCloudUse.push_back(NULL);
-		if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
-		else undercnt++;
-	} catch (...) {}
+  txv.normalize();
+  pointCloud.push_back(txv);
+  originalPointCloud.push_back(tv);
+  originalPointCloudUse.push_back(NULL);
+  if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
+  else undercnt++;
   }
   // if there are more then 1 underground shots from this station, add it
   if (undercnt > 0) {
@@ -3611,6 +3622,14 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 
 	return &(this->d3_outline);
 
+}
+
+const char * thdb1ds::get_label() const {
+  const char * label = this->comment;
+  if (!label || !label[0]) {
+    label = this->name;
+  }
+  return label;
 }
 
 void thdb1d_tree_node::push_back_arrow(thdb1d_tree_arrow * arrow) {

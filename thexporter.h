@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -31,9 +31,10 @@
 
 
 #include "thexport.h"
-#include "thparse.h"
+#include "thstok.h"
 #include <stdio.h>
 #include <list>
+#include <memory>
 
 
 /**
@@ -72,7 +73,7 @@ static const thstok thtt_exporter[] = {
  * Export list.
  */
  
-typedef std::list <thexport *> thexporter_list;
+using thexporter_list = std::list<std::unique_ptr<thexport>>;
 
 
 /**
@@ -88,8 +89,6 @@ class thexporter {
   public:
   
   thexporter();  ///< Default constructor.
-
-  ~thexporter();  ///< Default destructor.
   
   void assign_config(class thconfig * cptr);  ///< ??
   

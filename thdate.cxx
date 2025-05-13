@@ -21,18 +21,17 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thdate.h"
-#include "thparse.h"
 #include "thexception.h"
-#include "therion.h"
-#include <sys/types.h>
+
+#include <fmt/core.h>
+
 #include <time.h>
 #include <locale.h>
-#include <errno.h>
 
 void thdate::reset()
 {
@@ -65,12 +64,6 @@ void thdate::reset_current()
   this->smin = tim->tm_min;
   this->ssec = double(tim->tm_sec > 59 ? 59 : tim->tm_sec);
 
-}
-
-
-thdate::thdate()
-{
-  this->reset();
 }
 
 
@@ -120,7 +113,7 @@ void thdate::parse(const char * src)
           (ppos == 7) || (ppos == 8) || (ppos == 12))
         ppos++;
       else
-        ththrow("invalid date syntax -- \"{}\"", osrc);
+        throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
       ssrc++;
       continue;
     }
@@ -130,7 +123,7 @@ void thdate::parse(const char * src)
           (ppos == 10) || (ppos == 11))
         ppos++;
       else
-        ththrow("invalid date syntax -- \"{}\"", osrc);
+        throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
       ssrc++;
       continue;
     }
@@ -142,7 +135,7 @@ void thdate::parse(const char * src)
         if ((ppos >= 7) && (ppos <= 9))
           ppos = 10;
         else
-          ththrow("invalid date syntax -- \"{}\"", osrc);
+          throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
       }
       ssrc++;
       continue;
@@ -152,7 +145,7 @@ void thdate::parse(const char * src)
       if ((ppos >= 0) && (ppos <= 6))
         ppos = 7;
       else
-        ththrow("invalid date syntax -- \"{}\"", osrc);
+        throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
       ssrc++;
       continue;
     }
@@ -180,11 +173,11 @@ void thdate::parse(const char * src)
       continue;
     }
     else
-      ththrow("invalid date syntax -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
   }  // while
   
   if (dd[0] < 0)
-    ththrow("invalid date year -- \"{}\"", osrc);
+    throw thexception(fmt::format("invalid date year -- \"{}\"", osrc));
   else
     this->syear = dd[0];
     
@@ -192,35 +185,35 @@ void thdate::parse(const char * src)
     if (dd[1] < 13)
       this->smonth = dd[1];
     else
-      ththrow("invalid date month -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date month -- \"{}\"", osrc));
   }
   
   if (dd[2] > 0) {
     if ((dd[2] < 32) && (this->smonth > 0))
       this->sday = dd[2];
     else
-      ththrow("invalid date day -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date day -- \"{}\"", osrc));
   }
 
   if (dd[3] >= 0) {
     if ((dd[3] < 24) && (this->sday > 0))
       this->shour = dd[3];
     else
-      ththrow("invalid date hour -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date hour -- \"{}\"", osrc));
   }
 
   if (dd[4] >= 0) {
     if ((dd[4] < 60) && (this->shour >= 0))
       this->smin = dd[4];
     else
-      ththrow("invalid date minute -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date minute -- \"{}\"", osrc));
   }
 
   if (dd[5] >= 0) {
     if ((dd[5] < 60) && (this->smin >= 0))
       this->ssec = (double) dd[5];
     else
-      ththrow("invalid date second -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
   }
   
   if (ss[0] > 0) {
@@ -230,49 +223,49 @@ void thdate::parse(const char * src)
       this->ssec += ss[0] / sm[0];
     }
     else
-      ththrow("invalid date second -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
   }
 
   if (dd[7] >= 0) {
     if (this->syear >= 0)
       this->eyear = dd[7];
     else
-      ththrow("start date must be specified -- \"{}\"", osrc);
+      throw thexception(fmt::format("start date must be specified -- \"{}\"", osrc));
   }
     
   if (dd[8] > 0) {
     if ((dd[8] < 13) && (this->eyear >= 0))
       this->emonth = dd[8];
     else
-      ththrow("invalid date month -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date month -- \"{}\"", osrc));
   }
   
   if (dd[9] > 0) {
     if ((dd[9] < 32) && (this->emonth > 0))
       this->eday = dd[9];
     else
-      ththrow("invalid date day -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date day -- \"{}\"", osrc));
   }
 
   if (dd[10] >= 0) {
     if ((dd[10] < 24) && (this->eday > 0))
       this->ehour = dd[10];
     else
-      ththrow("invalid date hour -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date hour -- \"{}\"", osrc));
   }
 
   if (dd[11] >= 0) {
     if ((dd[11] < 60) && (this->ehour >= 0))
       this->emin = dd[11];
     else
-      ththrow("invalid date minute -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date minute -- \"{}\"", osrc));
   }
 
   if (dd[12] >= 0) {
     if ((dd[12] < 60) && (this->emin >= 0))
       this->esec = (double) dd[12];
     else
-      ththrow("invalid date second -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
   }
   
   if (ss[1] > 0) {
@@ -282,7 +275,7 @@ void thdate::parse(const char * src)
       this->esec += ss[1] / sm[1];
     }
     else
-      ththrow("invalid date second -- \"{}\"", osrc);
+      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
   }
   
 }  // parse
@@ -454,7 +447,7 @@ void thdate::join(thdate & dt)
 
 char * thdate::get_str(int fmt) {
   this->print_str(fmt);
-  return this->dstr.begin();
+  return this->dstr.data();
 }
 
 
@@ -612,8 +605,19 @@ void date2tm(int y, int m, int d, int hh, int mm, double ss, tm * info)
 void thdate::print_str(int fmt) {
   unsigned int tl = thdate_bufflen - 1;
   long yyyy, mm, dd;
-  char * dst = this->dstr.begin();
+  char * dst = this->dstr.data();
   const char * sep = " - ";
+  const char * sep_ymd = "-"; // YYYY-MM-DD
+  const char * sep_time = "T";
+
+  switch (fmt) {
+    case TT_DATE_FMT_THERION:
+      fmt = TT_DATE_FMT_ISO;
+      sep = "-";
+      sep_ymd = "."; // YYYY.MM.DD
+      sep_time = "@";
+      break;
+  }
 
   switch (fmt) {
     case TT_DATE_FMT_UTF8_Y:
@@ -679,23 +683,23 @@ void thdate::print_str(int fmt) {
       [[fallthrough]];
     default:
       if (this->ssec >= 0.0)
-        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d:%05.2f",
-          this->syear, this->smonth, this->sday, 
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d%s%02d:%02d:%05.2f",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday, sep_time,
           this->shour, this->smin, this->ssec);
       else if (this->smin >= 0)
-        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
-          this->syear, this->smonth, this->sday, 
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d%s%02d:%02d",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday, sep_time,
           this->shour, this->smin);
       else if (this->shour >= 0)
-        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
-          this->syear, this->smonth, this->sday, 
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d%s%02d:%02d",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday, sep_time,
           this->shour, 0);
       else if (this->sday > 0)
-        std::snprintf(dst,tl,"%04d-%02d-%02d",
-          this->syear, this->smonth, this->sday);
+        std::snprintf(dst,tl,"%04d%s%02d%s%02d",
+          this->syear, sep_ymd, this->smonth, sep_ymd, this->sday);
       else if (this->smonth > 0)
-        std::snprintf(dst,tl,"%04d-%02d",
-          this->syear, this->smonth);
+        std::snprintf(dst,tl,"%04d%s%02d",
+          this->syear, sep_ymd, this->smonth);
       else if (this->syear >= 0)
         std::snprintf(dst,tl,"%04d",
           this->syear);
@@ -704,23 +708,23 @@ void thdate::print_str(int fmt) {
       dst += strlen(dst);
       
       if (this->esec >= 0.0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d:%05.2f", sep,
-          this->eyear, this->emonth, this->eday, 
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d%s%02d:%02d:%05.2f", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday, sep_time, 
           this->ehour, this->emin, this->esec);
       else if (this->emin >= 0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
-          this->eyear, this->emonth, this->eday, 
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d%s%02d:%02d", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday, sep_time, 
           this->ehour, this->emin);
       else if (this->ehour >= 0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
-          this->eyear, this->emonth, this->eday, 
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d%s%02d:%02d", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday, sep_time, 
           this->ehour, 0);
       else if (this->eday > 0)
-        std::snprintf(dst,tl,"%s%04d-%02d-%02d", sep,
-          this->eyear, this->emonth, this->eday);
+        std::snprintf(dst,tl,"%s%04d%s%02d%s%02d", sep,
+          this->eyear, sep_ymd, this->emonth, sep_ymd, this->eday);
       else if (this->emonth > 0)
-        std::snprintf(dst,tl,"%s%04d-%02d", sep,
-          this->eyear, this->emonth);
+        std::snprintf(dst,tl,"%s%04d%s%02d", sep,
+          this->eyear, sep_ymd, this->emonth);
       else if (this->eyear >= 0)
         std::snprintf(dst,tl,"%s%04d", sep,
           this->eyear);

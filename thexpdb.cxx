@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -38,6 +38,7 @@
 #include "thchenc.h"
 #include <map>
 #include "thinfnan.h"
+#include "therion.h"
 
 thexpdb::thexpdb() {
   this->format = TT_EXPDB_FMT_UNKNOWN;
@@ -53,19 +54,19 @@ void thexpdb::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPDB_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing format -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expdb_fmt);
       if (this->format == TT_EXPDB_FMT_UNKNOWN)
-        ththrow("unknown format -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
     case TT_EXPDB_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow("missing encoding -- \"{}\"",args[optx]);
+        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow("unknown encoding -- \"{}\"", args[argx]);
+        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
     default:
@@ -106,11 +107,17 @@ void thexpdb::process_db(class thdatabase * dbp)
       this->export_csv_file(dbp);
       break;
     default:
-      ththrow("unknown database format (use .csv or .sql)");
+      throw thexception("unknown database format (use .csv or .sql)");
   }
 }
 
 
+double sql_double(double x) {
+	if (thisnan(x)) return 0.0;
+	if (thisinf(x) == 1) return 9e99;
+	if (thisinf(x) == -1) return -9e99;
+	return x;
+}
 
 
 
@@ -134,7 +141,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 #endif 
       
   FILE * sqlf;
-  sqlf = fopen(fnm,"w");
+  sqlf = fopen(fnm,"wb");
   if (sqlf == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;
@@ -250,7 +257,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
       switch ((*oi)->get_class_id()) {
 
         case TT_SURVEY_CMD:
-          sp = (thsurvey *)(*oi).get();
+          sp = dynamic_cast<thsurvey*>(oi->get());
           ENCODESTR(sp->title);
           IF_PRINTING {
             fprintf(sqlf,"insert into SURVEY values "
@@ -266,26 +273,26 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
           break;  // SURVEY
 
 		case TT_SCRAP_CMD:
-			scrapp = (thscrap *)(*oi).get();
+			scrapp = dynamic_cast<thscrap*>(oi->get());
 			IF_PRINTING {
 				fprintf(sqlf,"insert into SCRAPS values "
 				  "(%ld, %ld, '%s', %d, %.5lf, %.5lf);\n ",
 				  scrapp->id, (scrapp->fsptr != NULL ? scrapp->fsptr->id : 0), 
-				  scrapp->name, scrapp->proj->id, scrapp->maxdist, scrapp->avdist);
+				  scrapp->name, scrapp->proj->id, sql_double(scrapp->maxdist), sql_double(scrapp->avdist));
 			} else {
 				CHECK_STRLEN(survey_name,scrapp->name);
 			}
 			break;
 
 		case TT_MAP_CMD:
-			mapp = (thmap *)(*oi).get();
+			mapp = dynamic_cast<thmap*>(oi->get());
 			mapp->stat.scanmap(mapp);
 			ENCODESTR(mapp->title);
 			IF_PRINTING {
 				fprintf(sqlf,"insert into MAPS values "
 				  "(%ld, %ld, '%s', %s, %d, %.3lf, %.3lf);\n ",
 				  mapp->id, (mapp->fsptr != NULL ? mapp->fsptr->id : 0), 
-				  mapp->name, ESTR, mapp->projection_id, mapp->stat.get_length(), mapp->stat.get_depth()
+				  mapp->name, ESTR, mapp->projection_id, sql_double(mapp->stat.get_length()), sql_double(mapp->stat.get_depth())
 				  );
 				thdb2dmi * cit = mapp->first_item;
 				while (cit != NULL) {
@@ -301,7 +308,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 			break;
           
         case TT_DATA_CMD:
-          dp = (thdata *)(*oi).get();
+          dp = dynamic_cast<thdata*>(oi->get());
           ENCODESTR(dp->title);
           IF_PRINTING {
             fprintf(sqlf,"insert into CENTRELINE values "
@@ -342,11 +349,11 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
                 fprintf(sqlf,"insert into SHOT values ("
                   "%ld, %ld, %ld, %ld, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f);\n",
                   ++shotx, lei->from.id, lei->to.id, dp->id,
-                  lei->total_length, lei->total_bearing, lei->total_gradient,
-                  thdxyz2length(adx, ady, adz), thdxyz2bearing(adx, ady, adz), thdxyz2clino(adx, ady, adz),
-                  thdxyz2length(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz), 
-                  thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz), 
-                  thdxyz2clino(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)
+                  sql_double(lei->total_length), sql_double(lei->total_bearing), sql_double(lei->total_gradient),
+				  sql_double(thdxyz2length(adx, ady, adz)), sql_double(thdxyz2bearing(adx, ady, adz)), sql_double(thdxyz2clino(adx, ady, adz)),
+				  sql_double(thdxyz2length(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
+				  sql_double(thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
+				  sql_double(thdxyz2clino(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz))
                   );
                 if ((lei->flags & TT_LEGFLAG_SURFACE) != TT_LEGFLAG_NONE)
                   fprintf(sqlf,"insert into SHOT_FLAG values(%ld, 'srf');\n", shotx);
@@ -371,7 +378,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
         fprintf(sqlf,"insert into STATION values "
           "(%ld, %s, %ld, %.2f, %.2f, %.2f);\n",
           (i+1), ESTR, st->survey->id,           
-          st->x, st->y, st->z);
+		  sql_double(st->x), sql_double(st->y), sql_double(st->z));
         if ((st->flags & TT_STATIONFLAG_ENTRANCE) != TT_STATIONFLAG_NONE)
           fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'ent');\n", (i+1));
         if ((st->flags & TT_STATIONFLAG_CONT) != TT_STATIONFLAG_NONE)
@@ -433,7 +440,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 #endif
 
   FILE * out;
-  out = fopen(fnm, "w");
+  out = fopen(fnm, "wb");
   if (out == NULL) {
     thwarning(("can't open %s for output", fnm))
     return;
@@ -451,34 +458,30 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 
   while (oi != dbp->object_list.end()) {
     if ((*oi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *) (*oi).get();
+      dp = dynamic_cast<thdata*>(oi->get());
 
       for (lei = dp->leg_list.begin(); lei != dp->leg_list.end(); lei++) {
         if (lei->is_valid) {
-          if ((lei->flags & TT_LEGFLAG_SPLAY) == TT_LEGFLAG_SPLAY)
-            fprintf(out, "%s@%s,-,%.2f,%.2f,%.2f\n",
-              lei->from.name, lei->from.psurvey->get_full_name(),
-              lei->total_length, lei->total_bearing, lei->total_gradient);
-          else
-            fprintf(out, "%s@%s,%s@%s,%.2f,%.2f,%.2f\n",
-              lei->from.name, lei->from.psurvey->get_full_name(), lei->to.name, lei->to.psurvey->get_full_name(),
+          bool is_splay = (lei->flags & TT_LEGFLAG_SPLAY) == TT_LEGFLAG_SPLAY;
+          fprintf(out, "%s,%s,%.2f,%.2f,%.2f\n",
+              lei->from.print_full_name().c_str(),
+              is_splay ? "-" : lei->to.print_full_name().c_str(),
               lei->total_length, lei->total_bearing, lei->total_gradient);
         }
       }
 
       // Export equate links between stations 
       int last_equate = 0;
-      const long MAX_LEN = 500;
-      char first_name[MAX_LEN];
+      std::string first_name;
       if (!dp->equate_list.empty()) {
         fprintf(out, "# Equated stations\n");
         for (eqi = dp->equate_list.begin(); eqi != dp->equate_list.end(); eqi++) {
           if (last_equate != eqi->eqid) {
-            std::snprintf(first_name, MAX_LEN, "%s@%s", eqi->station.name, eqi->station.survey);
+            first_name = eqi->station.print_full_name();
             last_equate = eqi->eqid;
           } else {
             if (last_equate != 0)
-              fprintf(out, "%s,%s@%s\n", first_name, eqi->station.name, eqi->station.survey);
+              fprintf(out, "%s,%s\n", first_name.c_str(), eqi->station.print_full_name().c_str());
           }
         }
         fprintf(out, "# End equated stations\n");

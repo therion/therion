@@ -34,7 +34,7 @@ namespace fmt
 template <>
 struct formatter<thdouble>: formatter<std::string> {
     template <typename FormatContext>
-    auto format(const thdouble& p, FormatContext& ctx) {
+    auto format(const thdouble& p, FormatContext& ctx) const {
         // fixed formatting with given precision
         // and (perhaps more) stable cross-platform rounding in the border cases using two-passes
         auto num = fmt::format("{:.{}f}", std::stod(fmt::format("{:.{}f}", p.value, p.precision+1)), p.precision);
@@ -50,7 +50,9 @@ struct formatter<thdouble>: formatter<std::string> {
             }
         }
         num.resize(result_len);
-        return formatter<std::string>::format(num, ctx);
+        // Remove const for compatibility with fmtlib < 9.0.0
+        return const_cast<formatter<thdouble> *>(this)
+            ->formatter<std::string>::format(num, ctx);
     }
 };
 }

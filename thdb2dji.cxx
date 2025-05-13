@@ -21,15 +21,15 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 #include "thdb2dji.h"
 #include "thdatabase.h"
 #include "thexception.h"
-#include "thdb2dpt.h"
-#include "thdb2dlp.h"
+
+#include <fmt/core.h>
 
 thdb2dji::thdb2dji()
 {
@@ -73,7 +73,7 @@ void thdb2dji::parse_item(char * istr)
   if (npar == 2) {
     this->mark = thdb.strstore(pars[1]);
     if (!th_is_keyword(this->mark))
-      ththrow("line mark not a keyword -- {}",istr);
+      throw thexception(fmt::format("line mark not a keyword -- {}",istr));
   }
   /*
   thdb.buff_enc.strcpy(pars[0]);

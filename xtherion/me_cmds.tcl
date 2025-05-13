@@ -22,7 +22,7 @@
 ## 
 ## You should have received a copy of the GNU General Public License
 ## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 ## --------------------------------------------------------------------
 
 proc xth_me_set_theme {x} {
@@ -3255,6 +3255,20 @@ proc xth_me_show_context_menu {id x y} {
       set xth(me,ctrl,ctxopt,value) [lindex $optvalue 1] 
       #DON'T REMOVE - for translation. [mc "value"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel value] -command {xth_me_ctx_change_text value}
+    }
+    # dist
+    if {[lsearch -exact {extra} $xth(me,cmds,$id,type)] > -1} {
+      set optdist [xth_me_get_option_value "dist" $opts]
+      set xth(me,ctrl,ctx,dist) [lindex $optdist 0]
+      set xth(me,ctrl,ctxopt,dist) [lindex $optdist 1] 
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel dist] -command {xth_me_ctx_change_text dist}
+    }
+    # from
+    if {[lsearch -exact {extra} $xth(me,cmds,$id,type)] > -1} {
+      set optfrom [xth_me_get_option_value "from" $opts]
+      set xth(me,ctrl,ctx,from) [lindex $optfrom 0]
+      set xth(me,ctrl,ctxopt,from) [lindex $optfrom 1] 
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel from] -command {xth_me_ctx_change_text from}
     }
     # toggle orientation
     if {[lsearch -exact {station} $xth(me,cmds,$id,type)] == -1} {

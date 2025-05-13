@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -31,4 +31,24 @@ void thnan_update(double & oval, double uval)
 {
   if (thisnan(oval))
     oval = uval;
+}
+
+bool thapproximately_equal(double a, double b, double epsilon)
+{
+    return fabs(a - b) <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool thessentially_equal(double a, double b, double epsilon)
+{
+    return fabs(a - b) <= ( (fabs(a) > fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool thdefinitely_greater_than(double a, double b, double epsilon)
+{
+    return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool thdefinitely_less_than(double a, double b, double epsilon)
+{
+    return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
 }

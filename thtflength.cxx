@@ -21,13 +21,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
 
 #include "thtflength.h"
 #include "thexception.h"
+#include "thparse.h"
+
+#include <fmt/core.h>
 
 thtflength::thtflength() : thtf(TT_TFU_M) {}
 
@@ -56,7 +59,7 @@ void thtflength::parse_units(char * ustr) {
       this->ufactor = 0.9144;
       break;
     case TT_TFU_UNKNOWN_LENGTH:
-      ththrow("unknown length unit -- {}", ustr);
+      throw thexception(fmt::format("unknown length unit -- {}", ustr));
       break;
   }
   

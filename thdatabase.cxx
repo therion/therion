@@ -21,7 +21,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -32,8 +32,6 @@
 #include "thobjectid.h"
 #include "thexception.h"
 #include "thdata.h"
-#include "thcmdline.h"
-#include "thparse.h"
 #include "thdatastation.h"
 #include "thlookup.h"
 #include "thgrade.h"
@@ -49,9 +47,11 @@
 #include "thmap.h"
 #include "thimport.h"
 #include "thsurface.h"
+#include "thscan.h"
 #include "thendscrap.h"
 #include "thconfig.h"
 #include "thproj.h"
+#include "therion.h"
 
 
 const char * thlibrarydata_init_text =
@@ -164,7 +164,7 @@ void thdatabase::check_context(class thdataobject * optr) {
         misscmd = "scrap";
         break;
     }
-    ththrow("missing {} before {} command", misscmd, cmdname);
+    throw thexception(fmt::format("missing {} before {} command", misscmd, cmdname));
   }
 }
 
@@ -211,7 +211,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
     if (this->object_map.find(thobjectid(optr->name,csurvey_id)) !=
         this->object_map.end()) {
       optr_name = optr->get_name();  
-      ththrow("duplicate object name -- {}", optr_name);
+      throw thexception(fmt::format("duplicate object name -- {}", optr_name));
     }
   }
   
@@ -223,12 +223,12 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       // let's check, if name of endsurvey is correct
       if (strlen(optr->name) > 0) {
         if (strcmp(optr->name, csurveyptr->name) != 0)
-          ththrow("survey - endsurvey names don't match -- {} - {}",
-            csurveyptr->name, optr->name);
+          throw thexception(fmt::format("survey - endsurvey names don't match -- {} - {}",
+            csurveyptr->name, optr->name));
       }
 
       if ((optr->get_class_id() == TT_ENDSURVEY_CMD) && (this->fsurveyptr->id == this->csurveyptr->id)) {
-        ththrow("missing survey before endsurvey command");
+        throw thexception("missing survey before endsurvey command");
       }
 
       // whether csurvey is not the first one
@@ -250,8 +250,8 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       // let's check, if name of endsurvey is correct
       if (strlen(optr->name) > 0) {
         if (strcmp(optr->name, cscrapptr->name) != 0)
-          ththrow("scrap - endscrap names don't match -- {} - {}",
-            cscrapptr->name, optr->name);
+          throw thexception(fmt::format("scrap - endscrap names don't match -- {} - {}",
+            cscrapptr->name, optr->name));
       }
       this->ccontext = THCTX_SURVEY;
       this->cscrapptr = NULL;
@@ -283,7 +283,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       
       // let's take care of 2d object
       if(optr->is(TT_2DDATAOBJECT_CMD)) {
-        th2ddo_optr = (th2ddataobject *) optr;
+        th2ddo_optr = dynamic_cast<th2ddataobject*>(optr);
         
         if (this->lcscrapoptr != NULL)
           this->lcscrapoptr->nscrapoptr = th2ddo_optr;
@@ -302,7 +302,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       switch (optr_class_id) {
       
         case TT_SURVEY_CMD:
-          survey_optr = (thsurvey *) optr;
+          survey_optr = dynamic_cast<thsurvey*>(optr);
           survey_optr->level = ++this->csurveylevel;
           
           if (this->fsurveyptr == NULL) {
@@ -331,7 +331,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
           break;
           
         case TT_SCRAP_CMD:
-          scrap_optr = (thscrap *) optr;
+          scrap_optr = dynamic_cast<thscrap*>(optr);
           this->ccontext = THCTX_SCRAP;
           this->cscrapptr = scrap_optr;
           this->nscraps++;
@@ -344,7 +344,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
   // insert sub-objects
   switch(optr_class_id) {
     case TT_SURVEY_CMD:
-      this->insert(std::move(((thsurvey*)(optr))->tmp_data_holder));
+      this->insert(std::move(dynamic_cast<thsurvey*>(optr)->tmp_data_holder));
       break;
   }
   
@@ -357,7 +357,7 @@ thsurvey * thdatabase::get_survey(const char * sn, thsurvey * ps)
   if (xxx != NULL)
     return xxx;
   else
-    ththrow("survey does not exist -- {}", sn);
+    throw thexception(fmt::format("survey does not exist -- {}", sn));
 }
 
 
@@ -506,6 +506,9 @@ std::unique_ptr<thdataobject> thdatabase::create(const char * oclass,
     case TT_IMPORT_CMD:
       return create<thimport>(osrc);
       
+    case TT_SCAN_CMD:
+      return create<thscan>(osrc);
+
     case TT_SURFACE_CMD:
       return create<thsurface>(osrc);
 
@@ -564,7 +567,7 @@ class thdataobject * thdatabase::revise(char * nn, class thsurvey * fathersptr,
     thsurveyname xxx = thsurveyname(sfullname);
     iii = this->survey_map.find(xxx);
     if (iii == this->survey_map.end())
-      ththrow("unknown survey -- {}",nn);
+      throw thexception(fmt::format("unknown survey -- {}",nn));
     else {
       fsid = iii->second->id;
     }
@@ -677,7 +680,7 @@ class thgrade * thdatabase::get_grade(char * gname)
   if (gi == this->grade_map.end())
     return NULL;
   else
-    return (thgrade *)(gi->second);
+    return dynamic_cast<thgrade*>(gi->second);
 }
 
 
@@ -688,7 +691,7 @@ class thlayout * thdatabase::get_layout(const char * gname)
   if (gi == this->layout_map.end())
     return NULL;
   else
-    return (thlayout *)(gi->second);
+    return dynamic_cast<thlayout*>(gi->second);
 }
 
 
@@ -699,7 +702,7 @@ class thlookup * thdatabase::get_lookup(const char * gname)
   if (gi == this->lookup_map.end())
     return NULL;
   else
-    return (thlookup *)(gi->second);
+    return dynamic_cast<thlookup*>(gi->second);
 }
 
 
@@ -712,7 +715,7 @@ void thdatabase::self_print_library()
   thdb_grade_map_type::iterator gi = this->grade_map.begin();
   while (gi != this->grade_map.end()) {
     thprintf("\n\tpgrade = thdb.create<thgrade>(thobjectsrc(\"therion\",0));\n");
-    ((thgrade *)(gi->second))->self_print_library();
+    dynamic_cast<thgrade*>(gi->second)->self_print_library();
     gi++;
     thprintf("\tthdb.insert(std::move(pgrade));\n");
   }
@@ -723,7 +726,7 @@ void thdatabase::self_print_library()
   thdb_layout_map_type::iterator li = this->layout_map.begin();
   while (li != this->layout_map.end()) {
     thprintf("\n\tplayout = thdb.create<thlayout>(thobjectsrc(\"therion\",0));\n");
-    ((thlayout *)(li->second))->self_print_library();
+    dynamic_cast<thlayout*>(li->second)->self_print_library();
     li++;
     thprintf("\tthdb.insert(std::move(playout));\n");
   }
@@ -753,7 +756,7 @@ void thdb_object_rename_persons(thdataobject * op, thsurveyp2pmap * rmap) {
       op->author_map[tmpa].join(tmpdt);
     }
     if (op->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata*) op;
+      dp = dynamic_cast<thdata*>(op);
       if (dp->team_set.erase(mi->first) > 0) {
         dp->team_set.insert(mi->second);
       }
@@ -793,7 +796,7 @@ void thdb_survey_rename_persons(thsurvey * cs, thsurveyp2pmap * rmap) {
   op = cs->foptr;
   while (op != NULL) {
     if (op->get_class_id() == TT_SURVEY_CMD) {
-      thdb_survey_rename_persons((thsurvey*)op, &cmap);
+      thdb_survey_rename_persons(dynamic_cast<thsurvey*>(op), &cmap);
     } else {
       thdb_object_rename_persons(op, &cmap);
     }
@@ -816,14 +819,14 @@ void thdatabase::preprocess() {
     try {
       switch ((*obi)->get_class_id()) {
         case TT_IMPORT_CMD:
-          ((thimport*)(*obi).get())->import_file();
+          dynamic_cast<thimport*>(obi->get())->import_file();
           break;
       }
-    } catch (...) {
+    } catch (const std::exception& e) {
       (*obi)->throw_source();
       switch ((*obi)->get_class_id()) {
         case TT_IMPORT_CMD:
-          threthrow("file import");
+          throw thexception("file import", e);
         break;
       }
     }
@@ -853,7 +856,7 @@ void thdatabase::preprocess() {
   thsurvey * cs = this->fsurveyptr;
   while (cs != NULL) {
     thdb_survey_rename_persons(cs, NULL);
-    cs = (thsurvey*)(cs->nsptr);
+    cs = dynamic_cast<thsurvey*>(cs->nsptr);
   }
 
   
@@ -872,7 +875,7 @@ void thdatabase::preprocess() {
 void thdatabase::insert_equate(int nargs, char ** args)
 {
   if (this->csurveyptr == NULL)
-    ththrow("missing survey before equate command");
+    throw thexception("missing survey before equate command");
   this->csurveyptr->data->set_data_equate(nargs, args);
 }
 

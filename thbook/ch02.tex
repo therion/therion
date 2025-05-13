@@ -93,8 +93,10 @@ Therion uses following data types:
              (not starting with `|-|').
 * {\it ext\_keyword} = keyword that can also contain |+*.,'| characters,
             but not on the first position.
+* {\it restr\_keyword} = keyword limited to |A-Z|, |a-z| and |_| characters because
+            of \MP\ limitations
 * {\it date} = a date (or a time interval) specification in the format\hfil\break
-          |YYYY[.MM.[DD[@HH[:MM[:SS[.SS]]]]]] [- YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]]]| or `|-|'
+          |YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]] [- YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]]]| or `|-|'
           to leave a date unspecified.
 * {\it person} = a person's first name and surname separated by whitespace characters.
             Use `|/|' to separate first name and surname if there are
@@ -399,9 +401,24 @@ the command may be used anywhere.
   * |team <person> [<roles>]| = a survey team member. The first argument
     is his/her name, the others describe the roles of the person in
     the team (optional---currently not used). The following role keywords are
-    supported: station, [back]length, [back]tape, [back]compass, [back]bearing, [back]clino,
-    [back]gradient, counter, depth, station, position, notes, pictures, pics,
-    instruments (insts), assistant (dog).
+    supported:
+    [back]tape ([back]length),
+    [back]compass ([back]bearing),
+    [back]clino ([back]gradient),
+    counter (count),
+    depth,
+    station,
+    position,
+    notes (notebook),
+    pictures (pics),
+    instruments (insts),
+    assistant (dog),
+    altitude (dz),
+    dimensions,
+    left,
+    right,
+    up (ceiling),
+    down (floor).
   * |explo-team <person>| = a discovery team member.
   * |instrument <quantity list> <description>| = description
     of the instrument that was used to survey the given quantities (same
@@ -515,13 +532,13 @@ the command may be used anywhere.
   * |vthreshold <number> <units>| = threshold for interpreting LRUD readings
     as left-right-front-back reading perpendicular to the shot.
 
-    If passeges are horizontal (|inclination < vthreshold|),
+    If passages are horizontal (|inclination < vthreshold|),
     LR is perpendicular to the shot and UD is vertical.
 
     If passages are more or less vertical (|inclination > vthreshold|), even UD
     becomes perpendicular to the shot -- otherwise passages would not look very
     good. In the case of vertical shots, UD is interpreted as north-south
-    dimension from the station to allow tube-like modelling of verticals.
+    dimension from the station to allow tube-like modeling of verticals.
 
   * |extend <spec> [<station> [<station>]]| =
     control how the centerline is extended. |<spec>| is one of the following
@@ -859,7 +876,7 @@ Point is a command for drawing a point map symbol.
 
 
 \options
-  * |subtype <keyword>| = determines the object's subtype. The following
+  * |subtype <restr_keyword>| = determines the object's subtype. The following
     subtypes for given types are supported:
 
     {\it station:}\[if station subtype is not specified, Therion reads it from centreline,
@@ -892,10 +909,6 @@ Point is a command for drawing a point map symbol.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
-  * |dist <distance>| =  valid for extra points, specifies the distance to the nearest
-    station (or station specified using |-from| option. If not specified,
-    appropriate value from LRUD data is used.
-  * |from <station>| =  valid for extra points, specifies reference station.
   * |visibility <on/off>| = displays/hides the symbol.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
@@ -907,6 +920,10 @@ Point is a command for drawing a point map symbol.
 
     {\it Type-specific options:}\Nobreak
 
+  * |dist <distance>| =  if the point type is extra, specifies the distance to the nearest
+    station (or station specified using |-from| option. If not specified,
+    appropriate value from LRUD data is used.
+  * |from <station>| =  if the point type is extra, specifies reference station.
   * |name <reference>| = if the point type is station, this
     option gives the reference to the real survey station.
   * |extend [prev[ious] <station>]| = if the point type is station and scrap
@@ -960,7 +977,9 @@ Point is a command for drawing a point map symbol.
       |+<number>| (the height of the ceiling), |-<number>| (the depth of the
       floor or water depth), |<number>| (the distance between floor
       and ceiling) and |[+<number> -<number>]| (the distance to ceiling and
-      distance to floor).
+      distance to floor). All four forms can be optionally followed by a unit.
+      If there is more than one piece of information - two numbers, number and 
+      unit or else - the value must be enclosed in square brackets.
 
       {\it altitude:} the value specified is the altitude difference from
       the nearest station. The value will be set to 0 if defined as `|-|', `|.|',
@@ -1066,7 +1085,16 @@ respectively.
 
 
 \comopt
-       * |subtype <keyword>| = determines line subtype. The following
+    Most of these options are accepted both as a |line| command option and as a
+    |[LINE DATA]| option despite representing a 'whole line' option. The last 
+    one appearing prevails. The exceptions are |adjust|, |altitude|, |l-size|,
+    |mark|, |orientation|, |size| and |smooth| that are only accepted as a 
+    |[LINE DATA]| option.
+
+    The |direction| and |gradient| options are only accepted as a |[LINE DATA]| 
+    command option when set to |point|. Otherwise they are accepted as a |line| 
+    command option.
+       * |subtype <restr_keyword>| = determines line subtype. The following
          subtypes are supported for given types:
 
          {\it wall:} |invisible|, |bedrock| (default), |sand|, |clay|,
@@ -1096,32 +1124,17 @@ respectively.
          or not
        * |mark <keyword>| = is used to mark the point on the line (see
          |join| command).
-       * |orientation/orient <number>| = orientation of the symbols
-         on the line. If not specified, it's perpendicular to the
-         line on its left side. 0 $\le$ |number| $<$ 360.
        * |outline <in/out/none>| = determines whether the line serves as
          a border line for a scrap. Default value is `|out|' for
          walls, `|none|' for all other lines. Use |-outline in| for
          large pillars etc.
        * |reverse <on/off>| = whether points are given in reverse order.
-       * |size <number>| = line width (left and right sizes are set to
-         one half of this value)
-       * |r-size <number>| = size of the line to the right
-       * |l-size <number>| = same to the left. Required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
-  * |scale| = scale for labels, can be:
-    tiny (xs), small (s), normal (m), large (l), huge (xl) or a
-    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
-    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
-    $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
-    using |fonts-setup| in the |layout| configuration section.
-  * |adjust <horizontal/vertical>| = shifts the line point to be aligned
-    horizontally/ver\-ti\-cally with the previous point (or next point if there is
-    no previous point). The result is horizontal/vertical line segment).
-    If all line points have this option, they are aligned to the
-    average $y$ or $x$ coordinate, respectively. This option is not allowed
-    in the |plan| projection.
+    * |adjust <horizontal/vertical>| = shifts the line point to be aligned
+    horizontally/ver\-ti\-cally with the previous point. It can't be set on the 
+    first point. The result is a horizontal/vertical line segment.
+    This option is not allowed in the |plan| projection.
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
   * |visibility <on/off>| = displays/hides the symbol.
@@ -1144,21 +1157,37 @@ respectively.
          Units can follow the value. Examples: |+4|, |[+4 m]|,
          |[fix 1510 m]|.
        * |anchors <on/off>| = this option can be specified only with
-         the `rope' line type.
+         the `rope' line type. Default is |on|.
        * |border <on/off>| = this option can be specified only with
          the `slope' symbol type. It switches on/off the border line of
          the slope.
        * |direction <begin/end/both/none/point>| = can be used only
          with the section type. It indicates where to put
-         a direction arrow on the section line. None is default.
+         a direction arrow on the section line. None is default. The |point| 
+         option must be used inside |[LINE DATA]|. The others can (and should)
+         be used as a line option.
        * |gradient <none/center/point>| = can be used only with the contour
          type and indicates where to put a gradient mark on the contour line.
          If there is no gradient specification, behaviour is symbol-set
-         dependent (e.g. no tick in UIS, tick in the middle in SKBB).
+         dependent (e.g. no tick in UIS, tick in the middle in SKBB). The |point| 
+         option must be used inside |[LINE DATA]|. The others can (and should)
+         be used as a line option.
        * |head <begin/end/both/none>| = can be used only with the arrow
          type and indicates where to put an arrow head. End is default.
+       * |l-size <number>| = Size of the line (to the left). Only valid on and 
+         required for |slope| type.
+       * |orientation/orient <number>| = orientation of the symbols on the line.
+         Can be used only with slope type. If not specified, it's perpendicular 
+         to the line on its left side. 0 $\le$ |number| $<$ 360.
        * |rebelays <on/off>| = this option can be specified only with
-         the `rope' line type.
+         the `rope' line type. Default is |on|.
+       * |scale| = scale affects only the text on label lines, can be:
+         tiny (xs), small (s), normal (m), large (l), huge (xl) or a
+         numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+         $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+         $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
+         using |fonts-setup| in the |layout| configuration section.
+       * |size <number>| = synonym of l-size
        * |text <string>| = valid only for label lines.
        * \NEW{5.4}|height <value>| = height of pit or wall:pit; available in
          \MP\ as a numeric variable |ATTR__height|.
@@ -1176,10 +1205,10 @@ Area is specified by surrounding border lines. They may be of any type, but
 must be listed in order and each pair of consecutive lines must intersect.
 In order to be sure that lines intersect even after scrap transformation
 you may e.g.~continue a lake border 1\,cm behind a passage wall---these
-overlaps will be automatically clipped by scrap border.
-You may use invisible border to achieve this inside of the passage.
-
-
+overlaps will be automatically clipped by scrap border. You may use 
+invisible border to achieve this inside of the passage. When defined by more
+than one line, the actual area will be the intersection of the areas defined 
+by each separate line.
 \enddescription
 
 \syntax
@@ -1212,6 +1241,8 @@ You may use invisible border to achieve this inside of the passage.
 \endarguments
 
 \comopt
+All options can appear as command-like options or as |area| options, i.e., on
+the same line as the |area| command. The last one appearing prevails.
   * the data lines consist of border line references (IDs)
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
@@ -1304,7 +1335,7 @@ none, survey
   explanation.
 
   (Note: |break| only changes level of maps of scraps and has no function when
-   used with maps of maps, as they will cause a |break| implicitely)
+   used with maps of maps, as they will cause a |break| implicitly)
 \enddescription
 
 \syntax
@@ -1515,6 +1546,30 @@ endrevise|
   revise must always be specified).
 \endarguments
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `require'.
+
+\description
+  Checks that the version of Therion in use is at least |<version>| and stops
+  with an error if not.
+\enddescription
+
+\syntax
+  |require <version>|
+\endsyntax
+
+\context
+  all
+\endcontext
+
+\arguments
+* |<version>| = The minimum supported Therion version in the form
+  |major[.minor[.patch]]|, e.g.~|6.3|.
+\endarguments
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \subchapter Custom attributes.
@@ -1538,20 +1593,24 @@ format:
 \endlist
 
 
+\subchapter Graphical interfaces.
+
+To make creating and modifying data files easier, you can use a GUI (Graphical
+User Interface) for Therion. You can, in fact, edit input files in your
+favourite text editor and run Therion from the command line, so any GUI
+is completely optional.
+
+XTherion is a GUI that is included in Therion distributions. There are also
+alternative editors, like wtherion\[wtherion is a graphical editor for TH2
+files available on the web. See \www{https://github.com/daem-on/wtherion}],
+and others in development.
+
 \subchapter XTherion.
 
-XTherion is a GUI (Graphical User Interface) for Therion.
-It helps a lot with creating input data files. Currently it works in
-three main modes: text editor, map editor and compiler.
+XTherion works in three main modes: text editor, map editor and compiler.
 \[Here we're concerned with creating data, so only the first two modes are
 described in this section. For compiler features see the chapter
 {\it Processing data}.]
-
-It is not necessary for Therion itself---you may edit input files in your
-favourite text editor and run Therion from the command line. XTherion is also
-not the only GUI which may be used with Therion. It is possible to
-write a better one, which would be more user friendly, more WYSIWYG, faster,
-more robust and easier to use. Any volunteers?
 
 This manual does not describe such familiar things as `if you want to save a file, go to
 menu File and select Save, or press Ctrl-s'. Browse the top menu for a minute
@@ -1772,9 +1831,10 @@ draw cross-sections.
 \subsubchapter Additional tools.
 
 \NEW{5.3}{\bf Help/Calibrate bitmap} produces OziExplorer-compatible MAP file based
-on georeferencig data included in a PDF map.\[Calibration information for
+on georeferencing data included in PDF maps produced by Therion versions 5.3--6.2.\NEW{6.3}\[Calibration information for
 nine distinct points is present if the centreline contains
-station(s) fixed using geodetic coordinate system(s).]
+station(s) fixed using geodetic coordinate system(s).]\,\[Therion 6.3+ uses standard
+geospatial PDF files where such a calibration is not needed.]
 
 If the map in PDF format has been converted to raster using an external program,
 the converter uses raster image {\it and} pdf map with the same base name
@@ -1789,8 +1849,8 @@ to a raster format.
 format which needs to be imported using XTherion and can not be processed
 by Therion directly.]
 from PocketTopo application can be imported in the text editor as well as in the map
-editor ({\it File $\to$ Import $\to$ PocketTopo therion export} and
-{\it Background Images $\to$ Insert $\to$ PocketTopo therion export}). The
+editor ({\it File $\to$ Import $\to$ PocketTopo Therion export} and
+{\it Background Images $\to$ Insert $\to$ PocketTopo Therion export}). The
 same file is used for both imports. Importing the sketch does not create scrap
 data directly. The drawing is just displayed on the background like scanned
 bitmaps and should be digitized manually.

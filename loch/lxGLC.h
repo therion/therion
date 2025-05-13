@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * -------------------------------------------------------------------- 
  */
 
@@ -88,15 +88,15 @@ class lxGLCanvas: public wxGLCanvas {
     bool m_sMoveSingle = false, m_isO;
 
     // fonty
-    FT_Face m_ftFace1, m_ftFace2, m_ftFace3;
+    FT_Face m_ftFace1 = {}, m_ftFace2 = {}, m_ftFace3 = {};
     OGLFT::Monochrome * m_fntNumericS,
       * m_fntTitleS;
     OGLFT::Filled * m_fntNumericO,
       * m_fntTitleO;
 
-    GLdouble m_camera_modelview[16];
-    GLdouble m_camera_projection[16];
-    GLint m_camera_viewport[4];
+    GLdouble m_camera_modelview[16] = {};
+    GLdouble m_camera_projection[16] = {};
+    GLint m_camera_viewport[4] = {};
 
 		bool m_sCameraAutoRotate, m_sCameraLockRotation;
     wxStopWatch m_sCameraAutoRotateSWatch;

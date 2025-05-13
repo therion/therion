@@ -22,7 +22,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  * --------------------------------------------------------------------
  */
  
@@ -33,6 +33,8 @@
 #include "thdataobject.h"
 #include "thobjectname.h"
 #include "thtflength.h"
+
+#include <memory>
 
 /**
  * surface command options tokens.
@@ -75,13 +77,13 @@ class thsurface : public thdataobject {
   class thsurvey * ssurvey = nullptr;
   double pict_X1, pict_Y1, pict_X2, pict_Y2,
     pict_x1, pict_y1, pict_x2, pict_y2,
-    grid_ox, grid_oy, grid_dx, grid_dy,
+    grid_ox, grid_oy, grid_dx, grid_dy, grid_dxx, grid_dxy, grid_dyx, grid_dyy,
     calib_x, calib_y, calib_s, calib_r, calib_xx, calib_yy, calib_xy, calib_yx,
     pict_dpi = 0.0, pict_height = 0.0, pict_width = 0.0;
   long grid_nx, grid_ny, grid_counter, grid_size;
   int grid_flip, pict_type;
   thtflength grid_units;
-  double * grid;
+  std::unique_ptr<double[]> grid;
   thdb3ddata d3d;
   bool d3dok;
   int pict_cs, grid_cs;
@@ -96,13 +98,6 @@ class thsurface : public thdataobject {
    */
   
   thsurface();
-  
-  
-  /**
-   * Standard destructor.
-   */
-   
-  virtual ~thsurface();
   
   
   /**
