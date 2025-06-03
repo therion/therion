@@ -214,8 +214,8 @@ struct thlintrans {
   void insert_point(thvec2 src, thvec2 dst);
   void init_points();
   void init_backward();
-  thvec2 forward(thvec2 src);
-  thvec2 backward(thvec2 dst);
+  thvec2 forward(thvec2 src) const;
+  thvec2 backward(thvec2 dst) const;
 
 };
 

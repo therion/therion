@@ -26,22 +26,25 @@
  */
  
 #include "thscan.h"
-#include "thexception.h"
-#include "thmbuffer.h"
-#include "thtflength.h"
-#include "thdatabase.h"
+
 #include "thcsdata.h"
-#include <cmath>
+#include "thdatabase.h"
 #include "thdatareader.h"
 #include "thdb1d.h"
-#include "thinfnan.h"
-#include "thproj.h"
 #include "therion.h"
+#include "thexception.h"
+#include "thinfnan.h"
+#include "thmbuffer.h"
+#include "thproj.h"
+#include "thtflength.h"
+#include "thtrans.h"
+
 #include "stl_reader.h"
+
 #include <algorithm>
+#include <cmath>
 #include <filesystem>
 #include <list>
-#include "thtrans.h"
 
 namespace fs = std::filesystem;
 
@@ -62,7 +65,7 @@ static const thstok thtt_scan_coords[] = {
   {"x", TT_SCAN_COORDS_X},
   {"y", TT_SCAN_COORDS_Y},
   {"z", TT_SCAN_COORDS_Z},
-  {NULL, TT_SCAN_COORDS_UNKNOWN},
+  {nullptr, TT_SCAN_COORDS_UNKNOWN},
 };
 
 
@@ -70,13 +73,11 @@ static const thstok thtt_scan_coords[] = {
 
 
 thscan::thscan()
+  : datasrc_coords{TT_SCAN_COORDS_X, TT_SCAN_COORDS_Y, TT_SCAN_COORDS_Z}
 {
   // replace this by setting real properties initialization
   this->d3dok = false;
   this->datasrc_cs = TTCS_LOCAL;
-  this->datasrc_coords[0] = TT_SCAN_COORDS_X;
-  this->datasrc_coords[1] = TT_SCAN_COORDS_Y;
-  this->datasrc_coords[2] = TT_SCAN_COORDS_Z;
 }
 
 int thscan::get_class_id()
@@ -162,7 +163,7 @@ void thscan::parse_data_source_coords(char ** args) {
   hasx = false;
   hasy = false;
   hasz = false;
-  for(int i = 0; i < 3; i++) {
+  for(size_t i = 0; i < this->datasrc_coords.size(); i++) {
 	this->datasrc_coords[i] = thmatch_token(args[i], thtt_scan_coords);
 	if (this->datasrc_coords[i] == TT_SCAN_COORDS_UNKNOWN)
 	  throw thexception(fmt::format("unknown scan coordinate -- {}", args[i]));
@@ -195,8 +196,8 @@ void thscan::transform_coords(double & x, double & y, double & z) {
   tx = x;
   ty = y;
   tz = z;
-  double v[3];
-  for(int i = 0; i < 3; i++) switch(this->datasrc_coords[i]) {
+  std::array<double, 3> v{};
+  for(size_t i = 0; i < this->datasrc_coords.size(); i++) switch(this->datasrc_coords[i]) {
 	case TT_SCAN_COORDS_X:
 	  v[i] = tx;
 	  break;
@@ -222,12 +223,12 @@ void thscan::transform_coords(double & x, double & y, double & z) {
 }
 
 struct morph3dpt {
-  long m_id;
+  long m_id = 0;
   lxVec m_f;
   lxVec m_t;
-  double m_shift_z;
+  double m_shift_z = 0.0;
   thlintrans m_lt;
-  morph3dpt() : m_id(0), m_f(lxVec(0.0,0.0,0.0)), m_t(lxVec(0.0,0.0,0.0)), m_shift_z(0.0) {}
+  morph3dpt() = default;
 };
 
 struct morph3d {
@@ -278,20 +279,19 @@ void morph3d::initialize() {
 
 
 lxVec morph3d::forward(lxVec v) {
-  std::list<morph3dpt>::iterator ci, pi, ni;
   lxVec tt = lxVec(0.0, 0.0, 0.0), c;
   thvec2 f, t;
   double tw, cw;
   tw = 0.0;
-  for(pi = this->m_points.begin(); pi != this->m_points.end(); pi++) {
-	cw = std::hypot(v.x - pi->m_f.x, v.y - pi->m_f.y, v.z - pi->m_f.z);
+  for(const auto& point : this->m_points) {
+	cw = std::hypot(v.x - point.m_f.x, v.y - point.m_f.y, v.z - point.m_f.z);
 	cw = cw * cw;
 	f.m_x = v.x;
 	f.m_y = v.y;
-	t = pi->m_lt.forward(f);
+	t = point.m_lt.forward(f);
 	c.x = t.m_x;
 	c.y = t.m_y;
-	c.z = v.z + pi->m_shift_z;
+	c.z = v.z + point.m_shift_z;
 	if (cw > 0) {
 	  cw = 1/cw;
 	  tt += cw * c;
@@ -329,17 +329,17 @@ void thscan::parse_data_source(char ** args) {
 
 void thscan::parse_calib(int nargs, char** args) {
   if (nargs != 4)
-    throw thexception(fmt::format("wrong # of parameters -- expected <station> <x> <y> <z>"));
+    throw thexception("wrong # of parameters -- expected <station> <x> <y> <z>");
 
   int sv;
-  double coords[3];
+  std::array<double, 3> coords{};
   thdatafix_list::iterator it;
   it = this->calib.insert(this->calib.end(),thdatafix());
   it->srcf = this->db->csrc;
   it->psurvey = this->db->get_current_survey();
   it->cs = this->cs;
   thparse_objectname(it->station, & this->db->buff_stations, args[0], this);
-  for(int i = 0; i < 3; i++) {
+  for(size_t i = 0; i < coords.size(); i++) {
 	thparse_double(sv, coords[i], args[i+1]);
 	if (sv != TT_SV_NUMBER)
 	  throw thexception(fmt::format("number expected -- {}", args[i+1]));
@@ -361,16 +361,16 @@ void thscan::self_print_properties(FILE * outf)
 
 void thscan::check_stations()
 {
-  for(auto fix = this->calib.begin(); fix != this->calib.end(); fix++ ) {
-	  if (!fix->station.is_empty()) {
+  for(auto& fix : this->calib) {
+	  if (!fix.station.is_empty()) {
 
 	  // najde stations, error ak nie
-	  fix->station.id = thdb.db1d.get_station_id(fix->station, this->fsptr);
-	  if (fix->station.id == 0) {
-		if (fix->station.survey == NULL)
-		  throw thexception(fmt::format("{} -- station doesn't exist -- {}", this->throw_source(), fix->station.name));
+	  fix.station.id = thdb.db1d.get_station_id(fix.station, this->fsptr);
+	  if (fix.station.id == 0) {
+		if (fix.station.survey == nullptr)
+		  throw thexception(fmt::format("{} -- station doesn't exist -- {}", this->throw_source(), fix.station.name));
 		else
-		  throw thexception(fmt::format("{} -- station doesn't exist -- {}@{}", this->throw_source(), fix->station.name, fix->station.survey));
+		  throw thexception(fmt::format("{} -- station doesn't exist -- {}@{}", this->throw_source(), fix.station.name, fix.station.survey));
 	  }
 	}
   }
@@ -399,7 +399,7 @@ thdb3ddata * thscan::get_3d() {
             v.y = this->units.transform(c[1]);
             v.z = this->units.transform(c[2]);
             this->transform_coords(v.x, v.y, v.z);
-            fc->insert_vertex(this->d3d.insert_vertex(v, NULL, true));
+            fc->insert_vertex(this->d3d.insert_vertex(v, nullptr, true));
         }
         //std::cout << std::endl;
 
@@ -408,32 +408,31 @@ thdb3ddata * thscan::get_3d() {
         //            << "(" << n[0] << ", " << n[1] << ", " << n[2] << ")\n";
     }
   }
-  catch (std::exception& e) {
-	throw thexception(fmt::format("{} -- error reading {} -- {}", this->throw_source(), this->datasrc, e.what()));
+  catch (const std::exception& e) {
+	throw thexception(fmt::format("{} -- error reading {}", this->throw_source(), this->datasrc), e);
   }
 
   // TODO: inicializujeme transformaciu
   morph3d m3d;
-  thdatafix_list::iterator it;
-  for(it = this->calib.begin(); it != this->calib.end(); it++) {
+  for(const auto& fix : this->calib) {
 	lxVec f, t;
-	f.x = this->units.transform(it->x);
-	f.y = this->units.transform(it->y);
-	f.z = this->units.transform(it->z);
+	f.x = this->units.transform(fix.x);
+	f.y = this->units.transform(fix.y);
+	f.z = this->units.transform(fix.z);
 	this->transform_coords(f.x, f.y, f.z);
 	thdb1ds * ts;
-	ts = &(thdb.db1d.station_vec[it->station.id - 1]);
+	ts = &(thdb.db1d.station_vec[fix.station.id - 1]);
 	t.x = ts->x;
 	t.y = ts->y;
 	t.z = ts->z;
-	m3d.insert_point(it->station.id, f, t);
+	m3d.insert_point(fix.station.id, f, t);
   }
   m3d.initialize();
 
   // TODO: transformujeme vsetky vrcholy
   thdb3dvx * vx;
   lxVec t;
-  for(vx = this->d3d.firstvx; vx != NULL; vx = vx->next) {
+  for(vx = this->d3d.firstvx; vx != nullptr; vx = vx->next) {
 	t = m3d.forward(lxVec(vx->x, vx->y, vx->z));
 	vx->x = t.x;
 	vx->y = t.y;
