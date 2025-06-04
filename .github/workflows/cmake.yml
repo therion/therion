@@ -105,6 +105,7 @@ jobs:
             mingw-w64-${{ matrix.config.arch }}-shapelib
             mingw-w64-${{ matrix.config.arch }}-vtk
             mingw-w64-${{ matrix.config.arch }}-wxwidgets3.2-gtk3
+            mingw-w64-${{ matrix.config.arch }}-wxwidgets3.2-msw
             mingw-w64-${{ matrix.config.arch }}-gcc
             mingw-w64-${{ matrix.config.arch }}-make
             mingw-w64-${{ matrix.config.arch }}-bwidget

@@ -76,7 +76,7 @@ jobs:
         with:
           msystem: ${{ matrix.config.msystem }}
           update: true
-          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxwidgets3.2-gtk3 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
+          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxwidgets3.2-gtk3 mingw-w64-${{ matrix.config.arch }}-wxwidgets3.2-msw mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
       - name: prevent git EOL conversion
         run: git config --global core.autocrlf input
       - uses: actions/checkout@v4
