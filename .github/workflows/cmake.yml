@@ -81,8 +81,8 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: UCRT64,  arch: ucrt-x86_64,  args: ""                                                                                   }
-          - { msystem: CLANG64, arch: clang-x86_64, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
+          - { msystem: UCRT64,  arch: ucrt-x86_64,  args: ""                                                                                                                            }
+          - { msystem: CLANG64, arch: clang-x86_64, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON -DCMAKE_CXX_FLAGS=\"-Qunused-arguments\"" }
     defaults:
       run:
         shell: msys2 {0}
