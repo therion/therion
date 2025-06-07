@@ -31,6 +31,7 @@
 
 #include <cstddef>
 #include "thdb1d.h"
+#include "thobjectname.h"
 #include <list>
 
 /**

@@ -29,6 +29,7 @@
 #include "thscrap.h"
 #include "thexpmap.h"
 #include "thdatabase.h"
+#include "thdataleg.h"
 #include "loch/lxMath.h"
 
 thscraplp::thscraplp() {
