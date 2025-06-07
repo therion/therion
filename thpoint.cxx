@@ -37,6 +37,7 @@
 #include "thscrap.h"
 #include "thobjectname.h"
 #include "therion.h"
+#include "thdataleg.h"
 #include <string>
 #include <cstdio>
 

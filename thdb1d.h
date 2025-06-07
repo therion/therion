@@ -30,14 +30,13 @@
 #define thdb1d_h
 
 #include "thobjectid.h"
-#include "thinfnan.h"
-#include "thdataleg.h"
 #include "thdb3d.h"
-#include "thdataleg.h"
 #include "thattr.h"
 #include <map>
 #include <vector>
 #include <list>
+
+class thdataleg;
 
 enum {
   TT_TEMPSTATION_NONE,
@@ -115,9 +114,7 @@ class thdb1d_tree_arrow {
   
   thdb1d_tree_arrow * next_arrow;
   
-  thdb1d_tree_arrow() : is_discovery(false), is_nosurvey(false), is_reversed(false),
-    start_node(NULL), end_node(NULL), 
-    leg(NULL), extend(TT_EXTENDFLAG_NORMAL), negative(NULL), next_arrow(NULL) {}
+  thdb1d_tree_arrow();
   
 };
 
@@ -175,24 +172,14 @@ class thdb1ds {
    * Default constructor.
    */
    
-  thdb1ds() : uid(0), x(0), y(0), z(0), xx(0), asl(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), tmpselect(false),
-    data_priority(0), temps(TT_TEMPSTATION_NONE),
-    flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), extend_ratio(thnan), mark_station(false),
-    adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
-    explored(thnan), d3_parsed(false) {}
+  thdb1ds();
   
 
   /**
    * Default constructor with 2 parameters.
    */
    
-  thdb1ds(const char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), xx(0), asl(0), name(n), 
-    comment(NULL), survey(ps), fixcontext(NULL), tmpselect(false),
-    data_priority(0), temps(TT_TEMPSTATION_NONE),
-    flags(TT_STATIONFLAG_NONE),
-    mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), extend_ratio(thnan), mark_station(false),
-    adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
-    explored(thnan), d3_parsed(false) {}
+  thdb1ds(const char * n, class thsurvey * ps);
     
   
   /**

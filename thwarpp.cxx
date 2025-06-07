@@ -32,6 +32,7 @@
 #include "thpoint.h"
 #include "thconfig.h"
 #include "thdatabase.h"
+#include "thdataleg.h"
 
 #include <fmt/printf.h>
 
