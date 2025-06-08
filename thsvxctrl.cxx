@@ -34,7 +34,6 @@
 #include "thinfnan.h"
 #include "thinit.h"
 #include "thconfig.h"
-#include <fstream>
 #include "thsurvey.h"
 #include "thcsdata.h"
 #include "thlogfile.h"
