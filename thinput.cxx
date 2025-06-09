@@ -35,6 +35,7 @@
 #include <array>
 #include <cstdio>
 #include <filesystem>
+#include <fstream>
 
 namespace fs = std::filesystem;
 
@@ -75,14 +76,45 @@ static auto parse_version(const char * const version, bool strict = false) {
   return parts;
 }
 
-thinput::ifile::ifile(ifile * fp)
+/**
+ * Therion input file structure.
+ */
+class ifile {
+
+  public:
+  
+  std::ifstream sh;   ///< file stream.
+  thbuffer name,  ///< Input file name buffer.
+    path;  ///< Input file path buffer.
+  unsigned long lnumber;  /// Position at the file.
+  int encoding;  /// Current file encoding.
+  ifile * prev_ptr;  /// Pointer to the upper file.
+  std::unique_ptr<ifile> next_ptr;  /// Pointer to the lower file.
+    
+  /**
+   * Constructor.
+   */
+  ifile(ifile * fp);
+  
+  /**
+   * Close file if it's open.
+   */
+  void close();
+  
+  /**
+   * Check if file statistics are equal.
+   */
+  bool is_equal(ifile* f);
+};
+
+ifile::ifile(ifile * fp)
 {
   this->lnumber = 0;
   this->encoding = TT_UTF_8;
   this->prev_ptr = fp;
 }
 
-void thinput::ifile::close()
+void ifile::close()
 {
   if (this->sh.is_open()) {
     this->sh.close();
@@ -91,7 +123,7 @@ void thinput::ifile::close()
   }
 }
 
-bool thinput::ifile::is_equal(ifile* f)
+bool ifile::is_equal(ifile* f)
 {
   try {
     return fs::equivalent(name.get_buffer(), f->name.get_buffer());
@@ -115,6 +147,9 @@ thinput::thinput()
   this->pifoproc = NULL;
   this->report_missing = false;
 }
+
+// destructor must be defined only when ifile is a complete type
+thinput::~thinput() = default;
 
 void thinput::set_cmd_sensitivity(bool cs)
 {

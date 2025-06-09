@@ -31,9 +31,9 @@
 
 #include "thbuffer.h"
 #include "thmbuffer.h"
-#include <fstream>
 #include <memory>
 
+class ifile;
 
 /**
  * Input file processing class.
@@ -64,45 +64,6 @@ class thinput {
   static const long max_line_size;
   std::unique_ptr<char[]> lnbuffer;
   
-
-  /**
-   * Therion input file structure.
-   */
-  class ifile {
-  
-    public:
-    
-    std::ifstream sh;   ///< file stream.
-    thbuffer name,  ///< Input file name buffer.
-      path;  ///< Input file path buffer.
-    unsigned long lnumber;  /// Position at the file.
-    int encoding;  /// Current file encoding.
-    ifile * prev_ptr;  /// Pointer to the upper file.
-    std::unique_ptr<ifile> next_ptr;  /// Pointer to the lower file.
-      
-    
-    /**
-     * Standard constructor.
-     */
-    
-    ifile(ifile * fp);
-    
-    /**
-     * Close file if it's open.
-     */
-     
-    void close();
-    
-    
-    /**
-     * Check if file statistics are equal.
-     */
-     
-    bool is_equal(ifile* f);
-    
-  };
-  
-  
   std::unique_ptr<ifile> first_ptr;  ///< Pointer to the first file.
   ifile * last_ptr;  ///< Pointer to the last file.
 
@@ -131,6 +92,11 @@ class thinput {
    */
   
   thinput();
+
+  /**
+   * Destructor.
+   */
+  ~thinput();
 
   /**
    * Set command sensitivity state.

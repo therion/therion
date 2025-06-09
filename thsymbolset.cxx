@@ -45,6 +45,7 @@
 #include "thdatabase.h"
 #include "therion.h"
 #include "thlog.h"
+#include <fstream>
 #include <fmt/printf.h>
 
 thsymbolset::thsymbolset()
