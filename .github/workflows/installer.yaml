@@ -70,7 +70,7 @@ jobs:
       THID: ${{ steps.build.outputs.THID_out }}
       git_branch: ${{ steps.build.outputs.git_branch }}
     env:
-      THDIR: d:/a/therion
+      THDIR: ${{ github.workspace }}
     steps:
       - uses: msys2/setup-msys2@v2
         with:
@@ -88,6 +88,7 @@ jobs:
       - name: build and create the installation package
         id: build
         run: |
+          THDIR="${THDIR:0:2}/a/therion"
           reg add HKCU\\Software\\Therion //v InstallDir //t REG_SZ //d "${THDIR}/therion-batteries"
           mkdir -p $HOME/.therion
           echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
@@ -115,9 +116,9 @@ jobs:
         with:
           name: therion-setup-msys2-${{ steps.build.outputs.THID_out }}
           path: |
-            ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
-            ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
-            ${{ env.THDIR }}/therion.bin/sha256-${{ steps.build.outputs.THID_out }}.txt
+            ${{ env.THDIR }}.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
+            ${{ env.THDIR }}.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
+            ${{ env.THDIR }}.bin/sha256-${{ steps.build.outputs.THID_out }}.txt
   Release:
     runs-on: ubuntu-latest
     needs: Windows_installer
