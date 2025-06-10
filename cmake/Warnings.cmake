@@ -8,7 +8,7 @@ if (MSVC)
     target_compile_options(enable-warnings INTERFACE /W4)
     target_compile_options(disable-warnings INTERFACE /w)
 else()
-    target_compile_options(enable-warnings INTERFACE -Wall -Wextra)
+    target_compile_options(enable-warnings INTERFACE -Wall -Wextra -Wno-deprecated-enum-enum-conversion)
     target_compile_options(disable-warnings INTERFACE -w)
 endif()
 

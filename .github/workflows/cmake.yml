@@ -6,11 +6,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-22.04, toolchain: gcc.cmake,              pkgs: "libwxgtk3.0-gtk3-dev libvtk9-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                         }
-          - { os: ubuntu-22.04, toolchain: clang.cmake,            pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                }
-          - { os: ubuntu-24.04, toolchain: gcc.cmake,              pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: ""                                                }
-          - { os: ubuntu-24.04, toolchain: clang-sanitizers.cmake, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: ""                                                }
-          - { os: ubuntu-24.04, toolchain: clang.cmake,            pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
+          - { os: ubuntu-22.04, toolchain: gcc.cmake,              pkgs: "libwxgtk3.0-gtk3-dev libvtk9-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                                        }
+          - { os: ubuntu-22.04, toolchain: clang.cmake,            pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                               }
+          - { os: ubuntu-24.04, toolchain: gcc.cmake,              pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\"" }
+          - { os: ubuntu-24.04, toolchain: clang-sanitizers.cmake, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: ""                                                               }
+          - { os: ubuntu-24.04, toolchain: clang.cmake,            pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug"                }
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
