@@ -30,6 +30,7 @@
 
 #include "thtrans.h"
 #include "thdatabase.h"
+#include "thdataleg.h"
 
 void thvec2::reset() {
   this->m_x = 0.0;
