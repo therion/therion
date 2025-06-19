@@ -6,11 +6,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-22.04, cc: gcc,   cxx: g++,     pkgs: "libwxgtk3.0-gtk3-dev libvtk9-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                                           }
-          - { os: ubuntu-22.04, cc: clang, cxx: clang++, pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                                  }
-          - { os: ubuntu-24.04, cc: gcc,   cxx: g++,     pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\""    }
-          - { os: ubuntu-24.04, cc: clang, cxx: clang++, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DECM_ENABLE_SANITIZERS=address -DCMAKE_BUILD_TYPE=RelWithDebInfo" }
-          - { os: ubuntu-24.04, cc: clang, cxx: clang++, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug"                   }
+          - { os: ubuntu-22.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "libwxgtk3.0-gtk3-dev libvtk9-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                                        }
+          - { os: ubuntu-22.04, cc: clang, cxx: clang++, type: Release,        pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                               }
+          - { os: ubuntu-24.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\"" }
+          - { os: ubuntu-24.04, cc: clang, cxx: clang++, type: RelWithDebInfo, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DECM_ENABLE_SANITIZERS=address"                                }
+          - { os: ubuntu-24.04, cc: clang, cxx: clang++, type: Debug,          pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DENABLE_CLANG_TIDY=ON"                                         }
     env:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04' && always()
         with:
-          name: samples-${{ matrix.os }}-${{ matrix.toolchain }}
+          name: samples-${{ matrix.os }}-${{ matrix.cc }}-${{ matrix.type }}
           path: build/samples/
       - name: Install
         run: sudo cmake --build build -t install
