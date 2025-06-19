@@ -27,6 +27,7 @@ jobs:
         run: |
           mkdir build && cd build && \
           cmake -G Ninja \
+                -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
                 -DENABLE_WERROR=ON \
                 -DUSE_BUNDLED_SHAPELIB=OFF \
                 ${{ matrix.args }} ..
