@@ -14,7 +14,7 @@ CMNOBJECTS = \
   lxImgIO.o lxLRUD.o lxFile.o icase.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o lxSStats.o \
-  extern/img.o
+  lxTriGeom.o extern/img.o
 
 EXT =
 
@@ -319,3 +319,4 @@ $(LOUTDIR)/extern/img.o: ../extern/img/img.c ../extern/img/img.h
 $(LOUTDIR)/lxR2D.o: lxR2D.cxx lxR2D.h
 $(LOUTDIR)/lxR2P.o: lxR2P.cxx lxR2P.h
 $(LOUTDIR)/lxTR.o: lxTR.cxx lxTR.h
+$(LOUTDIR)/lxTriGeom.o: lxTriGeom.cxx lxTriGeom.h lxMath.h

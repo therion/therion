@@ -6,7 +6,7 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
-#include "lxMath.h"
+#include "lxTriGeom.h"
 
 #include <any>
 
