@@ -6,11 +6,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-22.04, toolchain: gcc.cmake,              pkgs: "libwxgtk3.0-gtk3-dev libvtk9-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                                        }
-          - { os: ubuntu-22.04, toolchain: clang.cmake,            pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                               }
-          - { os: ubuntu-24.04, toolchain: gcc.cmake,              pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\"" }
-          - { os: ubuntu-24.04, toolchain: clang-sanitizers.cmake, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: ""                                                               }
-          - { os: ubuntu-24.04, toolchain: clang.cmake,            pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug"                }
+          - { os: ubuntu-22.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "libwxgtk3.0-gtk3-dev libvtk9-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                                        }
+          - { os: ubuntu-22.04, cc: clang, cxx: clang++, type: Release,        pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                               }
+          - { os: ubuntu-24.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\"" }
+          - { os: ubuntu-24.04, cc: clang, cxx: clang++, type: RelWithDebInfo, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DECM_ENABLE_SANITIZERS=address"                                }
+          - { os: ubuntu-24.04, cc: clang, cxx: clang++, type: Debug,          pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DENABLE_CLANG_TIDY=ON"                                         }
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
@@ -24,7 +27,7 @@ jobs:
         run: |
           mkdir build && cd build && \
           cmake -G Ninja \
-                -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/${{ matrix.toolchain }} \
+                -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
                 -DENABLE_WERROR=ON \
                 -DUSE_BUNDLED_SHAPELIB=OFF \
                 ${{ matrix.args }} ..
@@ -37,7 +40,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04' && always()
         with:
-          name: samples-${{ matrix.os }}-${{ matrix.toolchain }}
+          name: samples-${{ matrix.os }}-${{ matrix.cc }}-${{ matrix.type }}
           path: build/samples/
       - name: Install
         run: sudo cmake --build build -t install
@@ -57,7 +60,7 @@ jobs:
           brew install wxwidgets vtk proj xquartz ninja basictex fmt catch2 imagemagick
       - name: Configure CMake
         run: |
-          mkdir build && cd build && cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_WERROR=ON -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
+          mkdir build && cd build && cmake -G Ninja -DECM_ENABLE_SANITIZERS=address -DENABLE_WERROR=ON -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
       - name: Run samples
@@ -82,7 +85,7 @@ jobs:
       matrix:
         config:
           - { msystem: UCRT64,  arch: ucrt-x86_64,  args: ""                                                                                                                            }
-          - { msystem: CLANG64, arch: clang-x86_64, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON -DCMAKE_CXX_FLAGS=\"-Qunused-arguments\"" }
+          - { msystem: CLANG64, arch: clang-x86_64, args: "-DECM_ENABLE_SANITIZERS=address -DENABLE_PROJ_CMAKE=ON -DCMAKE_CXX_FLAGS=\"-Qunused-arguments\"" }
     defaults:
       run:
         shell: msys2 {0}
