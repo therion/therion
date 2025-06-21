@@ -29,10 +29,12 @@
 #ifndef thdb3d_h
 #define thdb3d_h
 
-#include <any>
-#include <list>
-#include <stdio.h>
 #include "loch/lxMath.h"
+
+#include <any>
+#include <cstdio>
+#include <list>
+#include <map>
 
 enum {
   THDB3DFC_POINTS,

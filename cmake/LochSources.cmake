@@ -20,6 +20,7 @@ set(LOCH_HEADERS
     lxSetup.h
     lxSTree.h
     lxSStats.h
+    lxTriGeom.h
 )
 
 set(LOCH_SOURCES
@@ -39,4 +40,5 @@ set(LOCH_SOURCES
     lxSScene.cxx
     lxSView.cxx
     lxSStats.cxx
+    lxTriGeom.cxx
 )
