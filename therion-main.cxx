@@ -85,7 +85,7 @@ int main(int argc, char * argv[]) {
     if (thcmdln.get_version_disp_state())
     {
       thprintf(thversion_format, thversion_text);
-      thprintf("\n");
+      thprint("\n");
       thprintf("  - using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
                                                          thcs_get_proj_version_headers().c_str());
       thexit(EXIT_SUCCESS);
@@ -100,7 +100,7 @@ int main(int argc, char * argv[]) {
     
     if (thcmdln.get_help_disp_state()) 
     {
-      thprintf(thhelp_text);
+      thprint(thhelp_text);
       thexit(EXIT_SUCCESS);
     }
     
@@ -121,7 +121,7 @@ int main(int argc, char * argv[]) {
     
     // print version information
     thprintf(thversion_format, thversion_text);
-    thprintf("\n");
+    thprint("\n");
     thlog(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     if (thcs_get_proj_version() != thcs_get_proj_version_headers())
       thwarning(("Proj version mismatch: using %s, compiled against %s", thcs_get_proj_version().c_str(),
@@ -158,7 +158,7 @@ int main(int argc, char * argv[]) {
     if (sources->size() == 0)
       therror(("source files not specified"));
 #ifndef THDEBUG
-    thprintf("reading source files ... ");
+    thprint("reading source files ... ");
     thtext_inline = true;
 #endif 
 
@@ -173,13 +173,13 @@ int main(int argc, char * argv[]) {
         thcfg.get_search_path(), &thdb);
 
 #ifdef THDEBUG
-    thprintf("input read\n");
+    thprint("input read\n");
 #endif 
 
     }
 
 #ifndef THDEBUG
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif 
 
@@ -201,15 +201,15 @@ int main(int argc, char * argv[]) {
 
     // selecting objects for output
 #ifdef THDEBUG
-    thprintf("\n\nselecting export objects\n");
+    thprint("\n\nselecting export objects\n");
 #else
-    thprintf("selecting export objects ... ");
+    thprint("selecting export objects ... ");
     thtext_inline = true;
 #endif 
     thcfg.select_data();
 #ifdef THDEBUG
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif
 
@@ -221,17 +221,17 @@ int main(int argc, char * argv[]) {
     thcfg.xth_save();
 
 #ifdef THDEBUG
-    thprintf("\n\nlisting database\n");
+    thprint("\n\nlisting database\n");
     if (thverbose_mode)
       thdb.self_print(stdout);
     thdb.self_print(get_thlogfile().get_fileh());
-    thprintf("\ndatabase listed\n\n");
+    thprint("\ndatabase listed\n\n");
 #endif   
 
     // write the CPU time
     thprintf("compilation time: %.0f sec\n", difftime(time(NULL), tmUserStart));
 #ifdef THDEBUG
-    thprintf("\n");
+    thprint("\n");
 #endif   
 
     // log statistics

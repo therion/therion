@@ -93,14 +93,14 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
 
 #ifdef THDEBUG
   double sumsum = 0.0;
-  thprintf("\nBEFORE:\n");
+  thprint("\nBEFORE:\n");
   for(ii = this->data.begin(); ii != this->data.end(); ii++) {
     sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
     thprintf("   %d (+ %.0f = %.0f) [%s]\n",ii->first.ptr->id,
       ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, 
       sumsum, ii->first.ptr->fsptr->full_name);
   }
-  thprintf("\n");
+  thprint("\n");
 #endif  
 
   ii = dm->begin();

@@ -1784,7 +1784,7 @@ int thpdf(int m) {
   }
   build_pages();
 
-  thprintf("done\n");
+  thprint("done\n");
 
   return(0);
 }

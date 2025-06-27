@@ -426,7 +426,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -498,7 +498,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }

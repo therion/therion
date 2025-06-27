@@ -610,7 +610,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
                 fn = &(skit->m_pic.fname[fnx + 1]);
               }
             }
-            if (thtext_inline) thprintf("\n");
+            if (thtext_inline) thprint("\n");
             thprintf("converting %s ", fn);
             thprintf("(%.1f Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0);
             thtext_inline = true;
@@ -621,7 +621,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
               srcgif = skpic->convert("GIF", "gif", fmt::format("-resize {}", long(ns * double(skpic->width) + 0.5)));
             }
             
-            thprintf(" done\n");
+            thprint(" done\n");
             thtext_inline = false;
 
             if (srcgif != NULL) {
@@ -728,7 +728,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -863,7 +863,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                 fn = &(skit->m_pic.fname[fnx + 1]);
               }
             }
-            if (thtext_inline) thprintf("\n");
+            if (thtext_inline) thprint("\n");
             thprintf("converting %s ", fn);
             thprintf("(%.1f Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0);
             thtext_inline = true;
@@ -877,7 +877,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             if (srcgif != NULL) {              
               // Let's copy results and log-file to working directory
 #ifdef THDEBUG
-              thprintf("copying results\n");
+              thprint("copying results\n");
 #endif
               const fs::path new_file = fmt::format("{}.{:03}.gif", fnm, sknum++);
               fs::remove(new_file); // workaround for MinGW bug, can't overwrite files
@@ -885,7 +885,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s 0 {}\n", nx, ny, new_file.filename().string().c_str());
             }
 
-            thprintf(" done\n");
+            thprint(" done\n");
             thtext_inline = false;
           }
           skit++;
@@ -1178,7 +1178,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -2365,7 +2365,7 @@ if (ENC_NEW.NFSS==0) {
 //    com += " --interaction nonstopmode data.mp";
     com += " data.mp";
 #ifdef THDEBUG
-    thprintf("running metapost\n");
+    thprint("running metapost\n");
 #endif
     retcode = system(com.get_buffer());
     thexpmap_log_log_file("data.log",
@@ -2402,7 +2402,7 @@ if (ENC_NEW.NFSS==0) {
     //  com += " --interaction nonstopmode data.tex";
       com += " data.tex";
 #ifdef THDEBUG
-      thprintf("running pdftex\n");
+      thprint("running pdftex\n");
 #endif
       retcode = system(com.get_buffer());
       thexpmap_log_log_file("data.log",
@@ -2415,7 +2415,7 @@ if (ENC_NEW.NFSS==0) {
       // Let's copy results and log-file to working directory
       tmp_handle.switch_from_tmpdir();
 #ifdef THDEBUG
-      thprintf("copying results\n");
+      thprint("copying results\n");
 #endif
       fs::remove(fnm); // workaround for MinGW bug, can't overwrite files
       fs::copy(thtmp.get_file_name("data.pdf"), fnm, fs::copy_options::overwrite_existing);
@@ -2440,7 +2440,7 @@ if (ENC_NEW.NFSS==0) {
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
   
@@ -3242,7 +3242,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*
   }
   
   // potom to nastavi
-//  thprintf("\n");
+//  thprint("\n");
   cmn = 0;
   nmap = nmap - 1;
   cmap = maps;
@@ -3390,7 +3390,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
     
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }

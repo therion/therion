@@ -113,7 +113,7 @@ therion::warp::plaquette_algo::initialize( warp_proj proj )
     return false;
 
   if ( ! m_initialized ) {
-    // thprintf("plaquette_algo::initialize() \n");
+    // thprint("plaquette_algo::initialize() \n");
     size_t sz = mPairs.size();
 
     // bounding box
@@ -434,14 +434,14 @@ therion::warp::plaquette_algo::make_plaquettes( warp_proj proj )
       }
     }
     if ( node1 == NULL ) { 
-      // thprintf("Error: cannot find a 1-leg node\n");
+      // thprint("Error: cannot find a 1-leg node\n");
       return;
     }
   
     therion::warp::point_pair * node2 = line->other_end( node1 );
     therion::warp::point_pair * node10 = node1; // save starting nodes
     therion::warp::point_pair * node20 = node2;
-    // thprintf("make_plaquettes()");
+    // thprint("make_plaquettes()");
     // thprintf(" node1 %s node2 %s\n", node1->m_name.c_str(), node2->m_name.c_str() );
   
     do {
@@ -457,7 +457,7 @@ therion::warp::plaquette_algo::make_plaquettes( warp_proj proj )
 
         // thprintf("  A %s (%d)  B %s (%d) line type S\n", A->m_name.c_str(), iA, B->m_name.c_str(), iB );
         if ( iA == 1 && iB == 1 ) { 
-	  thprintf("ERROR: segments are no longer supported\n");
+	  thprint("ERROR: segments are no longer supported\n");
         } else if ( iA == 1 ) {
           //                      /
           //           A ======= B ... 

@@ -169,7 +169,7 @@ void thinit_print_open(char * s) {
     thprintf("\ninitialization file: %s\nreading\n", s);
 #else
     thprintf("initialization file: %s\n", s);
-    thprintf("reading ...");
+    thprint("reading ...");
     thtext_inline = true;
 #endif 
 }
@@ -205,12 +205,12 @@ void thinit::copy_fonts() {
 
   if (fonts_ok) return;
 
-  thprintf("copying_fonts ...\n");
+  thprint("copying_fonts ...\n");
 
   for(int index = 0; index < 5; index++) {
     thprintf("%s\n", font_dst[index].c_str());
 #ifdef THDEBUG
-    thprintf("copying font\n");
+    thprint("copying font\n");
 #endif
     const auto dst = thtmp.get_file_name(font_dst[index].c_str());
     fs::remove(dst); // workaround for MinGW bug, can't overwrite files
@@ -225,7 +225,7 @@ void thinit::copy_fonts() {
   fprintf(f,"@\"%s\\bin\\windows\\cfftot1.exe\" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9\n",thcfg.install_path.get_buffer());
   fclose(f);
 #endif
-  thprintf("done.\n");
+  thprint("done.\n");
   fonts_ok = true;
 }
 
@@ -347,7 +347,7 @@ void thinit::load()
 	  svxcom += thini.get_path_cavern();
 	  svxcom += "\" --version";  
 #ifdef THDEBUG
-	  thprintf("testing cavern\n");
+	  thprint("testing cavern\n");
 #endif
 	  if (system(svxcom.get_buffer()) == EXIT_SUCCESS) {
 			this->loopc = THINIT_LOOPC_SURVEX;
@@ -608,9 +608,9 @@ void thinit::load()
   }
   if (started) {
 #ifdef THDEBUG
-    thprintf("\n");
+    thprint("\n");
 #else
-    thprintf(" done\n");
+    thprint(" done\n");
     thtext_inline = false;
 #endif 
   }
@@ -693,10 +693,10 @@ void thinit::load()
       retcode = system(com.get_buffer());
       thprintf("checking optional fonts %s %s %s %s %s ...", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       if (retcode != EXIT_SUCCESS) {
-        thprintf(" NOT INSTALLED\n");
+        thprint(" NOT INSTALLED\n");
       } else {
         TMPFONTS.push_back(*J);
-        thprintf(" OK\n");
+        thprint(" OK\n");
       }
     } else {
       TMPFONTS.push_back(*J);
@@ -780,7 +780,7 @@ void thinit::set_proj_lib_path([[maybe_unused]] bool use_env) {  // set PROJ lib
 
 void thprint_init_file()
 {
-  thprintf(THCCC_INIT_FILE);
+  thprint(THCCC_INIT_FILE);
 }
 
 

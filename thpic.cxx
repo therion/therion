@@ -117,7 +117,7 @@ void thpic::init(const char * pfname, const char * incfnm)
   if (isspc) ccom += "\"";
   
 #ifdef THDEBUG
-  thprintf("running convert\n");
+  thprint("running convert\n");
 #endif
 
   retcode = system(ccom.get_buffer());

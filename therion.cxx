@@ -95,7 +95,7 @@ void thprint_xtherion() {
   const char * lngstr, *trnstr, * tsrc;
   thbuffer tdst;
   std::string tss;
-  thprintf("set xth(point_types) {\n");
+  thprint("set xth(point_types) {\n");
   for(i = 0; thtt_point_types[i].tok != TT_POINT_TYPE_UNKNOWN; i++) {
     already_exported = false;
     for(j = 0; j < i; j++) {
@@ -108,7 +108,7 @@ void thprint_xtherion() {
       thprintf("\t%s\n",thtt_point_types[i].s);
     }
   }
-  thprintf("}\n\nset xth(line_types) {\n");
+  thprint("}\n\nset xth(line_types) {\n");
   for(i = 0; thtt_line_types[i].tok != TT_LINE_TYPE_UNKNOWN; i++) {
     already_exported = false;
     for(j = 0; j < i; j++) {
@@ -121,7 +121,7 @@ void thprint_xtherion() {
       thprintf("\t%s\n",thtt_line_types[i].s);
     }
   }
-  thprintf("}\n\nset xth(area_types) {\n");
+  thprint("}\n\nset xth(area_types) {\n");
   for(i = 0; thtt_area_types[i].tok != TT_AREA_TYPE_UNKNOWN; i++) {
     already_exported = false;
     for(j = 0; j < i; j++) {
@@ -134,7 +134,7 @@ void thprint_xtherion() {
       thprintf("\t%s\n",thtt_area_types[i].s);
     }
   }
-  thprintf("}\n");
+  thprint("}\n");
 
   tss = "";
   const thstok * x = thlang_get_text_table();
@@ -170,7 +170,7 @@ void thprint_xth_lines() {
 void thpause_exit() {
 #ifdef THWIN32
   if (thverbose_mode && (!(thcfg.generate_xthcfg))) {
-    thprintf("Press ENTER to exit!");
+    thprint("Press ENTER to exit!");
     getchar();
   }
 #endif

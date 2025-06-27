@@ -88,7 +88,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
       fn = &(sketch->m_pic.fname[fnx + 1]);
     }
   }
-  if (thtext_inline) thprintf("\n");
+  if (thtext_inline) thprint("\n");
   thprintf("morphing %s ...", fn);
   thtext_inline = true;
 
@@ -197,7 +197,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
   this->mpic.x += this->m_origin.m_x;
   this->mpic.y -= this->m_origin.m_y;
 
-  thprintf(" done\n");
+  thprint(" done\n");
   thtext_inline = false;
 
   return &(this->mpic);

@@ -150,7 +150,7 @@ void th_init_proj(PJ * &P, std::string s) {
     -38 // PJD_ERR_FAILED_TO_LOAD_GRID is not exposed
 #endif
       ) {
-      thprintf("trying to recover from the error listed above...\n");
+      thprint("trying to recover from the error listed above...\n");
       std::smatch m1, m2;
       std::set<std::string> grids;
       // find all grid lists
@@ -187,7 +187,7 @@ void th_init_proj(PJ * &P, std::string s) {
       proj_destroy(P);
       therror(("couldn't disable network access for Proj"));
     }
-    thprintf("done\n");
+    thprint("done\n");
 
     // try once again after downloading the grids
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
@@ -216,7 +216,7 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
       therror(("couldn't enable network access for Proj"));
     }
     proj_grid_cache_set_enable(PJ_DEFAULT_CTX, 1);
-    thprintf("network access for Proj library enabled...\n");
+    thprint("network access for Proj library enabled...\n");
   } else if
 #endif
   (thcs_cfg.proj_auto_grid == GRID_WARN || thcs_cfg.proj_auto_grid == GRID_FAIL || thcs_cfg.proj_auto_grid == GRID_DOWNLOAD) {
@@ -283,7 +283,7 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
                 proj_list_destroy(ops);
                 therror(("couldn't disable network access for Proj"));
               }
-              thprintf("done\n");
+              thprint("done\n");
               break;
 #endif
           }

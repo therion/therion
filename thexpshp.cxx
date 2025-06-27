@@ -599,7 +599,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
     
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 
@@ -716,7 +716,7 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
     
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 

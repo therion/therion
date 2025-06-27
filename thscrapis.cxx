@@ -952,9 +952,9 @@ void thscrapis::outline_scan(class thscraplo * outln) {
   // ZJEDNODUSENIE
 #define print_outline(ARG) \
   oline = this->firstolseg; \
-  thprintf("\n" ARG ":\n"); \
+  thprint("\n" ARG ":\n"); \
   while (oline != NULL) { \
-  thprintf("------------------\n"); \
+  thprint("------------------\n"); \
   olineln = oline; \
   while (olineln != NULL) { \
   thprintf("%s %6.2f %6.2f\n", olineln->visible ? "SHOW" : "HIDE", olineln->x, olineln->y); \

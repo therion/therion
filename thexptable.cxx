@@ -422,7 +422,7 @@ void thexptable::process_db(class thdatabase * dbp)
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
  

@@ -132,7 +132,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     }
   }
 
-  if (thtext_inline) thprintf("\n");
+  if (thtext_inline) thprint("\n");
   thprintf("morphing %s ", fn);
   thtext_inline = true;
 
@@ -390,7 +390,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
   ptmp = T3.forward(mpic_origin);
   this->mpic.x = ptmp.m_x;
   this->mpic.y = ptmp.m_y;
-  thprintf(" done\n");
+  thprint(" done\n");
   thtext_inline = false;
   return &(this->mpic);
 

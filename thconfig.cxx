@@ -396,7 +396,7 @@ void thconfig_pifo(char * s) {
   thprintf("\nconfiguration file: %s\nreading\n",s);
 #else
   thprintf("configuration file: %s\n",s);
-  thprintf("reading ...");
+  thprint("reading ...");
   thtext_inline = true;
 #endif 
 }
@@ -640,9 +640,9 @@ void thconfig::load()
   
   if (fstarted) {
 #ifdef THDEBUG
-    thprintf("\n");
+    thprint("\n");
 #else
-    thprintf(" done\n");
+    thprint(" done\n");
     thtext_inline = false;
 #endif    
   }
@@ -793,7 +793,7 @@ void thconfig::save()
 #ifdef THDEBUG
     thprintf("\nwriting configuration file -- %s\n", this->fname.get_buffer());
 #else
-    thprintf("writing configuration file ... ");
+    thprint("writing configuration file ... ");
     thtext_inline = true;
 #endif 
 
@@ -849,9 +849,9 @@ void thconfig::save()
     fclose(cf);
     
 #ifdef THDEBUG
-    thprintf("\n");
+    thprint("\n");
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif 
 
@@ -883,9 +883,9 @@ void thconfig::xth_save()
   if (this->generate_xthcfg) {
 
 #ifdef THDEBUG
-    thprintf("\nwriting xtherion file -- .xtherion.dat\n");
+    thprint("\nwriting xtherion file -- .xtherion.dat\n");
 #else
-    thprintf("writing xtherion file ... ");
+    thprint("writing xtherion file ... ");
     thtext_inline = true;
 #endif 
 
@@ -910,9 +910,9 @@ void thconfig::xth_save()
     fclose(cf);
     
 #ifdef THDEBUG
-    thprintf("\n");
+    thprint("\n");
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif 
 

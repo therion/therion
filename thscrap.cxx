@@ -538,7 +538,7 @@ thscraplo * thscrap::get_outline() {
             co2 = co->next_scrap_line;
             search_all = true;
 #ifdef THDEBUG
-            thprintf("\tsearch all\n");
+            thprint("\tsearch all\n");
 #endif
           }
         }
@@ -1080,7 +1080,7 @@ void thscrap::process_3d() {
   if (this->d3 == TT_FALSE)
 	  return;
 
-  thprintf(".");
+  thprint(".");
 
   thscrapis is(this);
 

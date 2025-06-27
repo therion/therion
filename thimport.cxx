@@ -504,7 +504,7 @@ void thimport::import_file_img()
   // popridavame fixne body spolu s atributmi ak existuju a vytvarame
   // oba heshe
   // nakoniec pridame shots
-  // thprintf("\n\n");
+  // thprint("\n\n");
 
   img_point imgpt;
   img_errcode imgerr;
