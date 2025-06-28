@@ -29,11 +29,13 @@
 #ifndef thparse_h
 #define thparse_h
 
-#include <stdio.h>
-#include <string>
 #include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thstok.h"
+
+#include <cstdio>
+#include <span>
+#include <string>
 
 
 enum {
@@ -51,33 +53,13 @@ enum {
  * alphabetically sorted and last element should be set to
  * like TT_UNKNOWN.
  *
- * @param buffer String buffer.
+ * @param token String to find.
  * @param tab Array of token definitions.
- * @param tab_size Size of token array (ID of last element).
- *
- * @sa thmatch_token
  */
  
-int thmatch_stok(std::string_view token, const thstok *tab, std::size_t tab_size);
- 
-int thcasematch_stok(std::string_view token, const thstok *tab, std::size_t tab_size);
+int thmatch_token(std::string_view token, std::span<const thstok> tab);
 
-
-/**
- * Helper functions to determine array size.
- */
-
-template <std::size_t N>
-inline int thmatch_token(std::string_view token, const thstok (&table)[N])
-{
-  return thmatch_stok(token, table, N);
-}
-
-template <std::size_t N>
-inline int thcasematch_token(std::string_view token, const thstok (&table)[N])
-{
-  return thcasematch_stok(token, table, N);
-}
+int thcasematch_token(std::string_view token, std::span<const thstok> tab);
 
 
 /**
