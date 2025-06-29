@@ -44,28 +44,31 @@
 thmbuffer thparse_mbuff;
 
 template <typename Equality, typename Ordering>
-int binary_search_token(std::string_view token, const thstok *tab, const std::size_t tab_size, Equality equality, Ordering ordering)
+int binary_search_token(std::string_view token, std::span<const thstok> tab, Equality equality, Ordering ordering)
 {
+  if (tab.empty())
+    throw thexception(fmt::format("empty lookup table when searching for token '{}'", token));
+
   // comparator between thstok and string_view
   auto compare_thstok = [&ordering](const thstok& a, std::string_view b){ return ordering(a.s, b); };
   // binary search, we leave out the last item
-  auto it = std::lower_bound(tab, tab + tab_size - 1, token, compare_thstok);
+  auto it = std::lower_bound(tab.begin(), std::prev(tab.end()), token, compare_thstok);
   // if bound was found we also need to compare for equality
-  if (it != tab + tab_size - 1 && equality(token, it->s))
+  if (it != std::prev(tab.end()) && equality(token, it->s))
     return it->tok;
   // last item contains default value
-  return tab[tab_size - 1].tok;
+  return tab.back().tok;
 }
 
-int thmatch_stok(std::string_view token, const thstok *tab, const std::size_t tab_size)
+int thmatch_token(std::string_view token, std::span<const thstok> tab)
 {
-  return binary_search_token(token, tab, tab_size, std::equal_to<std::string_view>(), std::less<std::string_view>());
+  return binary_search_token(token, tab, std::equal_to<std::string_view>(), std::less<std::string_view>());
 }
 
 
-int thcasematch_stok(std::string_view token, const thstok *tab, const std::size_t tab_size)
+int thcasematch_token(std::string_view token, std::span<const thstok> tab)
 {
-  return binary_search_token(token, tab, tab_size, icase_equals, icase_less_than);
+  return binary_search_token(token, tab, icase_equals, icase_less_than);
 }
 
 
