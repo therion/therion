@@ -1416,7 +1416,7 @@ void convert_scraps_new() {
 
 int thconvert_eps() {
 
-  thprintf("converting scraps ... ");
+  thprint("converting scraps ... ");
 
   ALL_FONTS.clear();
   ALL_PATTERNS.clear();
@@ -1429,7 +1429,7 @@ int thconvert_eps() {
 
   convert_scraps_new();
 
-  thprintf("done\n");
+  thprint("done\n");
   return(0);
 }
 

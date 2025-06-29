@@ -444,9 +444,9 @@ thscraplp * thdb2d::insert_scraplp()
 void thdb2d::process_references()
 {
 #ifdef THDEBUG
-  thprintf("\n\nprocessing references\n");
+  thprint("\n\nprocessing references\n");
 #else
-  thprintf("processing references ... ");
+  thprint("processing references ... ");
   thtext_inline = true;
 #endif
 
@@ -501,7 +501,7 @@ void thdb2d::process_references()
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -1268,7 +1268,7 @@ void thdb2d::process_projection(thdb2dprj * prj)
   // Suppress "unused variable" warning.
   (void)old_thtext_inline;
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = old_thtext_inline;
 #endif 
   if (prj->amaxdist > 0.0) {
@@ -2634,7 +2634,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             // vytvorime z nich joiny
             
 #ifdef THDEBUG
-            thprintf("\ncreating new 2 joins:\n");
+            thprint("\ncreating new 2 joins:\n");
             thprintf("\tline %ld (%.2f,%.2f) -- line %ld (%.2f,%.2f)\n",
                 fse1->l1->id, fse1->lp1->point->xt, fse1->lp1->point->yt, 
                 fse2->l1->id, fse2->lp1->point->xt, fse2->lp1->point->yt);
@@ -3618,7 +3618,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   com += thini.get_opt_mpost();
   com += " data.mp";
 #ifdef THDEBUG
-  thprintf("running metapost\n");
+  thprint("running metapost\n");
 #endif
   retcode = system(com.get_buffer());
   thexpmap_log_log_file("data.log",

@@ -91,7 +91,7 @@ int encodings_new::get_enc_pos (int ch) {
 void encodings_new::write_enc_files() {
   if (NFSS==0) return;
 
-  thprintf("generating TeX metrics ... ");
+  thprint("generating TeX metrics ... ");
   std::string style[5] = {"rm", "it", "bf", "ss", "si"};
   std::string s, fc;
 
@@ -153,7 +153,7 @@ void encodings_new::write_enc_files() {
       H.close();
     }
   }
-  thprintf("done\n");
+  thprint("done\n");
 }
 
 int encodings_new::get_enc_count () {

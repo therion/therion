@@ -1147,11 +1147,11 @@ int thlayout::get_context()
 void thlayout::self_print_library() {
 
   thprintf("\toname = \"%s\";\n", this->get_name());
-  thprintf("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
+  thprint("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
   // decode title
   thdecode_c(&(this->db->buff_enc), this->get_title());
   thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-  thprintf("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
+  thprint("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
 
 
   thprintf("\tplayout->def_scale = %d;\n", this->def_scale);
@@ -1339,7 +1339,7 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->def_excl_pages = %d;\n", this->def_excl_pages);
   thprintf("\tplayout->excl_pages = %s;\n",(this->excl_pages ? "true" : "false"));
   if (this->excl_list == NULL) {
-    thprintf("\tplayout->excl_list = NULL;\n");
+    thprint("\tplayout->excl_list = NULL;\n");
   } else {
     thdecode_c(&(this->db->buff_enc), this->excl_list);
     thprintf("\tplayout->excl_list = \"%s\";\n", this->db->buff_enc.get_buffer());
@@ -1400,22 +1400,22 @@ void thlayout::self_print_library() {
       case TT_LAYOUT_CODE_TEX_ATLAS:
         thdecode_c(&(this->db->buff_enc), ln->line);
         if (ln->code != last_code) {
-          thprintf("\tplayout->ccode = ");
+          thprint("\tplayout->ccode = ");
           switch (ln->code) {
             case TT_LAYOUT_CODE_METAPOST:
-              thprintf("TT_LAYOUT_CODE_METAPOST");
+              thprint("TT_LAYOUT_CODE_METAPOST");
               break;
             case TT_LAYOUT_CODE_TEX_MAP:
-              thprintf("TT_LAYOUT_CODE_TEX_MAP");
+              thprint("TT_LAYOUT_CODE_TEX_MAP");
               break;
             default:
-              thprintf("TT_LAYOUT_CODE_TEX_ATLAS");
+              thprint("TT_LAYOUT_CODE_TEX_ATLAS");
               break;
           }
-          thprintf(";\n");
+          thprint(";\n");
         }
         thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-        thprintf("\tplayout->set(thcmd_option_desc(0,1),oname,TT_UTF_8,0);\n");
+        thprint("\tplayout->set(thcmd_option_desc(0,1),oname,TT_UTF_8,0);\n");
         break;
       case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
       case TT_LAYOUT_CODE_MAP_ITEM:
@@ -1428,29 +1428,29 @@ void thlayout::self_print_library() {
           thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
         }
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS)
-          thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
+          thprint("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
         else
-          thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
+          thprint("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
-              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
+              thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
               thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
-              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
+              thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
               thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
-              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
+              thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
               thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
-              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
+              thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
               thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
-              thprintf("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
+              thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
               thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
               thprintf("\tplayout->get_last_line()->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;

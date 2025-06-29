@@ -104,11 +104,11 @@ bool thdefinitely_less_than(double a, double b, double epsilon);
 
 #define thprintinfnan(cislo) {\
   if (thisnan(cislo)) \
-    thprintf("thnan"); \
+    thprint("thnan"); \
   else if (thisinf(cislo) == 1) \
-    thprintf("thinf"); \
+    thprint("thinf"); \
   else if (thisinf(cislo) == -1) \
-    thprintf("-thinf"); \
+    thprint("-thinf"); \
   else \
     thprintf("%lg",cislo);}
 

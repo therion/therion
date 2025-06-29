@@ -359,7 +359,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
   
@@ -482,7 +482,7 @@ station_name[8] = 0
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -655,7 +655,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -908,7 +908,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -1112,7 +1112,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -1455,7 +1455,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }
@@ -1942,7 +1942,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   
 #ifdef THDEBUG
 #else
-  thprintf(" done\n");
+  thprint(" done\n");
   thtext_inline = false;
 #endif
 }
@@ -2072,7 +2072,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 }

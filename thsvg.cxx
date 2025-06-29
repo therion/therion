@@ -448,9 +448,9 @@ void print_surface_bitmaps (std::ofstream &F) {
 
 void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   if (fmt == 0)
-    thprintf("making svg map ... ");
+    thprint("making svg map ... ");
   else
-    thprintf("making svg (xhtml) map ... ");
+    thprint("making svg (xhtml) map ... ");
   std::string bgcol;
   std::string unique_prefix = fname;
 
@@ -827,7 +827,7 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   }
 
   F.close();
-  thprintf("done\n");
+  thprint("done\n");
 }
 
 

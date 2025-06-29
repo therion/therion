@@ -187,33 +187,33 @@ void thgrade::start_insert()
 
 void thgrade::self_print_library() {
   thprintf("\toname = \"%s\";\n", this->get_name());
-  thprintf("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);\n");
+  thprint("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);\n");
   thdecode_c(&(this->db->buff_enc), this->get_title());
   thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-  thprintf("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
-  thprintf("\tpgrade->dls_length = ");
+  thprint("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
+  thprint("\tpgrade->dls_length = ");
   thprintinfnan(this->dls_length);
-  thprintf(";\n\tpgrade->dls_bearing = ");
+  thprint(";\n\tpgrade->dls_bearing = ");
   thprintinfnan(this->dls_bearing);
-  thprintf(";\n\tpgrade->dls_gradient = ");
+  thprint(";\n\tpgrade->dls_gradient = ");
   thprintinfnan(this->dls_gradient);
-  thprintf(";\n\tpgrade->dls_counter = ");
+  thprint(";\n\tpgrade->dls_counter = ");
   thprintinfnan(this->dls_counter);
-  thprintf(";\n\tpgrade->dls_depth = ");
+  thprint(";\n\tpgrade->dls_depth = ");
   thprintinfnan(this->dls_depth);
-  thprintf(";\n\tpgrade->dls_dx = ");
+  thprint(";\n\tpgrade->dls_dx = ");
   thprintinfnan(this->dls_dx);
-  thprintf(";\n\tpgrade->dls_dy = ");
+  thprint(";\n\tpgrade->dls_dy = ");
   thprintinfnan(this->dls_dy);
-  thprintf(";\n\tpgrade->dls_dz = ");
+  thprint(";\n\tpgrade->dls_dz = ");
   thprintinfnan(this->dls_dz);
-  thprintf(";\n\tpgrade->dls_x = ");
+  thprint(";\n\tpgrade->dls_x = ");
   thprintinfnan(this->dls_x);
-  thprintf(";\n\tpgrade->dls_y = ");
+  thprint(";\n\tpgrade->dls_y = ");
   thprintinfnan(this->dls_y);
-  thprintf(";\n\tpgrade->dls_z = ");
+  thprint(";\n\tpgrade->dls_z = ");
   thprintinfnan(this->dls_z);
-  thprintf(";\n");
+  thprint(";\n");
 }
 
 thdata thgrade::data;

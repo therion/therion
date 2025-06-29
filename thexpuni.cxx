@@ -591,7 +591,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 
@@ -694,7 +694,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
     
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 
@@ -801,7 +801,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
     
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 

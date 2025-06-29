@@ -690,10 +690,10 @@ void thdb1d::scan_data()
       thwarning(("year %.0f magnetic declination used for undated surveys", this->min_year))
     else
       thwarning(("unable to determine magnetic declination used for undated surveys"))
-    thprintf("undated surveys:\n");
+    thprint("undated surveys:\n");
     for(auto usi = undated_surveys_set.begin(); usi != undated_surveys_set.end(); usi++) {
-      thprintf(usi->c_str());
-      thprintf("\n");
+      thprint(usi->c_str());
+      thprint("\n");
     }
   }
 
@@ -909,9 +909,9 @@ void thdb1d::process_tree()
   size_t tn_stations = this->station_vec.size();
   
 #ifdef THDEBUG
-    thprintf("\n\nscanning centreline tree\n");
+    thprint("\n\nscanning centreline tree\n");
 #else
-    thprintf("scanning centreline tree ... ");
+    thprint("scanning centreline tree ... ");
     thtext_inline = true;
 #endif 
 
@@ -1066,7 +1066,7 @@ void thdb1d::process_tree()
       if (n2 == NULL) {
         throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
 //#ifdef THDEBUG
-//        thprintf("warning -- not all stations connected to the network\n");
+//        thprint("warning -- not all stations connected to the network\n");
 //#endif
         break;
       }
@@ -1164,9 +1164,9 @@ void thdb1d::process_tree()
   this->num_tree_legs = tarrows;
   
 #ifdef THDEBUG
-    thprintf("\nend of scanning data tree\n\n");
+    thprint("\nend of scanning data tree\n\n");
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif
 }
@@ -1255,9 +1255,9 @@ void thdb1d_scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) {
 void thdb1d::process_survey_stat() {
 
 #ifdef THDEBUG
-    thprintf("\n\ncalculating basic statistics\n");
+    thprint("\n\ncalculating basic statistics\n");
 #else
-    thprintf("calculating basic statistics ... ");
+    thprint("calculating basic statistics ... ");
     thtext_inline = true;
 #endif 
 
@@ -1365,9 +1365,9 @@ void thdb1d::process_survey_stat() {
 
   
 #ifdef THDEBUG
-    thprintf("\nend of basic statistics calculation\n\n");
+    thprint("\nend of basic statistics calculation\n\n");
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif
 }
@@ -1645,9 +1645,9 @@ void thdb1d::find_loops()
     lastlegseries, currentcross;
 
 #ifdef THDEBUG
-    thprintf("\n\nsearching for centerline loops\n");
+    thprint("\n\nsearching for centerline loops\n");
 #else
-    thprintf("searching for centerline loops ... ");
+    thprint("searching for centerline loops ... ");
     thtext_inline = true;
 #endif 
     
@@ -1836,8 +1836,8 @@ void thdb1d::find_loops()
   }
 
 #ifdef THDEBUG
-  thprintf("\n\n\nLOOP CLOSURE DEBUG\n");
-  thprintf("\nCROSSES:\n");
+  thprint("\n\n\nLOOP CLOSURE DEBUG\n");
+  thprint("\nCROSSES:\n");
   for (i = 0; i < lastcross; i++) {
     thprintf("%ld: %s %ld [",i, lccrosses[i].is_fixed ? "F" : "V", lccrosses[i].narrows);
     cca = lccrosses[i].first_arrow;
@@ -1849,7 +1849,7 @@ void thdb1d::find_loops()
       this->station_vec[lccrosses[i].station_uid - 1].name,
       this->station_vec[lccrosses[i].station_uid - 1].survey->name);
   }
-  thprintf("\nSERIES:\n");
+  thprint("\nSERIES:\n");
   for (i = 0; i < nseries; i++) {
     thprintf("%ld: %ld - %ld [%ld legs",i,lcseries[i].from,lcseries[i].to,lcseries[i].numlegs);
     clcleg = lcseries[i].first_leg;
@@ -1864,7 +1864,7 @@ void thdb1d::find_loops()
         this->station_vec[clcleg->to_uid - 1].survey->name);
       clcleg = clcleg->next_series_leg;
     }
-    thprintf("]\n");
+    thprint("]\n");
   }
 #endif  
 
@@ -2042,7 +2042,7 @@ void thdb1d::find_loops()
   // vypise okruhy na zaklade serii
   lli = all_loop_list.begin();
   i = 0;
-  thprintf("\nSERIES LOOPS:\n");
+  thprint("\nSERIES LOOPS:\n");
   while (lli != all_loop_list.end()) {
     lsi = all_loop_set.find(*lli);
     thprintf("%ld[%ld] %s %s %ld: ", lli->id, lli->old_id, lli->is_new ? "NEW" : "OLD" , lli->from_cross->id != lli->to_cross->id ? "OPN" : "CLS", lli->size);
@@ -2072,7 +2072,7 @@ void thdb1d::find_loops()
       }
       cca = cca->next_arrow;
     }
-    thprintf("\n");
+    thprint("\n");
     lli++;
     i++;
   }
@@ -2124,7 +2124,7 @@ void thdb1d::find_loops()
 
 
 #ifdef THDEBUG
-  thprintf("\nSHOT LOOPS:\n");
+  thprint("\nSHOT LOOPS:\n");
   dbli = this->loop_list.begin();
   i = 0;
   while (dbli != this->loop_list.end()) {
@@ -2143,7 +2143,7 @@ void thdb1d::find_loops()
       }
       ptdbl = ptdbl->next_leg;
     }
-    thprintf("\n");
+    thprint("\n");
     dbli++;
     i++;
   }
@@ -2157,13 +2157,13 @@ void thdb1d::find_loops()
   delete [] lccrossarrows;
 
 #ifdef THDEBUG    
-  thprintf("\nEND OF LOOP CLOSURE DEBUG\n");
+  thprint("\nEND OF LOOP CLOSURE DEBUG\n");
 #endif
 
 #ifdef THDEBUG
-    thprintf("\nend of loops searching\n\n");
+    thprint("\nend of loops searching\n\n");
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif
     
@@ -2178,9 +2178,9 @@ void thdb1d::close_loops()
   long i;
 
 #ifdef THDEBUG
-    thprintf("\n\ncalculating station coordinates\n");
+    thprint("\n\ncalculating station coordinates\n");
 #else
-    thprintf("calculating station coordinates ... ");
+    thprint("calculating station coordinates ... ");
     thtext_inline = true;
 #endif 
   
@@ -2550,7 +2550,7 @@ void thdb1d::close_loops()
           i = start_i - 1; 
         if (sumlegs < 1.0) {
 #ifdef THDEBUG
-          thprintf("ERRLEG UNRECOVERED!\n");
+          thprint("ERRLEG UNRECOVERED!\n");
 #endif				
           unrecover = end_i;
         }
@@ -2578,9 +2578,9 @@ void thdb1d::close_loops()
   }
 
 #ifdef THDEBUG
-  thprintf("\nend of station coordinates calculation\n\n");
+  thprint("\nend of station coordinates calculation\n\n");
 #else
-  thprintf("done\n");
+  thprint("done\n");
   thtext_inline = false;
 #endif
 
@@ -3073,12 +3073,12 @@ void thdb1d::process_xelev()
   unsigned long tn_stations = this->station_vec.size();
 
 #ifdef THDEBUG
-    thprintf("\n\nprocessing extended elevation\n");
+    thprint("\n\nprocessing extended elevation\n");
 #else
-    thprintf("processing extended elevation ... ");
+    thprint("processing extended elevation ... ");
     thtext_inline = true;
     if (thcfg.log_extend) {
-      thprintf("\n");
+      thprint("\n");
     }
 #endif 
     
@@ -3502,7 +3502,7 @@ void thdb1d::process_xelev()
           prev_id = current_node->last_arrow->end_node->id;
           if (current_node->last_arrow->leg->leg->extend_ratio != 1.0)
             thprintf(" (%.0f%%)", current_node->last_arrow->leg->leg->extend_ratio * 100.0);
-          thprintf("\n");
+          thprint("\n");
         }
       }
 
@@ -3573,9 +3573,9 @@ void thdb1d::process_xelev()
   }
 
 #ifdef THDEBUG
-    thprintf("\nend of extended elevation\n");
+    thprint("\nend of extended elevation\n");
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif
   

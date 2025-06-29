@@ -279,20 +279,20 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
           if ( fabs(v1) < 0.5 || fabs(v2) < 0.5 ) {
             if ( fabs(v1) < 0.1 && fabs(v2) < 0.1 ) {
               if ( v1 * v2 < 0.0 ) { // vertical opposite
-                // thprintf("horizontal\n");
+                // thprint("horizontal\n");
                 u3.m_x = u.m_x + ((v2>0.0)? 1.0 : -1.0) * du;
                 u3.m_y = u.m_y;
                 x3.m_x = x.m_x + ((v2>0.0)? 1.0 : -1.0) * dx;
                 x3.m_y = x.m_y;
               } else {
-                thprintf("warning: closed up vertical angle\n");
+                thprint("warning: closed up vertical angle\n");
                 u3.m_x = u.m_x;
                 u3.m_y = (u1.m_y + u2.m_y)/2.0;
                 x3.m_x = x.m_x;
                 x3.m_y = (x1.m_y + x2.m_y)/2.0;
               }
             } else {
-              // thprintf("bisector\n");
+              // thprint("bisector\n");
               u3.m_x = u.m_x + vu.m_y * du;
               u3.m_y = u.m_y - vu.m_x * du;
               thvec2 vx = x2/x2.length() - x1/x1.length();
@@ -300,7 +300,7 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
               x3.m_y = x.m_y - vx.m_x * dx;
             }
           } else {
-            // thprintf("vertical\n");
+            // thprint("vertical\n");
             u3.m_x = u.m_x;
             u3.m_y = u.m_y + ((v2>0.0)? 1.0 : -1.0) * du;
             x3.m_x = x.m_x;
@@ -319,7 +319,7 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
     point_pair * p2 = mLines[i]->other_end( this );
     thprintf("%s ", p2->m_name.c_str() );
   }
-  thprintf("\n");
+  thprint("\n");
   */
 
   // check that all the lines from this point that are not centerlines have a "single"

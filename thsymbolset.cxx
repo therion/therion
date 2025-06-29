@@ -1767,7 +1767,7 @@ void export_all_symbols()
   //    com += " --interaction nonstopmode data.mp";
     com += " data.mp";
 #ifdef THDEBUG
-    thprintf("running metapost\n");
+    thprint("running metapost\n");
 #endif
     retcode = system(com.get_buffer());
     thsymbolset_log_log_file("data.log",

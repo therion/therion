@@ -161,10 +161,10 @@ void thexporter::export_db(class thdatabase * dp)
   if (thcfg.crc_generate || thcfg.crc_verify) {
 	  bool ok(true), cok(true);
 	  if (thcfg.crc_generate)
-		  thprintf("generating");
+		  thprint("generating");
 	  else
-		  thprintf("checking");
-	  thprintf(" CRC32 of all output files ... \n");
+		  thprint("checking");
+	  thprint(" CRC32 of all output files ... \n");
 	  for(ii = this->xlist.begin(); ii != this->xlist.end(); ii++) {
 		  cok = (*ii)->check_crc();
 		  ok = ok && cok;
@@ -173,7 +173,7 @@ void thexporter::export_db(class thdatabase * dp)
 		  }
 
 	  }
-	  thprintf("done.\n");
+	  thprint("done.\n");
 	  if (!ok) therror(("CRC32 checks not passed.\n"));
   }
 

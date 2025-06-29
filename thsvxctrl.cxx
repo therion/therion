@@ -294,17 +294,17 @@ void thsvxctrl::write_survey_fix(thdatafix * fixp)
 void thsvxctrl::process_survey_data(class thdatabase * dbp)
 {
 #ifdef THDEBUG
-    thprintf("\n\nprocessing survey data\n");
+    thprint("\n\nprocessing survey data\n");
 #else
-    thprintf("processing survey data ... ");
+    thprint("processing survey data ... ");
     thtext_inline = true;
 #endif 
   // first check if any survey data
   if (dbp->db1d.station_vec.size() == 0) {
 #ifdef THDEBUG
-    thprintf("no survey data\n");
+    thprint("no survey data\n");
 #else
-    thprintf("no data.\n");
+    thprint("no data.\n");
     thtext_inline = false;
 #endif 
     return;
@@ -313,7 +313,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   // first create survex file
 #ifdef THDEBUG
 #else
-//   thprintf("writing ... ");
+//   thprint("writing ... ");
 #endif
   const char * svxfn = thtmp.get_file_name("data.svx");
   this->svxf = fopen(svxfn,"w");
@@ -403,9 +403,9 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   svxcom += svxfn;
   
 #ifdef THDEBUG
-  thprintf("running cavern\n");
+  thprint("running cavern\n");
 #else
-//    thprintf("processing ... ");
+//    thprint("processing ... ");
 #endif
   retcode = system(svxcom.get_buffer());
 
@@ -456,7 +456,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //   svxcom += thtmp.get_file_name("data.pos");
 // 
 // #ifdef THDEBUG
-//   thprintf("running 3dtopos\n");
+//   thprint("running 3dtopos\n");
 // #endif
 //   retcode = system(svxcom.get_buffer());
 // 
@@ -473,7 +473,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 // //   svxcom += " ";
 // //   svxcom += wdir.get_buffer();
 // // #ifdef THDEBUG
-// //   thprintf("copying results\n");
+// //   thprint("copying results\n");
 // // #endif
 // // 
 // //   retcode = system(svxcom.get_buffer());
@@ -484,7 +484,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //   
 // #ifdef THDEBUG
 // #else
-// //    thprintf("reading ... ");
+// //    thprint("reading ... ");
 // #endif 
 //   // import survex export
 //   std::ifstream posf;
@@ -544,7 +544,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 
 #ifdef THDEBUG
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif 
 
@@ -768,7 +768,7 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 								t.nlegs++;
 							}
 							else {
-//								thprintf("LEG not found!!!\n");
+//								thprint("LEG not found!!!\n");
 							}
 //							thprintf("TO: %s %lu\n", b.get_buffer()[i], st);
 						}
