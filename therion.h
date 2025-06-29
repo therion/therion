@@ -38,16 +38,16 @@
 #include <fmt/printf.h>
 
 #ifdef THDEBUG
-#define thprint_error_src() thprint2err(fmt::sprintf("%s%s (" __FILE__ ":%d): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
+#define thprint_error_src() thprint2err(fmt::format("{}{} (" __FILE__ ":{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
 #else
-#define thprint_error_src() thprint2err(fmt::sprintf("%s%s: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd))
+#define thprint_error_src() thprint2err(fmt::format("{}{}: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd))
 #endif
 
 
 #ifdef THDEBUG
-#define thprint_warning_src() thprint2err(fmt::sprintf("%s%s (" __FILE__ ":%d): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
+#define thprint_warning_src() thprint2err(fmt::format("{}{} (" __FILE__ ":{}): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
 #else
-#define thprint_warning_src() thprint2err(fmt::sprintf("%s%s: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd))
+#define thprint_warning_src() thprint2err(fmt::format("{}{}: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd))
 #endif
 
 /**
@@ -144,7 +144,7 @@ extern int therion_exit_state;
 void thprint_environment();
 void thprint_xtherion();
 
-#define thassert(expr) {if (!(expr)) {thprint2err(fmt::sprintf("%s%s (" __FILE__ ":%d): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__));exit(EXIT_FAILURE);}}
+#define thassert(expr) {if (!(expr)) {thprint2err(fmt::format("{}{} (" __FILE__ ":{}): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__));exit(EXIT_FAILURE);}}
 
 #endif
 
