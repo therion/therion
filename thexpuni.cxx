@@ -435,9 +435,9 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   this->register_output(fnm);
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 
@@ -628,9 +628,9 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
   this->register_output(fnm);
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 
@@ -722,9 +722,9 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
   this->register_output(fnm);
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 

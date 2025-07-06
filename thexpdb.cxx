@@ -134,9 +134,9 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   ni = dbp->db1d.get_tree_size();
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -437,9 +437,9 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
   const char * fnm = this->get_output("cave.csv");
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif
 

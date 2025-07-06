@@ -575,7 +575,6 @@ void thimport::import_file_img()
           zb = fmt::sprintf("%.16g", imgpt.z + this->calib_z);
           tmpsurvey = this->db->csurveyptr;
           new_name = this->station_name(stnm, pimg->separator, &tmpsst);
-          // thprintf("%s -> %s\n", pimg->label, new_name.c_str());
           if (tmpsst.survey != NULL) {
             this->db->csurveyptr = tmpsst.survey;
           } else {

@@ -166,9 +166,9 @@ static const thstok thtt_initcmd[] = {
 
 void thinit_print_open(char * s) {
 #ifdef THDEBUG
-    thprintf("\ninitialization file: %s\nreading\n", s);
+    thprint(fmt::format("\ninitialization file: {}\nreading\n", s));
 #else
-    thprintf("initialization file: %s\n", s);
+    thprint(fmt::format("initialization file: {}\n", s));
     thprint("reading ...");
     thtext_inline = true;
 #endif 
@@ -208,7 +208,7 @@ void thinit::copy_fonts() {
   thprint("copying_fonts ...\n");
 
   for(int index = 0; index < 5; index++) {
-    thprintf("%s\n", font_dst[index].c_str());
+    thprint(fmt::format("{}\n", font_dst[index]));
 #ifdef THDEBUG
     thprint("copying font\n");
 #endif
@@ -691,7 +691,7 @@ void thinit::load()
     //  com += " --interaction nonstopmode data.tex";
       com += " --no-mktex=tfm fonttest.tex";
       retcode = system(com.get_buffer());
-      thprintf("checking optional fonts %s %s %s %s %s ...", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
+      thprint(fmt::format("checking optional fonts {} {} {} {} {} ...", J->rm, J->it, J->bf, J->ss, J->si));
       if (retcode != EXIT_SUCCESS) {
         thprint(" NOT INSTALLED\n");
       } else {

@@ -393,9 +393,9 @@ char * thconfig::get_initialization_path()
 
 void thconfig_pifo(char * s) {
 #ifdef THDEBUG
-  thprintf("\nconfiguration file: %s\nreading\n",s);
+  thprint(fmt::format("\nconfiguration file: {}\nreading\n",s));
 #else
-  thprintf("configuration file: %s\n",s);
+  thprint(fmt::format("configuration file: {}\n",s));
   thprint("reading ...");
   thtext_inline = true;
 #endif 
@@ -791,7 +791,7 @@ void thconfig::save()
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_GENERATE)) {
   
 #ifdef THDEBUG
-    thprintf("\nwriting configuration file -- %s\n", this->fname.get_buffer());
+    thprint(fmt::format("\nwriting configuration file -- {}\n", this->fname.get_buffer()));
 #else
     thprint("writing configuration file ... ");
     thtext_inline = true;

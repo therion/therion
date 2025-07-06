@@ -186,10 +186,10 @@ void thgrade::start_insert()
 }
 
 void thgrade::self_print_library() {
-  thprintf("\toname = \"%s\";\n", this->get_name());
+  thprint(fmt::format("\toname = \"{}\";\n", this->get_name()));
   thprint("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);\n");
   thdecode_c(&(this->db->buff_enc), this->get_title());
-  thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\toname = \"{}\";\n", this->db->buff_enc.get_buffer()));
   thprint("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
   thprint("\tpgrade->dls_length = ");
   thprintinfnan(this->dls_length);

@@ -186,7 +186,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
 void thprint_encodings()
 {
   for(int i = 0; i <= TT_UTF_8; i++) {
-    thprintf("%s\n", thtt_encoding[i].s);
+    thprint(fmt::format("{}\n", thtt_encoding[i].s));
   }
 }
 

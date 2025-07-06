@@ -351,7 +351,7 @@ void thinput::open_file(char * fname)
         this->pifoproc = NULL;
       }
 #ifdef THDEBUG
-      thprintf("open file -- %s\n", this->last_ptr->name.get_buffer());
+      thprint(fmt::format("open file -- {}\n", this->last_ptr->name.get_buffer()));
 #endif
     }
   }
@@ -363,7 +363,7 @@ void thinput::close_file()
 {
   if (this->last_ptr->sh.is_open()) {
 #ifdef THDEBUG
-    thprintf("close file -- %s\n", this->last_ptr->name.get_buffer());
+    thprint(fmt::format("close file -- {}\n", this->last_ptr->name.get_buffer()));
 #endif
     this->last_ptr->close();
     if (this->last_ptr->prev_ptr != NULL) {

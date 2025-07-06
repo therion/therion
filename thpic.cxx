@@ -87,7 +87,6 @@ void thpic::init(const char * pfname, const char * incfnm)
   auto pict_path_str = pict_path.string();
   std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
   this->fname = thdb.strstore(pict_path_str.c_str());
-  // thprintf("\npict name: %s\n", this->fname);  
 
   thbuffer ccom;
   int retcode;

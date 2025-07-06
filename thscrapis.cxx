@@ -957,7 +957,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
   thprint("------------------\n"); \
   olineln = oline; \
   while (olineln != NULL) { \
-  thprintf("%s %6.2f %6.2f\n", olineln->visible ? "SHOW" : "HIDE", olineln->x, olineln->y); \
+  thprint(fmt::format("{} {:6.2f} {:6.2f}\n", olineln->visible ? "SHOW" : "HIDE", olineln->x, olineln->y)); \
   olineln = olineln->next; \
   } \
   oline = oline->next_segment; \
@@ -1367,7 +1367,6 @@ void thscrapis::end_bp()
   this->firstbp = cbp;
   it++;
   while (it != this->bp_map.end()) {
-    //    thprintf("BP: %.2f %.2f %.2f\n", cbp->x, cbp->y, cbp->z);
     cbp->next = &(it->second);
     cbp = cbp->next;
     it++;
@@ -1476,7 +1475,6 @@ void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, dou
   iz = 0.0;
   id = 0.0;
   thscrapisbp * cbp = this->firstbp;
-  //  thprintf("interpolation %.2f %.2f\n", x, y);
   while (cbp != NULL) {
     dx = x - cbp->x;
     dy = y - cbp->y;
@@ -1496,7 +1494,6 @@ void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, dou
       sumdw += cw;
       anyd = true;
     }
-    //    thprintf("inserting z: %.2f %.2f -> %.2f x %.2f\n", cbp->x, cbp->y, cw, cbp->z);
     iz += cw * cbp->z;
     sumw += cw;
     cbp = cbp->next;

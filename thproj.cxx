@@ -173,10 +173,10 @@ void th_init_proj(PJ * &P, std::string s) {
     }
     for (auto & f: grids) {
 #if PROJ_VER >= 8  // supported since 7.1.0
-      thprintf("downloading the grid %s from %s into %s...\n", f.c_str(), proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
-                                                                proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
+      thprint(fmt::format("downloading the grid {} from {} into {}...\n", f, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+                                                                proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0)));
 #else
-      thprintf("downloading the grid %s...\n", f.c_str());
+      thprint(fmt::format("downloading the grid {}...\n", f));
 #endif
       if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
         proj_destroy(P);
@@ -268,10 +268,10 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
                 therror(("couldn't enable network access for Proj"));
               }
 #if PROJ_VER >= 8  // supported since 7.1.0
-              thprintf("downloading the grid %s from %s into %s...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
-                                                                        proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
+              thprint(fmt::format("downloading the grid {} from {} into {}...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+                                                                        proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0)));
 #else
-              thprintf("downloading the grid %s... ", url);
+              thprint(fmt::format("downloading the grid {}... ", url));
 #endif
               if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
                 proj_destroy(P_tmp);
