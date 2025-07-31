@@ -1146,250 +1146,250 @@ int thlayout::get_context()
 
 void thlayout::self_print_library() {
 
-  thprintf("\toname = \"%s\";\n", this->get_name());
+  thprint(fmt::format("\toname = \"{}\";\n", this->get_name()));
   thprint("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
   // decode title
   thdecode_c(&(this->db->buff_enc), this->get_title());
-  thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\toname = \"{}\";\n", this->db->buff_enc.get_buffer()));
   thprint("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
 
 
-  thprintf("\tplayout->def_scale = %d;\n", this->def_scale);
-  thprintf("\tplayout->scale = %lg;\n",this->scale);
-  thprintf("\tplayout->def_base_scale = %d;\n", this->def_base_scale);
-  thprintf("\tplayout->base_scale = %lg;\n",this->base_scale);
+  thprint(fmt::format("\tplayout->def_scale = {};\n", this->def_scale));
+  thprint(fmt::format("\tplayout->scale = {};\n",this->scale));
+  thprint(fmt::format("\tplayout->def_base_scale = {};\n", this->def_base_scale));
+  thprint(fmt::format("\tplayout->base_scale = {};\n",this->base_scale));
 
-  thprintf("\tplayout->def_rotate = %d;\n", this->def_rotate);
-  thprintf("\tplayout->rotate = %lg;\n",this->rotate);
+  thprint(fmt::format("\tplayout->def_rotate = {};\n", this->def_rotate));
+  thprint(fmt::format("\tplayout->rotate = {};\n",this->rotate));
 
-  thprintf("\tplayout->def_page_setup = %d;\n", this->def_page_setup);
-  thprintf("\tplayout->hsize = %lg;\n",this->hsize);
-  thprintf("\tplayout->vsize = %lg;\n",this->vsize);
-  thprintf("\tplayout->paphs = %lg;\n",this->paphs);
-  thprintf("\tplayout->papvs = %lg;\n",this->papvs);
-  thprintf("\tplayout->paghs = %lg;\n",this->paghs);
-  thprintf("\tplayout->pagvs = %lg;\n",this->pagvs);
-  thprintf("\tplayout->marts = %lg;\n",this->marts);
-  thprintf("\tplayout->marls = %lg;\n",this->marls);
+  thprint(fmt::format("\tplayout->def_page_setup = {};\n", this->def_page_setup));
+  thprint(fmt::format("\tplayout->hsize = {};\n",this->hsize));
+  thprint(fmt::format("\tplayout->vsize = {};\n",this->vsize));
+  thprint(fmt::format("\tplayout->paphs = {};\n",this->paphs));
+  thprint(fmt::format("\tplayout->papvs = {};\n",this->papvs));
+  thprint(fmt::format("\tplayout->paghs = {};\n",this->paghs));
+  thprint(fmt::format("\tplayout->pagvs = {};\n",this->pagvs));
+  thprint(fmt::format("\tplayout->marts = {};\n",this->marts));
+  thprint(fmt::format("\tplayout->marls = {};\n",this->marls));
 
-  thprintf("\tplayout->color_map_bg.defined = %d;\n", this->color_map_bg.defined);
-  thprintf("\tplayout->color_map_bg.R = %lg;\n",this->color_map_bg.R);
-  thprintf("\tplayout->color_map_bg.G = %lg;\n",this->color_map_bg.G);
-  thprintf("\tplayout->color_map_bg.B = %lg;\n",this->color_map_bg.B);
-  thprintf("\tplayout->color_map_bg.A = %lg;\n",this->color_map_bg.A);
+  thprint(fmt::format("\tplayout->color_map_bg.defined = {};\n", this->color_map_bg.defined));
+  thprint(fmt::format("\tplayout->color_map_bg.R = {};\n",this->color_map_bg.R));
+  thprint(fmt::format("\tplayout->color_map_bg.G = {};\n",this->color_map_bg.G));
+  thprint(fmt::format("\tplayout->color_map_bg.B = {};\n",this->color_map_bg.B));
+  thprint(fmt::format("\tplayout->color_map_bg.A = {};\n",this->color_map_bg.A));
 
-  thprintf("\tplayout->color_map_fg.defined = %d;\n", this->color_map_fg.defined);
-  thprintf("\tplayout->color_crit = %d;\n", this->color_crit);
+  thprint(fmt::format("\tplayout->color_map_fg.defined = {};\n", this->color_map_fg.defined));
+  thprint(fmt::format("\tplayout->color_crit = {};\n", this->color_crit));
   if (this->color_crit_fname != NULL)
-    thprintf("\tplayout->color_crit_fname = \"%s\";\n", this->color_crit_fname);
-  thprintf("\tplayout->color_map_fg.R = %lg;\n",this->color_map_fg.R);
-  thprintf("\tplayout->color_map_fg.G = %lg;\n",this->color_map_fg.G);
-  thprintf("\tplayout->color_map_fg.B = %lg;\n",this->color_map_fg.B);
-  thprintf("\tplayout->color_map_fg.A = %lg;\n",this->color_map_fg.A);
+    thprint(fmt::format("\tplayout->color_crit_fname = \"{}\";\n", this->color_crit_fname));
+  thprint(fmt::format("\tplayout->color_map_fg.R = {};\n",this->color_map_fg.R));
+  thprint(fmt::format("\tplayout->color_map_fg.G = {};\n",this->color_map_fg.G));
+  thprint(fmt::format("\tplayout->color_map_fg.B = {};\n",this->color_map_fg.B));
+  thprint(fmt::format("\tplayout->color_map_fg.A = {};\n",this->color_map_fg.A));
 
-  thprintf("\tplayout->color_preview_below.defined = %d;\n", this->color_preview_below.defined);
-  thprintf("\tplayout->color_preview_below.R = %lg;\n",this->color_preview_below.R);
-  thprintf("\tplayout->color_preview_below.G = %lg;\n",this->color_preview_below.G);
-  thprintf("\tplayout->color_preview_below.B = %lg;\n",this->color_preview_below.B);
-  thprintf("\tplayout->color_preview_below.A = %lg;\n",this->color_preview_below.A);
+  thprint(fmt::format("\tplayout->color_preview_below.defined = {};\n", this->color_preview_below.defined));
+  thprint(fmt::format("\tplayout->color_preview_below.R = {};\n",this->color_preview_below.R));
+  thprint(fmt::format("\tplayout->color_preview_below.G = {};\n",this->color_preview_below.G));
+  thprint(fmt::format("\tplayout->color_preview_below.B = {};\n",this->color_preview_below.B));
+  thprint(fmt::format("\tplayout->color_preview_below.A = {};\n",this->color_preview_below.A));
 
-  thprintf("\tplayout->color_preview_above.defined = %d;\n", this->color_preview_above.defined);
-  thprintf("\tplayout->color_preview_above.R = %lg;\n",this->color_preview_above.R);
-  thprintf("\tplayout->color_preview_above.G = %lg;\n",this->color_preview_above.G);
-  thprintf("\tplayout->color_preview_above.B = %lg;\n",this->color_preview_above.B);
-  thprintf("\tplayout->color_preview_above.A = %lg;\n",this->color_preview_above.A);
+  thprint(fmt::format("\tplayout->color_preview_above.defined = {};\n", this->color_preview_above.defined));
+  thprint(fmt::format("\tplayout->color_preview_above.R = {};\n",this->color_preview_above.R));
+  thprint(fmt::format("\tplayout->color_preview_above.G = {};\n",this->color_preview_above.G));
+  thprint(fmt::format("\tplayout->color_preview_above.B = {};\n",this->color_preview_above.B));
+  thprint(fmt::format("\tplayout->color_preview_above.A = {};\n",this->color_preview_above.A));
 
-  thprintf("\tplayout->def_overlap = %d;\n", this->def_overlap);
-  thprintf("\tplayout->overlap = %lg;\n",this->overlap);
+  thprint(fmt::format("\tplayout->def_overlap = {};\n", this->def_overlap));
+  thprint(fmt::format("\tplayout->overlap = {};\n",this->overlap));
 
-  thprintf("\tplayout->def_scale_bar = %d;\n", this->def_scale_bar);
-  thprintf("\tplayout->scale_bar = %lg;\n",this->scale_bar);
+  thprint(fmt::format("\tplayout->def_scale_bar = {};\n", this->def_scale_bar));
+  thprint(fmt::format("\tplayout->scale_bar = {};\n",this->scale_bar));
 
-  thprintf("\tplayout->def_transparency = %d;\n", this->def_transparency);
-  thprintf("\tplayout->transparency = %s;\n",(this->transparency ? "true" : "false"));
+  thprint(fmt::format("\tplayout->def_transparency = {};\n", this->def_transparency));
+  thprint(fmt::format("\tplayout->transparency = {};\n",(this->transparency ? "true" : "false")));
 
-  thprintf("\tplayout->def_sketches = %d;\n", this->def_sketches);
-  thprintf("\tplayout->sketches = %s;\n",(this->sketches ? "true" : "false"));
+  thprint(fmt::format("\tplayout->def_sketches = {};\n", this->def_sketches));
+  thprint(fmt::format("\tplayout->sketches = {};\n",(this->sketches ? "true" : "false")));
 
-  thprintf("\tplayout->def_legend = %d;\n", this->def_legend);
-  thprintf("\tplayout->legend = %s;\n",(
+  thprint(fmt::format("\tplayout->def_legend = {};\n", this->def_legend));
+  thprint(fmt::format("\tplayout->legend = {};\n",(
     this->legend == TT_LAYOUT_LEGEND_OFF ? "TT_LAYOUT_LEGEND_OFF" : (
     this->legend == TT_LAYOUT_LEGEND_ON ? "TT_LAYOUT_LEGEND_ON" : "TT_LAYOUT_LEGEND_ALL"
-    )));
+    ))));
 
-  thprintf("\tplayout->def_survey_level = %d;\n", this->def_survey_level);
-  thprintf("\tplayout->survey_level = %d;\n", this->survey_level);
+  thprint(fmt::format("\tplayout->def_survey_level = {};\n", this->def_survey_level));
+  thprint(fmt::format("\tplayout->survey_level = {};\n", this->survey_level));
 
-  thprintf("\tplayout->def_color_legend = %d;\n", this->def_color_legend);
-  thprintf("\tplayout->color_legend = %d;\n", this->color_legend);
+  thprint(fmt::format("\tplayout->def_color_legend = {};\n", this->def_color_legend));
+  thprint(fmt::format("\tplayout->color_legend = {};\n", this->color_legend));
 
-  thprintf("\tplayout->def_color_model = %d;\n", this->def_color_model);
-  thprintf("\tplayout->color_model = %d;\n", this->color_model);
-
-
-  thprintf("\tplayout->def_legend_width = %d;\n", this->def_legend_width);
-  thprintf("\tplayout->legend_width = %lg;\n",this->legend_width);
-
-  thprintf("\tplayout->def_legend_columns = %d;\n", this->def_legend_columns);
-  thprintf("\tplayout->legend_columns = %d;\n",this->legend_columns);
-
-  thprintf("\tplayout->def_map_header = %d;\n", this->def_map_header);
-  thprintf("\tplayout->map_header = %d;\n",this->map_header);
-  thprintf("\tplayout->map_header_x = %lg;\n",this->map_header_x);
-  thprintf("\tplayout->map_header_y = %lg;\n",this->map_header_y);
-
-  thprintf("\tplayout->def_debug = %d;\n", this->def_debug);
-  thprintf("\tplayout->debug = %d;\n",this->debug);
-
-  thprintf("\tplayout->def_max_explos = %d;\n", this->def_max_explos);
-  thprintf("\tplayout->max_explos = %d;\n",this->max_explos);
-  thprintf("\tplayout->def_max_topos = %d;\n", this->def_max_topos);
-  thprintf("\tplayout->max_topos = %d;\n",this->max_topos);
-  thprintf("\tplayout->def_max_cartos = %d;\n", this->def_max_cartos);
-  thprintf("\tplayout->max_cartos = %d;\n",this->max_cartos);
-  thprintf("\tplayout->def_max_copys = %d;\n", this->def_max_copys);
-  thprintf("\tplayout->max_copys = %d;\n",this->max_copys);
-
-  thprintf("\tplayout->def_explo_lens = %d;\n",this->def_explo_lens);
-  thprintf("\tplayout->explo_lens = %d;\n",this->explo_lens);
-  thprintf("\tplayout->def_topo_lens = %d;\n",this->def_topo_lens);
-  thprintf("\tplayout->topo_lens = %d;\n",this->topo_lens);
-  thprintf("\tplayout->def_carto_lens = %d;\n",this->def_carto_lens);
-  thprintf("\tplayout->carto_lens = %d;\n",this->carto_lens);
-  thprintf("\tplayout->def_copy_lens = %d;\n",this->def_copy_lens);
-  thprintf("\tplayout->copy_lens = %d;\n",this->copy_lens);
-
-  thprintf("\tplayout->def_lang = %d;\n", this->def_lang);
-  thprintf("\tplayout->lang = %s;\n",thlang_getcxxid(this->lang));
-
-  thprintf("\tplayout->def_units = %d;\n", this->def_units);
-  thprintf("\tplayout->units.units = %d;\n",this->units.units);
-
-  thprintf("\tplayout->def_layers = %d;\n", this->def_layers);
-  thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
-
-  thprintf("\tplayout->def_geospatial = %d;\n", this->def_geospatial);
-  thprintf("\tplayout->geospatial = %s;\n",(this->geospatial ? "true" : "false"));
-
-  thprintf("\tplayout->def_map_header_bg = %d;\n", this->def_map_header_bg);
-  thprintf("\tplayout->map_header_bg = %s;\n",(this->map_header_bg ? "true" : "false"));
-
-  thprintf("\tplayout->def_opacity = %d;\n", this->def_opacity);
-  thprintf("\tplayout->opacity = %lg;\n",this->opacity);
-
-  thprintf("\tplayout->def_surface_opacity = %d;\n", this->def_surface_opacity);
-  thprintf("\tplayout->surface_opacity = %lg;\n", this->surface_opacity);
-
-  thprintf("\tplayout->def_surface= %d;\n", this->def_surface);
-  thprintf("\tplayout->surface = %d;\n", this->surface);
-
-  thprintf("\tplayout->def_color_labels= %d;\n", this->def_color_labels);
-  thprintf("\tplayout->color_labels = %s;\n", (this->color_labels ? "true" : "false"));
-
-  thprintf("\tplayout->def_grid_coords = %d;\n", this->def_grid_coords);
-  thprintf("\tplayout->grid_coords = %d;\n", this->grid_coords);
-
-  thprintf("\tplayout->def_north= %d;\n", this->def_north);
-  thprintf("\tplayout->north = %d;\n", this->north);
-
-  thprintf("\tplayout->def_smooth_shading= %d;\n", this->def_smooth_shading);
-  thprintf("\tplayout->smooth_shading = %d;\n", this->smooth_shading);
-
-  thprintf("\tplayout->def_grid = %d;\n", this->def_grid);
-  thprintf("\tplayout->grid = %d;\n",this->grid);
-
-  thprintf("\tplayout->def_page_grid = %d;\n", this->def_page_grid);
-  thprintf("\tplayout->page_grid = %s;\n",(this->page_grid ? "true" : "false"));
+  thprint(fmt::format("\tplayout->def_color_model = {};\n", this->def_color_model));
+  thprint(fmt::format("\tplayout->color_model = {};\n", this->color_model));
 
 
-  thprintf("\tplayout->def_origin = %d;\n", this->def_origin);
+  thprint(fmt::format("\tplayout->def_legend_width = {};\n", this->def_legend_width));
+  thprint(fmt::format("\tplayout->legend_width = {};\n",this->legend_width));
+
+  thprint(fmt::format("\tplayout->def_legend_columns = {};\n", this->def_legend_columns));
+  thprint(fmt::format("\tplayout->legend_columns = {};\n",this->legend_columns));
+
+  thprint(fmt::format("\tplayout->def_map_header = {};\n", this->def_map_header));
+  thprint(fmt::format("\tplayout->map_header = {};\n",this->map_header));
+  thprint(fmt::format("\tplayout->map_header_x = {};\n",this->map_header_x));
+  thprint(fmt::format("\tplayout->map_header_y = {};\n",this->map_header_y));
+
+  thprint(fmt::format("\tplayout->def_debug = {};\n", this->def_debug));
+  thprint(fmt::format("\tplayout->debug = {};\n",this->debug));
+
+  thprint(fmt::format("\tplayout->def_max_explos = {};\n", this->def_max_explos));
+  thprint(fmt::format("\tplayout->max_explos = {};\n",this->max_explos));
+  thprint(fmt::format("\tplayout->def_max_topos = {};\n", this->def_max_topos));
+  thprint(fmt::format("\tplayout->max_topos = {};\n",this->max_topos));
+  thprint(fmt::format("\tplayout->def_max_cartos = {};\n", this->def_max_cartos));
+  thprint(fmt::format("\tplayout->max_cartos = {};\n",this->max_cartos));
+  thprint(fmt::format("\tplayout->def_max_copys = {};\n", this->def_max_copys));
+  thprint(fmt::format("\tplayout->max_copys = {};\n",this->max_copys));
+
+  thprint(fmt::format("\tplayout->def_explo_lens = {};\n",this->def_explo_lens));
+  thprint(fmt::format("\tplayout->explo_lens = {};\n",this->explo_lens));
+  thprint(fmt::format("\tplayout->def_topo_lens = {};\n",this->def_topo_lens));
+  thprint(fmt::format("\tplayout->topo_lens = {};\n",this->topo_lens));
+  thprint(fmt::format("\tplayout->def_carto_lens = {};\n",this->def_carto_lens));
+  thprint(fmt::format("\tplayout->carto_lens = {};\n",this->carto_lens));
+  thprint(fmt::format("\tplayout->def_copy_lens = {};\n",this->def_copy_lens));
+  thprint(fmt::format("\tplayout->copy_lens = {};\n",this->copy_lens));
+
+  thprint(fmt::format("\tplayout->def_lang = {};\n", this->def_lang));
+  thprint(fmt::format("\tplayout->lang = {};\n",thlang_getcxxid(this->lang)));
+
+  thprint(fmt::format("\tplayout->def_units = {};\n", this->def_units));
+  thprint(fmt::format("\tplayout->units.units = {};\n",this->units.units));
+
+  thprint(fmt::format("\tplayout->def_layers = {};\n", this->def_layers));
+  thprint(fmt::format("\tplayout->layers = {};\n",(this->layers ? "true" : "false")));
+
+  thprint(fmt::format("\tplayout->def_geospatial = {};\n", this->def_geospatial));
+  thprint(fmt::format("\tplayout->geospatial = {};\n",(this->geospatial ? "true" : "false")));
+
+  thprint(fmt::format("\tplayout->def_map_header_bg = {};\n", this->def_map_header_bg));
+  thprint(fmt::format("\tplayout->map_header_bg = {};\n",(this->map_header_bg ? "true" : "false")));
+
+  thprint(fmt::format("\tplayout->def_opacity = {};\n", this->def_opacity));
+  thprint(fmt::format("\tplayout->opacity = {};\n",this->opacity));
+
+  thprint(fmt::format("\tplayout->def_surface_opacity = {};\n", this->def_surface_opacity));
+  thprint(fmt::format("\tplayout->surface_opacity = {};\n", this->surface_opacity));
+
+  thprint(fmt::format("\tplayout->def_surface= {};\n", this->def_surface));
+  thprint(fmt::format("\tplayout->surface = {};\n", this->surface));
+
+  thprint(fmt::format("\tplayout->def_color_labels= {};\n", this->def_color_labels));
+  thprint(fmt::format("\tplayout->color_labels = {};\n", (this->color_labels ? "true" : "false")));
+
+  thprint(fmt::format("\tplayout->def_grid_coords = {};\n", this->def_grid_coords));
+  thprint(fmt::format("\tplayout->grid_coords = {};\n", this->grid_coords));
+
+  thprint(fmt::format("\tplayout->def_north= {};\n", this->def_north));
+  thprint(fmt::format("\tplayout->north = {};\n", this->north));
+
+  thprint(fmt::format("\tplayout->def_smooth_shading= {};\n", this->def_smooth_shading));
+  thprint(fmt::format("\tplayout->smooth_shading = {};\n", this->smooth_shading));
+
+  thprint(fmt::format("\tplayout->def_grid = {};\n", this->def_grid));
+  thprint(fmt::format("\tplayout->grid = {};\n",this->grid));
+
+  thprint(fmt::format("\tplayout->def_page_grid = {};\n", this->def_page_grid));
+  thprint(fmt::format("\tplayout->page_grid = {};\n",(this->page_grid ? "true" : "false")));
+
+
+  thprint(fmt::format("\tplayout->def_origin = {};\n", this->def_origin));
   if (!thisnan(this->ox))
-    thprintf("\tplayout->ox = %lg;\n",this->ox);
+    thprint(fmt::format("\tplayout->ox = {};\n",this->ox));
   if (!thisnan(this->oy))
-    thprintf("\tplayout->oy = %lg;\n",this->oy);
+    thprint(fmt::format("\tplayout->oy = {};\n",this->oy));
   if (!thisnan(this->oz))
-    thprintf("\tplayout->oz = %lg;\n",this->oz);
+    thprint(fmt::format("\tplayout->oz = {};\n",this->oz));
 
-  thprintf("\tplayout->def_origin_label = %d;\n", this->def_origin_label);
+  thprint(fmt::format("\tplayout->def_origin_label = {};\n", this->def_origin_label));
   thdecode_c(&(this->db->buff_enc), this->olx);
-  thprintf("\tplayout->olx = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\tplayout->olx = \"{}\";\n", this->db->buff_enc.get_buffer()));
   thdecode_c(&(this->db->buff_enc), this->oly);
-  thprintf("\tplayout->oly = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\tplayout->oly = \"{}\";\n", this->db->buff_enc.get_buffer()));
 
-  thprintf("\tplayout->def_doc_title = %d;\n", this->def_doc_title);
+  thprint(fmt::format("\tplayout->def_doc_title = {};\n", this->def_doc_title));
   thdecode_c(&(this->db->buff_enc), this->doc_title);
-  thprintf("\tplayout->doc_title = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\tplayout->doc_title = \"{}\";\n", this->db->buff_enc.get_buffer()));
   
-  thprintf("\tplayout->def_doc_comment = %d;\n", this->def_doc_comment);
+  thprint(fmt::format("\tplayout->def_doc_comment = {};\n", this->def_doc_comment));
   thdecode_c(&(this->db->buff_enc), this->doc_comment);
-  thprintf("\tplayout->doc_comment = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\tplayout->doc_comment = \"{}\";\n", this->db->buff_enc.get_buffer()));
   
-  thprintf("\tplayout->def_doc_author = %d;\n", this->def_doc_author);
+  thprint(fmt::format("\tplayout->def_doc_author = {};\n", this->def_doc_author));
   thdecode_c(&(this->db->buff_enc), this->doc_author);
-  thprintf("\tplayout->doc_author = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\tplayout->doc_author = \"{}\";\n", this->db->buff_enc.get_buffer()));
 
-  thprintf("\tplayout->def_doc_subject = %d;\n", this->def_doc_author);
+  thprint(fmt::format("\tplayout->def_doc_subject = {};\n", this->def_doc_author));
   thdecode_c(&(this->db->buff_enc), this->doc_subject);
-  thprintf("\tplayout->doc_subject = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\tplayout->doc_subject = \"{}\";\n", this->db->buff_enc.get_buffer()));
   
-  thprintf("\tplayout->def_doc_keywords = %d;\n", this->def_doc_keywords);
+  thprint(fmt::format("\tplayout->def_doc_keywords = {};\n", this->def_doc_keywords));
   thdecode_c(&(this->db->buff_enc), this->doc_keywords);
-  thprintf("\tplayout->doc_keywords = \"%s\";\n", this->db->buff_enc.get_buffer());
+  thprint(fmt::format("\tplayout->doc_keywords = \"{}\";\n", this->db->buff_enc.get_buffer()));
   
-  thprintf("\tplayout->def_excl_pages = %d;\n", this->def_excl_pages);
-  thprintf("\tplayout->excl_pages = %s;\n",(this->excl_pages ? "true" : "false"));
+  thprint(fmt::format("\tplayout->def_excl_pages = {};\n", this->def_excl_pages));
+  thprint(fmt::format("\tplayout->excl_pages = {};\n",(this->excl_pages ? "true" : "false")));
   if (this->excl_list == NULL) {
     thprint("\tplayout->excl_list = NULL;\n");
   } else {
     thdecode_c(&(this->db->buff_enc), this->excl_list);
-    thprintf("\tplayout->excl_list = \"%s\";\n", this->db->buff_enc.get_buffer());
+    thprint(fmt::format("\tplayout->excl_list = \"{}\";\n", this->db->buff_enc.get_buffer()));
   }
 
-  thprintf("\tplayout->def_font_setup = %d;\n", this->def_font_setup);
+  thprint(fmt::format("\tplayout->def_font_setup = {};\n", this->def_font_setup));
   if (!thisnan(this->font_setup[0])) {
-    thprintf("\tplayout->font_setup[0] = %lg;\n",this->font_setup[0]);
-    thprintf("\tplayout->font_setup[1] = %lg;\n",this->font_setup[1]);
-    thprintf("\tplayout->font_setup[2] = %lg;\n",this->font_setup[2]);
-    thprintf("\tplayout->font_setup[3] = %lg;\n",this->font_setup[3]);
-    thprintf("\tplayout->font_setup[4] = %lg;\n",this->font_setup[4]);
+    thprint(fmt::format("\tplayout->font_setup[0] = {};\n",this->font_setup[0]));
+    thprint(fmt::format("\tplayout->font_setup[1] = {};\n",this->font_setup[1]));
+    thprint(fmt::format("\tplayout->font_setup[2] = {};\n",this->font_setup[2]));
+    thprint(fmt::format("\tplayout->font_setup[3] = {};\n",this->font_setup[3]));
+    thprint(fmt::format("\tplayout->font_setup[4] = {};\n",this->font_setup[4]));
   }
 
-  thprintf("\tplayout->def_min_symbol_scale = %d;\n", this->def_min_symbol_scale);
+  thprint(fmt::format("\tplayout->def_min_symbol_scale = {};\n", this->def_min_symbol_scale));
   if (this->min_symbol_scale > 0.0) {
-    thprintf("\tplayout->min_symbol_scale = %lg;\n",this->min_symbol_scale);
+    thprint(fmt::format("\tplayout->min_symbol_scale = {};\n",this->min_symbol_scale));
   }
 
   
-  thprintf("\tplayout->def_grid_size = %d;\n", this->def_grid_size);
+  thprint(fmt::format("\tplayout->def_grid_size = {};\n", this->def_grid_size));
   if (!thisnan(this->gxs)) {
-    thprintf("\tplayout->gxs = %lg;\n",this->gxs);
-    thprintf("\tplayout->gys = %lg;\n",this->gys);
-    thprintf("\tplayout->gzs = %lg;\n",this->gzs);
+    thprint(fmt::format("\tplayout->gxs = {};\n",this->gxs));
+    thprint(fmt::format("\tplayout->gys = {};\n",this->gys));
+    thprint(fmt::format("\tplayout->gzs = {};\n",this->gzs));
   }
 
-  thprintf("\tplayout->def_grid_origin = %d;\n", this->def_grid_origin);
+  thprint(fmt::format("\tplayout->def_grid_origin = {};\n", this->def_grid_origin));
   if (!thisnan(this->gox))
-    thprintf("\tplayout->gox = %lg;\n",this->gox);
+    thprint(fmt::format("\tplayout->gox = {};\n",this->gox));
   if (!thisnan(this->goy))
-    thprintf("\tplayout->goy = %lg;\n",this->goy);
+    thprint(fmt::format("\tplayout->goy = {};\n",this->goy));
   if (!thisnan(this->goz))
-    thprintf("\tplayout->goz = %lg;\n",this->goz);
+    thprint(fmt::format("\tplayout->goz = {};\n",this->goz));
 
-  thprintf("\tplayout->def_nav_factor = %d;\n", this->def_nav_factor);
-  thprintf("\tplayout->navf = %lg;\n",this->navf);
+  thprint(fmt::format("\tplayout->def_nav_factor = {};\n", this->def_nav_factor));
+  thprint(fmt::format("\tplayout->navf = {};\n",this->navf));
 
-  thprintf("\tplayout->def_nav_size = %d;\n", this->def_nav_size);
-  thprintf("\tplayout->navsx = %d;\n",this->navsx);
-  thprintf("\tplayout->navsy = %d;\n",this->navsy);
+  thprint(fmt::format("\tplayout->def_nav_size = {};\n", this->def_nav_size));
+  thprint(fmt::format("\tplayout->navsx = {};\n",this->navsx));
+  thprint(fmt::format("\tplayout->navsy = {};\n",this->navsy));
   
-  thprintf("\tplayout->def_own_pages = %d;\n", this->def_own_pages);
-  thprintf("\tplayout->ownp = %d;\n",this->ownp);
+  thprint(fmt::format("\tplayout->def_own_pages = {};\n", this->def_own_pages));
+  thprint(fmt::format("\tplayout->ownp = {};\n",this->ownp));
 
-  thprintf("\tplayout->def_title_pages = %d;\n", this->def_title_pages);
-  thprintf("\tplayout->titlep = %s;\n",(this->titlep ? "true" : "false"));
+  thprint(fmt::format("\tplayout->def_title_pages = {};\n", this->def_title_pages));
+  thprint(fmt::format("\tplayout->titlep = {};\n",(this->titlep ? "true" : "false")));
 
-  thprintf("\tplayout->def_page_numbers = %d;\n", this->def_page_numbers);
-  thprintf("\tplayout->pgsnum = %s;\n",(this->pgsnum ? "true" : "false"));
+  thprint(fmt::format("\tplayout->def_page_numbers = {};\n", this->def_page_numbers));
+  thprint(fmt::format("\tplayout->pgsnum = {};\n",(this->pgsnum ? "true" : "false")));
 
   
   char last_code = TT_LAYOUT_CODE_UNKNOWN;
@@ -1414,7 +1414,7 @@ void thlayout::self_print_library() {
           }
           thprint(";\n");
         }
-        thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
+        thprint(fmt::format("\toname = \"{}\";\n", this->db->buff_enc.get_buffer()));
         thprint("\tplayout->set(thcmd_option_desc(0,1),oname,TT_UTF_8,0);\n");
         break;
       case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
@@ -1425,7 +1425,7 @@ void thlayout::self_print_library() {
       case TT_LAYOUT_CODE_SYMBOL_COLOR:
         if (ln->line != NULL) {
           thdecode_c(&(this->db->buff_enc), ln->line);
-          thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
+          thprint(fmt::format("\toname = \"{}\";\n", this->db->buff_enc.get_buffer()));
         }
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS)
           thprint("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
@@ -1435,31 +1435,31 @@ void thlayout::self_print_library() {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
               thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
-              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprint(fmt::format("\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]));
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
               thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
-              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprint(fmt::format("\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]));
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
               thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
-              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprint(fmt::format("\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]));
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
               thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
-              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
+              thprint(fmt::format("\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]));
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
               thprint("\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
-              thprintf("\tplayout->get_last_line()->smid = %s;\n", thsymbolset_src[ln->smid]);
-              thprintf("\tplayout->get_last_line()->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
+              thprint(fmt::format("\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]));
+              thprint(fmt::format("\tplayout->get_last_line()->sclr = thlayout_color({:.6f},{:.6f},{:.6f});\n", ln->sclr.R, ln->sclr.G, ln->sclr.B));
               break;
           }
         }
         break;
     }
   }
-  thprintf("\tplayout->def_tex_lines = %d;\n", this->def_tex_lines);
+  thprint(fmt::format("\tplayout->def_tex_lines = {};\n", this->def_tex_lines));
   
 }
 
