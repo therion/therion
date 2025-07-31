@@ -569,9 +569,9 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
   }
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 
@@ -619,9 +619,9 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
   }
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 

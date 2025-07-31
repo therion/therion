@@ -503,12 +503,10 @@ void thparse_double_dms(int & sv, double & dv, const char * src)
   thsplit_strings(&thparse_mbuff,src,':');
   if (thparse_mbuff.get_size() > 0) {
     thparse_double(sv, dv, thparse_mbuff.get_buffer()[0]);
-//    thprintf("DEG:%lf\n", dv);
     if (sv == TT_SV_NUMBER) {
       // ok, mame stupne
       if (thparse_mbuff.get_size() > 1) {
         thparse_double(ssv, dms, thparse_mbuff.get_buffer()[1]);
-//        thprintf("MIN:%lf\n", dms);
         if ((ssv == TT_SV_NUMBER) && (dms >= 0.0) && (dv == double(int(dv)))) {
           // ok, mame minuty
           if (dv > 0.0) {
@@ -518,7 +516,6 @@ void thparse_double_dms(int & sv, double & dv, const char * src)
           }
           if ((dms == double(int(dms))) && (thparse_mbuff.get_size() == 3)) {
             thparse_double(ssv, dms, thparse_mbuff.get_buffer()[2]);
-//            thprintf("SEC:%lf\n", dms);
             if ((ssv == TT_SV_NUMBER) && (dms >= 0.0)) {
               if (dv > 0.0) {
                 dv += dms / 3600.0;
@@ -543,7 +540,6 @@ void thparse_double_dms(int & sv, double & dv, const char * src)
     sv = TT_SV_UNKNOWN;
     dv = 0.0;
   }
-//  thprintf("\n%s -> %lf\n", src, dv);
 }
 
 void thdecode_c(thbuffer * dest, const char * src)
@@ -1044,9 +1040,9 @@ void thparse_image(const char * fname, double & width, double & height, double &
   }
 
 #ifdef THDEBUG
-  thprintf("\nIMAGE FILE:%s\n", fname);
-  thprintf(  "       DPI:%.0f\n", dpi);
-  thprintf(  "      SIZE:%.0f x %.0f\n\n", width, height);
+  thprint(fmt::format("\nIMAGE FILE:{}\n", fname));
+  thprint(fmt::format(  "       DPI:{:.0f}\n", dpi));
+  thprint(fmt::format(  "      SIZE:{:.0f} x {:.0f}\n\n", width, height));
 #endif
 }
 

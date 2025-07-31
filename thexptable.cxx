@@ -264,9 +264,9 @@ void thexptable::process_db(class thdatabase * dbp)
   this->register_output(fname);
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fname);
+  thprint(fmt::format("\n\nwriting {}\n", fname));
 #else
-  thprintf("writing %s ... ", fname);
+  thprint(fmt::format("writing {} ... ", fname));
   thtext_inline = true;
 #endif 
 

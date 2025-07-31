@@ -582,11 +582,6 @@ class thdataobject * thdatabase::revise(char * nn, class thsurvey * fathersptr,
 
   jjj = this->object_map.find(thobjectid(objname,fsid));
   if (jjj == this->object_map.end()) {
-/*    jjj = this->object_map.begin();
-    while (jjj != this->object_map.end()) {
-      thprintf("%d:%s\n",jjj->first.sid,jjj->first.name);
-      jjj++;
-    }*/
     return NULL;
   }  
   else {

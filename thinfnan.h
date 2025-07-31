@@ -110,7 +110,7 @@ bool thdefinitely_less_than(double a, double b, double epsilon);
   else if (thisinf(cislo) == -1) \
     thprint("-thinf"); \
   else \
-    thprintf("%lg",cislo);}
+    thprint(fmt::format("{}",cislo));}
 
 
 #define THPI 3.1415926535898

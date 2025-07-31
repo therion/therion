@@ -323,8 +323,6 @@ void thscan::parse_data_source(char ** args) {
   std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
 
   this->datasrc = pict_path_str;
-  //thprintf("\npict name: %s\n", pict_path_str.c_str());
-
 }
 
 void thscan::parse_calib(int nargs, char** args) {

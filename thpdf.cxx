@@ -1771,7 +1771,7 @@ R"(\pdfcompresslevel=9%
 int thpdf(int m) {
   mode = m;
 
-  thprintf("making %s ... ", (mode == ATLAS) ? "atlas" : "map");
+  thprint(fmt::format("making {} ... ", (mode == ATLAS) ? "atlas" : "map"));
 
   SHEET.clear();
   SHEET_JMP.clear();

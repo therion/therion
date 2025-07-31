@@ -35,7 +35,7 @@ thexpsys::thexpsys() {
 
 void thexpsys::process_db(class thdatabase * /*dbp*/) 
 {
-  thprintf("system: %s\n", this->cmd);
+  thprint(fmt::format("system: {}\n", this->cmd));
   int retcode = system(this->cmd);
   if (retcode != EXIT_SUCCESS)
     thwarning(("system exit code -- %d", retcode))

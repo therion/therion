@@ -974,7 +974,6 @@ thvec2 thlinzoomtrans::forward(thvec2 src) {
         		vo = 1.0;
         }
         vec *= (vo * this->m_fl + (1.0 - vo) * this->m_fr);
-        //thprintf("VF: %.8f (%.8f, %.8f)\n", vo, (this->m_from + vec).m_x, (this->m_from + vec).m_y);
         return this->m_from + vec;
       } else if (dlt < 0.0) {
         vec = src - this->m_to;
@@ -986,7 +985,6 @@ thvec2 thlinzoomtrans::forward(thvec2 src) {
         		vo = 1.0;
         }
         vec *= (vo * this->m_tl + (1.0 - vo) * this->m_tr);
-        //thprintf("VT: %.8f (%.8f, %.8f)\n", vo, (this->m_to + vec).m_x, (this->m_to + vec).m_y);
         return this->m_to + vec;
       } else {
         thvec2 lp;
@@ -1001,7 +999,6 @@ thvec2 thlinzoomtrans::forward(thvec2 src) {
         } else {
           vec *= (vo * this->m_tr + (1.0 - vo) * this->m_fr);
         }
-        //thprintf("VI: %.8f (%.8f, %.8f)\n", vo, (lp + vec).m_x, (lp + vec).m_y);
         return lp + vec;
       }
     }

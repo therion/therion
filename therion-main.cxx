@@ -60,7 +60,7 @@ const char * thhelp_text =
 	  "        [--verify-output-crc]\n\n";
 
 const char * thversion_text = THVERSION;
-const char * thversion_format = "therion %s";
+constexpr const char * thversion_format = "therion {}";
 
 int main(int argc, char * argv[]) {
 
@@ -84,10 +84,10 @@ int main(int argc, char * argv[]) {
     // print some help messages and exit if demanded
     if (thcmdln.get_version_disp_state())
     {
-      thprintf(thversion_format, thversion_text);
+      thprint(fmt::format(thversion_format, thversion_text));
       thprint("\n");
-      thprintf("  - using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
-                                                         thcs_get_proj_version_headers().c_str());
+      thprint(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(),
+                                                         thcs_get_proj_version_headers()));
       thexit(EXIT_SUCCESS);
     }
 
@@ -120,7 +120,7 @@ int main(int argc, char * argv[]) {
     }
     
     // print version information
-    thprintf(thversion_format, thversion_text);
+    thprint(fmt::format(thversion_format, thversion_text));
     thprint("\n");
     thlog(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     if (thcs_get_proj_version() != thcs_get_proj_version_headers())
@@ -166,7 +166,7 @@ int main(int argc, char * argv[]) {
     for(srcit = sources->begin(); srcit != sources->end(); srcit++) {
 
 #ifdef THDEBUG
-      thprintf("\nreading input -- %s\n", srcit->fname);
+      thprint(fmt::format("\nreading input -- {}\n", srcit->fname));
 #endif 
 
       thdbreader.read(srcit->fname, srcit->startln, srcit->endln, 
@@ -229,7 +229,7 @@ int main(int argc, char * argv[]) {
 #endif   
 
     // write the CPU time
-    thprintf("compilation time: %.0f sec\n", difftime(time(NULL), tmUserStart));
+    thprint(fmt::format("compilation time: {:.0f} sec\n", difftime(time(NULL), tmUserStart)));
 #ifdef THDEBUG
     thprint("\n");
 #endif   

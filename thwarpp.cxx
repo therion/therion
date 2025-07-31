@@ -55,15 +55,12 @@ void thwarpp::process_station_vector(	thwarptrans	&	tw,	double ph	)
     std::string	name(	st.name	);
     tw.insert_point( ii->code, name, thvec2(ii->x, ph	-	ii->y),
       thvec2(st.x,	-	st.y)	);
-    // thprintf("insert	%s from	%.2f %.2f	to %.2f	%.2f \n",
-    //					st.name, ii->x,	ph - ii->y,	st.x,	-	st.y );
   }
 }
 
 void thwarpp::process_leg_vector(	thwarptrans	&	tw )
 {
   for	(	thsketchlg_list::iterator	jj = this->legs.begin(); jj	!= this->legs.end(); ++jj	)	{
-    //	thprintf("insert line	%s %s\n",	jj->from.name, jj->to.name );
     std::string	f( jj->from.name );
     std::string	t( jj->to.name );
     tw.insert_line(	jj->code,	f, t );
@@ -89,7 +86,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
     }
   }
   if (thtext_inline) thprint("\n");
-  thprintf("morphing %s ...", fn);
+  thprint(fmt::format("morphing {} ...", fn));
   thtext_inline = true;
 
   this->m_sketch->m_pic.rgba_load();
@@ -127,7 +124,6 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
     s = std::to_string(fuid);
     s2 = std::to_string(tuid);
     if ((ssm.find(fuid) != ssm.end()) && (ssm.find(tuid) != ssm.end())) {
-      // thprintf("insert	leg	%s %s\n",	dlg->from.name,	dlg->to.name );
       TW.insert_line(	THMORPH_STATION, s, s2);
     }
     ++ lg;
@@ -143,8 +139,8 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
 	if ((pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
 	  unsigned long fuid = thdb.db1d.station_vec[pointp->from_name.id - 1].uid;
 	  if ( ssm.find(fuid) == ssm.end() ) {
-	    thprintf("warning: extra point from %s but no station\n",
-	      pointp->from_name.name );
+	    thprint(fmt::format("warning: extra point from {} but no station\n",
+	      pointp->from_name.name ));
 	  } else {
             s  = fmt::sprintf("%ld_E_%d",fuid, ++n_extra);
             s2 = std::to_string(fuid);

@@ -222,7 +222,6 @@ void thsurface::parse_picture(char ** args)
   std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
 
   this->pict_name = thdb.strstore(pict_path_str.c_str());
-  // thprintf("\npict name: %s\n", this->pict_name);  
   
   this->pict_dpi = 300.0;
   this->pict_width = 1000;

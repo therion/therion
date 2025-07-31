@@ -169,7 +169,7 @@ void thexporter::export_db(class thdatabase * dp)
 		  cok = (*ii)->check_crc();
 		  ok = ok && cok;
 		  for(auto fi = (*ii)->output_files.begin(); fi != (*ii)->output_files.end(); fi++) {
-			  thprintf("%s ... %s\n", fi->fnm.c_str(), fi->res.c_str());
+			  thprint(fmt::format("{} ... {}\n", fi->fnm, fi->res));
 		  }
 
 	  }

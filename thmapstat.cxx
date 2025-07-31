@@ -96,9 +96,9 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
   thprint("\nBEFORE:\n");
   for(ii = this->data.begin(); ii != this->data.end(); ii++) {
     sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
-    thprintf("   %d (+ %.0f = %.0f) [%s]\n",ii->first.ptr->id,
+    thprint(fmt::format("   {} (+ {:.0f} = {:.0f}) [{}]\n",ii->first.ptr->id,
       ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, 
-      sumsum, ii->first.ptr->fsptr->full_name);
+      sumsum, ii->first.ptr->fsptr->full_name));
   }
   thprint("\n");
 #endif  
@@ -111,9 +111,9 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
 
 #ifdef THDEBUG
   sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
-    thprintf(" + %d (+ %.0f = %.0f) [%s]\n",ii->first.ptr->id,
+    thprint(fmt::format(" + {} (+ {:.0f} = {:.0f}) [{}]\n",ii->first.ptr->id,
       ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, 
-      sumsum, ii->first.ptr->fsptr->full_name);
+      sumsum, ii->first.ptr->fsptr->full_name));
 #endif  
 
       thdata_team_set_type::iterator ti;
