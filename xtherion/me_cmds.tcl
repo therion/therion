@@ -3344,7 +3344,7 @@ proc xth_me_show_context_menu {id x y} {
         set xth(me,ctrl,ctx,segsubtype) auto
       }      
       set xth(me,ctrl,ctxopt,segsubtype) [lindex $optsubtype 1]
-      for {set sti 0} {$sti < $subtypelen} {incr sti} {
+      for {set sti 0} {$sti <= $subtypelen} {incr sti} {
         $xth(me,ctxmenu).segsubtype add radiobutton -label [$xth(me,ctxmenu).subtype entrycget $sti -label] -variable xth(me,ctrl,ctx,segsubtype) -value [$xth(me,ctxmenu).subtype entrycget $sti -value] -command {xth_me_set_optionline_value segsubtype subtype}
       }
       $xth(me,ctxmenu) add cascade -label [xth_me_optlabel segsubtype [mc "segment subtype"]] -menu $xth(me,ctxmenu).segsubtype
