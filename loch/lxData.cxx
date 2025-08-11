@@ -251,8 +251,6 @@ struct lxDataRebuildStationStruct {
 
 void lxData::Rebuild()
 {
-
-  wxString inpln, flags, filename;
   wxUint32 id1, id2, nid, scrapWallsNpt, currentXpt = 0,
 		surfaceNpt;
   double fpos[3], norm[3];
