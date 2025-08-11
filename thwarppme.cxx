@@ -113,8 +113,6 @@ compute_segment_distance2( const thvec2 & x, const thvec2 & b, const thvec2 & c 
 void 
 therion::warp::point_pair::add_line( line * line )
 {
-  // thprintf("%s add_line %s-%s\n", 
-  //   m_name.c_str(), line->m_p1->m_name.c_str(), line->m_p2->m_name.c_str() );
   if ( line->m_type == THMORPH_STATION ) m_legs ++;
   mLines.push_back( line );
 }
@@ -124,7 +122,6 @@ therion::warp::line::line( morph_type t, point_pair * p1, point_pair * p2 )
   , m_p1( p1 )
   , m_p2( p2 )
 { 
-  // thprintf("New line: P1 %s P2 %s\n", p1->m_name.c_str(), p2->m_name.c_str() );
   if ( p1 != NULL ) p1->add_line( this );
   if ( p2 != NULL ) p2->add_line( this );
 }
@@ -140,7 +137,6 @@ void
 therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj proj )
 {
   size_t sz = mLines.size();
-  // thprintf("order_lines(): Point %s has %d/%d lines\n", m_name.c_str(), sz, m_legs );
   if ( sz <= 1 ) {
     return;
   }
@@ -173,7 +169,6 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
  
     repeat = false; 
     // now check that between any two STATION lines there is a non-STATION line
-    // thprintf("Point %s: %6.2f %6.2f has %d lines\n", m_name.c_str(), x.m_x, x.m_y, sz );
     for ( size_t i=0; i<sz; ++i) {
       size_t j = (i+1)%sz;
       if ( m_legs >= 2 ) {
@@ -183,8 +178,6 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
         if ( l2->m_type != THMORPH_STATION ) continue;
         therion::warp::point_pair * p1 = l1->other_end( this );
         therion::warp::point_pair * p2 = l2->other_end( this );
-        // thprintf("point %s (%s - %s) sizes %d %d \n",
-        //   m_name.c_str(),  p1->m_name.c_str(), p2->m_name.c_str(), p1->size(), p2->size() );
         if ( p1->size() == 1 && p2->size() == 1 ) continue;
 
       } else if ( m_legs == 0 ) {
@@ -195,14 +188,10 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
         therion::warp::line * l2 = mLines[j];
         therion::warp::point_pair * p1 = l1->other_end( this );
         therion::warp::point_pair * p2 = l2->other_end( this );
-        // thprintf("point %s (%s - %s) legs 1 angle %6.2f\n", 
-        //   m_name.c_str(), p1->m_name.c_str(), p2->m_name.c_str(), 
-        //   (p2->u - u) ^ (p1->u -u ) );
         if ( ((p2->u - u) ^ (p1->u -u )) < 0 )
           continue;
       }
       repeat = true;
-      // thprintf("Point %s: insert %d/%d lines (j=%d)\n", m_name.c_str(), i, sz, j );
       therion::warp::line * l1 = mLines[i];
       therion::warp::line * l2 = mLines[j];
       therion::warp::point_pair * p1 = l1->other_end( this ); // ( this == l1->m_p1 ) ? l1->m_p2 : l1->m_p1;
@@ -211,9 +200,6 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
       thvec2 x2 = p2->x - x;
       thvec2 u1 = p1->u - u;
       thvec2 u2 = p2->u - u;
-      // thprintf("must insert between %s %s at %s (m_legs %d) proj %s\n",
-      //   p1->m_name.c_str(), p2->m_name.c_str(), m_name.c_str(), m_legs,
-      //   (proj == THWARP_PLAN)? "plan" : "elev" );
       // try a non-STATION line that reflected is between l1 and l2
       size_t k = 0;
       if ( m_legs <= 2 ) {
@@ -224,7 +210,6 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
           thvec2 u0 = u - p0->u;
           if ( (x2 ^ x0) < 0 && (x0 ^ x1) < 0 && (u2 ^ u0) < 0 && (u0 ^ u1) ) {
             // opposite is OK both for PLAN and for EXTENDED proj
-            // thprintf("adding extra as opposite of %s\n", p0->m_name.c_str() );
             thvec2 x3 = x + x0;
             thvec2 u3 = u + u0;
             warper->add_extra_line( this, i, x3, u3 );
@@ -245,8 +230,6 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
           double du = (u1 - u2).length();
           thvec2 vu = u2/d2 - u1/d1;
 	  vu.normalize();
-	  // thprintf("adding extra as bisector at %s [lengths %.2f %.2f %.2f]\n",
-	  //   this->m_name.c_str(), du, d1, d2 );
           if ( d1 < du ) du = d1;
           if ( d2 < du ) du = d2;
           u3.m_x = u.m_x + vu.m_y * du;
@@ -275,7 +258,6 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
           if ( d1 < du ) du = d1;
           if ( d2 < du ) du = d2;
           double dx = du * x_u;
-          // thprintf("v1 %f v2 %f \n", v1, v2 );
           if ( fabs(v1) < 0.5 || fabs(v2) < 0.5 ) {
             if ( fabs(v1) < 0.1 && fabs(v2) < 0.1 ) {
               if ( v1 * v2 < 0.0 ) { // vertical opposite
@@ -313,14 +295,6 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
   } // while ( repeat )
 
   sz = mLines.size();
-  /*
-  thprintf("Point %s: %6.2f %6.2f has %d/%d lines: ", m_name.c_str(), x.m_x, x.m_y, sz, m_legs );
-  for ( size_t i=0; i<sz; ++i) {
-    point_pair * p2 = mLines[i]->other_end( this );
-    thprintf("%s ", p2->m_name.c_str() );
-  }
-  thprint("\n");
-  */
 
   // check that all the lines from this point that are not centerlines have a "single"
   // node at the other end
@@ -349,7 +323,6 @@ therion::warp::point_pair::first_leg()
 void
 therion::warp::line::update()
 {
-  // thprintf("Update line %s %s\n", m_p1->m_name.c_str(), m_p2->m_name.c_str() );
   vz = m_p2->z - m_p1->z;
   vw = m_p2->w - m_p1->w;
 
@@ -447,8 +420,6 @@ void therion::warp::plaquette::init()
   // thvec2 bcn = m_BC; bcn.normalize();
   // m_theta_r = acos( - m_abn * bcn );
   m_theta_r = angle( m_bcn, - m_abn );
-  
-  // thprintf("Plaquette theta L %.2f R %.2f \n", m_theta_l, m_theta_r );
   
   // C1 is the projection (parallel to AB) of C on AD.
   // [1] line thru C parallel to AB:
@@ -835,9 +806,6 @@ namespace therion
       
       m_dl = from.m_ac / to.m_ac;
       m_dr = from.m_ab / to.m_ab;
-
-      // thprintf("Triangle [%d] Theta L %.2f R %.2f Ratios L %.2f R %.2f \n", 
-      //   nr(), m_kl, m_kr, m_dl, m_dr );
     } 
     
     /** type of this warping basic_pair
@@ -855,7 +823,6 @@ namespace therion
     template< >
     void item_pair<triangle>::set_projection( warp_proj /*proj*/ )
     {
-      // thprintf("item_pair<triangle>::set_projection(%d)\n", proj );
       // TODO
     }
 
@@ -935,12 +902,12 @@ namespace therion
     template< >
     void item_pair<triangle>::print() const
     {
-        thprintf("[%d] Triangle A %6.2f %6.2f <-> %6.2f %6.2f\n",
-          nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y );
-        thprintf("              B %6.2f %6.2f <-> %6.2f %6.2f\n",
-          from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y );
-        thprintf("              C %6.2f %6.2f <-> %6.2f %6.2f\n",
-          from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y );
+        thprint(fmt::format("[{}] Triangle A {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+          nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y ));
+        thprint(fmt::format("              B {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+          from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y ));
+        thprint(fmt::format("              C {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+          from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y ));
         print_ngbhs();
     }
     #endif
@@ -953,7 +920,6 @@ namespace therion
     template< >
     void item_pair<plaquette>::set_projection( warp_proj /*proj*/ )
     {
-      // thprintf("item_pair<plaquette>::set_projection(%d)\n", proj );
       #ifdef MORPH_EXPERIMENTAL
       if ( proj == THWARP_EXTENDED ) {
         // TODO
@@ -1028,10 +994,6 @@ namespace therion
       
       m_dl = from.m_AD_len / to.m_AD_len;
       m_dr = from.m_BC_len / to.m_BC_len;
-      // thprintf("Plaquette [%d] Theta L %.2f R %.2f Ratios L %.2f R %.2f \n", 
-      //   nr(), m_kl, m_kr, m_dl, m_dr );
-      //
-
     }
     
     /** warp type
@@ -1156,14 +1118,14 @@ namespace therion
     template< >
     void plaquette_pair::print() const
     {
-        thprintf("[%d] Plaquette A %6.2f %6.2f <-> %6.2f %6.2f\n",
-          nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y );
-        thprintf("              B %6.2f %6.2f <-> %6.2f %6.2f\n",
-          from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y );
-        thprintf("              C %6.2f %6.2f <-> %6.2f %6.2f\n",
-          from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y );
-        thprintf("              D %6.2f %6.2f <-> %6.2f %6.2f\n",
-          from.m_D.m_x, from.m_D.m_y, to.m_D.m_x, to.m_D.m_y );
+        thprint(fmt::format("[{}] Plaquette A {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+          nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y ));
+        thprint(fmt::format("              B {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+          from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y ));
+        thprint(fmt::format("              C {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+          from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y ));
+        thprint(fmt::format("              D {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+          from.m_D.m_x, from.m_D.m_y, to.m_D.m_x, to.m_D.m_y ));
         print_ngbhs();
     }
     #endif

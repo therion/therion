@@ -929,8 +929,6 @@ void thdb1d::process_tree()
     n1->id = ii;
     n1->uid = ii;
     n1->is_fixed = ((this->station_vec[i].flags & TT_STATIONFLAG_FIXED) != 0);
-//    if (n1->is_fixed)
-//      thprintf("FX: %s@%s\n", this->station_vec[i].name, this->station_vec[i].survey->full_name);
     if (n1->is_fixed)
       any_fixed = true;
   }
@@ -989,13 +987,6 @@ void thdb1d::process_tree()
     a1->start_node = nodes + (nodes[iil->leg->from.id - 1].uid - 1);
     a1->end_node = nodes + (nodes[iil->leg->to.id - 1].uid - 1);
     
-//    if ((iil->leg->data_type == TT_DATATYPE_NOSURVEY) &&
-//      ((!a1->start_node->is_fixed) || (!a1->end_node->is_fixed))) {
-////        thprintf("%s@%s - %s@%s\n", iil->leg->from.name, iil->leg->from.survey, iil->leg->to.name, iil->leg->to.survey);
-//        ththrow("unsurveyed shot between unfixed stations -- %s [%d]",
-//          iil->leg->srcf.name, iil->leg->srcf.line
-//        ));
-//    }
     if (iil->leg->data_type == TT_DATATYPE_NOSURVEY) {
         a1->is_nosurvey = true;
         a2->is_nosurvey = true;
@@ -1085,9 +1076,9 @@ void thdb1d::process_tree()
         series++;
       component_break = false;
 #ifdef THDEBUG
-      thprintf("component %d -- %d (%s@%s)\n", component, current_node->id,
+      thprint(fmt::format("component {} -- {} ({}@{})\n", component, current_node->id,
         this->station_vec[current_node->id - 1].name,
-        this->station_vec[current_node->id - 1].survey->get_full_name());
+        this->station_vec[current_node->id - 1].survey->get_full_name()));
 #endif
       
     } // end of tremaux
@@ -1114,9 +1105,9 @@ void thdb1d::process_tree()
       else {
         current_node = current_node->back_arrow->end_node;
 #ifdef THDEBUG
-        thprintf("%d (%s@%s) <-\n", current_node->id,
+        thprint(fmt::format("{} ({}@{}) <-\n", current_node->id,
           this->station_vec[current_node->id - 1].name,
-          this->station_vec[current_node->id - 1].survey->get_full_name());
+          this->station_vec[current_node->id - 1].survey->get_full_name()));
 #endif
       }
 
@@ -1139,7 +1130,7 @@ void thdb1d::process_tree()
       current_leg++;
       
 #ifdef THDEBUG
-      thprintf("-> %d (%s@%s) [%d %s %d, series %d, arrow %d]\n", current_node->last_arrow->end_node->id,
+      thprint(fmt::format("-> {} ({}@{}) [{} {} {}, series {}, arrow {}]\n", current_node->last_arrow->end_node->id,
         this->station_vec[current_node->last_arrow->end_node->id - 1].name,
         this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name(),
         prev_leg->leg->from.id,
@@ -1463,9 +1454,6 @@ bool operator < (
       if ((l1a != NULL) && (l2a == NULL))
         return false;
     }
-//#ifdef THDEBUG
-//    thprintf("LOOP EQUAL: %ld == %ld\n", l1.id, l2.id);
-//#endif    
     return false;  
   } else {
 
@@ -1506,9 +1494,6 @@ bool operator < (
     }
     nextstep;
     while (l1a->series->id != l1.minid) nextstep;
-//#ifdef THDEBUG
-//    thprintf("LOOP EQUAL: %ld == %ld\n", l1.id, l2.id);
-//#endif    
     return false;      
   }
   
@@ -1523,7 +1508,7 @@ long chledala_chledala(thlc_cross * kde, unsigned long kde_size, thlc_cross * co
   thlc_cross * cc, * lastcc;  
 
 #ifdef THDEBUG
-  thprintf("\nLOOP SEARCH: %ld -> %ld\n", odkial->id, co == NULL ? -1 : long(co->id));
+  thprint(fmt::format("\nLOOP SEARCH: {} -> {}\n", odkial->id, co == NULL ? -1 : long(co->id)));
 #endif
 
   // initiaze targets
@@ -1615,12 +1600,12 @@ long chledala_chledala(thlc_cross * kde, unsigned long kde_size, thlc_cross * co
     while (ca != NULL) {
       vysledok.insert(vysledok.begin(),*ca);
 #ifdef THDEBUG
-      thprintf("%d - %d : %s%d\n",
+      thprint(fmt::format("{} - {} : {}{}\n",
         ca->reverse ? ca->series->to : ca->series->from,
         ca->reverse ? ca->series->from : ca->series->to,
         ca->reverse ? "R" : "N",
         ca->series->id
-      );
+      ));
 #endif
       cc = cc->dm_cross;
       ca = cc->dm_arrow;
@@ -1839,29 +1824,29 @@ void thdb1d::find_loops()
   thprint("\n\n\nLOOP CLOSURE DEBUG\n");
   thprint("\nCROSSES:\n");
   for (i = 0; i < lastcross; i++) {
-    thprintf("%ld: %s %ld [",i, lccrosses[i].is_fixed ? "F" : "V", lccrosses[i].narrows);
+    thprint(fmt::format("{}: {} {} [",i, lccrosses[i].is_fixed ? "F" : "V", lccrosses[i].narrows));
     cca = lccrosses[i].first_arrow;
     while (cca != NULL) {
-      thprintf("%s%ld", cca->prev_arrow == NULL ? "" : " ", cca->target->id);
+      thprint(fmt::format("{}{}", cca->prev_arrow == NULL ? "" : " ", cca->target->id));
       cca = cca->next_arrow;
     }
-    thprintf("] %s@%s\n",
+    thprint(fmt::format("] {}@{}\n",
       this->station_vec[lccrosses[i].station_uid - 1].name,
-      this->station_vec[lccrosses[i].station_uid - 1].survey->name);
+      this->station_vec[lccrosses[i].station_uid - 1].survey->name));
   }
   thprint("\nSERIES:\n");
   for (i = 0; i < nseries; i++) {
-    thprintf("%ld: %ld - %ld [%ld legs",i,lcseries[i].from,lcseries[i].to,lcseries[i].numlegs);
+    thprint(fmt::format("{}: {} - {} [{} legs",i,lcseries[i].from,lcseries[i].to,lcseries[i].numlegs));
     clcleg = lcseries[i].first_leg;
     if (clcleg != NULL) {
-      thprintf(": %s@%s",
+      thprint(fmt::format(": {}@{}",
         this->station_vec[clcleg->from_uid - 1].name,
-        this->station_vec[clcleg->from_uid - 1].survey->name);
+        this->station_vec[clcleg->from_uid - 1].survey->name));
     }
     while (clcleg != NULL) {
-      thprintf(" - %s@%s",
+      thprint(fmt::format(" - {}@{}",
         this->station_vec[clcleg->to_uid - 1].name,
-        this->station_vec[clcleg->to_uid - 1].survey->name);
+        this->station_vec[clcleg->to_uid - 1].survey->name));
       clcleg = clcleg->next_series_leg;
     }
     thprint("]\n");
@@ -1919,10 +1904,6 @@ void thdb1d::find_loops()
     if (!curseries->is_active)
       continue;
     curseries->is_active = false;
-
-//#ifdef THDEBUG
-//  thprintf("\nNEW SERIES: %ld -> %ld", curseries->from, curseries->to);
-//#endif
 
     // najde najblizsi pevny bod ku from
     from2fixv.clear();
@@ -2045,30 +2026,30 @@ void thdb1d::find_loops()
   thprint("\nSERIES LOOPS:\n");
   while (lli != all_loop_list.end()) {
     lsi = all_loop_set.find(*lli);
-    thprintf("%ld[%ld] %s %s %ld: ", lli->id, lli->old_id, lli->is_new ? "NEW" : "OLD" , lli->from_cross->id != lli->to_cross->id ? "OPN" : "CLS", lli->size);
+    thprint(fmt::format("{}[{}] {} {} {}: ", lli->id, lli->old_id, lli->is_new ? "NEW" : "OLD" , lli->from_cross->id != lli->to_cross->id ? "OPN" : "CLS", lli->size));
     cca = lli->first_arrow;
     if (cca->reverse) {
-      thprintf("%d(%s@%s)", cca->series->to,
+      thprint(fmt::format("{}({}@{})", cca->series->to,
         this->station_vec[cca->series->to_cross->station_uid - 1].name,
-        this->station_vec[cca->series->to_cross->station_uid - 1].survey->name);
+        this->station_vec[cca->series->to_cross->station_uid - 1].survey->name));
     } else {
-      thprintf("%d(%s@%s)", cca->series->from,
+      thprint(fmt::format("{}({}@{})", cca->series->from,
         this->station_vec[cca->series->from_cross->station_uid - 1].name,
-        this->station_vec[cca->series->from_cross->station_uid - 1].survey->name);
+        this->station_vec[cca->series->from_cross->station_uid - 1].survey->name));
     }
     while (cca != NULL) {
       if (cca->reverse) {
-        thprintf("[%d(%s@%s)] - %d(%s@%s)", cca->series->to,
+        thprint(fmt::format("[{}({}@{})] - {}({}@{})", cca->series->to,
           this->station_vec[cca->series->to_cross->station_uid - 1].name,
           this->station_vec[cca->series->to_cross->station_uid - 1].survey->name, cca->series->from,
           this->station_vec[cca->series->from_cross->station_uid - 1].name,
-          this->station_vec[cca->series->from_cross->station_uid - 1].survey->name);
+          this->station_vec[cca->series->from_cross->station_uid - 1].survey->name));
       } else {
-        thprintf("[%d(%s@%s)] - %d(%s@%s)", cca->series->from,
+        thprint(fmt::format("[{}({}@{})] - {}({}@{})", cca->series->from,
           this->station_vec[cca->series->from_cross->station_uid - 1].name,
           this->station_vec[cca->series->from_cross->station_uid - 1].survey->name, cca->series->to,
           this->station_vec[cca->series->to_cross->station_uid - 1].name,
-          this->station_vec[cca->series->to_cross->station_uid - 1].survey->name);
+          this->station_vec[cca->series->to_cross->station_uid - 1].survey->name));
       }
       cca = cca->next_arrow;
     }
@@ -2128,18 +2109,18 @@ void thdb1d::find_loops()
   dbli = this->loop_list.begin();
   i = 0;
   while (dbli != this->loop_list.end()) {
-    thprintf("%ld %s %ld: %s@%s", i, dbli->open ? "OPN" : "CLS", dbli->nlegs,
-      dbli->from->name, dbli->from->survey->name);
+    thprint(fmt::format("{} {} {}: {}@{}", i, dbli->open ? "OPN" : "CLS", dbli->nlegs,
+      dbli->from->name, dbli->from->survey->name));
     ptdbl = dbli->first_leg;
     while (ptdbl != NULL) {
       if (ptdbl->reverse) {
-        thprintf(" - %s@%s", 
+        thprint(fmt::format(" - {}@{}", 
           this->station_vec[this->station_vec[ptdbl->leg->from.id - 1].uid - 1].name,
-          this->station_vec[this->station_vec[ptdbl->leg->from.id - 1].uid - 1].survey->name);
+          this->station_vec[this->station_vec[ptdbl->leg->from.id - 1].uid - 1].survey->name));
       } else {
-        thprintf(" - %s@%s", 
+        thprint(fmt::format(" - {}@{}", 
           this->station_vec[this->station_vec[ptdbl->leg->to.id - 1].uid - 1].name,
-          this->station_vec[this->station_vec[ptdbl->leg->to.id - 1].uid - 1].survey->name);
+          this->station_vec[this->station_vec[ptdbl->leg->to.id - 1].uid - 1].survey->name));
       }
       ptdbl = ptdbl->next_leg;
     }
@@ -2306,9 +2287,9 @@ void thdb1d::close_loops()
       // zapise do statistiky
 #ifdef THDEBUG
       if (mode == 2) {
-        thprintf("CORRECTION: %7.4f%% -> %7.4f%%\n",
+        thprint(fmt::format("CORRECTION: {:7.4f}% -> {:7.4f}%\n",
           li->src_length > 0 ? 100.0 * li->err_length / li->src_length : 0.0,
-          li->src_length > 0 ? 100.0 * sqrt(pow(dst_dx - src_dx,2.0) + pow(dst_dy - src_dy,2.0) + pow(dst_dz - src_dz,2.0)) / li->src_length : 0.0);
+          li->src_length > 0 ? 100.0 * sqrt(pow(dst_dx - src_dx,2.0) + pow(dst_dy - src_dy,2.0) + pow(dst_dz - src_dz,2.0)) / li->src_length : 0.0));
       }      
       else 
 #endif      
@@ -2377,9 +2358,9 @@ void thdb1d::close_loops()
               ll->leg->adj_dz += ORIENT * err_dz / sumlegs;
             ll->leg->adjusted = true;
 #ifdef THDEBUG
-            thprintf("ADJLEG %s@%s - %s@%s:    %.2f,%.2f,%.2f -> %.2f,%.2f,%.2f\n", this->station_vec[ll->leg->from.id - 1].name, this->station_vec[ll->leg->from.id - 1].survey->name, this->station_vec[ll->leg->to.id - 1].name, this->station_vec[ll->leg->to.id - 1].survey->name,
+            thprint(fmt::format("ADJLEG {}@{} - {}@{}:    {:.2f},{:.2f},{:.2f} -> {:.2f},{:.2f},{:.2f}\n", this->station_vec[ll->leg->from.id - 1].name, this->station_vec[ll->leg->from.id - 1].survey->name, this->station_vec[ll->leg->to.id - 1].name, this->station_vec[ll->leg->to.id - 1].survey->name,
 						  ll->leg->total_dx, ll->leg->total_dy, ll->leg->total_dz, 
-							ll->leg->adj_dx, ll->leg->adj_dy, ll->leg->adj_dz);
+							ll->leg->adj_dx, ll->leg->adj_dy, ll->leg->adj_dz));
 #endif				
           }
           ll = ll->next_leg;
@@ -2441,9 +2422,9 @@ void thdb1d::close_loops()
     }
     
 #ifdef THDEBUG
-  	thprintf("LEG: %s@%s [%ld] (from %s@%s [%ld])\n", 
+  	thprint(fmt::format("LEG: {}@{} [{}] (from {}@{} [{}])\n", 
 		  tos->name, tos->survey->name, tos->uid, froms->name, froms->survey->name, froms->uid
-		);
+		));
 #endif
     if (froms->placed == 0)
       throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
@@ -2468,9 +2449,9 @@ void thdb1d::close_loops()
       
 			if ((err >= 1e-4) && (i > unrecover)) {			
 #ifdef THDEBUG
-		    thprintf("ERRLEG %s@%s - %s@%s: %.2f,%.2f,%.2f\n", 
+		    thprint(fmt::format("ERRLEG {}@{} - {}@{}: {:.2f},{:.2f},{:.2f}\n", 
 				  froms->name, froms->survey->name, tos->name, tos->survey->name,
-          err_dx, err_dy, err_dz);
+          err_dx, err_dy, err_dz));
 #endif    
         // mame problem - musime spravit nasledovne
         thdb1ds * errst, * lastst;
@@ -2522,8 +2503,8 @@ void thdb1d::close_loops()
 
 #define ORIENT2 (cleg->reverse ? -1.0 : 1.0)
 #ifdef THDEBUG
-            thprintf("ADJLEG %s@%s - %s@%s:    %.2f,%.2f,%.2f", this->station_vec[cleg->leg->from.id - 1].name, this->station_vec[cleg->leg->from.id - 1].survey->name, this->station_vec[cleg->leg->to.id - 1].name, this->station_vec[cleg->leg->to.id - 1].survey->name,
-							cleg->leg->adj_dx, cleg->leg->adj_dy, cleg->leg->adj_dz);
+            thprint(fmt::format("ADJLEG {}@{} - {}@{}:    {:.2f},{:.2f},{:.2f}", this->station_vec[cleg->leg->from.id - 1].name, this->station_vec[cleg->leg->from.id - 1].survey->name, this->station_vec[cleg->leg->to.id - 1].name, this->station_vec[cleg->leg->to.id - 1].survey->name,
+							cleg->leg->adj_dx, cleg->leg->adj_dy, cleg->leg->adj_dz));
 #endif				
             if (sum_sdx > 0.0)
               cleg->leg->adj_dx += ORIENT2 * err_dx * (cleg->leg->plumbed ? 0.0 : cleg->leg->total_sdx) / sum_sdx;
@@ -2540,8 +2521,8 @@ void thdb1d::close_loops()
               
             cleg->leg->adjusted = true;
 #ifdef THDEBUG
-            thprintf(" -> %.2f,%.2f,%.2f\n",
-							cleg->leg->adj_dx, cleg->leg->adj_dy, cleg->leg->adj_dz);
+            thprint(fmt::format(" -> {:.2f},{:.2f},{:.2f}\n",
+							cleg->leg->adj_dx, cleg->leg->adj_dy, cleg->leg->adj_dz));
 #endif				
           }
         }
@@ -2585,7 +2566,7 @@ void thdb1d::close_loops()
 #endif
 
   if (avg_error_sum > 0.0) {
-    thprintf("average loop error: %.2f%%\n", (avg_error / avg_error_sum));
+    thprint(fmt::format("average loop error: {:.2f}%\n", (avg_error / avg_error_sum)));
   }
   
 }
@@ -3319,14 +3300,14 @@ void thdb1d::process_xelev()
       just_started = true;
 
 #ifdef THDEBUG
-      thprintf("START -- %d (%s@%s)\n", current_node->id,
+      thprint(fmt::format("START -- {} ({}@{})\n", current_node->id,
         this->station_vec[current_node->id - 1].name,
-        this->station_vec[current_node->id - 1].survey->get_full_name());
+        this->station_vec[current_node->id - 1].survey->get_full_name()));
 #endif
       if (thcfg.log_extend) {
-        thprintf("START %s@%s\n",
+        thprint(fmt::format("START {}@{}\n",
         this->station_vec[current_node->id - 1].name,
-        this->station_vec[current_node->id - 1].survey->get_full_name());
+        this->station_vec[current_node->id - 1].survey->get_full_name()));
         prev_id = current_node->id;
       }
       
@@ -3384,15 +3365,15 @@ void thdb1d::process_xelev()
         default_left = current_node->xx_left;
         default_ratio = current_node->xx_ratio;
 #ifdef THDEBUG
-        thprintf("%d (%s@%s) <-\n", current_node->id,
+        thprint(fmt::format("{} ({}@{}) <-\n", current_node->id,
           this->station_vec[current_node->id - 1].name,
-          this->station_vec[current_node->id - 1].survey->get_full_name());
+          this->station_vec[current_node->id - 1].survey->get_full_name()));
 #endif
         if (thcfg.log_extend) {
           if (prev_id != current_node->id) {
-            thprintf("BACK %s@%s\n",
+            thprint(fmt::format("BACK {}@{}\n",
               this->station_vec[current_node->id - 1].name,
-              this->station_vec[current_node->id - 1].survey->get_full_name());
+              this->station_vec[current_node->id - 1].survey->get_full_name()));
             prev_id = current_node->id;
           }
         }        
@@ -3489,19 +3470,19 @@ void thdb1d::process_xelev()
         current_node->last_arrow->leg->leg->txx = cxx;
 
 #ifdef THDEBUG
-      thprintf("-> %d (%s@%s)\n", current_node->last_arrow->end_node->id,
+      thprint(fmt::format("-> {} ({}@{})\n", current_node->last_arrow->end_node->id,
         this->station_vec[current_node->last_arrow->end_node->id - 1].name,
-        this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
+        this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name()));
 #endif
       if (thcfg.log_extend) {
         if ((prev_id != current_node->last_arrow->end_node->id) && !this->station_vec[current_node->last_arrow->end_node->id - 1].is_temporary()) {
-          thprintf("%s %s@%s",
+          thprint(fmt::format("{} {}@{}",
             (go_left == -1 ? "LEFT" : (go_left == 1 ? "RIGHT" : "VERTICAL")),
             this->station_vec[current_node->last_arrow->end_node->id - 1].name,
-            this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
+            this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name()));
           prev_id = current_node->last_arrow->end_node->id;
           if (current_node->last_arrow->leg->leg->extend_ratio != 1.0)
-            thprintf(" (%.0f%%)", current_node->last_arrow->leg->leg->extend_ratio * 100.0);
+            thprint(fmt::format(" ({:.0f}%)", current_node->last_arrow->leg->leg->extend_ratio * 100.0));
           thprint("\n");
         }
       }

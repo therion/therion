@@ -399,9 +399,9 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
 
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -611,8 +611,8 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
               }
             }
             if (thtext_inline) thprint("\n");
-            thprintf("converting %s ", fn);
-            thprintf("(%.1f Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0);
+            thprint(fmt::format("converting {} ", fn));
+            thprint(fmt::format("({:.1f} Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0));
             thtext_inline = true;
 
             if (fabs(ns - 1.0) < 1e-8) {
@@ -775,9 +775,9 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
 
@@ -864,8 +864,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               }
             }
             if (thtext_inline) thprint("\n");
-            thprintf("converting %s ", fn);
-            thprintf("(%.1f Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0);
+            thprint(fmt::format("converting {} ", fn));
+            thprint(fmt::format("({:.1f} Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0));
             thtext_inline = true;
 
             if (fabs(ns - 1.0) < 1e-8) {
@@ -1258,9 +1258,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thini.copy_fonts();
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ...\n", fnm);
+  thprint(fmt::format("writing {} ...\n", fnm));
 //  thtext_inline = true;
 #endif 
   
@@ -3190,10 +3190,6 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*
               minz = curz;
               maxz = curz;
             } else {
-//              if (minz > curz)
-//                thprintf("new min: %8.2f %s @ %s\n", curz, cs->name, (cs->fsptr != NULL ? cs->fsptr->full_name : ""));
-//              if (maxz < curz)
-//                thprintf("new max: %8.2f %s @ %s\n", curz, cs->name, (cs->fsptr != NULL ? cs->fsptr->full_name : ""));
               if (minz > curz)
                 minz = curz;
               if (maxz < curz)
@@ -3281,7 +3277,6 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*
                 cmn++;
               }
               cs->clr = clr;
-//              thprintf("%s@%s->%.2f,%.2f,%.2f\n",cs->name,cs->fsptr->full_name,cs->R,cs->G,cs->B);
             break;
             case TT_LAYOUT_CCRIT_SCRAP:
               // set a different random color for earch scrap
@@ -3360,9 +3355,9 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
   this->register_output(fnm);
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 
