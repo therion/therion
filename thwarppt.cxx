@@ -148,14 +148,6 @@ therion::warp::plaquette_algo::initialize( warp_proj proj )
 
     make_neighbors( );
 
-    /* print topology
-    for (unsigned int k=0; k<mPlaquettes.size(); ++k ) {
-      thprintf("Neighbor %2d left %2d right %2d\n",
-        mPlaquettes[k]->nr(), mPlaquettes[k]->left_ngbh()->nr(),
-        mPlaquettes[k]->right_ngbh()->nr() );
-    }
-    */
-  
     m_initialized = true;
   }
   return m_initialized;
@@ -172,14 +164,13 @@ therion::warp::plaquette_algo::insert_zoom_point(
     if ( mPairs[k]->m_name == from ) break;
   }
   if ( k == sz ) {
-    thprintf("warning insert_zoom_point() from point \"%s\" not found\n", 
-      from.c_str() );
+    thprint(fmt::format("warning insert_zoom_point() from point \"{}\" not found\n", from));
     return NULL;
   }
   double x0 = mPairs[k]->x.m_x;
   double y0 = mPairs[k]->x.m_y;
-  thprintf("insert_zoom_point() %s (%.2f %.2f) from %s (%.2f %.2f) distance %.2f\n",
-    name.c_str(), src.m_x, src.m_y, from.c_str(), x0, y0, size );
+  thprint(fmt::format("insert_zoom_point() {} ({:.2f} {:.2f}) from {} ({:.2f} {:.2f}) distance {:.2f}\n",
+    name, src.m_x, src.m_y, from, x0, y0, size ));
 
   double x1 = src.m_x - x0;
   double y1 = src.m_y - y0;
@@ -241,8 +232,8 @@ therion::warp::plaquette_algo::insert_zoom_point(
   x0 += ( x2*ca + y2*sa) * size;
   y0 += (-x2*sa + y2*ca) * size;
 
-  thprintf("left %s (%.2f %.2f)  right %s (%.2f %.2f) ==> %.2f %.2f\n",
-    p1->m_name.c_str(), p1->u.m_x, p1->u.m_y, p2->m_name.c_str(), p2->u.m_x, p2->u.m_y, x0, y0 );
+  thprint(fmt::format("left {} ({:.2f} {:.2f})  right {} ({:.2f} {:.2f}) ==> {:.2f} {:.2f}\n",
+    p1->m_name, p1->u.m_x, p1->u.m_y, p2->m_name, p2->u.m_x, p2->u.m_y, x0, y0 ));
 
   auto pair = std::make_unique<point_pair>(t, name, src.m_x, src.m_y, x0, y0);
   mLines.push_back(std::make_unique<therion::warp::line>(t, mPairs[k].get(), pair.get()));
@@ -260,8 +251,6 @@ therion::warp::plaquette_algo::add_extra_line(
   std::ostringstream ost;
   ost << p1->m_name << "_E_" << index;
   std::string name = ost.str();
-  // thprintf("Extra line() point %s %6.2f %6.2f %6.2f %6.2f \n",
-  //    name.c_str(), x3.m_x, x3.m_y, u3.m_x, u3.m_y );
 
   point_pair * p3 = insert_point( THMORPH_EXTRA, name, x3, u3 );
   p3->update( mX0, mXUnit, mU0, mUUnit );
@@ -346,7 +335,6 @@ therion::warp::plaquette_algo::update_lines()
 void 
 therion::warp::plaquette_algo::make_neighbors( )
 {
-  // thprintf("plaquette_algo::make_neighbors() plaquettes %d \n", mPlaquettes.size() );
   for (size_t k=0; k<mPlaquettes.size(); ++k) {
     find_neighbors(mPlaquettes[k].get());
     // mPlaquettes[k]->compute_slopes();
@@ -364,8 +352,8 @@ therion::warp::plaquette_algo::find_neighbors( therion::warp::basic_pair * me )
         me->m_ngbh[k] = find_plaquette( me->m_pair[k+1], me->m_pair[k] );
       break;
     default:
-      thprintf("plaquette_algo::make_neighbors() wrong pair warp-type %d\n",
-        static_cast<int>(me->type()) );
+      thprint(fmt::format("plaquette_algo::make_neighbors() wrong pair warp-type {}\n",
+        static_cast<int>(me->type()) ));
   }
 }
 
@@ -374,13 +362,11 @@ therion::warp::plaquette_algo::find_plaquette(
     point_pair * p1, 
     point_pair * p2 )
 {
-  // thprintf("find_plaquette() %s %s \n", p1->m_name.c_str(), p2->m_name.c_str() );
   for (size_t k=0; k<mPlaquettes.size(); ++k ) {
     int i2 = mPlaquettes[k]->ngbh_nr();
     if ( i2 >= 1 && i2 < 4 ) {
       for (int i=0; i<i2; ++i) {
         if ( mPlaquettes[k]->m_pair[i] == p1 && mPlaquettes[k]->m_pair[i+1] == p2 ) {
-	  // thprintf("found %d\n", mPlaquettes[k]->nr() );
 	  return mPlaquettes[k].get();
 	}
       }
@@ -441,8 +427,6 @@ therion::warp::plaquette_algo::make_plaquettes( warp_proj proj )
     therion::warp::point_pair * node2 = line->other_end( node1 );
     therion::warp::point_pair * node10 = node1; // save starting nodes
     therion::warp::point_pair * node20 = node2;
-    // thprint("make_plaquettes()");
-    // thprintf(" node1 %s node2 %s\n", node1->m_name.c_str(), node2->m_name.c_str() );
   
     do {
       therion::warp::point_pair * A = node1;
@@ -455,7 +439,6 @@ therion::warp::plaquette_algo::make_plaquettes( warp_proj proj )
         if ( iB == 1 ) 
           B->m_used = true;
 
-        // thprintf("  A %s (%d)  B %s (%d) line type S\n", A->m_name.c_str(), iA, B->m_name.c_str(), iB );
         if ( iA == 1 && iB == 1 ) { 
 	  thprint("ERROR: segments are no longer supported\n");
         } else if ( iA == 1 ) {
@@ -506,7 +489,6 @@ therion::warp::plaquette_algo::make_plaquettes( warp_proj proj )
         if ( iB == 1 ) 
           B->m_used = true;
 
-        // thprintf("  A %s B %s line type non-S\n", A->m_name.c_str(), B->m_name.c_str() );
         //      ?
         //      |
         //      A ======== B
@@ -551,11 +533,11 @@ therion::warp::plaquette_algo::add_triangle( point_pair * A, point_pair * B, poi
   // N.B. bad triangles are only warned; 
   // they are used anyways.
   if ( ((C->x - B->x) ^ (A->x - B->x)) >= 0.0 ) {
-    thprintf("WARNING: bad triangle (%s %s %s) X-orientation\n",
-      C->m_name.c_str(), B->m_name.c_str(), A->m_name.c_str() );
+    thprint(fmt::format("WARNING: bad triangle ({} {} {}) X-orientation\n",
+      C->m_name, B->m_name, A->m_name ));
   } else if ( ((C->u - B->u) ^ (A->u - B->u)) >= 0.0 ) {
-    thprintf("WARNING: bad triangle (%s %s %s) U-orientation\n",
-      C->m_name.c_str(), B->m_name.c_str(), A->m_name.c_str() );
+    thprint(fmt::format("WARNING: bad triangle ({} {} {}) U-orientation\n",
+      C->m_name, B->m_name, A->m_name ));
   } // else {
     auto tri = std::make_unique<therion::warp::triangle_pair>(B, C, A, this->m_bound3);
     tri->set_projection( proj );
@@ -568,21 +550,19 @@ therion::warp::plaquette_algo::add_quadrilateral(
      point_pair * A, point_pair * B, point_pair * C, point_pair * D,
      warp_proj proj )
 {
-  // thprintf("  ADD Plaquette: %s %s %s %s\n",
-  //   A->m_name.c_str(), B->m_name.c_str(), C->m_name.c_str(), D->m_name.c_str() );
   // check orientation
   if ( ((B->x - A->x) ^ (D->x - A->x)) >= 0.0 ) {
-    thprintf("WARNING: bad plaquette (%s %s %s) X-orientation\n",
-      B->m_name.c_str(), A->m_name.c_str(), D->m_name.c_str() );
+    thprint(fmt::format("WARNING: bad plaquette ({} {} {}) X-orientation\n",
+      B->m_name, A->m_name, D->m_name ));
   } else if ( ((C->x - B->x) ^ (A->x - B->x)) >= 0.0 ) {
-    thprintf( "WARNING: bad plaquette (%s %s %s) X-orientation\n",
-      C->m_name.c_str(), B->m_name.c_str(), A->m_name.c_str() );
+    thprint(fmt::format( "WARNING: bad plaquette ({} {} {}) X-orientation\n",
+      C->m_name, B->m_name, A->m_name ));
   } else if ( ((B->u - A->u) ^ (D->u - A->u)) >= 0.0 ) {
-    thprintf("WARNING: bad plaquette (%s %s %s) U-orientation\n",
-      B->m_name.c_str(), A->m_name.c_str(), D->m_name.c_str() );
+    thprint(fmt::format("WARNING: bad plaquette ({} {} {}) U-orientation\n",
+      B->m_name, A->m_name, D->m_name ));
   } else if ( ((C->u - B->u) ^ (A->u - B->u)) >= 0.0 ) {
-    thprintf("WARNING: bad plaquette (%s %s %s) U-orientation\n",
-      C->m_name.c_str(), B->m_name.c_str(), A->m_name.c_str() );
+    thprint(fmt::format("WARNING: bad plaquette ({} {} {}) U-orientation\n",
+      C->m_name, B->m_name, A->m_name ));
   } else {
     auto plaq = std::make_unique<therion::warp::plaquette_pair>(A, B, C, D, this->m_bound4);
     plaq->set_projection( proj );
@@ -622,11 +602,6 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
 
   thvec2 z;
 
-  // print();
-
-  // thprintf("X origin %6.2f %6.2f units %6.2f\n", mX0.m_x, mX0.m_y, mXUnit);
-  // thprintf("U origin %6.2f %6.2f units %6.2f\n", mU0.m_x, mU0.m_y, mUUnit);
-  // thprintf("UC origin %6.2f %6.2f units %6.2f\n", mUC.m_x, mUC.m_y, mUCUnit);
   // new way
   std::vector<warpp_t> pi_storage(static_cast<size_t>(wd) * hd, 0xff);
   std::vector<double> pf_storage(static_cast<size_t>(wd) * hd, 0.0);
@@ -636,7 +611,6 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
     for (size_t k=0; k<mPlaquettes.size(); ++k ) {
       assert( ( ( (warpp_t)k) & (~ngbh_mask)) == (warpp_t)k );
       // int cnt = 0;
-      // thprintf("mapping plaquette %d\n", k );
       thvec2 t1, t2;
       mPlaquettes[k]->bounding_box_to( t1, t2 );
       t1 = mUC + mUCUnit * t1;
@@ -682,7 +656,6 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
 	  u.m_x += 1.0;
         }
       }
-      // thprintf("plaquette %2d: points %d\n", k, cnt );
     }
     warpp_t * pij = pi;
 

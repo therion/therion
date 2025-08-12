@@ -79,13 +79,13 @@ void thprint2err(std::string_view msg) noexcept
 }
 
 void thprint_environment() {
-  thprintf("\n\nINIT=%s\n",thcfg.get_initialization_path());
-  thprintf("SOURCE=%s\n\n",thcfg.get_search_path());
-  thprintf("CAVERN=%s\n",thini.get_path_cavern());
-  thprintf("METAPOST=%s\n",thini.get_path_mpost());
-  thprintf("PDFTEX=%s\n",thini.get_path_pdftex());
-  thprintf("IDENTIFY=%s\n",thini.get_path_identify());
-  thprintf("CONVERT=%s\n",thini.get_path_convert());
+  thprint(fmt::format("\n\nINIT={}\n",thcfg.get_initialization_path()));
+  thprint(fmt::format("SOURCE={}\n\n",thcfg.get_search_path()));
+  thprint(fmt::format("CAVERN={}\n",thini.get_path_cavern()));
+  thprint(fmt::format("METAPOST={}\n",thini.get_path_mpost()));
+  thprint(fmt::format("PDFTEX={}\n",thini.get_path_pdftex()));
+  thprint(fmt::format("IDENTIFY={}\n",thini.get_path_identify()));
+  thprint(fmt::format("CONVERT={}\n",thini.get_path_convert()));
 }
 
 
@@ -105,7 +105,7 @@ void thprint_xtherion() {
       }
     }
     if (!already_exported) {
-      thprintf("\t%s\n",thtt_point_types[i].s);
+      thprint(fmt::format("\t{}\n",thtt_point_types[i].s));
     }
   }
   thprint("}\n\nset xth(line_types) {\n");
@@ -118,7 +118,7 @@ void thprint_xtherion() {
       }
     }
     if (!already_exported) {
-      thprintf("\t%s\n",thtt_line_types[i].s);
+      thprint(fmt::format("\t{}\n",thtt_line_types[i].s));
     }
   }
   thprint("}\n\nset xth(area_types) {\n");
@@ -131,7 +131,7 @@ void thprint_xtherion() {
       }
     }
     if (!already_exported) {
-      thprintf("\t%s\n",thtt_area_types[i].s);
+      thprint(fmt::format("\t{}\n",thtt_area_types[i].s));
     }
   }
   thprint("}\n");
@@ -159,7 +159,7 @@ void thprint_xtherion() {
     }      
     x = &(x[1]);
   }
-  thprintf("\n%s", tss.c_str());
+  thprint(fmt::format("\n{}", tss));
 }
 
 

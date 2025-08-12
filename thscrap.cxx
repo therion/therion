@@ -361,7 +361,7 @@ thscraplo * thscrap::get_outline() {
   this->outline_parsed = true;
 
 #ifdef THDEBUG
-  thprintf("\n\nscanning outline: scrap %s\n",this->name);
+  thprint(fmt::format("\n\nscanning outline: scrap {}\n",this->name));
 #endif
   
   th2ddataobject * obj = this->fs2doptr;
@@ -372,14 +372,14 @@ thscraplo * thscrap::get_outline() {
   while (obj != NULL) {
 #ifdef THDEBUG
     if (obj->get_class_id() == TT_LINE_CMD)
-      thprintf("%d [%s]\n", obj->id, obj->name);
+      thprint(fmt::format("{} [{}]\n", obj->id, obj->name));
 #endif     
     if ((obj->get_class_id() == TT_LINE_CMD) &&
         (dynamic_cast<thline*>(obj)->first_point != NULL) &&
         ((dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_IN) ||
         (dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_OUT))) {
 #ifdef THDEBUG
-      thprintf("inserting line - %d [%s]\n", obj->id, obj->name);
+      thprint(fmt::format("inserting line - {} [{}]\n", obj->id, obj->name));
 #endif     
       co = this->db->db2d.insert_scraplo();
       co->line = dynamic_cast<thline*>(obj);
@@ -438,8 +438,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreefirst = false;
             co2->lfreefirst = false;
 #ifdef THDEBUG
-            thprintf("\tJOIN F-F: %.2f,%.2f\n", co->line->first_point->point->x, co->line->first_point->point->y);
-            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+            thprint(fmt::format("\tJOIN F-F: {:.2f},{:.2f}\n", co->line->first_point->point->x, co->line->first_point->point->y));
+            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
         if (co->lfreefirst && co2->lfreelast && 
@@ -448,8 +448,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreefirst = false;
             co2->lfreelast = false;
 #ifdef THDEBUG
-            thprintf("\tJOIN F-L: %.2f,%.2f\n", co->line->first_point->point->x, co->line->first_point->point->y);
-            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+            thprint(fmt::format("\tJOIN F-L: {:.2f},{:.2f}\n", co->line->first_point->point->x, co->line->first_point->point->y));
+            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
         if (co->lfreelast && co2->lfreefirst && 
@@ -458,8 +458,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreelast = false;
             co2->lfreefirst = false;
 #ifdef THDEBUG
-            thprintf("\tJOIN L-F: %.2f,%.2f\n", co->line->last_point->point->x, co->line->last_point->point->y);
-            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+            thprint(fmt::format("\tJOIN L-F: {:.2f},{:.2f}\n", co->line->last_point->point->x, co->line->last_point->point->y));
+            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
         if (co->lfreelast && co2->lfreelast && 
@@ -468,8 +468,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreelast = false;
             co2->lfreelast = false;
 #ifdef THDEBUG
-            thprintf("\tJOIN L-L: %.2f,%.2f\n", co->line->last_point->point->x, co->line->last_point->point->y);
-            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+            thprint(fmt::format("\tJOIN L-L: {:.2f},{:.2f}\n", co->line->last_point->point->x, co->line->last_point->point->y));
+            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
       }
@@ -488,7 +488,7 @@ thscraplo * thscrap::get_outline() {
       last_pt = co->line->last_point->point;
       co->mode = TT_OUTLINE_NORMAL;
 #ifdef THDEBUG
-      thprintf("\tfirst line: %d [%s] - mode %d\n",co->line->id, co->line->name, co->line->outline);
+      thprint(fmt::format("\tfirst line: {} [{}] - mode {}\n",co->line->id, co->line->name, co->line->outline));
 #endif
       still_in_line = !(co->line->is_closed);
       co3 = co;
@@ -547,7 +547,7 @@ thscraplo * thscrap::get_outline() {
         else {
           co3last->next_line = co3;
 #ifdef THDEBUG
-          thprintf("\tnext line: %d [%s] %s\n", co3->line->id, co3->line->name, (co3_normal ? "normal" : "reversed"));
+          thprint(fmt::format("\tnext line: {} [{}] {}\n", co3->line->id, co3->line->name, (co3_normal ? "normal" : "reversed")));
 #endif
           if (co3_normal) {
             co3->mode = TT_OUTLINE_NORMAL;
@@ -927,13 +927,13 @@ thscrapen * thscrap::get_ends() {
   thscrapen * res = NULL, * cres;
   thscraplo * lo = this->get_outline(), * lo2, * nextlo;
 #ifdef THDEBUG
-      thprintf("\nscaning ends: %s\n", this->name);
+      thprint(fmt::format("\nscaning ends: {}\n", this->name));
 #endif
   while (lo != NULL) {
     if (lo->line->outline != TT_LINE_OUTLINE_NONE) {
       lo2 = lo;
 #ifdef THDEBUG
-      thprintf("\toutline from: %d -- mode %d\n", lo->line->id, lo->line->outline);
+      thprint(fmt::format("\toutline from: {} -- mode {}\n", lo->line->id, lo->line->outline));
 #endif
       search_inv = true;
       cont = true;

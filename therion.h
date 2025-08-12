@@ -101,19 +101,6 @@ extern char * thexecute_cmd;
 void thprint(std::string_view msg);
 
 /**
- * @brief Print formatted to stdout.
- * 
- * @param format format string
- * @param args arguments to print
- */
-template <typename FormatStr, typename... Args>
-void thprintf(const FormatStr& format, const Args&... args)
-{
-  thprint(fmt::sprintf(format, args...));
-}
-
-
-/**
  * @brief Print to stderr.
  * 
  * This function is used for error reporting, so it catches any additional

@@ -32,13 +32,7 @@
 #define THERION
 
 #include "thwarppdef.h"
-
-#ifdef THERION
-  #include "therion.h"  // thprintf
-#else
-  #define thprintf printf
-#endif 
-
+#include "therion.h"  // thprint
 #include "thtrans.h"
 
 #define THWARP_NGBH_DIM 3
@@ -580,12 +574,12 @@ namespace therion
          */
         void print_ngbhs() const
         {
-          thprintf("    ngbh: ");
+          thprint("    ngbh: ");
           for (int k=0; k<THWARP_NGBH_DIM; ++k) {
-            if ( ! m_ngbh[k] ) thprintf(" 0 " );
-            else thprintf(" %d ", m_ngbh[k]->nr() );
+            if ( ! m_ngbh[k] ) thprint(" 0 " );
+            else thprint(fmt::format(" {} ", m_ngbh[k]->nr() ));
           }
-          thprintf("\n");
+          thprint("\n");
         }
 	#endif
     
@@ -856,9 +850,6 @@ namespace therion
 	m_theta_l = m_theta_r = m_t;
 	// m_theta_l = m_theta_r = angle( m_AB, m_AC );
     
-        // thprintf("Triangle A %.2f %.2f B %.2f %.2f C %.2f %.2f\n",
-        //    a.m_x, a.m_y, b.m_x, b.m_y, c.m_x, c.m_y );
-        // thprintf("         AB %.2f AC %.2f Theta %.2f\n", m_ab, m_ac, m_t );
       }
     
       /** map a point to polar coordinates (AB is the X-axis)

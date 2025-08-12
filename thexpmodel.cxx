@@ -207,9 +207,9 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.3d");
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -244,7 +244,6 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   for(i = 0; i < nstat; i++, *cis_exp = 0, cis_exp++);
   for(i = 0; i < nlegs; i++, tlegs++) {
     if ((*tlegs)->survey->is_selected()) {
-//      thprintf("EXP: %s@%s - %s@%s\n", (*tlegs)->leg->from.name, dbp->db1d.station_vec[(*tlegs)->leg->from.id -1].survey->full_name,  (*tlegs)->leg->to.name, dbp->db1d.station_vec[(*tlegs)->leg->to.id -1].survey->full_name);
       cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       is_surface = (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0);
       is_duplicate = (((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0);
@@ -293,7 +292,6 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
         }
         img_write_item(pimg, img_MOVE, 0, NULL, 
           dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z);
-        //thprintf("move to %d\n",cur_st);
         cnlegs = 0;
       }
       last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
@@ -314,7 +312,6 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
       cnlegs++;
       last_loop = (*tlegs)->leg->loop;
       last_traverse = (*tlegs)->leg->traverse;
-      //thprintf("line to %d\n",last_st);
     }
   }
 
@@ -386,9 +383,9 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.plt");
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -494,9 +491,9 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.thm");
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -559,10 +556,6 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
 
 
   // now let's print header
-//  thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
-//          finlim.minx, finlim.maxx, 
-//          finlim.miny, finlim.maxy, 
-//          finlim.minz, finlim.maxz);
 
   
   fprintf(pltf,"glDeleteLists $xthmvv(list,model) 1\n");
@@ -603,10 +596,6 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
         while(cs != NULL) {
           if (cs->fsptr->is_selected() && (cs->d3 != TT_FALSE)) {
             d3d = cs->get_3d_outline();
-    //        thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
-    //          d3d->limits.minx, d3d->limits.maxx, 
-    //          d3d->limits.miny, d3d->limits.maxy, 
-    //          d3d->limits.minz, d3d->limits.maxz);
             finlim.update(&(d3d->limits));
             d3d->exp_shift_x = avx;
             d3d->exp_shift_y = avy;
@@ -670,9 +659,9 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
 #endif
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -919,9 +908,9 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   const char * fnm = this->get_output("cave.3dmf");
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -1123,9 +1112,9 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   const char * fnm = this->get_output("cave.dxf");
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -1469,9 +1458,9 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   thdb_object_list_type::iterator obi;
   
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ...", fnm);
+  thprint(fmt::format("writing {} ...", fnm));
   thtext_inline = true;
 #endif
 
@@ -1965,9 +1954,9 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   this->register_output(fnm);
 
 #ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
 #else
-  thprintf("writing %s ... ", fnm);
+  thprint(fmt::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 

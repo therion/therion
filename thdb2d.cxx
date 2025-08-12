@@ -799,7 +799,7 @@ void thdb2d::process_map_references(thmap * mptr)
     citem = citem->next_item;
   }
 #ifdef THDEBUG
-  thprintf("\nmap projection %s -> %d\n",mptr->name,proj_id);
+  thprint(fmt::format("\nmap projection {} -> {}\n",mptr->name,proj_id));
 #endif 
   mptr->projection_id = proj_id;
 }
@@ -1229,18 +1229,18 @@ void thdb2d::process_projection(thdb2dprj * prj)
   bool old_thtext_inline = thtext_inline;
   if (strlen(prj->index) > 0) {
 #ifdef THDEBUG
-    thprintf("\n\nprocessing projection %s:%s\n",prjstr,prj->index);
+    thprint(fmt::format("\n\nprocessing projection {}:{}\n",prjstr,prj->index));
 #else
-    thprintf("%sprocessing projection %s:%s ... ",
-      thtext_inline ? "\n": "", prjstr,prj->index);
+    thprint(fmt::format("{}processing projection {}:{} ... ",
+      thtext_inline ? "\n": "", prjstr,prj->index));
     thtext_inline = true;
 #endif 
   } else {
 #ifdef THDEBUG
-    thprintf("\n\nprocessing projection %s\n",prjstr);
+    thprint(fmt::format("\n\nprocessing projection {}\n",prjstr));
 #else
-    thprintf("%sprocessing projection %s ... ",
-      thtext_inline ? "\n": "", prjstr);
+    thprint(fmt::format("{}processing projection {} ... ",
+      thtext_inline ? "\n": "", prjstr));
     thtext_inline = true;
 #endif   
   }
@@ -1272,7 +1272,7 @@ void thdb2d::process_projection(thdb2dprj * prj)
   thtext_inline = old_thtext_inline;
 #endif 
   if (prj->amaxdist > 0.0) {
-    thprintf("average distortion: %.2f%%\n", prj->amaxdist);
+    thprint(fmt::format("average distortion: {:.2f}%\n", prj->amaxdist));
   }
 
 }
@@ -2047,7 +2047,6 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
                               - pscrap->myy * acp1->pt->yt;                                                            
 #else
       // 1. najdeme transformaciu targetov
-      // thprintf("\n\n\nscap: %s\n",pscrap->name);
       movetx = 0.0;
       movety = 0.0;
       cp = pscrap->fcpp;
@@ -2065,7 +2064,6 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
       while (cp != NULL) {
         X = cp->tx - movetx;
         Y = cp->ty - movety;
-        // thprintf("%.4f,%.4f -> %.4f,%.4f\n",X,Y,cp->pt->xt,cp->pt->yt);
         sumXx += X * cp->pt->xt;
         sumYy += Y * cp->pt->yt;
         sumXy += X * cp->pt->yt;
@@ -2079,7 +2077,6 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
       b = (sumYx - sumXy) / (sumxx + sumyy);
         
       if (((sumxx + sumyy) > 0) && (std::hypot(a,b) > 0.0)) {
-        // thprintf("a = %.4f;\nb = %.4f\n",a,b);
         pscrap->mxx = a;
         pscrap->mxy = -b;
         pscrap->myx = b;
@@ -2547,7 +2544,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             fse2 = sc2->get_ends();
             
 #ifdef THDEBUG
-            thprintf("\nsearching for join %d of %s and %s:\n\t%% OCTAVE CODE\n\thold on;\n",ccount+1,sc1->name,sc2->name);
+            thprint(fmt::format("\nsearching for join {} of {} and {}:\n\t% OCTAVE CODE\n\thold on;\n",ccount+1,sc1->name,sc2->name));
 #endif
 
             if (ccount == 0) {
@@ -2556,8 +2553,8 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
                 se1->cxt = (se1->lp1->point->xt + se1->lp2->point->xt) / 2.0;
                 se1->cyt = (se1->lp1->point->yt + se1->lp2->point->yt) / 2.0;
 #ifdef THDEBUG
-                thprintf("\tplot([%.2f,%.2f],[%.2f,%.2f],\"r;;\");hold on;\n",se1->lp1->point->xt,se1->lp2->point->xt,se1->lp1->point->yt,se1->lp2->point->yt);
-                thprintf("\tplot([%.2f],[%.2f],\"xm;;\");hold on;\n",se1->cxt,se1->cyt);
+                thprint(fmt::format("\tplot([{:.2f},{:.2f}],[{:.2f},{:.2f}],\"r;;\");hold on;\n",se1->lp1->point->xt,se1->lp2->point->xt,se1->lp1->point->yt,se1->lp2->point->yt));
+                thprint(fmt::format("\tplot([{:.2f}],[{:.2f}],\"xm;;\");hold on;\n",se1->cxt,se1->cyt));
 #endif                
                 se1->active = true;
                 se1 = se1->next_end;
@@ -2568,8 +2565,8 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
                 se2->cxt = (se2->lp1->point->xt + se2->lp2->point->xt) / 2.0;
                 se2->cyt = (se2->lp1->point->yt + se2->lp2->point->yt) / 2.0;
 #ifdef THDEBUG
-                thprintf("\tplot([%.2f,%.2f],[%.2f,%.2f],\"b;;\");hold on;\n",se2->lp1->point->xt,se2->lp2->point->xt,se2->lp1->point->yt,se2->lp2->point->yt);
-                thprintf("\tplot([%.2f],[%.2f],\"xc;;\");hold on;\n",se2->cxt,se2->cyt);
+                thprint(fmt::format("\tplot([{:.2f},{:.2f}],[{:.2f},{:.2f}],\"b;;\");hold on;\n",se2->lp1->point->xt,se2->lp2->point->xt,se2->lp1->point->yt,se2->lp2->point->yt));
+                thprint(fmt::format("\tplot([{:.2f}],[{:.2f}],\"xc;;\");hold on;\n",se2->cxt,se2->cyt));
 #endif                
                 se2->active = true;
                 se2 = se2->next_end;
@@ -2602,9 +2599,6 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               se2 = sc2->get_ends();
               while (se2 != NULL) {
                 cdst = std::hypot(se1->cxt - se2->cxt, se1->cyt - se2->cyt);
-//#ifdef THDEBUG
-//  thprintf("\ttrying (%.2f,%.2f) - (%.2f,%.2f) = %.2f (MIN: %.2f)\n",se1->cxt,se1->cyt,se2->cxt,se2->cyt,cdst,mindst);
-//#endif
                 if ((cdst < mindst) && (se1->active) && (se2->active)) {
                   fse1 = se1;
                   fse2 = se2;
@@ -2635,12 +2629,12 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             
 #ifdef THDEBUG
             thprint("\ncreating new 2 joins:\n");
-            thprintf("\tline %ld (%.2f,%.2f) -- line %ld (%.2f,%.2f)\n",
+            thprint(fmt::format("\tline {} ({:.2f},{:.2f}) -- line {} ({:.2f},{:.2f})\n",
                 fse1->l1->id, fse1->lp1->point->xt, fse1->lp1->point->yt, 
-                fse2->l1->id, fse2->lp1->point->xt, fse2->lp1->point->yt);
-            thprintf("\tline %ld (%.2f,%.2f) -- line %ld (%.2f,%.2f)\n",
+                fse2->l1->id, fse2->lp1->point->xt, fse2->lp1->point->yt));
+            thprint(fmt::format("\tline {} ({:.2f},{:.2f}) -- line {} ({:.2f},{:.2f})\n",
                 fse1->l2->id, fse1->lp2->point->xt, fse1->lp2->point->yt, 
-                fse2->l2->id, fse2->lp2->point->xt, fse2->lp2->point->yt);
+                fse2->l2->id, fse2->lp2->point->xt, fse2->lp2->point->yt));
 #endif
             {
               auto unique_tjptr = thdb.create<thjoin>(thobjectsrc());
