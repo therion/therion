@@ -330,12 +330,12 @@ void thinput::open_file(char * fname)
     }
 #ifdef THWIN32
     if (n_rec == THMAXFREC) {
-      therror(("%s [%lu] -- too many file inclusions -- probably input recursion -- %s", \
+      therror(fmt::format("{} [{}] -- too many file inclusions -- probably input recursion -- {}", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #else
     if (is_rec) {
-      therror(("%s [%lu] -- recursive file inclusion -- %s", \
+      therror(fmt::format("{} [{}] -- recursive file inclusion -- {}", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #endif
@@ -417,7 +417,7 @@ char * thinput::read_line()
     // Check, if reading was OK.
     
     if (this->last_ptr->sh.fail() && (!(this->last_ptr->sh.eof()))) {
-      therror(("%s [%lu] -- line too long", \
+      therror(fmt::format("{} [{}] -- line too long", \
         this->get_cif_name(), this->get_cif_line_number()));
     }
     
@@ -469,7 +469,7 @@ char * thinput::read_line()
         case TT_INPUT:
           if (this->input_sensitivity) {
             if (this->tmpmb.get_size() != 1)
-              therror(("%s [%lu] -- one input file name expected -- %s", \
+              therror(fmt::format("{} [{}] -- one input file name expected -- {}", \
                 this->get_cif_name(), this->get_cif_line_number(), \
                 this->valuebf.get_buffer()))
             else
@@ -479,13 +479,13 @@ char * thinput::read_line()
           
         case TT_ENCODING:
           if (this->tmpmb.get_size() != 1)
-            therror(("%s [%lu] -- encoding name expected -- %s", \
+            therror(fmt::format("{} [{}] -- encoding name expected -- {}", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.get_buffer()));
           this->last_ptr->encoding = \
             thmatch_token(*(this->tmpmb.get_buffer()), thtt_encoding);
           if (this->last_ptr->encoding == TT_UNKNOWN_ENCODING) {
-            therror(("%s [%lu] -- unknown encoding -- %s", \
+            therror(fmt::format("{} [{}] -- unknown encoding -- {}", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.get_buffer()));
             this->last_ptr->encoding = TT_UTF_8;

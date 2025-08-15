@@ -58,7 +58,7 @@
  
 #define therror(P) {\
   thprint_error_src();\
-  thprint2err(fmt::sprintf P );\
+  thprint2err(P);\
   thprint2err("\n");\
   thpause_exit();\
   therion_exit_state = 0;\

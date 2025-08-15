@@ -200,7 +200,7 @@ void thcmdline::process(int argc, char * argv[])
         break;
         
       default:
-    	therror(("unknown command line option"));
+    	therror("unknown command line option");
 		break;
         
     }

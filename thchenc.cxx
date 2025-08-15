@@ -79,7 +79,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
       
       // longer chars not supported
       else
-        therror(("unicode character over 0xFFFF not supported"));
+        therror("unicode character over 0xFFFF not supported");
     }
     
     srcx++;
@@ -123,7 +123,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
         srcp++;
         srcx++;
         if ((srcx >= srcln) || (*srcp < 128))
-          therror(("invalid UTF-8 string -- \"%s\"",src));
+          therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
         sch += *srcp % 64;
       }
       // three byte UTF-8 character
@@ -132,18 +132,18 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
         srcp++;
         srcx++;
         if ((srcx >= srcln) || (*srcp < 128))
-          therror(("invalid UTF-8 string -- \"%s\"",src));
+          therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
         sch += 64 * (*srcp % 64);
         srcp++;
         srcx++;
         if ((srcx >= srcln) || (*srcp < 128))
-          therror(("invalid UTF-8 string -- \"%s\"",src));
+          therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
         sch += *srcp % 64;
       } 
       
       // longer chars not supported
       else
-        therror(("invalid UTF-8 string -- \"%s\"",src));
+        therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
         
       // now we have whchar_t value of UTF-8 character in sch
       if (sch < thchenc_fucc)
