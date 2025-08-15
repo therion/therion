@@ -140,7 +140,7 @@ void base64_encode(const char * fname, std::ofstream & fout) {
   unsigned char out_buffer[4];
 
   std::ifstream fin(fname, std::ios::binary);
-  if (!fin) therror((fmt::format("Can't read file {}!\n", fname).c_str()));
+  if (!fin) therror(fmt::format("Can't read file {}!\n", fname));
 
   do {
       for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';
@@ -230,7 +230,7 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
 
 
     if (llx == DBL_MAX || lly == DBL_MAX || urx == -DBL_MAX || ury == -DBL_MAX) 
-      therror(("This can't happen -- no data for a scrap!"));
+      therror("This can't happen -- no data for a scrap!");
     
     std::map<int,layerrecord>::iterator J = LAYERHASH.find(I->layer);
     thassert(J != LAYERHASH.end());

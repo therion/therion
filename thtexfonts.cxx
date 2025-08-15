@@ -96,7 +96,7 @@ void encodings_new::write_enc_files() {
   std::string s, fc;
 
   std::ofstream H ("thfonts.map"); // delete previous file, we will append to it below
-  if (!H) therror(("could not write font mapping data for pdfTeX\n"));
+  if (!H) therror("could not write font mapping data for pdfTeX\n");
   H.close();
 
   int fcount = get_enc_count();
@@ -105,7 +105,7 @@ void encodings_new::write_enc_files() {
     std::string fname_enc = std::string("th_enc")+fc+".enc";
     
     std::ofstream F(fname_enc.c_str());
-    if (!F) therror(("could not write encoding file\n"));
+    if (!F) therror("could not write encoding file\n");
     F << "% LIGKERN uni002D uni002D =: uni2013 ; uni2013 uni002D =: uni2014 ;\n";
     F << "% LIGKERN uni0066 uni0066 =: uniFB00 ; uni0066 uni006C =: uniFB02 ; uni0066 uni0069 =: uniFB01 ; uniFB00 uni0069 =: uniFB03 ; uniFB00 uni006C =: uniFB04 ;\n";
     F << "/" << fname_enc << "[\n";
@@ -135,20 +135,20 @@ void encodings_new::write_enc_files() {
 //        " -fkern --no-default-ligkern --name " + fname_tfm +
 //        type1 + " --warn-missing "+otf_file[i]+" > thotftfm.tmp").c_str()) > 0)
         type1 + otf_file[i]+" > thotftfm.tmp").c_str()) != 0)
-          therror((("can't generate TFM file from "+otf_file[i]+" (LCDF typetools not installed?)").c_str()));
+          therror(fmt::format("can't generate TFM file from {} (LCDF typetools not installed?)", otf_file[i]));
       std::ifstream G ("thotftfm.tmp");
-      if (!G) therror(("could not read font mapping data\n"));
+      if (!G) therror("could not read font mapping data\n");
       while (G) {
         std::getline(G,s);
         if (s.find("<") != std::string::npos) break;
       }
-      if (s.size() < 10) therror(("no usable otftotfm output"));
+      if (s.size() < 10) therror("no usable otftotfm output");
       if (s.substr(s.size()-3,3)=="otf" || s.substr(s.size()-3,3)=="OTF") {
         s.replace(s.rfind("<"), 1, "<<");  // OTF fonts must be fully embedded
       }
       G.close();
       std::ofstream H ("thfonts.map", std::ios::app); 
-      if (!H) therror(("could not write font mapping data for pdfTeX\n"));
+      if (!H) therror("could not write font mapping data for pdfTeX\n");
       H << "\\pdfmapline{+" << s << "}\n";
       H.close();
     }
@@ -239,8 +239,7 @@ unistr utf2uni(std::string s) {
       j += c-128;
       t.push_back(j);
     }
-    else therror (("Invalid utf-8 string!")); // we don't support higher
-                                              // unicode characters
+    else therror ("Invalid utf-8 string!"); // we don't support higher unicode characters
   }
   return t;
 }
@@ -366,7 +365,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
 //  size_t i=-1,j;
 //  while((i = str.find("<link:",i+1)) != string::npos) {
 //      j = str.find(">",i);
-//      if (j == string::npos) therror(("No closing '>' in <link:...> definition"));
+//      if (j == string::npos) therror("No closing '>' in <link:...> definition");
 //      str = str.replace(j,1,"\x1B\x0B");
 //      str = str.replace(i,6,"\x1B\x0A");
 //  }
@@ -391,7 +390,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
       out += match.prefix().str() + "\x1B\xE" + (char) (std::max((int) std::round(std::stod(match.str(2)) / 10), 1));
     else if (match.str(1) == match.str(2))   // font size in points; limited to <1,127>
       out += match.prefix().str() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(2)),1),127));
-    else therror(("invalid font size specification"));
+    else therror("invalid font size specification");
   }
   out.append(it, end);
   str = out;
@@ -617,7 +616,7 @@ int tex2uni(std::string font, int ch) {
       s << "can't map character 0x" << std::uppercase << std::setfill('0') << 
            std::setw(2) << std::hex << ch << 
            " in font '" << font << "' to unicode";
-      therror((s.str().c_str()));
+      therror(s.str());
     }
     return texenc[ch][id];
   } else {  // NFSS
@@ -636,7 +635,7 @@ int tex2uni(std::string font, int ch) {
 
 void print_fonts_setup() {
   std::ofstream P("th_enc.tex");  // included also in MetaPost
-  if(!P) therror(("Can't write file th_enc.tex"));
+  if(!P) therror("Can't write file th_enc.tex");
   P << "\\def\\rms{\\rm}\n";
   P << "\\def\\its{\\it}\n";
   P << "\\def\\bfs{\\bf}\n";

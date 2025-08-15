@@ -156,7 +156,7 @@ int main(int argc, char * argv[]) {
     thconfig_src_list * sources = thcfg.get_sources();
     thconfig_src_list::iterator srcit;
     if (sources->size() == 0)
-      therror(("source files not specified"));
+      therror("source files not specified");
 #ifndef THDEBUG
     thprint("reading source files ... ");
     thtext_inline = true;
@@ -251,7 +251,7 @@ int main(int argc, char * argv[]) {
   }
   catch(const std::exception& e)
   {
-      therror((e.what()));
+      therror(e.what());
   }
 #endif
 

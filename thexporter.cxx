@@ -174,7 +174,7 @@ void thexporter::export_db(class thdatabase * dp)
 
 	  }
 	  thprint("done.\n");
-	  if (!ok) therror(("CRC32 checks not passed.\n"));
+	  if (!ok) therror("CRC32 checks not passed.\n");
   }
 
   

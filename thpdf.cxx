@@ -54,7 +54,7 @@
 #include "thcs.h"
 #include "thproj.h"
 
-#define IOerr(F) fmt::format("Can't open file {}!\n", (F)).c_str()
+#define IOerr(F) fmt::format("Can't open file {}!\n", (F))
 
 
 
@@ -105,12 +105,12 @@ double HS,VS;
 //////////
 
 std::string black2pdf(double shade, fillstroke fs) {    // shade: 0 = white, 1 = black
-  if (shade < 0 || shade > 1) therror((fmt::format("shade {} out of range <0,1>",shade).c_str()));
+  if (shade < 0 || shade > 1) therror(fmt::format("shade {} out of range <0,1>",shade));
   color c;
   if (LAYOUT.output_colormodel == colormodel::grey) c.set(1-shade);
   else if (LAYOUT.output_colormodel == colormodel::rgb) c.set(1-shade, 1-shade, 1-shade);
   else if (LAYOUT.output_colormodel == colormodel::cmyk) c.set(0, 0, 0, shade);
-  else therror (("invalid color model"));
+  else therror ("invalid color model");
   return c.to_pdfliteral(fs);
 }
 
@@ -204,10 +204,10 @@ void make_sheets() {
     };
 
     if (llx == DBL_MAX || lly == DBL_MAX || urx == -DBL_MAX || ury == -DBL_MAX) 
-      therror(("This can't happen -- no data for a scrap!"));
+      therror("This can't happen -- no data for a scrap!");
     
     std::map<int,layerrecord>::iterator J = LAYERHASH.find(I->layer);
-    if (J == LAYERHASH.end()) therror (("This can't happen!"));
+    if (J == LAYERHASH.end()) therror ("This can't happen!");
 
     if (mode == ATLAS) {
       int Llx = (int) floor((llx-LAYOUT.overlap-LAYOUT.hoffset) / LAYOUT.hsize);
@@ -314,13 +314,13 @@ void find_jumps() {
     }
 
     std::map<int,layerrecord>::iterator lay_it = LAYERHASH.find(sheet_it->layer);
-    if (lay_it == LAYERHASH.end()) therror (("This can't happen!"));
+    if (lay_it == LAYERHASH.end()) therror ("This can't happen!");
 
     if (!lay_it->second.U.empty()) {
       for (std::set<int>::iterator l_it = lay_it->second.U.begin(); 
                               l_it != lay_it->second.U.end(); l_it++) {
         std::map<int,layerrecord>::iterator alt_lay_it = LAYERHASH.find(*l_it);
-        if (alt_lay_it == LAYERHASH.end()) therror(("This can't happen!"));
+        if (alt_lay_it == LAYERHASH.end()) therror("This can't happen!");
         jump = (alt_lay_it->second.Z == 0) ? *l_it : alt_lay_it->second.AltJump;
         std::string U = xyz2str(jump,sheet_it->namex,sheet_it->namey);
         if (SHEET_JMP.count(U) > 0) {
@@ -334,7 +334,7 @@ void find_jumps() {
       for (std::set<int>::iterator l_it = lay_it->second.D.begin(); 
                               l_it != lay_it->second.D.end(); l_it++) {
         std::map<int,layerrecord>::iterator alt_lay_it = LAYERHASH.find(*l_it);
-        if (alt_lay_it == LAYERHASH.end()) therror(("This can't happen!"));
+        if (alt_lay_it == LAYERHASH.end()) therror("This can't happen!");
         jump = (alt_lay_it->second.Z == 0) ? *l_it : alt_lay_it->second.AltJump;
         std::string D = xyz2str(jump,sheet_it->namex,sheet_it->namey);
         if (SHEET_JMP.count(D) > 0) {
@@ -397,7 +397,7 @@ std::set<int> find_excluded_pages(std::string s) {
       for (int k=i; k<=j; k++) excl.insert(k);
       S >> c;   // punctuation character
     }
-    else therror(("Invalid character in the exclusion list!"));
+    else therror("Invalid character in the exclusion list!");
   }
 //cout << '\n';
 //cout << "Excl.list: " << s << '\n';  
@@ -488,7 +488,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
 
   if (mode == ATLAS) {
     std::map<int,layerrecord>::iterator lay_it = LAYERHASH.find(sheet_it->layer);
-    if (lay_it == LAYERHASH.end()) therror(("This can't happen!"));
+    if (lay_it == LAYERHASH.end()) therror("This can't happen!");
     used_layers = (up ? lay_it->second.U : lay_it->second.D);
   }
   else {
@@ -502,7 +502,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
     }
     else {
       std::map<int,layerrecord>::iterator J = LAYERHASH.find(*I);
-      if (J == LAYERHASH.end()) therror(("This can't happen!"));
+      if (J == LAYERHASH.end()) therror("This can't happen!");
       used_scraps = J->second.allscraps;
     }
     if (!used_scraps.empty()) {
@@ -550,7 +550,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
 
 void compose_page(std::list<sheetrecord>::iterator sheet_it, std::ofstream& PAGE) {
   std::map<int,layerrecord>::iterator lay_it = LAYERHASH.find(sheet_it->layer);
-  if (lay_it == LAYERHASH.end()) therror (("This can't happen!"));
+  if (lay_it == LAYERHASH.end()) therror ("This can't happen!");
 
   if (sheet_it->title_before) {
     PAGE << "\\TITLE{" << utf2tex(lay_it->second.T) << "}\n";
@@ -603,7 +603,7 @@ void compose_page(std::list<sheetrecord>::iterator sheet_it, std::ofstream& PAGE
                                     l_it != sheet_it->jumpU.rend(); l_it++) {
       std::list<sheetrecord>::iterator s_it = 
         find_sheet(*l_it,sheet_it->namex,sheet_it->namey);
-      if (s_it == SHEET.end()) therror (("This can't happen!"));
+      if (s_it == SHEET.end()) therror ("This can't happen!");
       PAGE << utf2tex(LAYERHASH.find(*l_it)->second.N) << "|" <<
            s_it->id << "|" << u2str(s_it->id) << "||%\n";
     }
@@ -617,7 +617,7 @@ void compose_page(std::list<sheetrecord>::iterator sheet_it, std::ofstream& PAGE
                                     l_it != sheet_it->jumpD.rend(); l_it++) {
       std::list<sheetrecord>::iterator s_it = 
         find_sheet(*l_it,sheet_it->namex,sheet_it->namey);
-      if (s_it == SHEET.end()) therror (("This can't happen!"));
+      if (s_it == SHEET.end()) therror ("This can't happen!");
       PAGE << utf2tex(LAYERHASH.find(*l_it)->second.N) << "|" <<
            s_it->id << "|" << u2str(s_it->id) << "||%\n";
     }
@@ -1032,7 +1032,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
           K->P != "" && K->level >= (I->first)) {
         xc = HSHIFT - K->S1; yc = VSHIFT - K->S2;
         std::ifstream G((K->P).c_str());
-        if(!G) therror((IOerr(K->P)));
+        if(!G) therror(IOerr(K->P));
         while(G >> buffer) {
           if ((buffer == "m") || (buffer == "l") || (buffer == "c")) {
             PAGEDEF << "\\PL{"; 
@@ -1048,7 +1048,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
           }
         }
         G.close();
-        if (!thstack.empty()) therror(("This can't happen -- bad text clipping path!"));
+        if (!thstack.empty()) therror("This can't happen -- bad text clipping path!");
       };
     }
   
@@ -1130,7 +1130,7 @@ void print_navigator(std::ofstream& P, std::list<sheetrecord>::iterator sheet_it
   //P.precision(2);
 
   std::map<int,layerrecord>::iterator lay_it = LAYERHASH.find(sheet_it->layer);
-  if (lay_it == LAYERHASH.end()) therror (("This can't happen!"));
+  if (lay_it == LAYERHASH.end()) therror ("This can't happen!");
 
   NAV_SCRAPS.clear();
   if (!lay_it->second.D.empty()) {
@@ -1271,28 +1271,28 @@ void print_margins(std::ofstream& PAGEDEF) {
 
 void icc_check_file(std::string fname, std::string type) {
   std::ifstream iccfile(fname, std::ios::binary);
-  if(!iccfile) therror((IOerr(fname)));
+  if(!iccfile) therror(IOerr(fname));
   char buffer[5];
   iccfile.seekg(16);
   iccfile.read(buffer,4);
   buffer[4] = '\0';
-  if (type != std::string(buffer)) therror(((std::string("Invalid ICC profile type: expected ")+type+", got "+buffer).c_str()));
+  if (type != std::string(buffer)) therror(fmt::format("Invalid ICC profile type: expected {}, got {}", type, buffer));
 }
 
 void build_pages() {
   
   std::ofstream PAGEDEF("th_pagedef.tex");
-  if(!PAGEDEF) therror(("Can't write file th_pagedef.tex"));
+  if(!PAGEDEF) therror("Can't write file th_pagedef.tex");
   PAGEDEF.setf(std::ios::fixed, std::ios::floatfield);
   PAGEDEF.precision(2);
 
   std::ofstream PAGE("th_pages.tex");
-  if(!PAGE) therror(("Can't write file th_pages.tex"));
+  if(!PAGE) therror("Can't write file th_pages.tex");
   PAGE.setf(std::ios::fixed, std::ios::floatfield);
   PAGE.precision(2);
 
   std::ofstream PDFRES("th_resources.tex");
-  if(!PDFRES) therror(("Can't write file th_resources.tex"));
+  if(!PDFRES) therror("Can't write file th_resources.tex");
 
   PDFRES << "\\pdfminorversion=7%\n";
 
@@ -1510,7 +1510,7 @@ R"(\pdfcompresslevel=9%
     HS = MAXX - MINX;
     VS = MAXY - MINY;
     if (HS>14000 || VS>14000) 
-      therror(("Map is too large for PDF format. Try smaller scale!"));
+      therror("Map is too large for PDF format. Try smaller scale!");
     PAGEDEF << "\\eject\n";
     PAGEDEF << "\\hsize=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp\n";
     PAGEDEF << "\\vsize=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\n";

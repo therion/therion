@@ -169,7 +169,7 @@ void th_init_proj(PJ * &P, std::string s) {
     // download all tif grids from the Proj CDN
     if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
       proj_destroy(P);
-      therror(("couldn't enable network access for Proj"));
+      therror("couldn't enable network access for Proj");
     }
     for (auto & f: grids) {
 #if PROJ_VER >= 8  // supported since 7.1.0
@@ -180,12 +180,12 @@ void th_init_proj(PJ * &P, std::string s) {
 #endif
       if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
         proj_destroy(P);
-        therror(("couldn't download the grid"));
+        therror("couldn't download the grid");
       }
     }
     if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
       proj_destroy(P);
-      therror(("couldn't disable network access for Proj"));
+      therror("couldn't disable network access for Proj");
     }
     thprint("done\n");
 
@@ -197,7 +197,7 @@ void th_init_proj(PJ * &P, std::string s) {
     std::ostringstream u;
     u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << "): " << s;
     proj_destroy(P);
-    therror((u.str().c_str()));
+    therror(u.str());
   }
 }
 
@@ -213,7 +213,7 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
 #if PROJ_VER >= 7
   (thcs_cfg.proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
     if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
-      therror(("couldn't enable network access for Proj"));
+      therror("couldn't enable network access for Proj");
     }
     proj_grid_cache_set_enable(PJ_DEFAULT_CTX, 1);
     thprint("network access for Proj library enabled...\n");
@@ -240,12 +240,12 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
     const char * short_name, * url;
     if (proj_list_get_count(ops) < 1) {
       proj_list_destroy(ops);
-      therror(("no usable coordinate transformation found"));
+      therror("no usable coordinate transformation found");
     }
     for (int i = 0; i < 1; i++) {   // let's look just at the first operation instead of up to proj_list_get_count(ops)
       PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
 //      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
-//        therror(("no reasonably precise coordinate transformation found"));
+//        therror("no reasonably precise coordinate transformation found");
       if (!proj_coordoperation_is_instantiable(PJ_DEFAULT_CTX, P_tmp)) {
         for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
           proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j,
@@ -258,14 +258,14 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
             case GRID_FAIL:
               proj_destroy(P_tmp);
               proj_list_destroy(ops);
-              therror((s_tmp.c_str()));
+              therror(s_tmp);
               break;
 #if PROJ_VER >= 7
             case GRID_DOWNLOAD:
               if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
                 proj_destroy(P_tmp);
                 proj_list_destroy(ops);
-                therror(("couldn't enable network access for Proj"));
+                therror("couldn't enable network access for Proj");
               }
 #if PROJ_VER >= 8  // supported since 7.1.0
               thprint(fmt::format("downloading the grid {} from {} into {}...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
@@ -276,12 +276,12 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
               if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
                 proj_destroy(P_tmp);
                 proj_list_destroy(ops);
-                therror(("couldn't download the grid"));
+                therror("couldn't download the grid");
               }
               if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
                 proj_destroy(P_tmp);
                 proj_list_destroy(ops);
-                therror(("couldn't disable network access for Proj"));
+                therror("couldn't disable network access for Proj");
               }
               thprint("done\n");
               break;
@@ -305,7 +305,7 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
     std::ostringstream u;
     u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << ")";
     proj_destroy(P);
-    therror((u.str().c_str()));
+    therror(u.str());
   }
   PJ* P_for_GIS = proj_normalize_for_visualization(PJ_DEFAULT_CTX, P);
   if( 0 == P_for_GIS )  {
@@ -313,13 +313,13 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
     u << "PROJ library: " << proj_errno(P_for_GIS) << " (" << proj_errno_string(proj_errno(P_for_GIS)) << ")";
     proj_destroy(P);
     proj_destroy(P_for_GIS);
-    therror((u.str().c_str()));
+    therror(u.str());
   }
   proj_destroy(P);
   P = P_for_GIS;
 
   if (!cache.add(si,ti,thcs_cfg.bbox,P))
-    therror(("could not add projection to the cache, it's already there -- should not happen"));
+    therror("could not add projection to the cache, it's already there -- should not happen");
 }
 
 void thcs2cs(int si, int ti,
@@ -375,7 +375,7 @@ signed int thcs2zone(int s, double a, double b, double c) {
 double thcsconverg(int s, double a, double b) {
   double c = 0, x, y, z, x2, y2, z2;
   if (thcs_islatlong(thcs_get_params(s)))
-    therror(("can't determine meridian convergence for lat-long systems"));
+    therror("can't determine meridian convergence for lat-long systems");
   thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
   y += 1e-6;
   thcs2cs(TTCS_EPSG + 4326,s,x,y,z,x2,y2,z2);
@@ -427,17 +427,17 @@ std::vector<axis_orient> thcs_axesinfo(int cs, double &scale, bool &gis_ok) {
   if (proj_get_type(P) == PJ_TYPE_BOUND_CRS) {
     P2 = proj_get_source_crs(PJ_DEFAULT_CTX, P);
     proj_destroy(P);
-    if (P2 == nullptr) therror(("invalid bound crs conversion -- should not happen"));
+    if (P2 == nullptr) therror("invalid bound crs conversion -- should not happen");
     P = P2;
   } else if (proj_get_type(P) == PJ_TYPE_COMPOUND_CRS) {
     P2 = proj_crs_get_sub_crs(PJ_DEFAULT_CTX, P, 0);
     proj_destroy(P);
-    if (P2 == nullptr) therror(("invalid compound crs conversion -- should not happen"));
+    if (P2 == nullptr) therror("invalid compound crs conversion -- should not happen");
     P = P2;
   }
   CS = proj_crs_get_coordinate_system(PJ_DEFAULT_CTX, P);
   proj_destroy(P);
-  if (CS == nullptr) therror(("invalid coordinate system -- should not happen"));
+  if (CS == nullptr) therror("invalid coordinate system -- should not happen");
   int count = proj_cs_get_axis_count(PJ_DEFAULT_CTX, CS);
   const char *outdir = nullptr, *unit_name = nullptr;
   double conv_factor = 0;
@@ -451,7 +451,7 @@ std::vector<axis_orient> thcs_axesinfo(int cs, double &scale, bool &gis_ok) {
     // units and scale
     if (axis_units.find(unit_name) != axis_units.end()) {
       if (i == 0) scale = conv_factor;
-      else if (scale != conv_factor) therror(("inconsistent axes scales"));
+      else if (scale != conv_factor) therror("inconsistent axes scales");
     } else {
       scale = 0;
       gis_ok = false;
