@@ -74,7 +74,7 @@
  
 #define thwarning(P) {\
   thprint_warning_src();\
-  thprint2err(fmt::sprintf P );\
+  thprint2err(P);\
   thprint2err("\n");\
   therion_exit_state = 1;\
 }

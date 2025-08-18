@@ -67,7 +67,7 @@ void thlogfile::open_file()
   }
   
   if (should_warn)
-    thwarning(("can't open log file for output -- %s",this->get_file_name()));
+    thwarning(fmt::format("can't open log file for output -- {}",this->get_file_name()));
 }
 
 

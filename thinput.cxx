@@ -128,7 +128,7 @@ bool ifile::is_equal(ifile* f)
   try {
     return fs::equivalent(name.get_buffer(), f->name.get_buffer());
   } catch(const std::exception& e) {
-    thwarning(("unable to compare files -- %s", e.what()))
+    thwarning(fmt::format("unable to compare files -- {}", e.what()))
     return false;
   }
 }

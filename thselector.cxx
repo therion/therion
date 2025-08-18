@@ -485,7 +485,7 @@ void thselector::select_db(class thdatabase * db)
         nsrv = nms[1];
         break;
       default:
-        thwarning(("%s [%lu] -- invalid object specification", 
+        thwarning(fmt::format("{} [{}] -- invalid object specification", 
           ii->src_name, ii->src_ln))
         to_cont = false;
     }
@@ -507,7 +507,7 @@ void thselector::select_db(class thdatabase * db)
         objptr = NULL;
       }
       if (objptr == NULL) {
-        thwarning(("%s [%lu] -- object not found -- \"%s\"", 
+        thwarning(fmt::format("{} [{}] -- object not found -- \"{}\"", 
           ii->src_name, ii->src_ln, nobj))
         to_cont = false;
       }

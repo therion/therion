@@ -2589,7 +2589,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               mindst = std::hypot(fse1->cxt - fse2->cxt, fse1->cyt - fse2->cyt);
             else {
               // nenasli sme uz dva konce, skipujeme az na koniec
-              thwarning(("%s -- unable to join scraps (count %d)", jptr->throw_source().c_str(), ccount + 1));
+              thwarning(fmt::format("{} -- unable to join scraps (count {})", jptr->throw_source(), ccount + 1));
               ccount = jptr->count;
               goto UNABLE_TO_JOIN;
             }

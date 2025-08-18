@@ -801,7 +801,7 @@ void thconfig::save()
     FILE * cf;
     cf = fopen(this->fname.get_buffer(),"w");
     if (cf == NULL) {
-      thwarning(("can't open configuration file for output -- %s",           this->fname.get_buffer()));
+      thwarning(fmt::format("can't open configuration file for output -- {}", this->fname.get_buffer()));
       return;
     }
   
@@ -893,7 +893,7 @@ void thconfig::xth_save()
     FILE * cf;
     cf = fopen(".xtherion.dat","w");
     if (cf == NULL) {
-      thwarning(("can't open xtherion file for output -- %s.xth", this->fname.get_buffer()));
+      thwarning(fmt::format("can't open xtherion file for output -- {}.xth", this->fname.get_buffer()));
       return;
     }
   

@@ -240,7 +240,7 @@ void thlookup::postprocess_object_references() {
             thparse_objectname(on, &(thdb.buff_strings), tmp.get_buffer(), NULL);
             tr->m_ref = thdb.get_object(on, NULL);
             if (tr->m_ref == NULL) {
-              thwarning(("invalid reference -- %s", tr->m_valueString));
+              thwarning(fmt::format("invalid reference -- {}", tr->m_valueString));
             } else {
               if ((this->m_type == TT_LAYOUT_CCRIT_MAP) && (tr->m_ref->get_class_id() != TT_MAP_CMD))
                 throw thexception(fmt::format("not a map reference -- {}", tr->m_valueString));

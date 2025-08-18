@@ -221,7 +221,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   try {
     fnmb = std::filesystem::path(this->outpt).filename().string();
   } catch(const std::exception& e) {
-    thwarning(("unable to obtain output file name -- %s", e.what()))
+    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()))
   }
   if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
     pimg = img_open_write_cs(fnm, fnmb.c_str(), thcs_get_params(thcfg.outcs).c_str(), 1);
@@ -229,7 +229,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
     pimg = img_open_write(fnm, fnmb.c_str(), 1);
      
   if (!pimg) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   //this->register_output(fnm);
@@ -396,7 +396,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -502,7 +502,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   pltf = fopen(fnm,"w");
      
   if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
 
@@ -670,7 +670,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -919,7 +919,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -1123,7 +1123,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"w");
      
   if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -1923,7 +1923,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   expf.ExportLOX(fnm);
 
   if (expf.m_error.size() > 0) {
-    thwarning(("error writing %s",fnm))
+    thwarning(fmt::format("error writing {}",fnm))
     return;
   }
   this->register_output(fnm);
@@ -1940,7 +1940,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
 void thexpmodel::export_kml_file(class thdatabase * dbp)
 {
   if (thcfg.outcs == TTCS_LOCAL) {
-    thwarning(("data not georeferenced -- unable to export KML file"));
+    thwarning("data not georeferenced -- unable to export KML file");
     return;
   }
 
@@ -1948,7 +1948,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.kml");
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);

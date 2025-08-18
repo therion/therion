@@ -65,7 +65,7 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
   thlog(on_title);
   std::ifstream lf(logfpath);
   if (!(lf.is_open())) {{
-    thwarning(("can't open %s file for input", logfpath));
+    thwarning(fmt::format("can't open {} file for input", logfpath));
     }
     thlog(fmt::format("can't open {} file for input",logfpath));
     thlog(off_title);

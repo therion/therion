@@ -402,7 +402,7 @@ void thexptable::process_db(class thdatabase * dbp)
   try {
     title = std::filesystem::path(this->outpt).filename().string();
   } catch(const std::exception& e) {
-    thwarning(("unable to obtain output file name -- %s", e.what()))
+    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()))
   }
 
   switch (this->format) {

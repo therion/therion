@@ -409,18 +409,18 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 {
 
   if (prj->type != TT_2DPROJ_PLAN) {
-    thwarning(("unable to export KML from non plan projection"));
+    thwarning("unable to export KML from non plan projection");
     return;
   }
 
 
   if (thcfg.outcs == TTCS_LOCAL) {
-    thwarning(("data not georeferenced -- unable to export KML file"));
+    thwarning("data not georeferenced -- unable to export KML file");
     return;
   }
 
   if (maps == NULL) {
-    thwarning(("%s [%lu] -- no selected projection data -- %s",
+    thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -429,7 +429,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   const char * fnm = this->get_output("cave.kml");
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -603,17 +603,17 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
 {
 
   if (prj->type != TT_2DPROJ_PLAN) {
-    thwarning(("unable to export bounding box of non plan projection"));
+    thwarning("unable to export bounding box of non plan projection");
     return;
   }
 
   if (thcfg.outcs == TTCS_LOCAL) {
-    thwarning(("data not georeferenced -- unable to export bounding box file"));
+    thwarning("data not georeferenced -- unable to export bounding box file");
     return;
   }
 
   if (maps == NULL) {
-    thwarning(("%s [%lu] -- no selected projection data -- %s",
+    thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -622,7 +622,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
   const char * fnm = this->get_output("cave.bbox");
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -707,7 +707,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 {
 
   if (maps == NULL) {
-    thwarning(("%s [%lu] -- no selected projection data -- %s",
+    thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -716,7 +716,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
   const char * fnm = this->get_output("cave.dxf");
   out = fopen(fnm, "w");
   if (out == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);

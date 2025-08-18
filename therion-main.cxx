@@ -124,8 +124,7 @@ int main(int argc, char * argv[]) {
     thprint("\n");
     thlog(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     if (thcs_get_proj_version() != thcs_get_proj_version_headers())
-      thwarning(("Proj version mismatch: using %s, compiled against %s", thcs_get_proj_version().c_str(),
-                                                         thcs_get_proj_version_headers().c_str()));
+      thwarning(fmt::format("Proj version mismatch: using {}, compiled against {}", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     
     // load initialization file
     thini.load();
