@@ -33,9 +33,8 @@
 #ifndef therion_h
 #define therion_h
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <fmt/printf.h>
+#include <fmt/format.h>
 
 #ifdef THDEBUG
 #define thprint_error_src() thprint2err(fmt::format("{}{} (" __FILE__ ":{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
@@ -74,7 +73,7 @@
  
 #define thwarning(P) {\
   thprint_warning_src();\
-  thprint2err(fmt::sprintf P );\
+  thprint2err(P);\
   thprint2err("\n");\
   therion_exit_state = 1;\
 }

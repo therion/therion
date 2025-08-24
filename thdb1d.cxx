@@ -280,7 +280,7 @@ void thdb1d::scan_data()
                   else
                 	  bearing_sd = lei->bearing_sd;
                   if (abs(bearing_diff) > 3.0 * bearing_sd)
-                  	thwarning(("%s [%lu] -- forwards and backwards bearing readings do not match -- %.2f > %.2f", lei->srcf.name, lei->srcf.line, bearing_diff, 2.0 * bearing_sd));
+                  	thwarning(fmt::format("{} [{}] -- forwards and backwards bearing readings do not match -- {:.2f} > {:.2f}", lei->srcf.name, lei->srcf.line, bearing_diff, 2.0 * bearing_sd));
 									// calculate average of two angles
                   //lei->bearing += lei->backbearing;
                   //lei->bearing = lei->bearing / 2.0;
@@ -311,7 +311,7 @@ void thdb1d::scan_data()
                     else
                   	  gradient_sd = lei->gradient_sd;
                     if (abs(lei->backgradient - lei->gradient) > (3.0 * gradient_sd))
-                    	thwarning(("%s [%lu] -- forwards and backwards gradient readings do not match", lei->srcf.name, lei->srcf.line));
+                    	thwarning(fmt::format("{} [{}] -- forwards and backwards gradient readings do not match", lei->srcf.name, lei->srcf.line));
                     lei->gradient += lei->backgradient;
                     lei->gradient = lei->gradient / 2.0;
                   }
@@ -337,7 +337,7 @@ void thdb1d::scan_data()
                   else
                 	  length_sd = lei->length_sd;
 				  if (abs(lei->backlength - lei->length) > (3.0 * length_sd))
-					thwarning(("%s [%lu] -- forwards and backwards length readings do not match", lei->srcf.name, lei->srcf.line));
+					thwarning(fmt::format("{} [{}] -- forwards and backwards length readings do not match", lei->srcf.name, lei->srcf.line));
                   lei->length += lei->backlength;
                   lei->length /= 2.0;
                 }
@@ -529,7 +529,7 @@ void thdb1d::scan_data()
           prevlsid = this->lsid;
           eqi->station.id = this->insert_station(eqi->station, eqi->psurvey, dp, 1);
           if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL) && (eqi->srcf.line > 0))
-            thwarning(("%s [%d] -- equate used to define new station (%s@%s)", eqi->srcf.name, eqi->srcf.line, eqi->station.name, eqi->station.survey));
+            thwarning(fmt::format("{} [{}] -- equate used to define new station ({}@{})", eqi->srcf.name, eqi->srcf.line, eqi->station.name, eqi->station.survey));
           eqi++;
         }
       }
@@ -687,9 +687,9 @@ void thdb1d::scan_data()
 
   if (((used_declination & 1) != 0) && ((used_declination & 4) != 0)) {
     if (default_dpdeclinused)
-      thwarning(("year %.0f magnetic declination used for undated surveys", this->min_year))
+      thwarning(fmt::format("year {:.0f} magnetic declination used for undated surveys", this->min_year))
     else
-      thwarning(("unable to determine magnetic declination used for undated surveys"))
+      thwarning("unable to determine magnetic declination used for undated surveys")
     thprint("undated surveys:\n");
     for(auto usi = undated_surveys_set.begin(); usi != undated_surveys_set.end(); usi++) {
       thprint(usi->c_str());
@@ -698,7 +698,7 @@ void thdb1d::scan_data()
   }
 
   if (thcfg.m_decl_out_of_geomag_range)
-    thwarning(("magnetic declination calculated for dates outside of optimal model range (%d - %d)", thgeomag_minyear, thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1) - 1))
+    thwarning(fmt::format("magnetic declination calculated for dates outside of optimal model range ({} - {})", thgeomag_minyear, thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1) - 1))
 
   thcfg.log_outcs(this->min_year, this->max_year);
 
@@ -715,7 +715,7 @@ void thdb1d::process_data()
 		try {
 		  survex.process_survey_data(this->db);
 	  } catch (const std::exception& e) {
-			thwarning((e.what()))
+			thwarning(e.what())
 		}
 	}
   this->process_survey_stat();
@@ -3273,7 +3273,7 @@ void thdb1d::process_xelev()
       
       // set up current_node & current_node->last_arrow
       if (a2 == NULL) {
-        thwarning(("not all shots attached to extended elevation"));
+        thwarning("not all shots attached to extended elevation");
         break;
       }
       current_node = a2->start_node;

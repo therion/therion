@@ -50,7 +50,7 @@ thtmpdir::tmpdir_handle::tmpdir_handle(const std::string& tmp_dir)
     prev_dir = fs::current_path().string();
     fs::current_path(tmp_dir);
   } catch(const std::exception& e) {
-    thwarning(("error switching to temporary directory -- %s", e.what()));
+    thwarning(fmt::format("error switching to temporary directory -- {}", e.what()));
   }
 }
 
@@ -67,7 +67,7 @@ void thtmpdir::tmpdir_handle::switch_from_tmpdir() noexcept
   try {
     fs::current_path(prev_dir);
   } catch(const std::exception& e) {
-    thwarning(("error switching from temporary directory -- %s", e.what()));
+    thwarning(fmt::format("error switching from temporary directory -- {}", e.what()));
   }
 
   prev_dir.clear();
@@ -115,7 +115,7 @@ void thtmpdir::create() try
 
   this->tried = true;
   if (!fs::create_directory(dir_path) && !this->debug) {
-    thwarning(("temporary directory already exists"));
+    thwarning("temporary directory already exists");
   }
 
   this->exist = true;
@@ -135,10 +135,10 @@ void thtmpdir::remove() try
   if (!this->tmp_remove_script.empty()) {
     const auto tmpfname = fmt::format("{} {}", this->tmp_remove_script, this->name);
     if (system(tmpfname.c_str()) != 0) {
-      thwarning(("delete temporary directory error -- %s not successful", tmpfname.c_str()))
+      thwarning(fmt::format("delete temporary directory error -- {} not successful", tmpfname))
     }
     if (fs::is_directory(this->name)) {
-      thwarning(("error deleting temporary directory -- %s", this->name.c_str()))    
+      thwarning(fmt::format("error deleting temporary directory -- {}", this->name))    
     } else {
       this->name = ".";
       this->tried = false;
@@ -152,7 +152,7 @@ void thtmpdir::remove() try
   this->tried = false;
   this->exist = false;
 } catch (const std::exception& e) {
-  thwarning(("error deleting temporary directory -- %s", e.what()))
+  thwarning(fmt::format("error deleting temporary directory -- {}", e.what()))
 }
 
 

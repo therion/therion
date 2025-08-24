@@ -232,7 +232,7 @@ void thsurface::parse_picture(char ** args)
     thparse_image(this->pict_name, this->pict_width, this->pict_height, this->pict_dpi, this->pict_type);
   } catch (const std::exception& e) {
     this->pict_name = NULL;
-    thwarning(("%s [%lu] -- error reading bitmap -- %s",
+    thwarning(fmt::format("{} [{}] -- error reading bitmap -- {}",
       thdbreader.get_cinf()->get_cif_name(),
       thdbreader.get_cinf()->get_cif_line_number(), e.what()));
   }
@@ -417,7 +417,7 @@ void thsurface::parse_grid_setup(char ** args)
 	this->grid_dxy = this->grid_oy;
 	this->grid_dyx = this->grid_ox;
 	this->grid_dyy = this->grid_oy + double(this->grid_ny-1) * this->grid_dy;
-	if (!gis_ok) thwarning(("%s [%lu] -- surface grid cs has not east-north axes orientation, expect distorted output",
+	if (!gis_ok) thwarning(fmt::format("{} [{}] -- surface grid cs has not east-north axes orientation, expect distorted output",
 		thdbreader.get_cinf()->get_cif_name(),
         thdbreader.get_cinf()->get_cif_line_number()));
   }

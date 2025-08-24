@@ -93,7 +93,7 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
   thlog(on_title);
   std::ifstream lf(logfpath);
   if (!(lf.is_open())) {{
-    thwarning(("can't open %s file for input", logfpath));
+    thwarning(fmt::format("can't open {} file for input", logfpath));
     }
     thlog(fmt::format("can't open {} file for input",logfpath));
     thlog(off_title);
@@ -287,11 +287,6 @@ void thexpmap::dump_body(FILE * xf)
 void thexpmap::parse_projection(class thdatabase * dbp) {
 
   thdb2dprjpr prjid = dbp->db2d.parse_projection(this->projstr,true);
-/*  if (prjid.newprj) {
-    thwarning(("%s [%d] -- no projection data -- %s",
-      this->src.name, this->src.line, this->projstr))
-    return;
-  }*/
   this->projptr = prjid.prj;
   
 }
@@ -387,12 +382,12 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
       this->db->db2d.process_projection(prj);
       break;
     default:
-      thwarning(("projection type not supported in XVI export"));
+      thwarning("projection type not supported in XVI export");
       return;
   }
   
   if (thdb.db1d.station_vec.size() == 0) {
-    thwarning(("no data to export"));
+    thwarning("no data to export");
     return;
   }
 
@@ -413,7 +408,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -763,12 +758,12 @@ void thexpmap::export_th2(class thdb2dprj * prj)
       this->db->db2d.process_projection(prj);
       break;
     default:
-      thwarning(("projection type not supported in TH2 export"));
+      thwarning("projection type not supported in TH2 export");
       return;
   }
   
   if (thdb.db1d.station_vec.size() == 0) {
-    thwarning(("no data to export"));
+    thwarning("no data to export");
     return;
   }
 
@@ -784,7 +779,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
   FILE * pltf;
   pltf = fopen(fnm,"wb");
   if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -1200,7 +1195,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   // spusti mp - thpdf - pdftex
 
   if (maps == NULL) {
-    thwarning(("%s [%lu] -- no selected projection data -- %s",
+    thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -3336,7 +3331,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 {
 
   if (maps == NULL) {
-    thwarning(("%s [%lu] -- no selected projection data -- %s",
+    thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -3349,7 +3344,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
   fname = "cave";
   pimg = img_open_write(fnm, fname.get_buffer(), 1);
   if (pimg == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -3560,7 +3555,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     lkp = this->db->get_lookup(ccfname);
     if (lkp == NULL) {
       if (strlen(ccidx) > 0) {
-        thwarning(("missing lookup -- %s", this->layout->color_crit_fname));
+        thwarning(fmt::format("missing lookup -- {}", this->layout->color_crit_fname));
       }
       unique_lkp = this->db->create<thlookup>(this->src);
       lkp = unique_lkp.get();

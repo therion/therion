@@ -135,7 +135,7 @@ void thpic::init(const char * pfname, const char * incfnm)
   }
 
   if ((retcode != EXIT_SUCCESS) || (!this->exists())) {
-    thwarning(("unable to read \"%s\"", this->fname))
+    thwarning(fmt::format("unable to read \"{}\"", this->fname))
     this->height = -1;
     this->width = -1;
   }

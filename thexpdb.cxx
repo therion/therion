@@ -143,7 +143,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   FILE * sqlf;
   sqlf = fopen(fnm,"wb");
   if (sqlf == NULL) {
-    thwarning(("can't open %s for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm))
     return;
   }
   this->register_output(fnm);
@@ -446,7 +446,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
   FILE * out;
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(("can't open %s for output", fnm))
+    thwarning(fmt::format("can't open {} for output", fnm))
     return;
   }
   this->register_output(fnm);

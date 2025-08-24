@@ -1196,7 +1196,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     		errdot = "@";
     		errsurv = this->m_scrap->fsptr->full_name;
     	}
-    	thwarning(("%s%s%s -- scrap 3D reconstruction failed", errscrap, errdot, errsurv));
+    	thwarning(fmt::format("{}{}{} -- scrap 3D reconstruction failed", errscrap, errdot, errsurv));
     	thtext_inline = false;
     	this->tri_num = 0;
     }
@@ -1235,11 +1235,11 @@ void thscrapis::outline_scan(class thscraplo * outln) {
           errsurv = this->m_scrap->fsptr->full_name;
         }
         if (mult_outer) {
-          thwarning(("%s%s%s -- multiple scrap outer outlines not supported yet", errscrap, errdot, errsurv));
+          thwarning(fmt::format("{}{}{} -- multiple scrap outer outlines not supported yet", errscrap, errdot, errsurv));
           thtext_inline = false;
         }
         if ((this->tri_num > newnum) || duplpts) {
-          thwarning(("%s%s%s -- invalid scrap outline", errscrap, errdot, errsurv));
+          thwarning(fmt::format("{}{}{} -- invalid scrap outline", errscrap, errdot, errsurv));
           thtext_inline = false;
         }
       }

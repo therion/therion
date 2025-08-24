@@ -395,7 +395,7 @@ void thattr::export_dbf(const char * fname, int encoding)
   this->analyze_fields();
   h = DBFCreate(fname);
   if (h == NULL) {
-    thwarning(("unable to open file for output -- %s", fname));
+    thwarning(fmt::format("unable to open file for output -- {}", fname));
     return;
   }
 
@@ -416,7 +416,7 @@ void thattr::export_dbf(const char * fname, int encoding)
     }
     cf->m_xdbf_field = DBFAddField(h, cf->m_xdbf_name.c_str(), ftype, cf->m_xdbf_width, cf->m_xdbf_decimals); 
     if (cf->m_xdbf_field == -1) {
-      thwarning(("error writing to %s", fname))
+      thwarning(fmt::format("error writing to {}", fname))
       goto EXPORT_DBF_EXIT;
     }
   }
@@ -532,7 +532,7 @@ void thattr::export_txt(const char * fname, int /*encoding*/) // TODO unused par
 
   f = fopen(fname, "wb");
   if (f == NULL) {
-    thwarning(("unable to open file for output -- %s", fname));
+    thwarning(fmt::format("unable to open file for output -- {}", fname));
     return;
   }
 
@@ -588,13 +588,13 @@ void thattr::export_kml(const char * fname, const char * name_field, const char 
   double dlon, dlat, dalt;
   
   if ((lat == NULL) || (lon == NULL)) {
-    thwarning(("geographical reference is not associated with table"));
+    thwarning("geographical reference is not associated with table");
     return;
   }
   
   f = fopen(fname, "wb");
   if (f == NULL) {
-    thwarning(("unable to open file for output -- %s", fname));
+    thwarning(fmt::format("unable to open file for output -- {}", fname));
     return;
   }
 
@@ -669,7 +669,7 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
 
   f = fopen(fname, "wb");
   if (f == NULL) {
-    thwarning(("unable to open file for output -- %s", fname));
+    thwarning(fmt::format("unable to open file for output -- {}", fname));
     return;
   }
 

@@ -212,7 +212,7 @@ void thcmdline::process(int argc, char * argv[])
   if (optind < argc)
     thcfg.set_file_name(argv[optind++]);
   if (optind < argc)
-    thwarning(("too many input arguments"));
+    thwarning("too many input arguments");
 
 
 }

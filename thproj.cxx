@@ -253,7 +253,7 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
           std::string s_tmp = fmt::format("missing PROJ transformation grid '{}'; you can download it from {} and install it to a location where PROJ finds it", short_name, url);
           switch (thcs_cfg.proj_auto_grid) {
             case GRID_WARN:
-              thwarning((s_tmp.c_str()));
+              thwarning(s_tmp);
               break;
             case GRID_FAIL:
               proj_destroy(P_tmp);

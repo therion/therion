@@ -51,7 +51,7 @@ void thtfangle::parse_units(char * ustr)
       break;
     case TT_TFU_MILS:
       if (mils_warning) {
-        thwarning(("using mil/mils as angle unit is deprecated"));
+        thwarning("using mil/mils as angle unit is deprecated");
         mils_warning = false;
       }
       [[fallthrough]];

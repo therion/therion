@@ -635,7 +635,7 @@ void thimport::import_file_img()
   img_close(pimg);
 
   if (notimpst > 0) {
-    thwarning(("unable to import %lu stations outside survey", notimpst));
+    thwarning(fmt::format("unable to import {} stations outside survey", notimpst));
   }
 
   std::vector<thsst> anon_stations(1);
@@ -689,7 +689,7 @@ void thimport::import_file_img()
   }
 
   if (notimpsh > 0) {
-    thwarning(("unable to import %lu shots outside survey", notimpsh));
+    thwarning(fmt::format("unable to import {} shots outside survey", notimpsh));
   }
 }
 
