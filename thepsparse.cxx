@@ -50,7 +50,7 @@
 #include "thdouble.h"
 #include "thexception.h"
 
-#define IOerr(F) fmt::format("Can't open file {}!\n", (F)).c_str()
+#define IOerr(F) fmt::format("Can't open file {}!\n", (F))
 
 std::map<std::string,std::string> ALL_FONTS, ALL_PATTERNS;
 typedef std::set<unsigned char> FONTCHARS;
@@ -130,7 +130,7 @@ std::string color::to_svg() const {
     g = 1.0 - std::min(1.0, this->b + this->d);
     b = 1.0 - std::min(1.0, this->c + this->d);
   }
-  else therror(("undefined color used"));
+  else therror("undefined color used");
   return fmt::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
                                            int(255*g) % 256,
                                            int(255*b) % 256);
@@ -438,7 +438,7 @@ void MP_path::print_pdf(std::ofstream & F) const {
   else if (fillstroke == MP_stroke) F << PL("S");
   else if (fillstroke == MP_fillstroke) F << PL("B*");
   else if (fillstroke == MP_clip) F << PL("W* n");
-  else therror(("invalid path drawing operation"));
+  else therror("invalid path drawing operation");
 }
 
 void MP_data::add(int i) {
@@ -848,7 +848,7 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) const {
     else if (mode == 30) outname = tex_Lname(name);
     else if (31 <= mode && mode <= 32) outname = tex_Wname(name);
     else if (mode > 100 && mode < 110) outname = tex_Wname(name);
-    else therror(("invalid conversion mode"));
+    else therror("invalid conversion mode");
     F << "\\xxx\n" << tex_set_ref(outname,"\\pdflastxform") << '\n';
   }
 }
@@ -929,7 +929,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
   data.mode = mode;
 
   std::ifstream F(fname.c_str());
-  if(!F) therror((IOerr(fname)));
+  if(!F) therror(IOerr(fname));
   while(F >> tok) {
     if (comment) {                      // File header
       if (tok == "%%BoundingBox:") {
@@ -954,7 +954,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
                            // for F and G scraps
           data.MP.add(MP_gsave);
           std::ifstream G(cname.c_str());
-          if(!G) therror((IOerr(cname)));
+          if(!G) therror(IOerr(cname));
           mp_path.clear();
           while(G >> buffer) {
             if (buffer == "m") {
@@ -1144,7 +1144,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
             }
           } else throw thexception("invalid buffer size");
         } catch (const std::exception& e) {
-          therror((e.what()));
+          therror(e.what());
         }
         if (FORM_GRADIENTS.find(u2str(patt_id)) == FORM_GRADIENTS.end()) {
           FORM_GRADIENTS.insert(u2str(patt_id));
@@ -1369,7 +1369,7 @@ void convert_scraps_new() {
   PATTERNLIST.clear();
 
   std::ifstream P("patterns.dat");
-  if(!P) therror(("Can't open patterns definition file!"));
+  if(!P) therror("Can't open patterns definition file!");
   char buf[5000];
   char delim[] = ":";
   std::string num,pfile,bbox,xstep,ystep,matr;
@@ -1435,7 +1435,7 @@ int thconvert_eps() {
 
 void thgraphics2pdf() {
   std::ofstream TEX("th_formdef.tex");
-  if(!TEX) therror((IOerr("th_formdef.tex")));
+  if(!TEX) therror(IOerr("th_formdef.tex"));
 
   for(const auto &I: SCRAPLIST) {
     I.Fc.print_pdf(TEX, I.name);
@@ -1499,7 +1499,7 @@ void thgraphics2pdf() {
 
 
   std::ofstream F("th_fontdef.tex");
-  if(!F) therror((IOerr("th_fontdef.tex")));
+  if(!F) therror(IOerr("th_fontdef.tex"));
   F << "% FONTS:\n";
   F.setf(std::ios::fixed, std::ios::floatfield);
   F.precision(2);
@@ -1573,7 +1573,7 @@ void thgraphics2pdf() {
   for (auto &i: SCRAPLIST) {
       if (LAYOUT.smooth_shading == shading_mode::off || i.gour_stream == "") continue;
       std::ofstream F_g("th_gour_"+i.name+".dat", std::ios::out | std::ios::binary);
-      if(!F_g) therror((IOerr("th_gour_"+i.name)));
+      if(!F_g) therror(IOerr("th_gour_"+i.name));
       F_g << i.gour_stream;
       F_g.close();
       F << "\\immediate\\pdfobj stream attr {";
@@ -1595,7 +1595,7 @@ void thgraphics2pdf() {
     legend_arr_d.push_back(I->descr);
   }
   std::ofstream LEG("th_legend.tex");
-  if(!LEG) therror((IOerr("th_legend.tex")));
+  if(!LEG) therror(IOerr("th_legend.tex"));
 /*  for(list<legendrecord>::iterator I = LEGENDLIST.begin();
                                    I != LEGENDLIST.end(); I++) {
     LEG << "\\legendsymbolbox{" << tex_get_ref(tex_Lname(I->name)) << "}{" <<
@@ -1630,7 +1630,7 @@ void thgraphics2pdf() {
     legend_color.push_back(lcr);
   }
   std::ofstream LEGCOLOR("th_legendcolor.tex");
-  if(!LEGCOLOR) therror((IOerr("th_legendcolor.tex")));
+  if(!LEGCOLOR) therror(IOerr("th_legendcolor.tex"));
 
   if (LAYOUT.altitudebar == "") {
     legendbox_num = COLORLEGENDLIST.size();

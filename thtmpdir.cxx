@@ -123,7 +123,7 @@ void thtmpdir::create() try
 }
 catch (const std::exception& e)
 {
-  therror(("can't create temporary directory -- %s", e.what()));
+  therror(fmt::format("can't create temporary directory -- {}", e.what()));
 }
 
 
