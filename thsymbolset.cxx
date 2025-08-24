@@ -817,6 +817,8 @@ int thsymbolset_get_group(int group_id, int cid) {
     group(41,SYMA_STALACTITE);
     group(42,SYMA_STALACTITESTALAGMITE);
     group(43,SYMA_STALAGMITE);
+    group(44,SYMP_STALACTITES);
+    group(45,SYMP_STALAGMITES);
     egroup
 
 
