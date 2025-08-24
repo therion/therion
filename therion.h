@@ -33,9 +33,8 @@
 #ifndef therion_h
 #define therion_h
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <fmt/printf.h>
+#include <fmt/format.h>
 
 #ifdef THDEBUG
 #define thprint_error_src() thprint2err(fmt::format("{}{} (" __FILE__ ":{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
