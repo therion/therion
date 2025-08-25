@@ -50,7 +50,7 @@
 #include "lxR2P.h"
 #endif
 
-#include <fmt/printf.h>
+#include <fmt/format.h>
 
 #define LXTRCBORDER (this->m_renderData->m_scaleMode == LXRENDER_FIT_SCREEN ? 0 : 16)
 
@@ -1277,9 +1277,9 @@ void lxGLCanvas::RenderOffList()
       // altitude
       if (this->setup->m_stlabel_altitude) {
         if (this->frame->m_iniUnits == 1) {
-          strCBar = fmt::sprintf("%.0f ft", st->pos.z / 0.3048);
+          strCBar = fmt::format("{:.0f} ft", st->pos.z / 0.3048);
         } else {
-          strCBar = fmt::sprintf("%.0f m", st->pos.z);
+          strCBar = fmt::format("{:.0f} m", st->pos.z);
         }
         if (cmnt.length() > 0) cmnt += ":";
         cmnt += strCBar;
@@ -1702,9 +1702,9 @@ void lxGLCanvas::RenderIDepthbar(double size)
     clrOutCntr();
     this->RenderILine(dbw, double(t) * size / 10.0, dbw + dbtw, double(t) * size / 10.0);
     if (this->frame->m_iniUnits == 1) {
-      strCBar = fmt::sprintf("%.0f ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
+      strCBar = fmt::format("{:.0f} ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
     } else {
-      strCBar = fmt::sprintf("%.0f m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
+      strCBar = fmt::format("{:.0f} m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
     }
     this->GetFontNumeric()->draw(this->m_indRes * dbw + lxFNTSW, this->m_indRes * (double(t) * size / 10.0) - 0.333 * lxFNTSH, strCBar);
   }
@@ -1762,11 +1762,11 @@ void lxGLCanvas::RenderIScalebar(double size)
 
 
     if (miles)
-      strLen = fmt::sprintf("%.0f mi", sblen);
+      strLen = fmt::format("{:.0f} mi", sblen);
     else if (sblen > 4.0)
-      strLen = fmt::sprintf("%.0f ft", sblen);
+      strLen = fmt::format("{:.0f} ft", sblen);
     else
-      strLen = fmt::sprintf("%g in", 12.0 * sblen);
+      strLen = fmt::format("{:g} in", 12.0 * sblen);
 
   } else {
 
@@ -1780,13 +1780,13 @@ void lxGLCanvas::RenderIScalebar(double size)
     size = sblen / scale / this->m_indRes;
 
     if (sblen >= 10000.0)
-      strLen = fmt::sprintf("%.0f km", sblen / 1000.0);
+      strLen = fmt::format("{:.0f} km", sblen / 1000.0);
     else if (sblen >= 4.0)
-      strLen = fmt::sprintf("%.0f m", sblen);
+      strLen = fmt::format("{:.0f} m", sblen);
     else if (sblen >= 0.01)
-      strLen = fmt::sprintf("%.0f mm", sblen * 1000.0);
+      strLen = fmt::format("{:.0f} mm", sblen * 1000.0);
     else
-      strLen = fmt::sprintf("%g mm", sblen * 1000.0);
+      strLen = fmt::format("{:g} mm", sblen * 1000.0);
   }
 
 

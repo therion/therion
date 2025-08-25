@@ -71,8 +71,6 @@
 #include "img.h"
 #include <filesystem>
 
-#include <fmt/printf.h>
-
 namespace fs = std::filesystem;
 
 thexpmap::thexpmap() {
@@ -1718,7 +1716,7 @@ if (ENC_NEW.NFSS==0) {
                   // pred orezanim
                   if (exps.F > 0) {
                     fprintf(plf,"\t\t F => \"data.%ld\",\n",exps.F);
-                    SCRAPITEM->F = fmt::sprintf("data.%ld",exps.F);
+                    SCRAPITEM->F = fmt::format("data.{}",exps.F);
                   }
 //                  else
 //                    fprintf(plf,"\t\t F => \"data.0\",\n");
@@ -1726,11 +1724,11 @@ if (ENC_NEW.NFSS==0) {
                   // orezavacia cesta a outlines
                   if (exps.B > 0) {
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    SCRAPITEM->B = fmt::sprintf("data.%ld",exps.B);
+                    SCRAPITEM->B = fmt::format("data.{}",exps.B);
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    SCRAPITEM->I = fmt::sprintf("data.%ldbg",exps.B);
+                    SCRAPITEM->I = fmt::format("data.{}bg",exps.B);
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    SCRAPITEM->C = fmt::sprintf("data.%ldclip",exps.B);
+                    SCRAPITEM->C = fmt::format("data.{}clip",exps.B);
                   }
 //                  else {
 //                    fprintf(plf,"\t\t B => \"data.0\",\n");
@@ -1741,16 +1739,16 @@ if (ENC_NEW.NFSS==0) {
                   // po orezani
                   if (exps.E > 0) {
                     fprintf(plf,"\t\t E => \"data.%ld\",\n",exps.E);
-                    SCRAPITEM->E = fmt::sprintf("data.%ld",exps.E);
+                    SCRAPITEM->E = fmt::format("data.{}",exps.E);
                   }
 //                  else
 //                    fprintf(plf,"\t\t E => \"data.0\",\n");
     
                   if (exps.X > 0) {
                     fprintf(plf,"\t\t X => \"data.%ld\",\n",exps.X);
-                    SCRAPITEM->X = fmt::sprintf("data.%ld",exps.X);
+                    SCRAPITEM->X = fmt::format("data.{}",exps.X);
                     fprintf(plf,"\t\t P => \"data.%ldbbox\",\n",exps.X);
-                    SCRAPITEM->P = fmt::sprintf("data.%ldbbox",exps.X);
+                    SCRAPITEM->P = fmt::format("data.{}bbox",exps.X);
                   }
 
                   if (export_outlines_only) {
@@ -1784,11 +1782,11 @@ if (ENC_NEW.NFSS==0) {
                     active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    SCRAPITEM->B = fmt::sprintf("data.%ld",exps.B);
+                    SCRAPITEM->B = fmt::format("data.{}",exps.B);
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    SCRAPITEM->I = fmt::sprintf("data.%ldbg",exps.B);
+                    SCRAPITEM->I = fmt::format("data.{}bg",exps.B);
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    SCRAPITEM->C = fmt::sprintf("data.%ldclip",exps.B);
+                    SCRAPITEM->C = fmt::format("data.{}clip",exps.B);
                     //fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     //fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
                     //fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
@@ -1837,10 +1835,10 @@ if (ENC_NEW.NFSS==0) {
   	  break;
   }
 
-  LAYOUT.northarrow = fmt::sprintf("data.%d",sfig);
+  LAYOUT.northarrow = fmt::format("data.{}",sfig);
   fprintf(mpf,"beginfig(%d);\ns_northarrow(%g);\nendfig;\n",sfig++,this->layout->rotate + rotate_plus);
 
-  LAYOUT.scalebar = fmt::sprintf("data.%d",sfig);
+  LAYOUT.scalebar = fmt::format("data.{}",sfig);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()).c_str());
 
@@ -1853,7 +1851,7 @@ if (ENC_NEW.NFSS==0) {
     switch (this->layout->color_crit) {
       case TT_LAYOUT_CCRIT_ALTITUDE:
       case TT_LAYOUT_CCRIT_DEPTH:
-    	  LAYOUT.altitudebar = fmt::sprintf("data.%d",sfig);
+    	  LAYOUT.altitudebar = fmt::format("data.{}",sfig);
     	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
     	  for(const auto& ti : this->layout->m_lookup->m_table) {
     		  sv_max = ti.m_valueDbl;
@@ -2066,7 +2064,7 @@ if (ENC_NEW.NFSS==0) {
   if (this->layout->grid != TT_LAYOUT_GRID_OFF) {
 
 #define expgridscrap(varname,Xpos,Ypos) \
-    LAYOUT.varname = fmt::sprintf("data.%d",sfig); \
+    LAYOUT.varname = fmt::format("data.{}",sfig); \
     fprintf(mpf,"beginfig(%d);\n%s(%d, %d, %.5f, %.5f);\nendfig;\n", \
     sfig++, grid_macro, Xpos, Ypos, ghs, gvs);
     
@@ -2916,7 +2914,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
-          dbg_stnms.push_back(fmt::sprintf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);",
+          dbg_stnms.push_back(fmt::format("p_label.urt(btex \\thstationname {} etex, ({:.2f}, {:.2f}), 0.0, p_label_mode_debugstation);",
             utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
             thxmmxst(out, slp->stx, slp->sty)));
         }
@@ -2995,7 +2993,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 }
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
                       out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
-                      dbg_stnms.push_back(fmt::sprintf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);",
+                      dbg_stnms.push_back(fmt::format("p_label.urt(btex \\thstationname {} etex, ({:.2f}, {:.2f}), 0.0, p_label_mode_debugstation);",
                       utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                       thxmmxst(out, ptp->point->xt, ptp->point->yt)));
                 }

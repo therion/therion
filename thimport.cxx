@@ -39,8 +39,7 @@
 #include <map>
 #include <list>
 #include <filesystem>
-
-#include <fmt/printf.h>
+#include <algorithm>
 
 constexpr auto ANON_STATION_NAME = "-";
 
@@ -570,9 +569,9 @@ void thimport::import_file_img()
         }
         orig_name = stnm;
         if (svxs2ths.find(orig_name) == svxs2ths.end()) {
-          xb = fmt::sprintf("%.16g", imgpt.x + this->calib_x);
-          yb = fmt::sprintf("%.16g", imgpt.y + this->calib_y);
-          zb = fmt::sprintf("%.16g", imgpt.z + this->calib_z);
+          xb = fmt::format("{:.16g}", imgpt.x + this->calib_x);
+          yb = fmt::format("{:.16g}", imgpt.y + this->calib_y);
+          zb = fmt::format("{:.16g}", imgpt.z + this->calib_z);
           tmpsurvey = this->db->csurveyptr;
           new_name = this->station_name(stnm, pimg->separator, &tmpsst);
           if (tmpsst.survey != NULL) {
