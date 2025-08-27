@@ -443,6 +443,7 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_AUDIO,SYMP_AUDIO);
         cp3(TT_POINT_TYPE_BAT,SYMP_BAT);
         cp3(TT_POINT_TYPE_BONES,SYMP_BONES);
+        cp3(TT_POINT_TYPE_BOREHOLE,SYMP_BOREHOLE);
         cp3(TT_POINT_TYPE_CURTAINS,SYMP_CURTAINS);
         cp3(TT_POINT_TYPE_DANGER,SYMP_DANGER);
         cp3(TT_POINT_TYPE_DISCPILLAR,SYMP_DISCPILLAR);
@@ -1520,6 +1521,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_BAT,thT("point bat",layout->lang));
   legend_point(SYMP_BONES,thT("point bones",layout->lang));
   legend_point(SYMP_CURTAINS,thT("point curtains",layout->lang));
+  legend_point(SYMP_BOREHOLE,thT("point borehole",layout->lang));
   legend_point(SYMP_DANGER,thT("point danger",layout->lang));
   legend_point(SYMP_DISCPILLAR,thT("point disc-pillar",layout->lang));
   legend_point(SYMP_DISCSTALACTITE,thT("point disc-stalactite",layout->lang));

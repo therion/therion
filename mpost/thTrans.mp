@@ -62,6 +62,7 @@ let p_audio = p_audio_SBE;
 let p_bat = p_bat_SBE;
 let p_bones = p_bones_SBE;
 let p_curtains = p_curtains_UIS;
+let p_borehole = p_borehole_SKBB;
 let p_danger = p_danger_SBE;
 let p_discpillar = p_discpillar_UIS;
 let p_discpillars = p_discpillars_UIS;

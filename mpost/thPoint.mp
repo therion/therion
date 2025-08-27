@@ -619,6 +619,10 @@ def p_steps_SKBB (expr pos,r,s,al) =
            (.1u,-.1u)--(.1u,-.3u)--(.3u,-.3u);
 enddef;
 
+def p_borehole_SKBB (expr pos,r,s,al) =
+   p_station_temporary_SKBB(pos);
+enddef;
+
 def p_fixedladder_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
     T:=identity aligned al scaled s shifted pos;
