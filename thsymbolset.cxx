@@ -46,7 +46,6 @@
 #include "therion.h"
 #include "thlog.h"
 #include <fstream>
-#include <fmt/printf.h>
 
 thsymbolset::thsymbolset()
 {
@@ -1017,7 +1016,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     LEGENDITEM->idfig = (unsigned) sfig; \
     LEGENDITEM->idsym = (unsigned) mid; \
     LEGENDITEM->idnum = (unsigned) symn; \
-    LEGENDITEM->fname = fmt::sprintf("data.%d",sfig); \
+    LEGENDITEM->fname = fmt::format("data.{}",sfig); \
     LEGENDITEM->name = thlegend_u2string(unsigned(symn++)); \
     LEGENDITEM->descr = txt; \
     sfig++;
@@ -1810,7 +1809,7 @@ void export_all_symbols()
           if (thsymsets_count[iset] > 0) {
             fx = thsymsets_figure[sx][iset];
             if (fx > 0) {
-              fname = fmt::sprintf("%s/data.%d", thtmp.get_dir_name(),fx);
+              fname = fmt::format("{}/data.{}", thtmp.get_dir_name(),fx);
               parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
               hf << "<td>\n";
          	    svgpict.print_svg(hf);
@@ -1821,7 +1820,7 @@ void export_all_symbols()
           }
         }
       } else {
-        fname = fmt::sprintf("%s/data.%d", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
+        fname = fmt::format("{}/data.{}", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
         parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
         hf << "<td bgcolor=\"#cccccc\" colspan=\"" << thsymsets_size << "\">";
         svgpict.print_svg(hf);

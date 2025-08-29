@@ -31,7 +31,7 @@
 #include "thdataobject.h"
 #include "thsurvey.h"
 
-#include <fmt/printf.h>
+#include <fmt/format.h>
 
 thobjectname::thobjectname()
 {
@@ -106,7 +106,7 @@ std::string thobjectname::print_name()
     survey_str = this->survey;
   }
   if (!name_str.empty() && !survey_str.empty()) {
-    return fmt::sprintf("%s@%s", name_str, survey_str);
+    return fmt::format("{}@{}", name_str, survey_str);
   }
   if (!name_str.empty()) {
     return name_str;
@@ -130,7 +130,7 @@ std::string thobjectname_print_full_name(const char * oname_ptr, thsurvey * psrv
   size_t start = 0;
   if (!oname.empty() && !sname.empty() && (slevel != 0)) {
     const char sep = (oname.find('@') == oname.npos) ? '@' : '.';
-    rv = fmt::sprintf("%s%c%s", oname, sep, sname);
+    rv = fmt::format("{}{}{}", oname, sep, sname);
     start = oname.size() + 1;
   } else if (!oname.empty()) {
     rv = oname;

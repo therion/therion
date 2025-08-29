@@ -39,8 +39,6 @@
 #include "thmap.h"
 #include "therion.h"
 
-#include <fmt/printf.h>
-
 thselector::thselector() {
   this->number = 0;
   this->cfgptr = NULL;
@@ -381,7 +379,7 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   while (prjli != db->db2d.prj_list.end()) {
 	  std::string projdir;
 		if ((prjli->type == TT_2DPROJ_ELEV) && (prjli->pp1 != 0.0)) {
-			projdir = fmt::sprintf("\\[%.1f\\]", prjli->pp1);
+			projdir = fmt::format("\\[{:.1f}\\]", prjli->pp1);
 		}
     fprintf(cf,"xth_cp_map_tree_insert projection 0 p%d {} 0",prjli->id); 
     if (strlen(prjli->index) > 0)

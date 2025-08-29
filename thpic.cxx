@@ -35,8 +35,7 @@
 #include "thconfig.h"
 #include "therion.h"
 #include <filesystem>
-
-#include <fmt/printf.h>
+#include <algorithm>
 
 namespace fs = std::filesystem;
 
@@ -152,7 +151,7 @@ const char * thpic::convert(const char * type, const char * ext, const std::stri
   int retcode;
   bool isspc;
   const char * tmpf;
-  const auto tmpfn = fmt::sprintf("pic%04ld.%s", thpic_convert_number++, ext);
+  const auto tmpfn = fmt::format("pic{:04d}.{}", thpic_convert_number++, ext);
   isspc = (strcspn(thini.get_path_convert()," \t") < strlen(thini.get_path_convert()));
   ccom = "";
   if (isspc) ccom += "\"";
@@ -245,7 +244,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   thpic tmp;
   tmp.width = this->width;
   tmp.height = this->height;
-  auto tmpfn = fmt::sprintf("pic%04ld.rgba", thpic_convert_number++);
+  auto tmpfn = fmt::format("pic{:04d}.rgba", thpic_convert_number++);
   tmp.fname = thdb.strstore(thtmp.get_file_name(tmpfn.c_str()));
   this->rgbafn = tmp.fname;
   FILE * f;
@@ -256,7 +255,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
     this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300 +dither -colors {}", this->width, this->height, colors));
   else
     this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300", this->width, this->height));
-  tmpfn = fmt::sprintf("pic%04ld.%s", thpic_convert_number - 1, ext);
+  tmpfn = fmt::format("pic{:04d}.{}", thpic_convert_number - 1, ext);
   this->texfname = thdb.strstore(tmpfn.c_str());
 }
 

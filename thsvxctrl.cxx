@@ -44,8 +44,6 @@
 #include <string>
 #include <fstream>
 
-#include <fmt/printf.h>
-
 #define THPI 3.1415926535898
 
 thsvxctrl::thsvxctrl()
@@ -654,7 +652,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
                   fonline = true;
                   tsbuff.strcat("\n");
                 }
-                numbuff = fmt::sprintf("%2ld> input:%ld -- %s [%ld]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
+                numbuff = fmt::format("{:2d}> input:{} -- {} [{}]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
                 tsbuff.strcat(numbuff.c_str());
               }
               break;
@@ -662,14 +660,14 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               csn--;
               if ((csn >= 0) && (csn < long(lsid))) {
                 if (fonline) {
-                  numbuff = fmt::sprintf("%2ld> ",lnum);
+                  numbuff = fmt::format("{:2d}> ",lnum);
                   tsbuff.strcat(numbuff.c_str());
                   fonline = false;
                 }
                 else {
                   tsbuff.strcat(" -- ");
                 }
-                numbuff = fmt::sprintf("%ld : ",(csn+1));
+                numbuff = fmt::format("{} : ",(csn+1));
                 stp = & (dbp->db1d.station_vec[(unsigned int)csn]);
                 tsbuff.strcat(numbuff.c_str());
                 tsbuff.strcat(stp->name);
