@@ -620,7 +620,12 @@ def p_steps_SKBB (expr pos,r,s,al) =
 enddef;
 
 def p_borehole_SKBB (expr pos,r,s,al) =
-   p_station_temporary_SKBB(pos);
+    U:=(.4u,.4u);
+    T:=identity aligned al scaled s shifted pos;
+    pickup PenD;
+    thclean fullcircle scaled 0.8u;
+    thdraw fullcircle scaled 0.8u;
+    thfill fullcircle scaled 0.63u;
 enddef;
 
 def p_fixedladder_SKBB (expr pos,r,s,al) =
@@ -873,5 +878,3 @@ def p_pillars_UIS(expr pos,theta,sc,al) =
         thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
     endfor;
 enddef;
-
-
