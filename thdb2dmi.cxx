@@ -51,6 +51,8 @@ thdb2dmi_shift thdb2dmi_shift::add(const thdb2dmi_shift & s)
     x.m_prev_y = this->m_y;
   } else {
     x.m_preview = this->m_preview;
+    x.m_prev_x = this->m_prev_x;
+    x.m_prev_y = this->m_prev_y;
   }
   x.m_x = this->m_x + s.m_x;
   x.m_y = this->m_y + s.m_y;
