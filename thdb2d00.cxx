@@ -34,12 +34,12 @@
 #include "thconfig.h"
 #include <list>
 #include <algorithm>
+#include <cassert>
 #include <cstring>
 #include "thmapstat.h"
 
 void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift) {
   thdb2dxs * xs, * txs = NULL;
-  thdb2dmi * mi;
   bool found = false;
   if (map->is_basic) {
     xs = fmap->first_bm;
@@ -108,21 +108,20 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
   }
   
   // prejde vsetky referencie
-  mi = map->first_item;
-  while (mi != NULL) {
-    if (mode == TT_MAPITEM_NORMAL) {
-      if (((mi->type != TT_MAPITEM_NORMAL) || (!map->is_basic)) && 
-        ((mi->type == TT_MAPITEM_NORMAL) || (level == 0))) {
-          this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object),mi->type,level+1, shift.add(mi->m_shift));
+  for (auto mi = map->first_item; mi != nullptr; mi = mi->next_item) {
+    if (auto childmap = dynamic_cast<thmap *>(mi->object)) {
+      auto preview_type = mode;
+
+      if (mode == TT_MAPITEM_NORMAL) {
+        this->insert_basic_maps(fmap, childmap, mi->type, level + 1, shift.add(mi->m_shift));
+        preview_type = mi->m_shift.m_preview;
       }
-      if ((mi->type == TT_MAPITEM_NORMAL) && (mi->m_shift.is_active()) && (mi->m_shift.m_preview != TT_MAPITEM_NONE)) {
-        this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object), mi->m_shift.m_preview, level+1, shift);
+
+      if (preview_type == TT_MAPITEM_ABOVE ||
+          preview_type == TT_MAPITEM_BELOW) {
+        this->insert_basic_maps(fmap, childmap, preview_type, level + 1, shift);
       }
-    } else {
-      if ((mi->type == TT_MAPITEM_NORMAL) && (!map->is_basic))
-        this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object),mode,level+1, shift);
     }
-    mi = mi->next_item;
   }
   
 }
