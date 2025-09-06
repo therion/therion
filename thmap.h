@@ -77,7 +77,7 @@ class thmap : public thdataobject {
     * last_item;  ///< Last map item.
   class thdb2dprj * expl_projection;
   int projection_id;  ///< ID of map projection.
-  bool is_basic;  ///< Whether map is basic.
+  bool is_basic;  ///< Whether map is basic (is a map of scraps).
   int selection_mode;  ///< How map is maximally selected.
   class thdb2dxs * selection_xs; ///< Maximal ....
   thobjectname asoc_survey; ///< Associated survey.
