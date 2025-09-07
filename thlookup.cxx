@@ -262,10 +262,11 @@ bool scrap_in_map(thscrap * s, thmap * m) {
   mi = m->first_item;
   while(mi != NULL) {
     if (mi->type == TT_MAPITEM_NORMAL) {
-      if (m->is_basic) {
+      auto childmap = dynamic_cast<thmap *>(mi->object);
+      if (!childmap) {
         if (s->id == mi->object->id) return true;
       } else {
-        if (scrap_in_map(s, dynamic_cast<thmap*>(mi->object))) return true;
+        if (scrap_in_map(s, childmap)) return true;
       }
     }
     mi = mi->next_item;

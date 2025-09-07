@@ -182,6 +182,18 @@ class thmap : public thdataobject {
    
   void self_print_properties(FILE * outf) override; 
   
+  /**
+   * Return true if this map has any direct scrap children.
+   */
+  bool has_direct_scrap_children() const;
+
+  /**
+   * Return true if this map has only scrap children.
+   *
+   * Also known as "basic" map (no nesting, no survey children).
+   */
+  bool has_only_scrap_children() const;
+
 
 };
 
