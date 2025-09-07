@@ -624,10 +624,6 @@ void thdb2d::process_map_references(thmap * mptr)
   int proj_id = -1;
 
   while (citem != NULL) {
-    if (citem->type != TT_MAPITEM_NORMAL) {
-      citem = citem->next_item;
-      continue;
-    }
     optr = this->db->get_object(citem->name, citem->psurvey);
     if (optr == NULL) {
       if (citem->name.survey != NULL)
@@ -647,6 +643,12 @@ void thdb2d::process_map_references(thmap * mptr)
     switch (optr->get_class_id()) {
     
       case TT_SURVEY_CMD:
+
+        if (citem->type != TT_MAPITEM_NORMAL ||
+            (citem->m_shift.is_active() &&
+             citem->m_shift.m_preview != TT_MAPITEM_NONE)) {
+          throw thexception(fmt::format("{} [{}] -- nothing to preview for survey", citem->source.name, citem->source.line));
+        }
 
         if (proj_id == -1) {
           if (mptr->expl_projection == NULL)
@@ -690,7 +692,7 @@ void thdb2d::process_map_references(thmap * mptr)
       case TT_MAP_CMD:
         mapp = dynamic_cast<thmap*>(optr);
         // if not defined - process recursively
-        if (mapp->projection_id == 0) {
+        if (mapp->projection_id == 0 && citem->type == TT_MAPITEM_NORMAL) {
           try {
             this->process_map_references(mapp);
           }
@@ -766,7 +768,7 @@ void thdb2d::process_map_references(thmap * mptr)
               citem->name.name));
         }
         citem->object = scrapp;
-        if (citem->m_shift.is_active()) {
+        if (citem->m_shift.is_active() || citem->type != TT_MAPITEM_NORMAL) {
           promote_to_map(citem);
           mptr->is_basic = false;
         }
@@ -796,72 +798,17 @@ void thdb2d::process_map_references(thmap * mptr)
 
 void thdb2d::postprocess_map_references(thmap * mptr)
 {
-  thdb2dmi * citem = mptr->first_item;
-  thdataobject * optr;
-  if (mptr->projection_id == -1) {
-	throw thexception(fmt::format("{} [{}] -- map cannot contain only previews",
-	  citem->source.name, citem->source.line));
-  }
-
-  while (citem != NULL) {
+  bool has_normal = false;
+  for (thdb2dmi * citem = mptr->first_item; citem != NULL; citem = citem->next_item) {
     if (citem->type == TT_MAPITEM_NORMAL) {
-      citem = citem->next_item;
-      continue;
+      has_normal = true;
+      break;
     }
-    optr = this->db->get_object(citem->name, citem->psurvey);
-    if (optr == NULL) {
-      if (citem->name.survey != NULL)
-        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}@{}",
-          citem->source.name, citem->source.line, 
-          citem->name.name,citem->name.survey));
-      else
-        throw thexception(fmt::format("{} [{}] -- object does not exist -- {}",
-          citem->source.name, citem->source.line, 
-          citem->name.name));
-    }
-    
-    thmap * mapp;
-    switch (optr->get_class_id()) {
-      case TT_MAP_CMD:
-        mapp = dynamic_cast<thmap*>(optr);
-        if (mapp->projection_id != mptr->projection_id) {
-          if (citem->name.survey != NULL)
-            throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
-              citem->source.name, citem->source.line, 
-              citem->name.name,citem->name.survey));
-          else
-            throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}",
-              citem->source.name, citem->source.line, 
-              citem->name.name));
-        }
-        citem->object = optr;
-        break;
-
-      case TT_SCRAP_CMD:
-        if (citem->name.survey != NULL)
-          throw thexception(fmt::format("{} [{}] -- not a map reference -- {}@{}",
-            citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey));
-        else
-          throw thexception(fmt::format("{} [{}] -- not a map reference -- {}",
-            citem->source.name, citem->source.line, 
-            citem->name.name));
-        break;
-
-
-
-      default:
-        mptr->throw_source();
-        if (citem->name.survey != NULL)
-          throw thexception(fmt::format("{} [{}] -- invalid map object -- {}@{}",
-            citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey));
-        else
-          throw thexception(fmt::format("{} [{}] -- invalid map object -- {}",
-            citem->source.name, citem->source.line, 
-            citem->name.name));
-    }
-    citem = citem->next_item;
+  }
+  if (!has_normal) {
+    thdb2dmi * citem = mptr->first_item;
+    throw thexception(fmt::format("{} [{}] -- map cannot contain only previews",
+      citem->source.name, citem->source.line));
   }
 }
 
