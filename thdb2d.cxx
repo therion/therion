@@ -605,19 +605,8 @@ void thdb2d::process_map_references(thmap * mptr)
           if (mptr->expl_projection == NULL)
             throw thexception(fmt::format("{} [{}] -- no projection for survey", citem->source.name, citem->source.line));
           proj_id = mptr->expl_projection->id;
-          mptr->is_basic = false;
-        } else {
-          if (mptr->is_basic) {
-            if (citem->name.survey != NULL)
-              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}@{}",
-                citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey));
-            else
-              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}",
-                citem->source.name, citem->source.line, 
-                citem->name.name));
-          }
         }
+        mptr->is_basic = false;
 
         // skontroluje ci nie sme v inej projekcii
         switch (this->get_projection(proj_id)->type) {
@@ -691,7 +680,6 @@ void thdb2d::process_map_references(thmap * mptr)
         }
         if (proj_id == -1) {
           proj_id = mapp->projection_id;
-          mptr->is_basic = false;
         } else {
           // check projection
           if (mapp->projection_id != proj_id) {
@@ -704,18 +692,8 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->source.name, citem->source.line, 
                 citem->name.name));
           }
-          // check basic
-          if (mptr->is_basic) {
-            if (citem->name.survey != NULL)
-              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}@{}",
-                citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey));
-            else
-              throw thexception(fmt::format("{} [{}] -- not a scrap reference -- {}",
-                citem->source.name, citem->source.line, 
-                citem->name.name));
-          }
         }
+        mptr->is_basic = false;
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
             throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
@@ -735,7 +713,6 @@ void thdb2d::process_map_references(thmap * mptr)
         scrapp = dynamic_cast<thscrap*>(optr);
         if (proj_id == -1) {
           proj_id = scrapp->proj->id;
-          mptr->is_basic = true;
         } else {
           // check projection
           if (scrapp->proj->id != proj_id) {
@@ -748,18 +725,8 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->source.name, citem->source.line, 
                 citem->name.name));
           }
-          // check basic
-          if (!mptr->is_basic) {
-            if (citem->name.survey != NULL)
-              throw thexception(fmt::format("{} [{}] -- not a map reference -- {}@{}",
-                citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey));
-            else
-              throw thexception(fmt::format("{} [{}] -- not a map reference -- {}",
-                citem->source.name, citem->source.line, 
-                citem->name.name));
-          }
-          if (citem->m_shift.is_active()) {
+        }
+        if (citem->m_shift.is_active()) {
             if (citem->name.survey != NULL)
               throw thexception(fmt::format("{} [{}] -- shift is not allowed for scrap -- {}@{}",
                 citem->source.name, citem->source.line, 
@@ -768,7 +735,6 @@ void thdb2d::process_map_references(thmap * mptr)
               throw thexception(fmt::format("{} [{}] -- shift is not allowed for scrap -- {}",
                 citem->source.name, citem->source.line, 
                 citem->name.name));
-          }
         }
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
@@ -1180,8 +1146,8 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
     	  thlog(fmt::format(" {}@{} ({})\n", bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : ""));
       }
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
-        if (cmi->type == TT_MAPITEM_NORMAL) {
-          cs = dynamic_cast<thscrap*>(cmi->object);
+        cs = dynamic_cast<thscrap*>(cmi->object);
+        if (cs && cmi->type == TT_MAPITEM_NORMAL) {
           z = cs->z;
           if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
 		      thlog("S ");
