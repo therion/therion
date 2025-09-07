@@ -49,6 +49,7 @@
 #include <list>
 #include <set>
 #include <iterator>
+#include <cassert>
 #include <cstdio>
 #include <algorithm>
 
@@ -548,6 +549,52 @@ void thdb2d::process_area_references(tharea * aptr)
 }
 
 
+/**
+ * Promote scrap reference map item to a map with a single scrap.
+ *
+ * @param citem map item referencing a scrap or a survey
+ * @param scrapp scrap pointer, needed if citem is not a scrap reference
+ * @return newly created map item referencing the scrap within the new map
+ */
+static thdb2dmi * promote_to_map(thdb2dmi * citem, thscrap * scrapp = nullptr) {
+  if (!scrapp)
+    scrapp = dynamic_cast<thscrap *>(citem->object);
+  assert(scrapp != nullptr);
+
+  auto db = scrapp->db;
+  assert(db != nullptr);
+
+  // Create a new map
+  thmap * mapp;
+  {
+    auto unique_mapp = std::make_unique<thmap>();
+    mapp = unique_mapp.get();
+    mapp->projection_id = scrapp->proj->id;
+    mapp->id = ++db->objid;
+    mapp->db = db;
+    mapp->z = scrapp->z;
+    mapp->fsptr = NULL;
+    db->object_list.push_back(std::move(unique_mapp));
+  }
+
+  // Create a new map item for the scrap within the new map
+  thdb2dmi * xcitem = db->db2d.insert_map_item();
+  xcitem->itm_level = mapp->last_level;
+  xcitem->source = citem->source;
+  xcitem->psurvey = citem->psurvey;
+  xcitem->type = TT_MAPITEM_NORMAL;
+  xcitem->object = scrapp;
+
+  // Set up the map item chain
+  mapp->first_item = xcitem;
+  mapp->last_item = xcitem;
+
+  // Replace the scrap or survey reference with the map reference
+  citem->object = mapp;
+
+  return xcitem;
+}
+
 void thdb2d::process_map_references(thmap * mptr)
 {
   if (!mptr->asoc_survey.is_empty()) {
@@ -572,7 +619,7 @@ void thdb2d::process_map_references(thmap * mptr)
     throw thexception("recursive map reference");
   // let's lock the current map
   mptr->projection_id = -1;
-  thdb2dmi * citem = mptr->first_item, * xcitem;
+  thdb2dmi * citem = mptr->first_item;
   thdataobject * optr;
   int proj_id = -1;
 
@@ -636,26 +683,8 @@ void thdb2d::process_map_references(thmap * mptr)
           scrapp->proj = this->get_projection(proj_id);
           thdb.object_list.push_back(std::move(unique_scrapp));
         }
-        {
-          auto unique_mapp = std::make_unique<thmap>();
-          mapp = unique_mapp.get();
-          mapp->projection_id = proj_id;
-          mapp->id = ++this->db->objid;
-          mapp->db = this->db;
-          mapp->z = scrapp->z;
-          mapp->fsptr = NULL;
-          thdb.object_list.push_back(std::move(unique_mapp));
-        }
 
-        xcitem = this->db->db2d.insert_map_item();
-        xcitem->itm_level = mapp->last_level;
-        xcitem->source = thdb.csrc;
-        xcitem->psurvey = NULL;
-        xcitem->type = TT_MAPITEM_NORMAL;
-        xcitem->object = scrapp;
-        mapp->first_item = xcitem;
-        mapp->last_item = xcitem;
-        citem->object = mapp;
+        promote_to_map(citem, scrapp);
         break;
 
       case TT_MAP_CMD:
@@ -726,16 +755,6 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->name.name));
           }
         }
-        if (citem->m_shift.is_active()) {
-            if (citem->name.survey != NULL)
-              throw thexception(fmt::format("{} [{}] -- shift is not allowed for scrap -- {}@{}",
-                citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey));
-            else
-              throw thexception(fmt::format("{} [{}] -- shift is not allowed for scrap -- {}",
-                citem->source.name, citem->source.line, 
-                citem->name.name));
-        }
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
             throw thexception(fmt::format("{} [{}] -- incompatible scrap projection -- {}@{}",
@@ -747,6 +766,10 @@ void thdb2d::process_map_references(thmap * mptr)
               citem->name.name));
         }
         citem->object = scrapp;
+        if (citem->m_shift.is_active()) {
+          promote_to_map(citem);
+          mptr->is_basic = false;
+        }
         break;
 
 
