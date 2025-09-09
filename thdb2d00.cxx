@@ -110,11 +110,14 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
   // prejde vsetky referencie
   for (auto mi = map->first_item; mi != nullptr; mi = mi->next_item) {
     if (auto childmap = dynamic_cast<thmap *>(mi->object)) {
-      auto preview_type = mode;
+      int preview_type = TT_MAPITEM_NONE;
 
       if (mode == TT_MAPITEM_NORMAL) {
         this->insert_basic_maps(fmap, childmap, mi->type, level + 1, shift.add(mi->m_shift));
         preview_type = mi->m_shift.m_preview;
+      } else if (thcfg.preview_deep ||
+                 (mi->type == TT_MAPITEM_NORMAL && !mi->m_shift.is_active())) {
+        preview_type = mode;
       }
 
       if (preview_type == TT_MAPITEM_ABOVE ||
