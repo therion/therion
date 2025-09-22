@@ -49,7 +49,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-13, macos-14, macos-15]
+        os: [macos-14, macos-15, macos-26]
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
@@ -57,7 +57,7 @@ jobs:
           find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
           brew unlink python && brew link --overwrite python
           brew update  # try to comment out in case of package problems
-          brew install wxwidgets vtk proj xquartz ninja basictex fmt catch2 imagemagick
+          brew install wxwidgets vtk proj xquartz basictex fmt catch2 imagemagick
       - name: Configure CMake
         run: |
           mkdir build && cd build && cmake -G Ninja -DECM_ENABLE_SANITIZERS=address -DENABLE_WERROR=ON -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
