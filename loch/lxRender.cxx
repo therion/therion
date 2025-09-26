@@ -42,7 +42,7 @@
 #include "lxGUI.h"
 #include "lxFile.h"
 
-#include <fmt/printf.h>
+#include <fmt/format.h>
 
 #define lxRENDERBORDER this->m_glc->TRCGet(TR_TILE_BORDER)
 
@@ -869,7 +869,7 @@ void lxRenderFile::RenderPDFHeader()
   fprintf(this->m_file,"%%PDF-1.4\n");
 
   pdf_obj[4] = ftell(this->m_file);
-  const auto tmp_buff = fmt::sprintf("q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
+  const auto tmp_buff = fmt::format("q\n{:.4f} 0 0 {:.4f} 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
   fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", static_cast<unsigned>(tmp_buff.size()), tmp_buff.c_str());
 
   pdf_obj[3] = ftell(this->m_file);

@@ -48,8 +48,6 @@
 #include "therion.h"
 #include <filesystem>
 
-#include <fmt/printf.h>
-
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
@@ -749,7 +747,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
               "Shape {\nappearance Appearance {\n" \
               "\tmaterial Material {\n\t\tdiffuseColor 0.3 1.0 0.1\n\t\ttransparency 0.5\n\t}\n");
             if (has_texture) {
-              const auto tifn = fmt::sprintf("%s.img%d.%s", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
+              const auto tifn = fmt::format("{}.img{}.{}", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
               auto texf = thopen_file(tifn, "wb");
               auto xf = thopen_file(srfc->pict_name, "rb");
               if (texf != NULL) {

@@ -34,8 +34,6 @@
 #include "thdatabase.h"
 #include "thdataleg.h"
 
-#include <fmt/printf.h>
-
 thwarpp::~thwarpp() {}
 
 
@@ -142,7 +140,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
 	    thprint(fmt::format("warning: extra point from {} but no station\n",
 	      pointp->from_name.name ));
 	  } else {
-            s  = fmt::sprintf("%ld_E_%d",fuid, ++n_extra);
+            s  = fmt::format("{}_E_{}",fuid, ++n_extra);
             s2 = std::to_string(fuid);
 	    thdb2dpt * pt = pointp->point;
 	    // assert( pt != NULL );
