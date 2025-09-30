@@ -4,14 +4,11 @@
 #include <catch2/catch.hpp>
 #endif
 #include <cmath>
+#include <numbers>
 
 #include "thproj.h"
 #include "thcsdata.h"
 #include "thcs.h"
-
-#ifndef M_PI
-#define M_PI       3.14159265358979323846
-#endif
 
 // tests for coordinate systems transformations using Proj library
 
@@ -26,7 +23,7 @@ double dms2dec(int d, int m, double s) {
 }
 
 double deg2rad(double d) {
-  return d / 180.0 * M_PI;
+  return d / 180.0 * std::numbers::pi;
 }
 
 double x,y,z;
@@ -75,7 +72,7 @@ TEST_CASE( "projections: is lat/long", "[proj]" ) {
 
 TEST_CASE( "projections: meridian convergence", "[proj]" ) {
     // therion uses a convention that the convergence is positive west to central meridian
-    CHECK(coord_equal(thcsconverg(TTCS_EPSG + 32634, p1_utm_e, p1_utm_n), -atan(tan(p1_ll_lambda-deg2rad(21.0))*sin(p1_ll_phi))*180/M_PI, 0.1/3600));   // 0.1 deg second
+    CHECK(coord_equal(thcsconverg(TTCS_EPSG + 32634, p1_utm_e, p1_utm_n), -atan(tan(p1_ll_lambda-deg2rad(21.0))*sin(p1_ll_phi))*180/std::numbers::pi, 0.1/3600));   // 0.1 deg second
     // https://geodesyapps.ga.gov.au/geographic-to-grid
     CHECK(coord_equal(thcsconverg(TTCS_EPSG + 32634, 350812.125, 5318235.614),  1.486562, 0.01/3600));  // 48 N, 19 E (central meridian 21 E)
     CHECK(coord_equal(thcsconverg(TTCS_EPSG + 32634, 649187.875, 5318235.614), -1.486562, 0.01/3600));  // 48 N, 23 E

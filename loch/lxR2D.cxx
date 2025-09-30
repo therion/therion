@@ -5,11 +5,8 @@
 #include "lxR2D.h"
 #include <math.h>
 #include <stdlib.h>
+#include <numbers>
 #include <GL/gl.h>
-
-#if !defined(M_PI)
-#define M_PI 3.14159265F
-#endif
 
 #define colorIndexMode FALSE
 #define doubleBuffered FALSE
@@ -402,8 +399,8 @@ drawTorus(void)
 	int numMinor = 24;
 	float majorRadius = 0.6F;
 	float minorRadius = 0.2F;
-	double majorStep = 2.0F*M_PI / numMajor;
-	double minorStep = 2.0F*M_PI / numMinor;
+	double majorStep = 2.0F*std::numbers::pi / numMajor;
+	double minorStep = 2.0F*std::numbers::pi / numMinor;
 	int i, j;
 
 	for (i=0; i<numMajor; ++i) {

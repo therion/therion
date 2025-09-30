@@ -40,12 +40,9 @@
 #include <math.h>
 #include <sstream>
 #include <iomanip>
+#include <numbers>
 #ifdef THWIN32
   #include "thconfig.h"
-#endif
-
-#ifndef M_PI
-#define M_PI       3.14159265358979323846
 #endif
 
 std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
@@ -350,10 +347,10 @@ void thcs2cs(int si, int ti,
   {  // let PROJ find the best transformation
     th_init_proj_auto(P, si, ti);
     if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
-      undo_radians = 180.0 / M_PI;
+      undo_radians = 180.0 / std::numbers::pi;
     }
     if (thcs_islatlong(t) && !proj_angular_output(P, PJ_FWD)) {
-      redo_radians = M_PI / 180.0;
+      redo_radians = std::numbers::pi / 180.0;
     }
   }
   PJ_COORD res;
@@ -369,7 +366,7 @@ void thcs2cs(int si, int ti,
 signed int thcs2zone(int s, double a, double b, double c) {
   double x, y, z;
   thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
-  return (int) (x*180/M_PI+180)/6 + 1;
+  return (int) (x*180/std::numbers::pi+180)/6 + 1;
 }
 
 double thcsconverg(int s, double a, double b) {
@@ -379,7 +376,7 @@ double thcsconverg(int s, double a, double b) {
   thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
   y += 1e-6;
   thcs2cs(TTCS_EPSG + 4326,s,x,y,z,x2,y2,z2);
-  return atan2(x2-a,y2-b)/M_PI*180;
+  return atan2(x2-a,y2-b)/std::numbers::pi*180;
 }
 
 bool thcs_islatlong(std::string s) {

@@ -31,13 +31,10 @@
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
+#include <numbers>
 
 #include "thexception.h"
 #include "thwarppt.h"
-
-#ifndef M_PI
-#define M_PI       3.14159265358979323846
-#endif
 
 typedef unsigned int warpp_t;
 const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
@@ -202,9 +199,9 @@ therion::warp::plaquette_algo::insert_zoom_point(
     sa = x2*y1 - y2*x1;
     ca = x1*x2 + y1*y2;
     a = atan2( sa, ca );
-    if ( a < 0.0 ) a += 2*M_PI;
+    if ( a < 0.0 ) a += 2*std::numbers::pi;
     if ( a < a1 ) { a1=a; p1=p; }
-    a = 2*M_PI - a;
+    a = 2*std::numbers::pi - a;
     if ( a < a2 ) { a2=a; p2=p; }
   }
   if ( p1 == NULL || p2 == NULL || p1 == p2 ) return NULL;

@@ -801,8 +801,6 @@ namespace therion
 
       m_kl = ( from.theta_left() - to.theta_left() ) * MORPH_ANGLE_FACTOR;
       m_kr = ( from.theta_right() - to.theta_right() ) * MORPH_ANGLE_FACTOR;
-      // m_kl = fabs(from.theta_left()-M_PI_2) - fabs(to.theta_left()-M_PI_2);
-      // m_kr = fabs(from.theta_right()-M_PI_2) - fabs(to.theta_right()-M_PI_2);
       
       m_dl = from.m_ac / to.m_ac;
       m_dr = from.m_ab / to.m_ab;
@@ -989,8 +987,6 @@ namespace therion
 
       m_kl = ( from.theta_left() - to.theta_left() ) * MORPH_ANGLE_FACTOR;
       m_kr = ( from.theta_right() - to.theta_right() ) * MORPH_ANGLE_FACTOR;
-      // m_kl = fabs(from.theta_left()-M_PI_2) - fabs(to.theta_left()-M_PI_2);
-      // m_kr = fabs(from.theta_right()-M_PI_2) - fabs(to.theta_right()-M_PI_2);
       
       m_dl = from.m_AD_len / to.m_AD_len;
       m_dr = from.m_BC_len / to.m_BC_len;
