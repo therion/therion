@@ -33,7 +33,6 @@
 #include "thbuffer.h"
 #include "thobjectsrc.h"
 #include "thlayout.h"
-#include "loch/icase.h"
 #include <memory>
 
 /**
@@ -86,6 +85,8 @@ class thexport {
   thbuffer cfgpath;  ///< Config path.
   bool outpt_def;  ///< Whether output file defined.  
   int cs; ///< Output coordinate system.
+  int format{};  ///< Output format.
+  int encoding{};  ///< Output encoding.
   
   std::list<thexport_output_crc> output_files; ///< List of output files.
 
@@ -168,16 +169,14 @@ class thexport {
 
   virtual bool check_crc();
   
+protected:
+  /**
+   * @brief Set format if the output file has the given extension.
+   * @brief extension file extension corresponding to the given format
+   * @brief cformat format to conditionally set
+   */
+  void set_format_by_extension(std::string_view extension, int cformat);
 };
-
-
-#define thexp_set_ext_fmt(extension,cformat) { \
-    if (strlen(this->outpt) > strlen(extension)) { \
-      if (icase_equals(&(this->outpt[strlen(this->outpt) - strlen(extension)]), extension)) { \
-        this->format = cformat; \
-      } \
-    } \
-  }
 
 
 #endif

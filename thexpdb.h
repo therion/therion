@@ -88,9 +88,6 @@ class thexpdb : public thexport {
 
   public:
 
-  int format,  ///< Output format.
-    encoding;
-  
   void export_sql_file(class thdatabase * dbp);
   
   void export_csv_file(class thdatabase * dbp);

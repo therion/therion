@@ -106,9 +106,6 @@ class thexptable : public thexport {
 
   bool expattr, exploc, filter, surveys; ///< Whether to export user defined attributes.
 
-  int format,  ///< Output format.
-    encoding;
-  
   thattr m_table;
 
   std::list<std::string> m_str_list;
