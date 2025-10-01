@@ -179,8 +179,6 @@ class thexpmodel : public thexport {
 
   public:
 
-  int format,  ///< Output format.
-    encoding;  ///< Output encoding.
   unsigned items,
     wallsrc;
 

@@ -193,8 +193,6 @@ class thexpmap : public thexport {
   
   friend class thexporter;
   
-  int format,  ///< Output format.
-    encoding;  ///< Output encoding.
   const char * projstr,  ///< Projection string.
     * layoutstr;  ///< Layout string.
   class thdb2dprj * projptr;  ///< Projection pointer.

@@ -96,8 +96,8 @@ void thexpdb::process_db(class thdatabase * dbp)
 {
   this->db = dbp;
   if (this->format == TT_EXPDB_FMT_UNKNOWN) {
-    thexp_set_ext_fmt(".sql", TT_EXPDB_FMT_SQL)
-    thexp_set_ext_fmt(".csv", TT_EXPDB_FMT_CSV)
+    set_format_by_extension(".sql", TT_EXPDB_FMT_SQL);
+    set_format_by_extension(".csv", TT_EXPDB_FMT_CSV);
   }
   switch (this->format) {
     case TT_EXPDB_FMT_SQL:
