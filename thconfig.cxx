@@ -71,6 +71,7 @@ enum {
   TT_MAPS,
   TT_MAPS_OFFSET,
   TT_LOG,
+  TT_PREVIEW_DEEP,
 };
 
 
@@ -84,6 +85,7 @@ static const thstok thtt_cfg[] = {
   {"log", TT_LOG},
   {"maps", TT_MAPS},
   {"maps-offset", TT_MAPS_OFFSET},
+  {"preview-deep", TT_PREVIEW_DEEP},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
   {"sketch-colors", TT_SKETCH_COLORS},
@@ -461,6 +463,15 @@ void thconfig::load()
 #endif
               this->search_path.strcat(this->cfg_file.get_cif_path());
             }
+            break;
+
+          case TT_PREVIEW_DEEP:
+            if (valuemb.get_size() != 1)
+              throw thexception("single preview-deep switch expected");
+            sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
+            if (sv == TT_UNKNOWN_BOOL)
+              throw thexception(fmt::format("invalid preview-deep switch -- {}", valuemb.get_buffer()[0]));
+            this->preview_deep = (sv == TT_TRUE);
             break;
             
           case TT_SKETCH_WARP:
