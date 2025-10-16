@@ -345,6 +345,7 @@ void thline::parse_subtype(char * ss)
         case TT_LINE_SUBTYPE_PIT:
         case TT_LINE_SUBTYPE_MOONMILK:
         case TT_LINE_SUBTYPE_FLOWSTONE:
+	case TT_LINE_SUBTYPE_CHIMNEY:
           tsok = true;
       }
       break;
@@ -725,6 +726,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_UNSURVEYED, SYML_WALL_UNSURVEYED)
             thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_WALL_PRESUMED)
             thline_type_export_mp(TT_LINE_SUBTYPE_PIT, SYML_WALL_PIT)
+            thline_type_export_mp(TT_LINE_SUBTYPE_CHIMNEY, SYML_WALL_CHIMNEY)
           }
           omacroid = macroid;
           if (this->context >= 0)
