@@ -235,11 +235,11 @@ void thexptable::process_db(class thdatabase * dbp)
 
   if (this->format == TT_EXPTABLE_FMT_UNKNOWN) {
     this->format = TT_EXPTABLE_FMT_HTML;
-    thexp_set_ext_fmt(".txt", TT_EXPTABLE_FMT_TXT)
-    thexp_set_ext_fmt(".html", TT_EXPTABLE_FMT_HTML)
-    thexp_set_ext_fmt(".htm", TT_EXPTABLE_FMT_HTML)
-    thexp_set_ext_fmt(".dbf", TT_EXPTABLE_FMT_DBF)
-    thexp_set_ext_fmt(".kml", TT_EXPTABLE_FMT_KML)
+    set_format_by_extension(".txt", TT_EXPTABLE_FMT_TXT);
+    set_format_by_extension(".html", TT_EXPTABLE_FMT_HTML);
+    set_format_by_extension(".htm", TT_EXPTABLE_FMT_HTML);
+    set_format_by_extension(".dbf", TT_EXPTABLE_FMT_DBF);
+    set_format_by_extension(".kml", TT_EXPTABLE_FMT_KML);
   }  
   const char * fname;
 
