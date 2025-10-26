@@ -1,0 +1,34 @@
+encoding  utf-8
+
+source cave.th
+
+#!PROCESS
+#!FILE 7
+#!
+#! Preview of previews can be disabled with `preview-deep off`.
+#! Example:
+
+source
+#!CODE
+map m23
+  m2
+  m3 [-8 0 m] below
+endmap
+
+map m123
+  m1
+  m23 [0 8 m] below
+endmap
+#!ENDCODE
+endsource
+
+#! Then <em>m123</em> looks like this:
+#!
+#!IMAGE map7.pdf
+#!CLEAN map7.pdf
+
+preview-deep off
+
+select m123
+input thconfig.layout
+export map -layout l -o map7.pdf
