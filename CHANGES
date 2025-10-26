@@ -2,6 +2,7 @@ Therion 6.3.5 (in progress):
 
 therion:
  * added point borehole
+ * support compilation on Android (in termux)
 
 --------------------------------------------------------------------------------
 

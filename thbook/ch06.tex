@@ -73,7 +73,7 @@ For Windows consider using MinGW and MSYS2 (\www{https://www.msys2.org/}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
-Installing dependencies to compile Therion on Ubuntu 22.04:
+Installing dependencies to compile Therion on {\bf Ubuntu 22.04}:
 
 {\rightskip 0pt plus 3cm
   |sudo apt install|
@@ -98,7 +98,7 @@ Installing dependencies to compile Therion on Ubuntu 22.04:
   |zlib1g-dev|
 \par}
 
-Installing dependencies on Ubuntu 24.10:
+Installing dependencies on {\bf Ubuntu 24.10}:
 
 {\rightskip 0pt plus 3cm
   |sudo apt install|
@@ -123,7 +123,7 @@ Installing dependencies on Ubuntu 24.10:
   |zlib1g-dev|
 \par}
 
-Installing dependencies in Fedora 37:
+Installing dependencies in {\bf Fedora 37}:
 
 {\rightskip 0pt plus 3cm
   |sudo dnf install|
@@ -151,6 +151,15 @@ Installing dependencies in Fedora 37:
   |vtk-devel|
   |wxGTK-devel|
 \par}
+
+Installing dependencies in {\bf termux} on {\bf Android}:
+
+{\rightskip 0pt plus 3cm
+  |pkg install|
+  |clang cmake fmt ninja perl proj tcl texlive-bin|
+\par}
+Then run |termux-install-tl| to install additional texlive packages and
+|termux-setup-storage| to make Android data directories accessible from termux.
 
 Check also |therion/.github/workflows/| for complete configurations
 for Ubuntu, Mac OS X and Windows.
@@ -234,6 +243,18 @@ Therion's {\it Makefile} may take some optional parameters.
 \fi
 
 \subsubchapter Hacker's guide.
+
+{\it Compilation on Android}\NEW{6.3}
+
+Install the dependencies as listed above and run the following in the therion source directory:
+
+\list
+* |mkdir build && cd build|
+* {\catcode`\=12|cmake -DUSE_BUNDLED_CATCH2=ON -DBUILD_LOCH=OFF -G Ninja ..|}
+* |ninja|
+\endlist
+
+
 
 {\it Cross-compilation for Windows}\NEW{5.4}
 
