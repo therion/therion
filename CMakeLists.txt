@@ -151,7 +151,7 @@ if (BUILD_THERION)
     add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
     target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}")
     target_include_directories(therion-common SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/extern/stl_reader)
-    target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull)
+    target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull $<$<PLATFORM_ID:Android>:log>)
     target_compile_definitions(therion-common PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
     add_dependencies(therion-common 
         version
