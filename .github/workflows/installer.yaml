@@ -100,7 +100,7 @@ jobs:
           echo "git_branch=$BRANCH" >> $GITHUB_OUTPUT
           mkdir ../therion.bin
           cd ../therion.bin
-          cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON ../therion
+          cmake -G "MSYS Makefiles" -DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DUSE_BUNDLED_SHAPELIB=ON ../therion
           cmake --build . -j 4
           cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/ ../therion-batteries/lib/
           cmake --build . -t samples deploy -- -j 4
