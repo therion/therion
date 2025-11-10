@@ -1,7 +1,6 @@
 file(
   COPY ${CMAKE_CURRENT_SOURCE_DIR}
   DESTINATION ${CMAKE_BINARY_DIR}/loch
-  PATTERN "Makefile" EXCLUDE
   PATTERN "CMakeLists.txt" EXCLUDE)
 
 function(add_help DIR)

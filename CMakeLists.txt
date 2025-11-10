@@ -117,19 +117,11 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
 )
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
-# check if there are artifacts from the legacy Makefile in the source dir,
-# which could interfere with the CMake build
-add_custom_target(legacy-make 
-    ${CMAKE_COMMAND} -P cmake/DetectLegacyBuild.cmake
-    COMMENT "Checking for legacy build"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
 # generate version files
 add_custom_target(version python3 set_version.py ${CMAKE_BINARY_DIR}
                   COMMENT "Updating version"
                   BYPRODUCTS ${CMAKE_BINARY_DIR}/thversion.h
                              ${CMAKE_BINARY_DIR}/thbook/version.tex
-                  DEPENDS legacy-make
                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 # generate InnoSetup config file

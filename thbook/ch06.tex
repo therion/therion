@@ -22,7 +22,7 @@ If you want to compile Therion from source code and run it, you need
 (first three are required only during compilation):
 \list
 * GNU C/C++ compiler or Clang
-* GNU make or CMake
+* CMake
 * Perl
 * Python 3
 * PROJ library (\www{https://proj.org/}). Supported versions are
@@ -213,35 +213,6 @@ Here is a selection of parameters which can be used with cmake:
 The following CMake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
 th-docs, loch-docs.
 
-\subsubchapter Legacy approach: using make.
-
-\NEW{6.3}This method is deprecated, use CMake instead.
-
-\iffalse
-\list
-* unpack the source distribution |therion-6.*.tar.gz|
-* |cd therion|
-* |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows,
-  respectively
-* |make|
-* |sudo make install|
-\endlist
-
-{\it Make parameters}
-
-Therion's {\it Makefile} may take some optional parameters.
-
-\list
-* |config-linux|, |config-macosx|, |config-win32| = configure Therion for a
-  specific platform. Linux is a default.
-* |config-release|, |config-oxygen|, |config-ozone| = set optimization level
-  for C++ compiler (none, |-O2| and |-O3|)
-* |config-debug| = useful before debugging the program
-* |install| = install Therion
-* |clean| = delete all temporary files
-\endlist
-\fi
-
 \subsubchapter Hacker's guide.
 
 {\it Compilation on Android}\NEW{6.3}
@@ -254,26 +225,6 @@ Install the dependencies as listed above and run the following in the therion so
 * |ninja|
 \endlist
 
-
-
-{\it Cross-compilation for Windows}\NEW{5.4}
-
-Therion supports compilation of Win32/Win64 executables in Linux using MXE cross
-compiler (\www{http://mxe.cc}).
-
-\list
-* install the following static/win32 packages (i686-w64-mingw32.static-\char42) 
-or static/win64 packages (x86-64-w64-mingw32.static-\char42) to
-the directory |/usr/lib/mxe/|: binutils, bzip2, expat, freetype-bootstrap,
-gcc, gettext, glib, harfbuzz, jpeg, libiconv, libpng, proj, tiff, vtk, wxwidgets,
-xz, zlib.
-* modify PATH: {\catcode`\=12|export PATH=/usr/lib/mxe/usr/bin:$PATH|}
-* use CMake or the legacy approach (|cd therion && make config-win32cross && make|)
-  to build Therion
-\endlist
-
-See |therion/.github/workflows/| for detailed examples of building
-Therion on multiple platforms.
 
 {\it Adding new translations}
 
