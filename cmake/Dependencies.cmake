@@ -12,7 +12,6 @@ endif()
 # therion dependencies
 if (BUILD_THERION)
     include(PROJ)
-    include(Catch2)
     include(Shapelib)
 endif()
 

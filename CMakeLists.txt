@@ -19,6 +19,7 @@ include(Dependencies)
 include(TherionSources)
 include(ECMEnableSanitizers)
 include(Warnings)
+include(CTest)
 
 # strip binaries in release build
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
@@ -183,27 +184,30 @@ if (BUILD_THERION)
         endif()"
         COMPONENT th-runtime)
 
-    # unit tests
-    add_executable(utest 
-        utest-main.cxx
-        utest-proj.cxx
-        utest-str.cxx
-        utest-thdatastation.cxx
-        utest-thdb2dab.cxx
-        utest-thdouble.cxx
-        utest-thexception.cxx
-        utest-thlayoutln.cxx
-        utest-thlogfile.cxx
-        utest-thobjectid.cxx
-        utest-thobjectsrc.cxx
-        utest-thscrapen.cxx
-        utest-thscraplo.cxx
-    )
-    target_link_libraries(utest PUBLIC therion-common catch2-interface)
-    enable_testing()
-    add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    if (ENABLE_CODE_COVERAGE)
-        set_property(TEST utest PROPERTY ENVIRONMENT LLVM_PROFILE_FILE=${COVERAGE_FOLDER}/utest.profraw)
+    if (BUILD_TESTING)
+        include(Catch2)
+
+        add_executable(utest 
+            utest-main.cxx
+            utest-proj.cxx
+            utest-str.cxx
+            utest-thdatastation.cxx
+            utest-thdb2dab.cxx
+            utest-thdouble.cxx
+            utest-thexception.cxx
+            utest-thlayoutln.cxx
+            utest-thlogfile.cxx
+            utest-thobjectid.cxx
+            utest-thobjectsrc.cxx
+            utest-thscrapen.cxx
+            utest-thscraplo.cxx
+        )
+        target_link_libraries(utest PUBLIC therion-common catch2-interface)
+        
+        add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        if (ENABLE_CODE_COVERAGE)
+            set_property(TEST utest PROPERTY ENVIRONMENT LLVM_PROFILE_FILE=${COVERAGE_FOLDER}/utest.profraw)
+        endif()
     endif()
 
     # updates thlibrarydata.cxx
