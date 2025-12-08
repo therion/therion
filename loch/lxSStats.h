@@ -13,14 +13,8 @@
 #ifndef lxSStats_h
 #define lxSStats_h
 
-
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/minifram.h>
 #include <wx/textctrl.h>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxWX.h"
 

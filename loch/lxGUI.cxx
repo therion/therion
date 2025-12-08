@@ -10,9 +10,6 @@
  * $Revision: $
  */
 
-// Standard libraries
-#ifndef LXDEPCHECK
-
 #include <wx/utils.h>
 #include <wx/filedlg.h>
 #include <wx/toolbar.h>
@@ -27,9 +24,6 @@
 #include <wx/msgdlg.h>
 
 #include <vtkObject.h>
-
-#endif  
-//LXDEPCHECK - standard libraries
 
 #include "lxData.h"
 #include "lxGUI.h"

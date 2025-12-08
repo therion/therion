@@ -1,16 +1,11 @@
 #ifndef lxFile_h
 #define lxFile_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <list>
 #include <string>
 #include <cstdio>
 #include <cstdint>
 #include <vector>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 typedef char * lxFileBuff;
 

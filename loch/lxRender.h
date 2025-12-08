@@ -6,11 +6,7 @@
 #ifndef lxRender_h
 #define lxRender_h  
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/window.h>
-#endif  
-//LXDEPCHECK - standard libraries
 
 enum {
 	LXRENDER_FIT_SCREEN,

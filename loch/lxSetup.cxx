@@ -26,14 +26,10 @@
  * -------------------------------------------------------------------- 
  */
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 #include <locale.h>
-#endif  
-//LXDEPCHECK - standard libraries
 
 #include "lxSetup.h"
 #include "lxData.h"

@@ -68,10 +68,6 @@
 #ifndef lxTR_h
 #define lxTR_h
 
-
-/* Standard libraries */
-#ifndef LXDEPCHECK
-
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
@@ -87,8 +83,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
-#endif  
-/* LXDEPCHECK - standard libraries */
 
 #define TR_VERSION "1.1"
 #define TR_MAJOR_VERSION 1

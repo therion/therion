@@ -28,11 +28,7 @@
 
 #include "lxMath.h"
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <cmath>
-#endif  
-//LXDEPCHECK - standard libraries
 
 void lxVec::Normalize() 
 {
