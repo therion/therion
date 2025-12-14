@@ -1117,6 +1117,12 @@ respectively.
     In this case you need also to define corresponding metapost symbol
     (see the chapter {\it New map symbols}).
 
+    |subtype| can be set either as a line option or as a line-point option (inside [LINE DATA]).
+    When used as a line option (either as TYPE:SUBTYPE or -subtype SUBTYPE), it defines the
+    subtype starting at the beginning of the line and stays in effect until it is overridden by
+    another subtype specified at a line point or until the end of the line, whichever comes first.
+    As a line point option (inside [LINE DATA]) it can be used multiple times.
+
        * |[LINE DATA]| specify either the coordinates of a line segment
          |<x> <y>|, or coordinates of a B\'ezier curve arc
          |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
