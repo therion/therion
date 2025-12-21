@@ -402,23 +402,41 @@ the command may be used anywhere.
     is his/her name, the others describe the roles of the person in
     the team (optional---currently not used). The following role keywords are
     supported:
-    [back]tape ([back]length),
-    [back]compass ([back]bearing),
-    [back]clino ([back]gradient),
-    counter (count),
-    depth,
-    station,
-    position,
-    notes (notebook),
-    pictures (pics),
-    instruments (insts),
-    assistant (dog),
-    altitude (dz),
-    dimensions,
-    left,
-    right,
-    up (ceiling),
-    down (floor).
+
+    \medskip
+
+    \halign{
+    \vtop{\hsize.19\hsize #} &
+    \vtop{\hsize.19\hsize #} &
+    \vtop{\hsize.60\hsize #{\vrule width0pt depth.9em}} \cr
+    {\it role}  & {\it alias}  & {\it intended meaning} \cr
+    \noalign{\kern-.4em\hrule\kern.5em}
+      tape        & length       & Measured leg lengths \cr
+      compass     & bearing      & Measured bearings \cr
+      clino       & gradient     & Measured vertical angles \cr
+      backtape    & backlength   & Like |tape| but for backsights \cr
+      backcompass & backbearing  & Like |compass| but for backsights \cr
+      backclino   & backgradient & Like |clino| but for backsights \cr
+      instruments & insts        & All instruments: both compass and clino; use for
+                                   all-in-one instruments such as DistoX. \cr
+      counter     & count        & Topofil length measurements \cr
+      depth       &              & Measured differences in height between stations,
+                                   e.g.\ underwater with a diver's depth gauge, or above water with a manometer \cr
+      station     &              & Added markers at stations \cr
+      position    &              & Recorded absolute positions of stations (e.g.\ fixed
+                                   surface stations with a GPS) \cr
+      notes       & notebook     & Recorded instrument readings \cr
+      pictures    & pics         & Drew sketches \cr
+      assistant   & dog          & General helper (e.g.\ held the end of the tape on stations) \cr
+      altitude    & dz           & Recorded the altitudes of stations (e.g.\ with an altimeter) \cr
+      dimensions  &              & Measured all passage dimensions \cr
+      left        &              & Measured |left| passage dimension \cr
+      right       &              & Measured |right| passage dimension \cr
+      up          & ceiling      & Measured |up| passage dimension \cr
+      down        & floor        & Measured |down| passage dimension \cr
+      explorer    &              & Explored the area of cave being surveyed \cr
+    }
+
   * |explo-team <person>| = a discovery team member.
   * |instrument <quantity list> <description>| = description
     of the instrument that was used to survey the given quantities (same
