@@ -1,0 +1,33 @@
+encoding  utf-8
+
+source cave.th
+
+#!PROCESS
+#!FILE 6
+#!
+#! Scraps can have offset and preview as well and can be mixed with maps.
+#! Example:
+
+source
+#!CODE
+map m23
+  s2
+  s3 [-8 0 m] none
+  preview below s3
+endmap
+
+map m123
+  s1
+  m23 [0 8 m] below
+endmap
+#!ENDCODE
+endsource
+
+#! Then <em>m123</em> looks like this:
+#!
+#!IMAGE map6.pdf
+#!CLEAN map6.pdf
+
+select m123
+input thconfig.layout
+export map -layout l -o map6.pdf

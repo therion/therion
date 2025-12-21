@@ -35,6 +35,7 @@
 #include "thconfig.h"
 #include "thdatabase.h"
 
+#include <cassert>
 #include <fmt/core.h>
 
 thmap::thmap()
@@ -289,4 +290,28 @@ void thmap::calc_z() {
 int thmap::get_context()
 {
   return (THCTX_SURVEY);
+}
+
+
+bool thmap::has_direct_scrap_children() const
+{
+  for (thdb2dmi * item = first_item; item != nullptr; item = item->next_item) {
+    if (dynamic_cast<thscrap const *>(item->object) != nullptr) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+bool thmap::has_only_scrap_children() const
+{
+  for (thdb2dmi * item = first_item; item != nullptr; item = item->next_item) {
+    if (dynamic_cast<thscrap const *>(item->object) == nullptr) {
+      assert(!is_basic);
+      return false;
+    }
+  }
+  assert(is_basic);
+  return true;
 }
