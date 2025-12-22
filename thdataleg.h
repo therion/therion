@@ -117,6 +117,7 @@ static const thstok thtt_dataleg_comp[] = {
   {"fromcount", TT_DATALEG_FROMCOUNT},
   {"fromcounter", TT_DATALEG_FROMCOUNT},
   {"fromdepth", TT_DATALEG_FROMDEPTH},
+  {"gps", TT_DATALEG_POSITION},
   {"gradient", TT_DATALEG_GRADIENT},
   {"ignore", TT_DATALEG_IGNORE},
   {"ignoreall", TT_DATALEG_IGNOREALL},
