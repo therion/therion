@@ -13,12 +13,7 @@
 #ifndef lxSetup_h
 #define lxSetup_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/xml/xml.h>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxMath.h"
 #include <set>

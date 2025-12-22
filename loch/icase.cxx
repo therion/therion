@@ -1,12 +1,8 @@
 #include "icase.h"
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <algorithm>
 #include <functional>
 #include <cctype>
-#endif  
-//LXDEPCHECK - standard libraries
 
 using uchar_type = const unsigned char; // we need to convert chars to unsigned chars because of std::tolower's requirements
 using str_it = std::string_view::const_iterator;

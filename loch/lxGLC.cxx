@@ -10,8 +10,6 @@
 * $Revision: $
 */
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <math.h>
 #include <stdlib.h>
 #include <wx/dcclient.h>
@@ -29,8 +27,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
-#endif  
-//LXDEPCHECK - standard libraries
 
 #include "lxGLC.h"
 #include "lxGUI.h"

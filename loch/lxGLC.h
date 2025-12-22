@@ -29,14 +29,10 @@
 #ifndef lx_h
 #define lx_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/glcanvas.h>
 #include <wx/timer.h>
 #include <wx/image.h>
 #include "lxOGLFT.h"
-#endif  
-//LXDEPCHECK - standard libraries
 
 enum {
   LXGLCML_NONE,

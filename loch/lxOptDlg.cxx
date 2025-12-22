@@ -1,8 +1,6 @@
 #include "lxWX.h"
 #include "lxGUI.h"
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/dirdlg.h>
 #include <wx/valgen.h>
 #include <wx/statbox.h>
@@ -10,9 +8,6 @@
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/valtext.h>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 enum {
   LXOD_START = 6000,

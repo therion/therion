@@ -26,8 +26,6 @@
  * -------------------------------------------------------------------- 
  */
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <stdlib.h>
 #include <wx/txtstrm.h>
 #include <wx/strconv.h>
@@ -50,8 +48,6 @@
 #endif
 
 #include <map>
-#endif  
-//LXDEPCHECK - standard libraries
 
 #include "lxData.h"
 #include "lxLRUD.h"

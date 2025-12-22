@@ -1,7 +1,5 @@
 #include "lxFile.h"
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -10,9 +8,6 @@
 #include <list>
 #include <fstream>
 #include <filesystem>
-
-#endif  
-//LXDEPCHECK - standard libraries
 
 #include "icase.h"
 #include "lxMath.h"
