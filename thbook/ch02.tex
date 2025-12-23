@@ -408,9 +408,9 @@ the command may be used anywhere.
     \halign{
     \vtop{\hsize.19\hsize #} &
     \vtop{\hsize.19\hsize #} &
-    \vtop{\hsize.60\hsize #{\vrule width0pt depth.9em}} \cr
+    \vtop{\hsize.60\hsize \strut#\strut} \cr
     {\it role}  & {\it alias}  & {\it intended meaning} \cr
-    \noalign{\kern-.4em\hrule\kern.5em}
+    \noalign{\hrule}
       tape        & length       & Measured leg lengths \cr
       compass     & bearing      & Measured bearings \cr
       clino       & gradient     & Measured vertical angles \cr
@@ -423,7 +423,7 @@ the command may be used anywhere.
       depth       &              & Measured differences in height between stations,
                                    e.g.\ underwater with a diver's depth gauge, or above water with a manometer \cr
       station     &              & Added markers at stations \cr
-      position    & gps          & Recorded absolute positions of stations (e.g.\ fixed
+      position    & \mgshift3.215\hsize\NEW{6.3.5}gps   & Recorded absolute positions of stations (e.g.\ fixed
                                    surface stations with a GPS) \cr
       notes       & notebook     & Recorded instrument readings \cr
       pictures    & pics         & Drew sketches \cr
@@ -436,8 +436,6 @@ the command may be used anywhere.
       down        & floor        & Measured |down| passage dimension \cr
       explorer    &              & Explored the area of cave being surveyed \cr
     }
-
-    \NEW{6.3.5}|gps| was added as an alias for |position| in Therion 6.3.5.
 
   * |explo-team <person>| = a discovery team member.
   * |instrument <quantity list> <description>| = description
