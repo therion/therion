@@ -338,16 +338,15 @@
          \threetonum#1 \else \twotonum#1 \fi}
 \fi
 
+\newdimen\mgshift  % used to adjust horizontal position, required for tables (0 by default)
 \def\NEW#1{\iffulloutput\ifnum\versiontonum{#1}<\versiontonum{5.5}% don't display too old news
        \else
        \leavevmode\vadjust{%
           \vbox to 0pt{%
 	    \vss
-	    \line{%
-	      \ifodd\pageno\hfil\fi
-	      \raise2.3pt\ifodd\pageno\expandafter\rlap\else\expandafter\llap\fi
-	      {\ifodd\pageno\quad\fi\grey\tenit #1\POPcolor\ifodd\pageno\else\quad\fi}%
-	      \ifodd\pageno\else\hfil\fi
+	    \hbox to 0pt{%
+	      \kern\hsize\kern\mgshift
+	      \raise2.3pt\rlap{\quad\grey\tenit #1\POPcolor}\hss%
 	    }%
 	  }%
 	}\fi\fi\ignorespaces
@@ -367,7 +366,7 @@
   \textfont\bffam=\tenbf \scriptfont\bffam=\sevenbf
   \scriptscriptfont\bffam=\sevenbf
   \def\tt{\fam\ttfam\tentt}%
-  \normalbaselineskip=12pt
+  \baselineskip=14pt
   \setbox\strutbox=\hbox{\vrule height9.5pt depth4.5pt width0pt}%
   \normalbaselines\rm}
 
@@ -382,7 +381,7 @@
   \textfont\ttfam=\tentt \def\tt{\fam\ttfam\tentt}%
   \textfont\bffam=\tenbf \scriptfont\bffam=\sevenbf
    \scriptscriptfont\bffam=\fivebf \def\bf{\fam\bffam\tenbf}%
-  \normalbaselineskip=12pt
+  \baselineskip=14pt
   \font\manfnt=logo10
   \setbox\strutbox=\hbox{\vrule height9.5pt depth4.5pt width0pt}%
   \normalbaselines\rm}
@@ -405,6 +404,7 @@
 \parskip=\medskipamount
 \parindent=0pt
 \baselineskip=16pt
+\setbox\strutbox=\hbox{\vrule height11.33pt depth 4.67pt width0pt}%
 \raggedbottom
 \widowpenalty10000
 \clubpenalty10000
