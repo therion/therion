@@ -711,7 +711,7 @@ the command may be used anywhere.
   * |walls <on/off/auto>| = specify if the scrap should be used in 3D model
     reconstruction
   * |flip (none)/horizontal/vertical| = flips the scrap after
-    scale transformation
+    scale transformation. Default is |none|.
   * |station-names <prefix> <suffix>| = adds given prefix/suffix to
     all survey stations in the current scrap. Saves some typing.
 
@@ -919,16 +919,19 @@ Point is a command for drawing a point map symbol.
   * |align| = alignment of the symbol or text. The following values
     are accepted: center, c, top, t, bottom, b, left, l, right, r,
     top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
+    Default is |center|.
   * |scale| = symbol scale, can be:
     tiny (xs), small (s), normal (m), large (l), huge (xl) or a
     numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
     $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
     $xl \equiv 2.0$.
-  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |place <bottom/default/top>| = changes displaying order in the map. Default is 
+    |default|.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
-    station-name, label, remark, date, altitude, height, passage-height.
-  * |visibility <on/off>| = displays/hides the symbol.
+    station-name, label, remark, date, altitude, height, passage-height. Default 
+    is |on|.
+  * |visibility <on/off>| = displays/hides the symbol. Default is |on|.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.\[Example: if you specify
@@ -1146,7 +1149,7 @@ respectively.
          |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
          point.
        * |close <on/off/auto>| = determines whether a line is closed
-         or not
+         or not. Default is |auto|.
        * |mark <keyword>| = is used to mark the point on the line (see
          |join| command).
        * |outline <in/out/none>| = determines whether the line serves as
@@ -1154,18 +1157,31 @@ respectively.
          walls, `|none|' for all other lines. Use |-outline in| for
          large pillars etc.
        * |reverse <on/off>| = whether points are given in reverse order.
+         Default is |off|.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
-         Auto is default.
-    * |adjust <horizontal/vertical>| = shifts the line point to be aligned
-    horizontally/ver\-ti\-cally with the previous point. It can't be set on the 
-    first point. The result is a horizontal/vertical line segment.
-    This option is not allowed in the |plan| projection.
-  * |place <bottom/default/top>| = changes displaying order in the map.
-  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides the symbol.
-  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
-    and |symbol-show| layout options) symbol will be hidden/shown according
-    to rules for specified |<symbol-type>|.
+         Deafult is |auto|. This setting only has any effect if both segments that
+         passes through the point affected by the smooth setting are Bezier Curves
+         (the one arriving at it and the one leaving it). On means that the line
+         connection at this point will be smoothed, both by therion and by xTherion.
+         Off means that smoothness at the point is not guaranteded. Auto means that,
+         if both segments that passes through the point are Bezier Curves, Therion
+         will automatically detected if they are smooth and, if they are detected as
+         smooth, Therion will keep them smooth in it's transformations. xTherion
+         always creates Bezier Curves as smooth, even if the previous segment was a
+         straight one.
+       * |adjust <horizontal/vertical>| = shifts the line point to be aligned
+         horizontally/ver\-ti\-cally with the previous point. It can't be set on the
+         first point. The result is a horizontal/vertical line segment. When unset
+         (the default situation) the line point isn't automatically aligned with the
+         previous line point. This option is not allowed in the |plan| projection.
+       * |place <bottom/default/top>| = changes displaying order in the map. Default
+         is |top| for |ceiling-step| and |chimney|, |default| for all other types.
+       * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
+         Default is |on|.
+       * |visibility <on/off>| = displays/hides the symbol. Default is |on|.
+       * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
+         and |symbol-show| layout options) symbol will be hidden/shown according
+         to rules for specified |<symbol-type>|.
 
     {\it Type-specific options:}\Nobreak
 
@@ -1185,10 +1201,10 @@ respectively.
          the `rope' line type. Default is |on|.
        * |border <on/off>| = this option can be specified only with
          the `slope' symbol type. It switches on/off the border line of
-         the slope.
+         the slope. Default is |on|.
        * |direction <begin/end/both/none/point>| = can be used only
          with the section type. It indicates where to put
-         a direction arrow on the section line. None is default. The |point| 
+         a direction arrow on the section line. Default is |none|. The |point| 
          option must be used inside |[LINE DATA]|. The others can (and should)
          be used as a line option.
        * |gradient <none/center/point>| = can be used only with the contour
@@ -1196,9 +1212,9 @@ respectively.
          If there is no gradient specification, behaviour is symbol-set
          dependent (e.g. no tick in UIS, tick in the middle in SKBB). The |point| 
          option must be used inside |[LINE DATA]|. The others can (and should)
-         be used as a line option.
+         be used as a line option. Default is |none|.
        * |head <begin/end/both/none>| = can be used only with the arrow
-         type and indicates where to put an arrow head. End is default.
+         type and indicates where to put an arrow head. Default is |end|.
        * |l-size <number>| = Size of the line (to the left). Only valid on and 
          required for |slope| type.
        * |orientation/orient <number>| = orientation of the symbols on the line.
@@ -1269,9 +1285,11 @@ by each separate line.
 All options can appear as command-like options or as |area| options, i.e., on
 the same line as the |area| command. The last one appearing prevails.
   * the data lines consist of border line references (IDs)
-  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |place <bottom/default/top>| = changes displaying order in the map. Default
+    is |top|.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides the symbol.
+    Default is |on|.
+  * |visibility <on/off>| = displays/hides the symbol. Default is |on|.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.
