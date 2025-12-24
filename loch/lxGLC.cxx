@@ -48,6 +48,8 @@
 
 #include <fmt/format.h>
 
+#include <numbers>
+
 #define LXTRCBORDER (this->m_renderData->m_scaleMode == LXRENDER_FIT_SCREEN ? 0 : 16)
 
 BEGIN_EVENT_TABLE(lxGLCanvas, wxGLCanvas)
@@ -759,17 +761,17 @@ void lxGLCanvas::SetCamera() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   lxVec up = lxVec(
-    sin(this->setup->cam_tilt / 180.0 * lxPI) * sin(this->setup->cam_dir / 180.0 * lxPI),
-    sin(this->setup->cam_tilt / 180.0 * lxPI) * cos(this->setup->cam_dir / 180.0 * lxPI),
-    cos(this->setup->cam_tilt / 180.0 * lxPI)
+    sin(this->setup->cam_tilt / 180.0 * std::numbers::pi) * sin(this->setup->cam_dir / 180.0 * std::numbers::pi),
+    sin(this->setup->cam_tilt / 180.0 * std::numbers::pi) * cos(this->setup->cam_dir / 180.0 * std::numbers::pi),
+    cos(this->setup->cam_tilt / 180.0 * std::numbers::pi)
     );
   //printf("LOOK FROM: %12.2f%12.2f%12.f\n", lxShiftVecXYZ(this->setup->cam_pos,this->shift));
   //printf("       TO: %12.2f%12.2f%12.f\n", lxShiftVecXYZ(this->setup->cam_center,this->shift));
   //printf("       UP: %12.2f%12.2f%12.f\n", lxVecXYZ(up));  
   if (this->setup->cam_anaglyph) {
     lxVec aRPosShift = (this->setup->cam_anaglyph_left ? -1.0 : 1.0) * (this->setup->cam_anaglyph_eyesep * this->setup->cam_dist) * lxVec(
-      -cos(this->setup->cam_dir / 180.0 * lxPI),
-      sin(this->setup->cam_dir / 180.0 * lxPI),
+      -cos(this->setup->cam_dir / 180.0 * std::numbers::pi),
+      sin(this->setup->cam_dir / 180.0 * std::numbers::pi),
       0
       );
     gluLookAt(lxShiftVecXYZ(this->setup->cam_pos,this->shift + aRPosShift),
@@ -1521,8 +1523,8 @@ void lxGLCanvas::RenderICompass(double size) {
   glBegin(GL_TRIANGLE_FAN);
   for(t = 0; t < 360; t++) {
     v2r(
-      (size - hlw) * sin(double(t)/180.0*lxPI),
-      (size - hlw) * cos(double(t)/180.0*lxPI));
+      (size - hlw) * sin(double(t)/180.0*std::numbers::pi),
+      (size - hlw) * cos(double(t)/180.0*std::numbers::pi));
   }
   glEnd();
 
@@ -1531,19 +1533,19 @@ void lxGLCanvas::RenderICompass(double size) {
     glBegin(GL_TRIANGLE_STRIP);
     for(t = 0; t <= 360; t++) {
       v2r(
-        (size - hlw) * sin(double(t)/180.0*lxPI),
-        (size - hlw) * cos(double(t)/180.0*lxPI));
+        (size - hlw) * sin(double(t)/180.0*std::numbers::pi),
+        (size - hlw) * cos(double(t)/180.0*std::numbers::pi));
       v2r(
-        (size + hlw) * sin(double(t)/180.0*lxPI),
-        (size + hlw) * cos(double(t)/180.0*lxPI));
+        (size + hlw) * sin(double(t)/180.0*std::numbers::pi),
+        (size + hlw) * cos(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   } else {
     glBegin(GL_LINE_STRIP);
     for(t = 0; t <= 360; t++) {
       v2r(
-        (size - hlw) * sin(double(t)/180.0*lxPI),
-        (size - hlw) * cos(double(t)/180.0*lxPI));
+        (size - hlw) * sin(double(t)/180.0*std::numbers::pi),
+        (size - hlw) * cos(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   }
@@ -1600,8 +1602,8 @@ void lxGLCanvas::RenderIClino(double size)
     v2r(0.0, 0.0);
     for(t = 0; t <= 20; t++) {
       v2r(
-        (-size) * cos(double(t) * (tilt / 20.0) / 180.0 * lxPI),
-        (size) *  sin(double(t) * (tilt / 20.0) / 180.0 * lxPI));
+        (-size) * cos(double(t) * (tilt / 20.0) / 180.0 * std::numbers::pi),
+        (size) *  sin(double(t) * (tilt / 20.0) / 180.0 * std::numbers::pi));
     }
     glEnd();
   }
@@ -1612,19 +1614,19 @@ void lxGLCanvas::RenderIClino(double size)
     glBegin(GL_TRIANGLE_STRIP);
     for(t = 0; t <= 90; t += 5) {
       v2r(
-        (-1.0) * (size - hlw) * cos(double(t)/180.0*lxPI),
-        (neg ? -1.0 : 1.0) * (size - hlw) * sin(double(t)/180.0*lxPI));
+        (-1.0) * (size - hlw) * cos(double(t)/180.0*std::numbers::pi),
+        (neg ? -1.0 : 1.0) * (size - hlw) * sin(double(t)/180.0*std::numbers::pi));
       v2r(      
-        (-1.0) * (size + hlw) * cos(double(t)/180.0*lxPI),
-        (neg ? -1.0 : 1.0) * (size + hlw) * sin(double(t)/180.0*lxPI));
+        (-1.0) * (size + hlw) * cos(double(t)/180.0*std::numbers::pi),
+        (neg ? -1.0 : 1.0) * (size + hlw) * sin(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   } else {
     glBegin(GL_LINE_STRIP);
     for(t = 0; t <= 90; t += 5) {
       v2r(
-        (-1.0) * (size) * cos(double(t)/180.0*lxPI),
-        (neg ? -1.0 : 1.0) * (size) * sin(double(t)/180.0*lxPI));
+        (-1.0) * (size) * cos(double(t)/180.0*std::numbers::pi),
+        (neg ? -1.0 : 1.0) * (size) * sin(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   }

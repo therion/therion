@@ -29,8 +29,6 @@
 #ifndef lxMath_h
 #define lxMath_h
 
-#define lxPI 3.1415926535898
-
 struct lxVec {
 
   double x, y, z;
