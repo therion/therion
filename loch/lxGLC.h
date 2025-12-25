@@ -124,14 +124,9 @@ class lxGLCanvas: public wxGLCanvas {
     void RenderOffList();
 
     // offscreen funkcie a premenne
-    struct OSC * m_OSC;
     struct TRC * m_TRC;
 
     GLint m_maxTSizeS, m_maxTSizeO;
-
-    bool OSCMakeCurrent();
-    void OSCDestroy();
-    bool OSCInit(GLint w, GLint h);
 
     void TRCInit(int type, GLint w, GLint h, GLint tw = 0, GLint th = 0);
     struct TRctx * TRCGetContext();

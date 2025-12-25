@@ -1237,12 +1237,6 @@ bool lxApp::OnInit()
     this->frame->Show(true);
     this->frame->canvas->SetFocus();
 
-#if wxUSE_DISPLAY
-    this->frame->canvas->OSCInit(displayRect.width, displayRect.height);
-#else
-    this->frame->canvas->OSCInit(wxGetDisplaySize().x, wxGetDisplaySize().y);
-#endif
-
     if (this->argc > 1) {
       this->frame->m_fileToOpen = wxString(this->argv[1]);
     }
