@@ -38,7 +38,7 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thpdfdbg.h"
-#include "loch/icase.h"
+#include "icase.h"
 #include <filesystem>
 
 #ifdef THWIN32

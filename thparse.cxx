@@ -39,7 +39,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include <algorithm>
-#include "loch/icase.h"
+#include "icase.h"
 
 thmbuffer thparse_mbuff;
 
