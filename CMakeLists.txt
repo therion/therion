@@ -144,7 +144,7 @@ if (BUILD_THERION)
     add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
     target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}")
     target_include_directories(therion-common SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/extern/stl_reader)
-    target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull $<$<PLATFORM_ID:Android>:log>)
+    target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull fmt::fmt $<$<PLATFORM_ID:Android>:log>)
     target_compile_definitions(therion-common PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
     add_dependencies(therion-common 
         version
@@ -224,9 +224,13 @@ if (BUILD_THERION)
     add_subdirectory(samples)
 endif()
 
-add_subdirectory(loch)
+add_subdirectory(src)
 add_subdirectory(thbook)
 add_subdirectory(xtherion)
+
+if (BUILD_LOCH)
+    add_subdirectory(loch)
+endif()
 
 # deployment of DLL dependencies on Windows
 if (BUILD_THERION AND BUILD_LOCH AND WIN32)

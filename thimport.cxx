@@ -25,7 +25,7 @@
  * --------------------------------------------------------------------
  */
  
-#include "loch/icase.h"
+#include "icase.h"
 #include "thimport.h"
 #include "thcsdata.h"
 #include "thexception.h"

@@ -38,7 +38,7 @@
 #include "thsurvey.h"
 #include "thmapstat.h"
 #include <stdlib.h>
-#include "loch/lxMath.h"
+#include "lxMath.h"
 #include "thexpmodel.h"
 #include <stdlib.h>
 #include <time.h>

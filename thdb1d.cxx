@@ -47,7 +47,7 @@
 #include "thinit.h"
 #include "thconfig.h"
 #include "thtrans.h"
-#include "loch/lxMath.h"
+#include "lxMath.h"
 #include "thcsdata.h"
 #include "thgeomagdata.h"
 #include "therion.h"

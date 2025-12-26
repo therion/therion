@@ -34,7 +34,7 @@
 #include <list>
 #include <memory>
 #include "thdb3d.h"
-#include "loch/lxMath.h"
+#include "lxMath.h"
 #define THSCRAPISRES 0.001
 //#define THSCRAPIS_NEW3D 1
 

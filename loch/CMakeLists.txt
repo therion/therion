@@ -1,17 +1,4 @@
-if (NOT BUILD_THERION AND NOT BUILD_LOCH)
-    return()
-endif()
-
 set(LOCH_DEFINITIONS LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
-
-# library common with therion
-add_library(common-utils STATIC icase.h icase.cxx lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
-target_compile_definitions(common-utils PUBLIC $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN> PRIVATE ${LOCH_DEFINITIONS})
-target_link_libraries(common-utils PUBLIC img enable-warnings code-coverage fmt::fmt)
-
-if (NOT BUILD_LOCH)
-    return()
-endif()
 
 # Tiled Rendering library
 add_library(tr STATIC lxTR.h lxTR.cxx)
@@ -49,7 +36,7 @@ add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES})
 set(CXX_FLAGS_WITHOUT_INCLUDE_DIRS ${wxWidgets_CXX_FLAGS_LIST})
 list(FILTER CXX_FLAGS_WITHOUT_INCLUDE_DIRS EXCLUDE REGEX "-I/")
 target_compile_options(loch PRIVATE ${CXX_FLAGS_WITHOUT_INCLUDE_DIRS})
-target_compile_definitions(loch PRIVATE ${LOCH_DEFINITIONS})
+target_compile_definitions(loch PRIVATE ${LOCH_DEFINITIONS} $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN>)
 target_include_directories(loch PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(loch SYSTEM PRIVATE ${FREETYPE_INCLUDE_DIRS} ${wxWidgets_INCLUDE_DIRS} ${VTK_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
 target_link_libraries(loch PRIVATE
@@ -61,6 +48,7 @@ target_link_libraries(loch PRIVATE
     ${FREETYPE_LIBRARIES}
     ${X11_LIBRARIES}
     $<$<BOOL:${WIN32}>:${CMAKE_CURRENT_BINARY_DIR}/loch.res>
+    fmt::fmt
 )
 add_dependencies(loch version)
 if (WIN32)

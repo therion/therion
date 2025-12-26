@@ -35,7 +35,7 @@
 #include "img.h"
 #include "thscrap.h"
 #include "thsurface.h"
-#include "loch/lxFile.h"
+#include "lxFile.h"
 #include "thsurface.h"
 #include "thscan.h"
 #include "thconfig.h"
