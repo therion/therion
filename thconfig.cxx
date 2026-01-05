@@ -72,6 +72,7 @@ enum {
   TT_MAPS_OFFSET,
   TT_LOG,
   TT_PREVIEW_DEEP,
+  TT_SCRAP_SORT,
 };
 
 
@@ -86,6 +87,7 @@ static const thstok thtt_cfg[] = {
   {"maps", TT_MAPS},
   {"maps-offset", TT_MAPS_OFFSET},
   {"preview-deep", TT_PREVIEW_DEEP},
+  {"scrap-sort", TT_SCRAP_SORT},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
   {"sketch-colors", TT_SKETCH_COLORS},
@@ -472,6 +474,15 @@ void thconfig::load()
             if (sv == TT_UNKNOWN_BOOL)
               throw thexception(fmt::format("invalid preview-deep switch -- {}", valuemb.get_buffer()[0]));
             this->preview_deep = (sv == TT_TRUE);
+            break;
+            
+          case TT_SCRAP_SORT:
+            if (valuemb.get_size() != 1)
+              throw thexception("single scrap-sort switch expected");
+            sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
+            if (sv == TT_UNKNOWN_BOOL)
+              throw thexception(fmt::format("invalid scrap-sort switch -- {}", valuemb.get_buffer()[0]));
+            this->scrap_sort = (sv == TT_TRUE);
             break;
             
           case TT_SKETCH_WARP:

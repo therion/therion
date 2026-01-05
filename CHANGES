@@ -2,6 +2,8 @@ Therion 6.3.5 (in progress):
 
 therion:
  * added point borehole
+ * support compilation on Android (in termux)
+ * add `gps` as alias for `position` team role
 
 --------------------------------------------------------------------------------
 

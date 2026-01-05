@@ -1,10 +1,6 @@
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/statline.h>
 #include <wx/busyinfo.h>
 #include <wx/button.h>
-#endif  
-//LXDEPCHECK - standard libraries
 
 #include "lxData.h"
 #include "lxSTree.h"

@@ -150,15 +150,15 @@ void thexpmodel::process_db(class thdatabase * dbp)
  this->db = dbp;
  if (this->format == TT_EXPMODEL_FMT_UNKNOWN) {
     this->format = TT_EXPMODEL_FMT_LOCH;
-    thexp_set_ext_fmt(".plt", TT_EXPMODEL_FMT_COMPASS)
-    thexp_set_ext_fmt(".3d", TT_EXPMODEL_FMT_SURVEX)
-    thexp_set_ext_fmt(".wrl", TT_EXPMODEL_FMT_VRML)
-    thexp_set_ext_fmt(".vrml", TT_EXPMODEL_FMT_VRML)
-    thexp_set_ext_fmt(".3dmf", TT_EXPMODEL_FMT_3DMF)
-    thexp_set_ext_fmt(".dxf", TT_EXPMODEL_FMT_DXF)
-    thexp_set_ext_fmt(".lox", TT_EXPMODEL_FMT_LOCH)
-    thexp_set_ext_fmt(".shp", TT_EXPMODEL_FMT_SHP)
-    thexp_set_ext_fmt(".kml", TT_EXPMODEL_FMT_KML)
+    set_format_by_extension(".plt", TT_EXPMODEL_FMT_COMPASS);
+    set_format_by_extension(".3d", TT_EXPMODEL_FMT_SURVEX);
+    set_format_by_extension(".wrl", TT_EXPMODEL_FMT_VRML);
+    set_format_by_extension(".vrml", TT_EXPMODEL_FMT_VRML);
+    set_format_by_extension(".3dmf", TT_EXPMODEL_FMT_3DMF);
+    set_format_by_extension(".dxf", TT_EXPMODEL_FMT_DXF);
+    set_format_by_extension(".lox", TT_EXPMODEL_FMT_LOCH);
+    set_format_by_extension(".shp", TT_EXPMODEL_FMT_SHP);
+    set_format_by_extension(".kml", TT_EXPMODEL_FMT_KML);
   }  
   switch (this->format) {
     case TT_EXPMODEL_FMT_LOCH:

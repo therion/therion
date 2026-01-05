@@ -11,13 +11,3 @@ else()
     target_compile_options(enable-warnings INTERFACE -Wall -Wextra -Wno-deprecated-enum-enum-conversion)
     target_compile_options(disable-warnings INTERFACE -w)
 endif()
-
-# enforce warnings as errors
-set(ENABLE_WERROR OFF CACHE BOOL "Report warnings as errors.")
-if (ENABLE_WERROR)
-    if (MSVC)
-        target_compile_options(enable-warnings INTERFACE /WX)
-    else()
-        target_compile_options(enable-warnings INTERFACE -Werror)
-    endif()
-endif()

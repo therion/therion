@@ -29,13 +29,6 @@
 #ifndef lxMath_h
 #define lxMath_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
-#endif  
-//LXDEPCHECK - standard libraries
-
-#define lxPI 3.1415926535898
-
 struct lxVec {
 
   double x, y, z;

@@ -13,13 +13,7 @@
 #ifndef lxSScene_h
 #define lxSScene_h
 
-
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/minifram.h>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxWX.h"
 

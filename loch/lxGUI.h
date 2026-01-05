@@ -29,15 +29,10 @@
 #ifndef lxGUI_h
 #define lxGUI_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/fileconf.h>
 #include <wx/filename.h>
 #include <wx/docview.h>
 #include <wx/xml/xml.h>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxGLC.h"
 

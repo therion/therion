@@ -301,8 +301,8 @@ the command may be used anywhere.
 \endarguments
 
 \options
-* |namespace <on/off>| = specify whether survey creates namespace (|on|
-  by default)
+* |namespace <on/off>| = specify whether survey creates namespace
+  \defval{on}
 * |declination <specification>| = set the default declination for
   all data objects in this survey (which can be overridden by
   declination definitions in subsurveys). The |<specification>|
@@ -402,23 +402,41 @@ the command may be used anywhere.
     is his/her name, the others describe the roles of the person in
     the team (optional---currently not used). The following role keywords are
     supported:
-    [back]tape ([back]length),
-    [back]compass ([back]bearing),
-    [back]clino ([back]gradient),
-    counter (count),
-    depth,
-    station,
-    position,
-    notes (notebook),
-    pictures (pics),
-    instruments (insts),
-    assistant (dog),
-    altitude (dz),
-    dimensions,
-    left,
-    right,
-    up (ceiling),
-    down (floor).
+
+    \medskip
+
+    \halign{
+    \vtop{\hsize.19\hsize #} &
+    \vtop{\hsize.19\hsize #} &
+    \vtop{\hsize.60\hsize \strut#\strut} \cr
+    {\it role}  & {\it alias}  & {\it intended meaning} \cr
+    \noalign{\hrule}
+      tape        & length       & Measured leg lengths \cr
+      compass     & bearing      & Measured bearings \cr
+      clino       & gradient     & Measured vertical angles \cr
+      backtape    & backlength   & Like |tape| but for backsights \cr
+      backcompass & backbearing  & Like |compass| but for backsights \cr
+      backclino   & backgradient & Like |clino| but for backsights \cr
+      instruments & insts        & All instruments: both compass and clino; use for
+                                   all-in-one instruments such as DistoX. \cr
+      counter     & count        & Topofil length measurements \cr
+      depth       &              & Measured differences in height between stations,
+                                   e.g.\ underwater with a diver's depth gauge, or above water with a manometer \cr
+      station     &              & Added markers at stations \cr
+      position    & \mgshift3.215\hsize\NEW{6.3.5}gps   & Recorded absolute positions of stations (e.g.\ fixed
+                                   surface stations with a GPS) \cr
+      notes       & notebook     & Recorded instrument readings \cr
+      pictures    & pics         & Drew sketches \cr
+      assistant   & dog          & General helper (e.g.\ held the end of the tape on stations) \cr
+      altitude    & dz           & Recorded the altitudes of stations (e.g.\ with an altimeter) \cr
+      dimensions  &              & Measured all passage dimensions \cr
+      left        &              & Measured |left| passage dimension \cr
+      right       &              & Measured |right| passage dimension \cr
+      up          & ceiling      & Measured |up| passage dimension \cr
+      down        & floor        & Measured |down| passage dimension \cr
+      explorer    &              & Explored the area of cave being surveyed \cr
+    }
+
   * |explo-team <person>| = a discovery team member.
   * |instrument <quantity list> <description>| = description
     of the instrument that was used to survey the given quantities (same
@@ -692,8 +710,8 @@ the command may be used anywhere.
     (lower left corner coordinates).
   * |walls <on/off/auto>| = specify if the scrap should be used in 3D model
     reconstruction
-  * |flip (none)/horizontal/vertical| = flips the scrap after
-    scale transformation
+  * |flip none/horizontal/vertical| = flips the scrap after
+    scale transformation \defval{none}.
   * |station-names <prefix> <suffix>| = adds given prefix/suffix to
     all survey stations in the current scrap. Saves some typing.
 
@@ -730,7 +748,7 @@ Point is a command for drawing a point map symbol.
       plane used while creating 3D model.],
     |section|\[|section| is an anchor for placing the cross-section at this
       point.  This symbol has no visual representation. The cross section
-      must be in the separate scrap with `none' projection specified.
+      must be in the separate scrap.
       You can specify it through the |-scrap| option.],
     |station|\[Survey station. For each scrap (with the exception of scraps
       in `none' projection) at least one station with station reference
@@ -900,17 +918,19 @@ Point is a command for drawing a point map symbol.
     0 $\le$ |number| $<$ 360.
   * |align| = alignment of the symbol or text. The following values
     are accepted: center, c, top, t, bottom, b, left, l, right, r,
-    top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
+    top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br
+    \defval{center}.
   * |scale| = symbol scale, can be:
     tiny (xs), small (s), normal (m), large (l), huge (xl) or a
-    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+    numeric value \defval{normal}. Named sizes scale by $\sqrt 2$, so that
     $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
     $xl \equiv 2.0$.
-  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |place <bottom/default/top>| = changes displaying order in the map \defval{default}.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
-    station-name, label, remark, date, altitude, height, passage-height.
-  * |visibility <on/off>| = displays/hides the symbol.
+    station-name, label, remark, date, altitude, height, passage-height
+    \defval{on}.
+  * |visibility <on/off>| = displays/hides the symbol \defval{on}.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.\[Example: if you specify
@@ -971,8 +991,8 @@ Point is a command for drawing a point map symbol.
       {\it height:} according to the sign of the value (positive, negative or
       unsigned), this type of symbol represents chimney height, pit depth
       or step height in general. The numeric value can be optionally followed by `|?|',
-      if the value is presumed and units can be added
-      (e.g.~|-value [40? ft]|).
+      if the value is presumed and units can be added (e.g.~|-value [40? ft]|). Values
+      `|+?|' and `|-?|' are also accepted, meaning unknown height or depth.
 
       {\it passage-height:} the following four forms of value are supported:
       |+<number>| (the height of the ceiling), |-<number>| (the depth of the
@@ -1117,31 +1137,50 @@ respectively.
     In this case you need also to define corresponding metapost symbol
     (see the chapter {\it New map symbols}).
 
+    |subtype| can be set either as a line option or as a line-point option (inside [LINE DATA]).
+    When used as a line option (either as TYPE:SUBTYPE or -subtype SUBTYPE), it defines the
+    subtype starting at the beginning of the line and stays in effect until it is overridden by
+    another subtype specified at a line point or until the end of the line, whichever comes first.
+    As a line point option (inside [LINE DATA]) it can be used multiple times.
+
        * |[LINE DATA]| specify either the coordinates of a line segment
          |<x> <y>|, or coordinates of a B\'ezier curve arc
          |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
          point.
        * |close <on/off/auto>| = determines whether a line is closed
-         or not
+         or not \defval{auto}.
        * |mark <keyword>| = is used to mark the point on the line (see
          |join| command).
        * |outline <in/out/none>| = determines whether the line serves as
          a border line for a scrap. Default value is `|out|' for
          walls, `|none|' for all other lines. Use |-outline in| for
          large pillars etc.
-       * |reverse <on/off>| = whether points are given in reverse order.
+       * |reverse <on/off>| = whether points are given in reverse order
+         \defval{off}.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
-         Auto is default.
-    * |adjust <horizontal/vertical>| = shifts the line point to be aligned
-    horizontally/ver\-ti\-cally with the previous point. It can't be set on the 
-    first point. The result is a horizontal/vertical line segment.
-    This option is not allowed in the |plan| projection.
-  * |place <bottom/default/top>| = changes displaying order in the map.
-  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides the symbol.
-  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
-    and |symbol-show| layout options) symbol will be hidden/shown according
-    to rules for specified |<symbol-type>|.
+         Deafult is |auto|. This setting only has any effect if both segments that
+         passes through the point affected by the smooth setting are Bezier Curves
+         (the one arriving at it and the one leaving it). On means that the line
+         connection at this point will be smoothed, both by therion and by xTherion.
+         Off means that smoothness at the point is not guaranteded. Auto means that,
+         if both segments that passes through the point are Bezier Curves, Therion
+         will automatically detected if they are smooth and, if they are detected as
+         smooth, Therion will keep them smooth in it's transformations. xTherion
+         always creates Bezier Curves as smooth, even if the previous segment was a
+         straight one.
+       * |adjust <horizontal/vertical>| = shifts the line point to be aligned
+         horizontally/ver\-ti\-cally with the previous point. It can't be set on the
+         first point. The result is a horizontal/vertical line segment. When unset
+         (the default situation) the line point isn't automatically aligned with the
+         previous line point. This option is not allowed in the |plan| projection.
+       * |place <bottom/default/top>| = changes displaying order in the map. Default
+         is |top| for |ceiling-step| and |chimney|, |default| for all other types.
+       * |clip <on/off>| = specify whether a symbol is clipped by the scrap border
+         \defval{on}.
+       * |visibility <on/off>| = displays/hides the symbol \defval{on}.
+       * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
+         and |symbol-show| layout options) symbol will be hidden/shown according
+         to rules for specified |<symbol-type>|.
 
     {\it Type-specific options:}\Nobreak
 
@@ -1158,13 +1197,13 @@ respectively.
          Units can follow the value. Examples: |+4|, |[+4 m]|,
          |[fix 1510 m]|.
        * |anchors <on/off>| = this option can be specified only with
-         the `rope' line type. Default is |on|.
+         the `rope' line type \defval{on}.
        * |border <on/off>| = this option can be specified only with
          the `slope' symbol type. It switches on/off the border line of
-         the slope.
+         the slope \defval{on}.
        * |direction <begin/end/both/none/point>| = can be used only
          with the section type. It indicates where to put
-         a direction arrow on the section line. None is default. The |point| 
+         a direction arrow on the section line \defval{none}. The |point|
          option must be used inside |[LINE DATA]|. The others can (and should)
          be used as a line option.
        * |gradient <none/center/point>| = can be used only with the contour
@@ -1172,19 +1211,19 @@ respectively.
          If there is no gradient specification, behaviour is symbol-set
          dependent (e.g. no tick in UIS, tick in the middle in SKBB). The |point| 
          option must be used inside |[LINE DATA]|. The others can (and should)
-         be used as a line option.
+         be used as a line option \defval{none}.
        * |head <begin/end/both/none>| = can be used only with the arrow
-         type and indicates where to put an arrow head. End is default.
+         type and indicates where to put an arrow head \defval{end}.
        * |l-size <number>| = Size of the line (to the left). Only valid on and 
          required for |slope| type.
        * |orientation/orient <number>| = orientation of the symbols on the line.
          Can be used only with slope type. If not specified, it's perpendicular 
          to the line on its left side. 0 $\le$ |number| $<$ 360.
        * |rebelays <on/off>| = this option can be specified only with
-         the `rope' line type. Default is |on|.
+         the `rope' line type \defval{on}.
        * |scale| = scale affects only the text on label lines, can be:
          tiny (xs), small (s), normal (m), large (l), huge (xl) or a
-         numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+         numeric value \defval{normal}. Named sizes scale by $\sqrt 2$, so that
          $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
          $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
          using |fonts-setup| in the |layout| configuration section.
@@ -1245,9 +1284,9 @@ by each separate line.
 All options can appear as command-like options or as |area| options, i.e., on
 the same line as the |area| command. The last one appearing prevails.
   * the data lines consist of border line references (IDs)
-  * |place <bottom/default/top>| = changes displaying order in the map.
-  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides the symbol.
+  * |place <bottom/default/top>| = changes displaying order in the map \defval{top}.
+  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border \defval{on}.
+  * |visibility <on/off>| = displays/hides the symbol \defval{on}.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.
@@ -2026,7 +2065,7 @@ the survey hierarchy when drawing maps and choose the best scrap joins.
 We usually insert maps in the last-but-one level in survey hierarchy.\[Remember
 that surveys create namespaces, so you may reference only the objects in the given
 survey and all subsurveys.] Each
-scrap may than contain arbitrary parts of any survey in the last level of
+scrap may then contain arbitrary parts of any survey in the last level of
 the hierarchy. For example, there is a survey |main| which contains surveys |a|,
 |b|, |c| and |d|. Surveys |a| -- |d| contain centreline data from four survey
 trips and each of them is in a separate file. There is a map |main_map| which

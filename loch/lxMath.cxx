@@ -28,11 +28,8 @@
 
 #include "lxMath.h"
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <cmath>
-#endif  
-//LXDEPCHECK - standard libraries
+#include <numbers>
 
 void lxVec::Normalize() 
 {
@@ -57,13 +54,13 @@ double lxVec::Length() {
 
 double lxVec::Azimuth()
 {
-  return atan2(this->x, this->y) / lxPI * 180.0;
+  return atan2(this->x, this->y) / std::numbers::pi * 180.0;
 }
 
 
 double lxVec::Inclination()
 {
-  return atan2(this->z, sqrt(this->x * this->x + this->y * this->y)) / lxPI * 180.0;
+  return atan2(this->z, sqrt(this->x * this->x + this->y * this->y)) / std::numbers::pi * 180.0;
 }
 
 
@@ -157,18 +154,18 @@ void lxVecLimits::Add(double a, double b, double c)
 lxVec lxPol2Vec(const double l, const double a, const double i)
 {
   return lxVec(
-    l * cos(i / 180.0 * lxPI) * sin(a / 180.0 * lxPI),
-    l * cos(i / 180.0 * lxPI) * cos(a / 180.0 * lxPI),
-    l * sin(i / 180.0 * lxPI)
+    l * cos(i / 180.0 * std::numbers::pi) * sin(a / 180.0 * std::numbers::pi),
+    l * cos(i / 180.0 * std::numbers::pi) * cos(a / 180.0 * std::numbers::pi),
+    l * sin(i / 180.0 * std::numbers::pi)
     );
 }
 
 
 lxVec lxVec::Rotated(double a, double i) {
-  double sa = sin(a / 180.0 * lxPI), 
-         ca = cos(a / 180.0 * lxPI), 
-         si = sin(i / 180.0 * lxPI), 
-         ci = cos(i / 180.0 * lxPI);
+  double sa = sin(a / 180.0 * std::numbers::pi), 
+         ca = cos(a / 180.0 * std::numbers::pi), 
+         si = sin(i / 180.0 * std::numbers::pi), 
+         ci = cos(i / 180.0 * std::numbers::pi);
   
   return lxVec(
     this->x * ca      - this->y * sa                    ,      

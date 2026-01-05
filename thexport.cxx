@@ -31,12 +31,14 @@
 #include "thdatabase.h"
 #include "thexporter.h"
 #include "thcs.h"
+#include "loch/icase.h"
 #include <stdio.h>
 #include <algorithm>
 #include <array>
 #include <cstdint>
 #include <numeric>
 #include <fstream>
+#include <filesystem>
 #include <fmt/ostream.h>
 
 
@@ -248,3 +250,9 @@ void thexport::register_output(std::string fnm) {
 	this->output_files.push_back(thexport_output_crc(fnm));
 }
 
+void thexport::set_format_by_extension(std::string_view extension, const int cformat)
+{
+  if (icase_equals(std::filesystem::path(this->outpt).extension().string(), extension)) {
+    this->format = cformat;
+  }
+}

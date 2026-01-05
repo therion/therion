@@ -975,12 +975,7 @@ void thdb2d::process_point_references(thpoint * pp)
         optr = this->db->get_object(pp->station_name,pp->fsptr);
         if (optr != NULL) {
           if (optr->get_class_id() == TT_SCRAP_CMD) {
-            if (auto& scrap = dynamic_cast<thscrap&>(*optr); scrap.proj->type == TT_2DPROJ_NONE) {
-              pp->data = &scrap;
-            } else {
-              extend_error = true;
-              err_code = "not a none scrap projection";
-            }
+            pp->data = dynamic_cast<thscrap*>(optr);
           }
           else {
             extend_error = true;

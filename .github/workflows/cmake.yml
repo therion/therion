@@ -14,6 +14,7 @@ jobs:
     env:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
+      CTEST_OUTPUT_ON_FAILURE: 1
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
@@ -28,7 +29,7 @@ jobs:
           mkdir build && cd build && \
           cmake -G Ninja \
                 -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
-                -DENABLE_WERROR=ON \
+                -DCMAKE_COMPILE_WARNING_AS_ERROR=ON \
                 -DUSE_BUNDLED_SHAPELIB=OFF \
                 ${{ matrix.args }} ..
       - run: cmake --build build
@@ -50,6 +51,8 @@ jobs:
     strategy:
       matrix:
         os: [macos-14, macos-15, macos-26]
+    env:
+      CTEST_OUTPUT_ON_FAILURE: 1
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
@@ -60,7 +63,7 @@ jobs:
           brew install wxwidgets vtk proj xquartz basictex fmt catch2 imagemagick
       - name: Configure CMake
         run: |
-          mkdir build && cd build && cmake -G Ninja -DECM_ENABLE_SANITIZERS=address -DENABLE_WERROR=ON -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
+          mkdir build && cd build && cmake -G Ninja -DECM_ENABLE_SANITIZERS=address -DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
       - name: Run samples
@@ -91,6 +94,7 @@ jobs:
         shell: msys2 {0}
     env:
       THDIR: ${{ github.workspace }}
+      CTEST_OUTPUT_ON_FAILURE: 1
     steps:
       - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
@@ -114,7 +118,7 @@ jobs:
             mingw-w64-${{ matrix.config.arch }}-bwidget
             mingw-w64-${{ matrix.config.arch }}-fmt
             mingw-w64-${{ matrix.config.arch }}-catch
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DENABLE_WERROR=ON -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Set up the batteries
         run: |
@@ -133,38 +137,3 @@ jobs:
           name: samples-windows-${{ matrix.config.msystem }}
           path: build/samples/
       - run: cmake --build build -t deploy -- -j 4
-
-  # MXE:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       include:
-  #         - { os: ubuntu-20.04, osname: focal, pkg: i686,   cmd: i686,   wine-pkg: wine32, wine: wine }
-  #         - { os: ubuntu-20.04, osname: focal, pkg: x86-64, cmd: x86_64, wine-pkg: wine64, wine: wine64-stable }
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: install dependencies
-  #       run: |
-  #         sudo dpkg --add-architecture i386
-  #         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
-  #         sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt ${{ matrix.osname }} main'
-  #         sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
-  #         sudo apt -qq update
-  #         sudo apt install -yqq --allow-downgrades libgd3/focal libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
-  #         sudo apt purge -yqq libmono* moby* mono* php* libgdiplus libpcre2-posix3 libzip4
-  #         sudo apt install -y ${{ matrix.wine-pkg }}
-  #         sudo apt install -y ninja-build
-  #         sudo apt install -y mxe-${{ matrix.pkg }}-w64-mingw32.static-binutils mxe-${{ matrix.pkg }}-w64-mingw32.static-bzip2 mxe-${{ matrix.pkg }}-w64-mingw32.static-expat mxe-${{ matrix.pkg }}-w64-mingw32.static-freetype-bootstrap mxe-${{ matrix.pkg }}-w64-mingw32.static-gcc mxe-${{ matrix.pkg }}-w64-mingw32.static-gettext mxe-${{ matrix.pkg }}-w64-mingw32.static-glib mxe-${{ matrix.pkg }}-w64-mingw32.static-harfbuzz mxe-${{ matrix.pkg }}-w64-mingw32.static-jpeg \
-  #                             mxe-${{ matrix.pkg }}-w64-mingw32.static-libiconv mxe-${{ matrix.pkg }}-w64-mingw32.static-libpng mxe-${{ matrix.pkg }}-w64-mingw32.static-tiff mxe-${{ matrix.pkg }}-w64-mingw32.static-vtk mxe-${{ matrix.pkg }}-w64-mingw32.static-wxwidgets mxe-${{ matrix.pkg }}-w64-mingw32.static-xz mxe-${{ matrix.pkg }}-w64-mingw32.static-zlib mxe-${{ matrix.pkg }}-w64-mingw32.static-proj
-  #     - name: run build
-  #       run: |
-  #         export PATH=/usr/lib/mxe/usr/bin:$PATH
-  #         mkdir build && cd build
-  #         ${{ matrix.cmd }}-w64-mingw32.static-cmake -G Ninja \
-  #             -DMXE_USE_CCACHE=OFF \
-  #             -DCMAKE_CROSSCOMPILING_EMULATOR=${{ matrix.wine }} \
-  #             -DCMAKE_C_FLAGS="-Werror" \
-  #             -DCMAKE_CXX_FLAGS="-Werror" \
-  #             -DBUILD_SHARED_LIBS=OFF \
-  #             -DBUILD_THBOOK=OFF ..
-  #         ninja

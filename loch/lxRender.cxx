@@ -3,9 +3,6 @@
 * Loch printing implementation.
 */
 
-
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <stdio.h>
 #include <stdlib.h>
 #include <wx/spinctrl.h>
@@ -28,11 +25,6 @@
 #ifdef __cplusplus
  }
 #endif
-
-
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxRender.h"
 #include "lxWX.h"

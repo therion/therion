@@ -301,17 +301,17 @@ void thexpmap::process_db(class thdatabase * dbp)
 
   if (this->format == TT_EXPMAP_FMT_UNKNOWN) {
     this->format = TT_EXPMAP_FMT_PDF;
-    thexp_set_ext_fmt(".pdf", TT_EXPMAP_FMT_PDF)
+    set_format_by_extension(".pdf", TT_EXPMAP_FMT_PDF);
     if (this->export_mode == TT_EXP_MAP) {
-      thexp_set_ext_fmt(".svg", TT_EXPMAP_FMT_SVG)
-      thexp_set_ext_fmt(".xhtml", TT_EXPMAP_FMT_XHTML)
-      thexp_set_ext_fmt(".xvi", TT_EXPMAP_FMT_XVI)
-      thexp_set_ext_fmt(".th2", TT_EXPMAP_FMT_TH2)
-      thexp_set_ext_fmt(".3d", TT_EXPMAP_FMT_3D)
-      thexp_set_ext_fmt(".shp", TT_EXPMAP_FMT_SHP)
-      thexp_set_ext_fmt(".kml", TT_EXPMAP_FMT_KML)
-      thexp_set_ext_fmt(".dxf", TT_EXPMAP_FMT_DXF)
-      thexp_set_ext_fmt(".bbox", TT_EXPMAP_FMT_BBOX)
+      set_format_by_extension(".svg", TT_EXPMAP_FMT_SVG);
+      set_format_by_extension(".xhtml", TT_EXPMAP_FMT_XHTML);
+      set_format_by_extension(".xvi", TT_EXPMAP_FMT_XVI);
+      set_format_by_extension(".th2", TT_EXPMAP_FMT_TH2);
+      set_format_by_extension(".3d", TT_EXPMAP_FMT_3D);
+      set_format_by_extension(".shp", TT_EXPMAP_FMT_SHP);
+      set_format_by_extension(".kml", TT_EXPMAP_FMT_KML);
+      set_format_by_extension(".dxf", TT_EXPMAP_FMT_DXF);
+      set_format_by_extension(".bbox", TT_EXPMAP_FMT_BBOX);
     }
   }
 

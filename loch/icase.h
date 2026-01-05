@@ -1,10 +1,6 @@
 #pragma once
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <string_view>
-#endif  
-//LXDEPCHECK - standard libraries
 
 /**
  * @brief Case insensitive comparison of two strings.

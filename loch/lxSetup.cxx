@@ -26,14 +26,11 @@
  * -------------------------------------------------------------------- 
  */
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 #include <locale.h>
-#endif  
-//LXDEPCHECK - standard libraries
+#include <numbers>
 
 #include "lxSetup.h"
 #include "lxData.h"
@@ -95,7 +92,7 @@ void lxSetup::SetLens(double lens)
   if (this->cam_lens > 2000.0)
     this->cam_lens = 2000.0;
 
-  this->cam_lens_vfov = atan(12.0 / this->cam_lens) / lxPI * 360.0;
+  this->cam_lens_vfov = atan(12.0 / this->cam_lens) / std::numbers::pi * 360.0;
   this->cam_lens_vfovr = 12.0 / this->cam_lens;
 
 }

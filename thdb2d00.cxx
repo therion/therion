@@ -468,6 +468,10 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       }
 
       if (!sss.empty()) {
+        obi++;
+      }  
+      
+      if (nscraps > 1 && thcfg.scrap_sort) {
 
         // zoradime scrapy podla z-ka
         std::sort(sss.begin(), sss.end(), thdb2d_compscrap);
