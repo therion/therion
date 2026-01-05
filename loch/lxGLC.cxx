@@ -39,13 +39,6 @@
 #include "lxRender.h"
 #include "lxTR.h"
 
-#ifdef LXWIN32
-#include "lxR2D.h"
-#endif
-#ifdef LXLINUX
-#include "lxR2P.h"
-#endif
-
 #include <fmt/format.h>
 
 #include <numbers>
@@ -130,7 +123,6 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
   this->m_fntTitleO = new OGLFT::Filled(this->m_ftFace3);
   this->m_fntNumericO = new OGLFT::Filled(this->m_ftFace3);
 
-  this->m_OSC = NULL;
   this->m_TRC = NULL;
 
   this->m_sMoveLock = LXGLCML_NONE;
@@ -156,7 +148,6 @@ bool lxGLCanvas::IsRenderingOff()
 
 lxGLCanvas::~lxGLCanvas()
 {
-  this->OSCDestroy();
   this->TRCDestroy();
   delete this->m_fntTitleS;
   delete this->m_fntNumericS;
@@ -321,8 +312,6 @@ void lxGLCanvas::UpdateRenderContents()
       this->m_maxTSizeO = newTSizeO;
       this->ctx.SetCurrent(*this);
       this->data->m_textureSurface.CreateTexImages(this->m_maxTSizeS, this->m_maxTSizeO);
-      if (this->m_isO)
-        this->OSCMakeCurrent();      
     }
     if (this->m_initTextures) {
       glGenTextures(1, & this->m_idTexSurface);
@@ -1894,102 +1883,6 @@ void lxGLCanvas::SetFontColors()
 }
 
 
-
-
-struct OSC {
-
-  int m_Width, m_Height;
-  bool m_OK;
-
-#ifdef LXWIN32
-  R2DContext * m_r2d;
-#endif
-#ifdef LXLINUX
-  R2PContext * m_r2p;
-#endif
-
-
-  OSC() {
-#ifdef LXWIN32
-    this->m_r2d = NULL;
-#endif
-#ifdef LXLINUX
-    this->m_r2p = NULL;
-#endif
-    this->m_Width = 0;
-    this->m_Height = 0;
-    this->m_OK = false;
-  }
-};
-
-bool lxGLCanvas::OSCMakeCurrent()
-{
-
-	if (!this->m_OSC->m_OK) {
-	  int w, h;
-		this->GetClientSize(&w, &h);
-		w = int(this->GetContentScaleFactor() * w);
-		h = int(this->GetContentScaleFactor() * h);
-		this->m_OSC->m_Width = w;
-		this->m_OSC->m_Height = h;
-		return true;
-	}
-
-  // urobime context current
-#ifdef LXWIN32  
-  if (this->m_OSC->m_r2d) {
-    R2DMakeCurrent(this->m_OSC->m_r2d);
-    return true;
-  }
-#endif
-#ifdef LXLINUX  
-  if (this->m_OSC->m_r2p) {
-    R2PMakeCurrent(this->m_OSC->m_r2p);
-    return true;
-  }
-#endif
-  return false;
-}
-
-
-bool lxGLCanvas::OSCInit(GLint w, GLint h)
-{
-  // vytvorime dib
-  // vytvorime context
-  this->m_OSC = new OSC();
-  this->m_OSC->m_Width = w;
-  this->m_OSC->m_Height = h;
-  this->m_OSC->m_OK = false;
-
-#ifdef LXWIN32
-  this->m_OSC->m_r2d = R2DCreate(w, h);
-  if (this->m_OSC->m_r2d) this->m_OSC->m_OK = true;
-#endif
-#ifdef LXLINUX
-  //this->m_OSC->m_r2p = R2PCreate(w, h);
-  if (this->m_OSC->m_r2p) this->m_OSC->m_OK = true;
-#endif
-  return this->m_OSC->m_OK;
-}
-
-
-void lxGLCanvas::OSCDestroy()
-{
-  if (this->m_OSC != NULL) {
-#ifdef LXWIN32
-    if (this->m_OSC->m_r2d)
-      R2DDestroy(this->m_OSC->m_r2d);
-#endif
-#ifdef LXLINUX
-    if (this->m_OSC->m_r2p)
-      R2PDestroy(this->m_OSC->m_r2p);
-#endif
-    delete this->m_OSC;
-  }
-  this->m_OSC = NULL;
-}
-
-
 struct TRctx * lxGLCanvas::TRCGetContext()
 {
   if (this->m_TRC != NULL)
@@ -2011,18 +1904,12 @@ void lxGLCanvas::TRCInit(int type, GLint w, GLint h, GLint tw, GLint th)
     if (tw < 64)
       tw = 64;
 
-    if (th > this->m_OSC->m_Height)
-      th = this->m_OSC->m_Height;
-    if (tw > this->m_OSC->m_Width)
-      tw = this->m_OSC->m_Width;
-
     tw = tw - tw % 8;
     th = th - th % 8;
 
     TRcontext * ctx = this->m_TRC->m_ctx = trNew();
     GLubyte * buff = this->m_TRC->m_buff = new GLubyte [3 * sizeof(GLubyte) * (type == LXGLCTR_IMAGE ? w : tw) * (type == LXGLCTR_IMAGE ? h : th)];
 
-    this->OSCMakeCurrent();
     this->OpenGLInit();
 
     trTileSize(ctx, tw, th, LXTRCBORDER);
@@ -2064,7 +1951,6 @@ void lxGLCanvas::TRCDestroy()
 void lxGLCanvas::TRCBeginTile()
 {
   if (this->m_TRC != NULL) {
-    this->OSCMakeCurrent();
     trBeginTile(this->m_TRC->m_ctx);
   }
 }
