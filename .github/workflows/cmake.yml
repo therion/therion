@@ -14,6 +14,7 @@ jobs:
     env:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
+      CTEST_OUTPUT_ON_FAILURE: 1
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
@@ -50,6 +51,8 @@ jobs:
     strategy:
       matrix:
         os: [macos-14, macos-15, macos-26]
+    env:
+      CTEST_OUTPUT_ON_FAILURE: 1
     steps:
       - uses: actions/checkout@v4
       - name: install dependencies
@@ -91,6 +94,7 @@ jobs:
         shell: msys2 {0}
     env:
       THDIR: ${{ github.workspace }}
+      CTEST_OUTPUT_ON_FAILURE: 1
     steps:
       - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
