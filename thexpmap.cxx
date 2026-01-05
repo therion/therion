@@ -65,7 +65,7 @@
 #include "thsurface.h"
 #include "therion.h"
 #include <stdlib.h>
-#include "loch/lxMath.h"
+#include "lxMath.h"
 #include "thsvg.h"
 #include "thlog.h"
 #include "img.h"

@@ -30,7 +30,7 @@
 #include "thexpmap.h"
 #include "thdatabase.h"
 #include "thdataleg.h"
-#include "loch/lxMath.h"
+#include "lxMath.h"
 
 thscraplp::thscraplp() {
 

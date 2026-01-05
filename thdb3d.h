@@ -29,7 +29,7 @@
 #ifndef thdb3d_h
 #define thdb3d_h
 
-#include "loch/lxMath.h"
+#include "lxMath.h"
 
 #include <any>
 #include <cstdio>

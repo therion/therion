@@ -4,7 +4,7 @@
 #else
 #include <catch2/catch.hpp>
 #endif
-#include "loch/icase.h"
+#include "icase.h"
 #include "thparse.h"
 #include "thcsdata.h"
 #include "thsvg.h"
