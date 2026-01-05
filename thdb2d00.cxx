@@ -469,7 +469,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
         obi++;
       }  
       
-      if (nscraps > 1) {
+      if (nscraps > 1 && thcfg.scrap_sort) {
 
         // zoradime scrapy podla z-ka
         std::vector<thscrap*> sss(nscraps);
