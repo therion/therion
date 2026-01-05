@@ -91,6 +91,7 @@ class thconfig {
 	crc_generate, ///< Generate CRC files for output files.
 	crc_verify, ///< Verify CRC files for output files.
     log_extend; ///< Log extended elevation construction.
+  bool preview_deep = true;  ///< Whether to show preview of previews
   bool scrap_sort = true;  ///< Whether scraps should be z-sorted
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.

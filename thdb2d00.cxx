@@ -34,14 +34,14 @@
 #include "thconfig.h"
 #include <list>
 #include <algorithm>
+#include <cassert>
 #include <cstring>
 #include "thmapstat.h"
 
 void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift) {
   thdb2dxs * xs, * txs = NULL;
-  thdb2dmi * mi;
   bool found = false;
-  if (map->is_basic) {
+  if (map->has_direct_scrap_children()) {
     xs = fmap->first_bm;
     while ((!found) && (xs != NULL)) {
       if ((xs->bm->id == map->id) && (xs->m_shift == shift)) {
@@ -108,21 +108,23 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
   }
   
   // prejde vsetky referencie
-  mi = map->first_item;
-  while (mi != NULL) {
-    if (mode == TT_MAPITEM_NORMAL) {
-      if (((mi->type != TT_MAPITEM_NORMAL) || (!map->is_basic)) && 
-        ((mi->type == TT_MAPITEM_NORMAL) || (level == 0))) {
-          this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object),mi->type,level+1, shift.add(mi->m_shift));
+  for (auto mi = map->first_item; mi != nullptr; mi = mi->next_item) {
+    if (auto childmap = dynamic_cast<thmap *>(mi->object)) {
+      int preview_type = TT_MAPITEM_NONE;
+
+      if (mode == TT_MAPITEM_NORMAL) {
+        this->insert_basic_maps(fmap, childmap, mi->type, level + 1, shift.add(mi->m_shift));
+        preview_type = mi->m_shift.m_preview;
+      } else if (thcfg.preview_deep ||
+                 (mi->type == TT_MAPITEM_NORMAL && !mi->m_shift.is_active())) {
+        preview_type = mode;
       }
-      if ((mi->type == TT_MAPITEM_NORMAL) && (mi->m_shift.is_active()) && (mi->m_shift.m_preview != TT_MAPITEM_NONE)) {
-        this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object), mi->m_shift.m_preview, level+1, shift);
+
+      if (preview_type == TT_MAPITEM_ABOVE ||
+          preview_type == TT_MAPITEM_BELOW) {
+        this->insert_basic_maps(fmap, childmap, preview_type, level + 1, shift);
       }
-    } else {
-      if ((mi->type == TT_MAPITEM_NORMAL) && (!map->is_basic))
-        this->insert_basic_maps(fmap,dynamic_cast<thmap*>(mi->object),mode,level+1, shift);
     }
-    mi = mi->next_item;
   }
   
 }
@@ -150,10 +152,10 @@ bool thdb2d_compscrap(const thscrap * e1, const thscrap * e2)
 
 thdb2dxm * thdb2d::insert_maps(thdb2dxm * selection,thdb2dxm * insert_after, thmap * map, 
     unsigned long selection_level, int level, int title_level, int map_level) {
-  thdb2dxm * cxm = NULL;
-  thdb2dmi * mi;
-  if ((level == title_level) || (level == map_level) || (map->is_basic)) {
-    cxm = this->insert_xm();
+  auto const expand = (level == map_level) || map->has_direct_scrap_children();
+
+  if ((level == title_level) || expand) {
+    auto const cxm = this->insert_xm();
     cxm->map = map;
     cxm->selection_level = selection_level;
     if (insert_after == NULL) {
@@ -170,21 +172,18 @@ thdb2dxm * thdb2d::insert_maps(thdb2dxm * selection,thdb2dxm * insert_after, thm
     }
     if (level == title_level)
       cxm->title = true;
-    if ((level == map_level) || (map->is_basic))
+    if (expand)
       cxm->expand = true;
+    insert_after = cxm;
   }
   
   // ak treba, preskuma pod nim
-  if ((!map->is_basic) && ((level < map_level) || (map_level < 0))) {
-    mi = map->first_item;
+  if ((level < map_level) || (map_level < 0)) {
+    auto mi = map->first_item;
     while (mi != NULL) {
-      if (mi->type == TT_MAPITEM_NORMAL) {
-        if (cxm == NULL)
-          selection = this->insert_maps(selection,insert_after,dynamic_cast<thmap*>(mi->object),
-            selection_level, level+1, title_level, map_level);
-        else 
-          selection = this->insert_maps(selection,cxm,dynamic_cast<thmap*>(mi->object),
-            selection_level, level+1, title_level, map_level);
+      auto childmap = dynamic_cast<thmap *>(mi->object);
+      if (childmap && mi->type == TT_MAPITEM_NORMAL) {
+        selection = this->insert_maps(selection, insert_after, childmap, selection_level, level + 1, title_level, map_level);
       }
       mi = mi->next_item;
     }
@@ -275,7 +274,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
   // najde vsetky mapy ktore mame oznacene, resp. vyberie vsetky zakladne  
   thdb2dxm * selection = NULL, * cxm, * lxm = NULL, **nsi;
   thdb2dxs * pcxs;
-  unsigned long nmaps = 0, imap, nscraps = 0, iscr;
+  unsigned long nmaps = 0, imap, nscraps = 0;
 //  bool chapters = false, onemap = false;
 //  thmap * pmap, * prev_pmap;
 //  thdb2dmi * pmapitem;
@@ -317,7 +316,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       if (((*obi)->get_class_id() == TT_MAP_CMD) &&
 		  thcfg.use_maps &&
           (dynamic_cast<thmap*>(obi->get())->projection_id == prj->id) &&
-          (dynamic_cast<thmap*>(obi->get())->is_basic) &&
+          (dynamic_cast<thmap*>(obi->get())->has_direct_scrap_children()) &&
           (dynamic_cast<thmap*>(obi->get())->fsptr != NULL) &&
           (dynamic_cast<thmap*>(obi->get())->fsptr->is_selected())) {
         prj->stat.scanmap(dynamic_cast<thmap*>(obi->get()));  
@@ -443,14 +442,14 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       // do tej mapy povkladame vsetky scrapy, ktore
       // v danej projekcii mame zoradene podla Ztka a kazde
       // na novom levely
-      nscraps = 0;
-      obi = this->db->object_list.begin();
-      while (obi != this->db->object_list.end()) {
-        if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
-            (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id) &&
-            (dynamic_cast<thscrap*>(obi->get())->fsptr != NULL) &&
-            (dynamic_cast<thscrap*>(obi->get())->fsptr->is_selected())) {
-          xcitem = thdb.db2d.insert_map_item();          
+      std::vector<thscrap*> sss;
+      for (auto const & obj : this->db->object_list) {
+        auto cs = dynamic_cast<thscrap *>(obj.get());
+        if (cs &&
+            (cs->proj->id == prj->id) &&
+            (cs->fsptr != nullptr) &&
+            (cs->fsptr->is_selected())) {
+          xcitem = thdb.db2d.insert_map_item();
           if (mapp->first_item == NULL) {
             mapp->first_item = xcitem;
             mapp->last_item = xcitem;
@@ -463,25 +462,18 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
           xcitem->source = thdb.csrc;
           xcitem->psurvey = NULL;
           xcitem->type = TT_MAPITEM_NORMAL;
-          xcitem->object = obi->get();
-          nscraps++;
+          xcitem->object = cs;
+          sss.push_back(cs);
         }
-        obi++;
-      }  
+      }
       
-      if (nscraps > 1 && thcfg.scrap_sort) {
+      if ((!sss.empty()) && thcfg.scrap_sort) {
 
         // zoradime scrapy podla z-ka
-        std::vector<thscrap*> sss(nscraps);
-        xcitem = mapp->first_item; //->next_item;
-        for(iscr = 0; iscr < nscraps; iscr++) {
-          sss[iscr] = dynamic_cast<thscrap*>(xcitem->object);
-          xcitem = xcitem->next_item;
-        }
         std::sort(sss.begin(), sss.end(), thdb2d_compscrap);
         xcitem = mapp->first_item; //->next_item;
-        for(iscr = 0; iscr < nscraps; iscr++) {
-          xcitem->object = sss[iscr];
+        for (auto * cs : sss) {
+          xcitem->object = cs;
           xcitem = xcitem->next_item;
         }
         
@@ -553,7 +545,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
 
         if (pcxs->m_target->preview_output_number == 0) {
           if ((pcxs->m_target->mode == TT_MAPITEM_NORMAL)
-              && pcxs->m_target->fmap->map->is_basic)
+              && pcxs->m_target->fmap->map->has_direct_scrap_children())
             pcxs->m_target->preview_output_number = pcxs->m_target->fmap->output_number;
           else
             pcxs->m_target->preview_output_number = ++on;
