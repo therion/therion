@@ -281,6 +281,7 @@ enum {
   TT_LINE_SUBTYPE_PIT,
   TT_LINE_SUBTYPE_MOONMILK,
   TT_LINE_SUBTYPE_FLOWSTONE,
+  TT_LINE_SUBTYPE_CHIMNEY,
 };
 
 /**
@@ -292,6 +293,7 @@ static const thstok thtt_line_subtypes[] = {
   {"blocks",TT_LINE_SUBTYPE_BLOCKS},
   {"cave",TT_LINE_SUBTYPE_CAVE},
   {"clay",TT_LINE_SUBTYPE_CLAY},
+  {"chimney",TT_LINE_SUBTYPE_CHIMNEY},
   {"conjectural",TT_LINE_SUBTYPE_CONJECTURAL},
   {"debris",TT_LINE_SUBTYPE_DEBRIS},
   {"flowstone",TT_LINE_SUBTYPE_FLOWSTONE},
