@@ -5,7 +5,6 @@ if (CMAKE_CROSSCOMPILING)
 endif()
 
 if (BUILD_THERION OR BUILD_LOCH)
-    add_subdirectory(extern/img)
     find_package(fmt REQUIRED)
 endif()
 

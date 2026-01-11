@@ -35,9 +35,11 @@
 #include "thconfig.h"
 #include "thtrans.h"
 #include "thscraplp.h"
-#include "extern/poly2tri/poly2tri.h"
 #include "thscrap.h"
 #include "thsurvey.h"
+
+#include <poly2tri/poly2tri.h>
+
 #include <cmath>
 #include <cstring>
 

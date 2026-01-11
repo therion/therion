@@ -35,7 +35,7 @@ target_link_libraries(loch PRIVATE
     $<$<BOOL:${WIN32}>:${CMAKE_CURRENT_BINARY_DIR}/loch.res>
     fmt::fmt
 )
-add_dependencies(loch version)
+add_dependencies(loch thversion)
 if (WIN32)
     add_dependencies(loch generate_resource)
 endif()
