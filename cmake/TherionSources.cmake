@@ -1,12 +1,5 @@
-# TODO rename these files to .h
-set_source_files_properties(
-    ${CMAKE_BINARY_DIR}/thchencdata.cxx
-    ${CMAKE_SOURCE_DIR}/thlibrarydata.cxx
-    PROPERTIES HEADER_FILE_ONLY TRUE)
-
 set(THERION_SOURCES
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
-    ${CMAKE_BINARY_DIR}/thchencdata.cxx
     ${CMAKE_BINARY_DIR}/thmpost.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
     ${CMAKE_BINARY_DIR}/thtex.cxx
@@ -67,7 +60,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlayoutln.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlegenddata.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlibrary.cxx
-    ${CMAKE_SOURCE_DIR}/src/therion-core/thlibrarydata.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thline.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlocale.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlog.cxx
