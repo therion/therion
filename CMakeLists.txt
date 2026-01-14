@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(PreventInSourceBuilds)
@@ -119,7 +119,7 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
 # generate version files
-add_custom_target(version python3 set_version.py ${CMAKE_BINARY_DIR}
+add_custom_target(thversion python3 set_version.py ${CMAKE_BINARY_DIR}
                   COMMENT "Updating version"
                   BYPRODUCTS ${CMAKE_BINARY_DIR}/thversion.h
                              ${CMAKE_BINARY_DIR}/thbook/version.tex
@@ -138,27 +138,9 @@ else()
 endif()
 
 if (BUILD_THERION)
-    add_subdirectory(extern/quickhull)
-
-    # therion lib
-    add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
-    target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}")
-    target_include_directories(therion-common SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/extern/stl_reader)
-    target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull fmt::fmt $<$<PLATFORM_ID:Android>:log>)
-    target_compile_definitions(therion-common PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
-    add_dependencies(therion-common 
-        version
-        generate_thsymbolsetlist
-        generate_thlang
-        generate_tex
-        generate_mpost
-        generate_thchencdata
-        generate_thcsdata
-    )
-
     # therion executable
     add_executable(therion therion-main.cxx)
-    target_link_libraries(therion therion-common)
+    target_link_libraries(therion therion-core)
 
     # therion resource file
     if (WIN32)
@@ -202,7 +184,7 @@ if (BUILD_THERION)
             utest-thscrapen.cxx
             utest-thscraplo.cxx
         )
-        target_link_libraries(utest PUBLIC therion-common catch2-interface)
+        target_link_libraries(utest PUBLIC therion-core catch2-interface)
         
         add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         if (ENABLE_CODE_COVERAGE)
@@ -216,7 +198,6 @@ if (BUILD_THERION)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
-    add_subdirectory(extern/poly2tri)
     add_subdirectory(mpost)
     add_subdirectory(thchencdata)
     add_subdirectory(tex)
@@ -224,6 +205,7 @@ if (BUILD_THERION)
     add_subdirectory(samples)
 endif()
 
+add_subdirectory(extern)
 add_subdirectory(src)
 add_subdirectory(thbook)
 add_subdirectory(xtherion)
