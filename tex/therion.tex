@@ -824,6 +824,9 @@
 }%
 %% end of eplain macros
 
+% use \twodigit\day instead of \the\day to get a leading zero
+\def\twodigit#1{\ifnum #1<10 0\fi\the#1}
+
 \pdfcolorstack 0 set {\ifx\OutputColormodel\modelcmyk 0 0 0 1 k 0 0 0 1 K\else
            \ifx\OutputColormodel\modelrgb 0 0 0 rg 0 0 0 RG\else
            0 g 0 G\fi\fi}
