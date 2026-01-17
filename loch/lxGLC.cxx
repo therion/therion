@@ -37,7 +37,8 @@
 #include "lxFNT10x20_bdf.h"
 #include "lxFNTFreeSans_ttf.h"
 #include "lxRender.h"
-#include "lxTR.h"
+
+#include <TR/tr.h>
 
 #include <fmt/format.h>
 
@@ -1883,7 +1884,7 @@ void lxGLCanvas::SetFontColors()
 }
 
 
-struct TRctx * lxGLCanvas::TRCGetContext()
+TRcontext * lxGLCanvas::TRCGetContext()
 {
   if (this->m_TRC != NULL)
     return this->m_TRC->m_ctx;
