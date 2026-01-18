@@ -29,10 +29,11 @@
 #include "lxRender.h"
 #include "lxWX.h"
 #include "lxSetup.h"
-#include "lxTR.h"
 #include "lxGLC.h"
 #include "lxGUI.h"
 #include "lxFile.h"
+
+#include <TR/tr.h>
 
 #include <fmt/format.h>
 

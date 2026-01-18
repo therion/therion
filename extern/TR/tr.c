@@ -39,48 +39,53 @@
  */
 
 
-#include "lxTR.h"
+#include <assert.h>
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#ifdef WIN32
+#include <windows.h>
+#endif
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include "tr.h"
 
 
 #define DEFAULT_TILE_WIDTH  256
 #define DEFAULT_TILE_HEIGHT 256
 #define DEFAULT_TILE_BORDER 0
 
-#ifdef assert
-#undef assert
-#endif
-#define assert(x)
 
-struct TRctx {
+struct _TRctx {
    /* Final image parameters */
-   GLint ImageWidth  = {}, ImageHeight = {};
-   GLenum ImageFormat = {}, ImageType = {};
-   GLvoid *ImageBuffer = {};
+   GLint ImageWidth, ImageHeight;
+   GLenum ImageFormat, ImageType;
+   GLvoid *ImageBuffer;
 
    /* Tile parameters */
-   GLint TileWidth = {}, TileHeight = {};
-   GLint TileWidthNB = {}, TileHeightNB = {};
-   GLint TileBorder = {};
-   GLenum TileFormat = {}, TileType = {};
-   GLvoid *TileBuffer = {};
+   GLint TileWidth, TileHeight;
+   GLint TileWidthNB, TileHeightNB;
+   GLint TileBorder;
+   GLenum TileFormat, TileType;
+   GLvoid *TileBuffer;
 
    /* Projection parameters */
-   GLboolean Perspective = {};
-   GLdouble Left = {};
-   GLdouble Right = {};
-   GLdouble Bottom = {};
-   GLdouble Top = {};
-   GLdouble Near = {};
-   GLdouble Far = {};
+   GLboolean Perspective;
+   GLdouble Left;
+   GLdouble Right;
+   GLdouble Bottom;
+   GLdouble Top;
+   GLdouble Near;
+   GLdouble Far;
 
    /* Misc */
-   TRenum RowOrder = {};
-   GLint Rows = {}, Columns = {};
-   GLint CurrentTile = {};
-   GLint CurrentTileWidth = {}, CurrentTileHeight = {};
-   GLint CurrentRow = {}, CurrentColumn = {};
+   TRenum RowOrder;
+   GLint Rows, Columns;
+   GLint CurrentTile;
+   GLint CurrentTileWidth, CurrentTileHeight;
+   GLint CurrentRow, CurrentColumn;
 
-   GLint ViewportSave[4] = {};
+   GLint ViewportSave[4];
 };
 
 
@@ -105,7 +110,7 @@ static void Setup(TRcontext *tr)
 
 TRcontext *trNew(void)
 {
-   TRcontext *tr = new TRcontext;
+   TRcontext *tr = (TRcontext *) calloc(1, sizeof(TRcontext));
    if (tr) {
       tr->TileWidth = DEFAULT_TILE_WIDTH;
       tr->TileHeight = DEFAULT_TILE_HEIGHT;
@@ -120,7 +125,7 @@ TRcontext *trNew(void)
 void trDelete(TRcontext *tr)
 {
    if (tr)
-      delete tr;
+      free(tr);
 }
 
 
@@ -357,7 +362,7 @@ void trBeginTile(TRcontext *tr)
 
 int trEndTile(TRcontext *tr)
 {
-   GLint prevRowLength, prevSkipRows, prevSkipPixels; /* prevAlignment; */
+   GLint prevRowLength, prevSkipRows, prevSkipPixels, prevAlignment;
 
    if (!tr)
       return 0;
@@ -365,7 +370,7 @@ int trEndTile(TRcontext *tr)
    assert(tr->CurrentTile>=0);
 
    /* be sure OpenGL rendering is finished */
-   glFinish();
+   glFlush();
 
    /* save current glPixelStore values */
    glGetIntegerv(GL_PACK_ROW_LENGTH, &prevRowLength);
@@ -456,12 +461,12 @@ void trRasterPos3f(TRcontext *tr, GLfloat x, GLfloat y, GLfloat z)
          glLoadIdentity();
          glOrtho(0.0, tr->CurrentTileWidth,
                  0.0, tr->CurrentTileHeight, 0.0, 1.0);
-         glRasterPos3f(0.0, 0.0, (GLfloat) -winZ);
+         glRasterPos3f(0.0, 0.0, -winZ);
 
          /* Now use empty bitmap to adjust raster position to (winX,winY) */
          {
             GLubyte bitmap[1] = {0};
-            glBitmap(1, 1, 0.0, 0.0, (GLfloat) winX, (GLfloat) winY, bitmap);
+            glBitmap(1, 1, 0.0, 0.0, winX, winY, bitmap);
          }
 
          /* restore original matrices */

@@ -1,11 +1,5 @@
 set(LOCH_DEFINITIONS LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
 
-# Tiled Rendering library
-add_library(tr STATIC lxTR.h lxTR.cxx)
-target_compile_definitions(tr PUBLIC ${LOCH_DEFINITIONS})
-target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU 
-                         PRIVATE enable-warnings)
-
 # loch resource file
 if (WIN32)
     add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc "-I$<JOIN:${wxWidgets_INCLUDE_DIRS},;-I>" -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/loch.res -O coff
@@ -28,7 +22,7 @@ target_include_directories(loch PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(loch SYSTEM PRIVATE ${FREETYPE_INCLUDE_DIRS} ${wxWidgets_INCLUDE_DIRS} ${VTK_INCLUDE_DIRS})
 target_link_libraries(loch PRIVATE
     common-utils
-    tr
+    TR
     ${wxWidgets_LIBRARIES}
     ${VTK_LIBRARIES} 
     ${FREETYPE_LIBRARIES}

@@ -65,31 +65,24 @@
  */
 
 
-#ifndef lxTR_h
-#define lxTR_h
+#ifndef TR_H
+#define TR_H
 
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
-#ifdef LXMACOSX
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
 #include <GL/gl.h>
-#include <GL/glu.h>
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
+
 
 #define TR_VERSION "1.1"
 #define TR_MAJOR_VERSION 1
 #define TR_MINOR_VERSION 1
 
 
-typedef struct TRctx TRcontext;
+typedef struct _TRctx TRcontext;
 
 
 typedef enum {
@@ -155,5 +148,12 @@ extern int trEndTile(TRcontext *tr);
 
 
 extern void trRasterPos3f(TRcontext *tr, GLfloat x, GLfloat y, GLfloat z);
+
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
