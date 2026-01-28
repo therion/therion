@@ -1150,11 +1150,11 @@ int thlayout::get_context()
 void thlayout::self_print_library(std::ostream& out) {
 
   fmt::print(out, "\toname = \"{}\";\n", this->get_name());
-  out << "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n";
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
   // decode title
   thdecode_c(&(this->db->buff_enc), this->get_title());
   fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
-  out << "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n";
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
 
 
   fmt::print(out, "\tplayout->def_scale = {};\n", this->def_scale);
@@ -1342,7 +1342,7 @@ void thlayout::self_print_library(std::ostream& out) {
   fmt::print(out, "\tplayout->def_excl_pages = {};\n", this->def_excl_pages);
   fmt::print(out, "\tplayout->excl_pages = {};\n",(this->excl_pages ? "true" : "false"));
   if (this->excl_list == NULL) {
-    out << "\tplayout->excl_list = NULL;\n";
+    fmt::print(out, "\tplayout->excl_list = NULL;\n");
   } else {
     thdecode_c(&(this->db->buff_enc), this->excl_list);
     fmt::print(out, "\tplayout->excl_list = \"{}\";\n", this->db->buff_enc.get_buffer());
@@ -1403,22 +1403,22 @@ void thlayout::self_print_library(std::ostream& out) {
       case TT_LAYOUT_CODE_TEX_ATLAS:
         thdecode_c(&(this->db->buff_enc), ln->line);
         if (ln->code != last_code) {
-          out << "\tplayout->ccode = ";
+          fmt::print(out, "\tplayout->ccode = ");
           switch (ln->code) {
             case TT_LAYOUT_CODE_METAPOST:
-              out << "TT_LAYOUT_CODE_METAPOST";
+              fmt::print(out, "TT_LAYOUT_CODE_METAPOST");
               break;
             case TT_LAYOUT_CODE_TEX_MAP:
-              out << "TT_LAYOUT_CODE_TEX_MAP";
+              fmt::print(out, "TT_LAYOUT_CODE_TEX_MAP");
               break;
             default:
-              out << "TT_LAYOUT_CODE_TEX_ATLAS";
+              fmt::print(out, "TT_LAYOUT_CODE_TEX_ATLAS");
               break;
           }
-          out << ";\n";
+          fmt::print(out, ";\n");
         }
         fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
-        out << "\tplayout->set(thcmd_option_desc(0,1),oname,TT_UTF_8,0);\n";
+        fmt::print(out, "\tplayout->set(thcmd_option_desc(0,1),oname,TT_UTF_8,0);\n");
         break;
       case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
       case TT_LAYOUT_CODE_MAP_ITEM:
@@ -1431,29 +1431,29 @@ void thlayout::self_print_library(std::ostream& out) {
           fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
         }
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS)
-          out << "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n";
+          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
         else
-          out << "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n";
+          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
-              out << "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n";
+              fmt::print(out, "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
               fmt::print(out, "\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
-              out << "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n";
+              fmt::print(out, "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
               fmt::print(out, "\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
-              out << "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n";
+              fmt::print(out, "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
               fmt::print(out, "\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
-              out << "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n";
+              fmt::print(out, "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
               fmt::print(out, "\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
-              out << "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n";
+              fmt::print(out, "\tplayout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
               fmt::print(out, "\tplayout->get_last_line()->smid = {};\n", thsymbolset_src[ln->smid]);
               fmt::print(out, "\tplayout->get_last_line()->sclr = thlayout_color({:.6f},{:.6f},{:.6f});\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;
