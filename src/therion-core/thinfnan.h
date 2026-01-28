@@ -98,21 +98,6 @@ bool thdefinitely_less_than(double a, double b, double epsilon);
 // infnan.h
 #endif
 
-/**
- * Print number in nan format.
- */
-
-#define thprintinfnan(cislo) {\
-  if (thisnan(cislo)) \
-    thprint("thnan"); \
-  else if (thisinf(cislo) == 1) \
-    thprint("thinf"); \
-  else if (thisinf(cislo) == -1) \
-    thprint("-thinf"); \
-  else \
-    thprint(fmt::format("{}",cislo));}
-
-
 #define THPI 3.1415926535898
 #define thnanpow2(cislo) ((thisnan(cislo) ? 0.0 : cislo) * (thisnan(cislo) ? 0.0 : cislo))
 #define thdxyz2length(dx,dy,dz) (sqrt(thnanpow2(dx) + thnanpow2(dy) + thnanpow2(dz)))

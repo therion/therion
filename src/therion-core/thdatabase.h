@@ -357,9 +357,10 @@ class thdatabase {
 
   /**
    * Print library from current database.
+   * @param out stream for printing
    */
  
-  void self_print_library();
+  void self_print_library(std::ostream& out);
   
   /**
    * Process database references.

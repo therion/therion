@@ -154,9 +154,10 @@ class thgrade : public thdataobject {
 
   /**
    * Print object in C++ format.
+   * @param out stream for printing
    */
    
-  void self_print_library(); 
+  void self_print_library(std::ostream& out); 
   
 
   /**
