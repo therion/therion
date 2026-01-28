@@ -167,9 +167,9 @@ if (BUILD_THERION)
         COMPONENT th-runtime)
 
     # updates thlibrarydata.cxx
-    add_custom_target(library 
-        ${CMAKE_COMMAND} -D THERION=$<TARGET_FILE:therion> -P cmake/Library.cmake
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    add_custom_target(library
+        $<TARGET_FILE:therion> --print-library-src ${CMAKE_SOURCE_DIR}/thlibrarydata.thcfg
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src/therion-core
     )
 
     add_subdirectory(mpost)

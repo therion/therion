@@ -312,6 +312,8 @@ void thlibrary_init_layouts()
 	playout->units.units = 1;
 	playout->def_layers = 0;
 	playout->layers = true;
+	playout->def_geospatial = 0;
+	playout->geospatial = true;
 	playout->def_map_header_bg = 0;
 	playout->map_header_bg = false;
 	playout->def_opacity = 0;
@@ -478,6 +480,8 @@ void thlibrary_init_layouts()
 	playout->units.units = 1;
 	playout->def_layers = 0;
 	playout->layers = true;
+	playout->def_geospatial = 0;
+	playout->geospatial = true;
 	playout->def_map_header_bg = 0;
 	playout->map_header_bg = false;
 	playout->def_opacity = 0;

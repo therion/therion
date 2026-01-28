@@ -28,7 +28,23 @@
 #include "thgrade.h"
 #include "thdata.h"
 #include "thdatabase.h"
-#include "therion.h"
+
+#include <fmt/ostream.h>
+
+/**
+ * Print number in nan format.
+ */
+static std::string thprintinfnan(const double number)
+{
+  if (thisnan(number))
+    return "thnan";
+  else if (thisinf(number) == 1)
+    return "thinf";
+  else if (thisinf(number) == -1)
+    return "-thinf";
+  else
+    return fmt::format("{}", number);
+}
 
 thgrade::thgrade()
 {
@@ -185,35 +201,23 @@ void thgrade::start_insert()
   this->update_sd_from_data();
 }
 
-void thgrade::self_print_library() {
-  thprint(fmt::format("\toname = \"{}\";\n", this->get_name()));
-  thprint("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);\n");
+void thgrade::self_print_library(std::ostream& out) {
+  fmt::print(out, "\toname = \"{}\";\n", this->get_name());
+  out << "\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);\n";
   thdecode_c(&(this->db->buff_enc), this->get_title());
-  thprint(fmt::format("\toname = \"{}\";\n", this->db->buff_enc.get_buffer()));
-  thprint("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
-  thprint("\tpgrade->dls_length = ");
-  thprintinfnan(this->dls_length);
-  thprint(";\n\tpgrade->dls_bearing = ");
-  thprintinfnan(this->dls_bearing);
-  thprint(";\n\tpgrade->dls_gradient = ");
-  thprintinfnan(this->dls_gradient);
-  thprint(";\n\tpgrade->dls_counter = ");
-  thprintinfnan(this->dls_counter);
-  thprint(";\n\tpgrade->dls_depth = ");
-  thprintinfnan(this->dls_depth);
-  thprint(";\n\tpgrade->dls_dx = ");
-  thprintinfnan(this->dls_dx);
-  thprint(";\n\tpgrade->dls_dy = ");
-  thprintinfnan(this->dls_dy);
-  thprint(";\n\tpgrade->dls_dz = ");
-  thprintinfnan(this->dls_dz);
-  thprint(";\n\tpgrade->dls_x = ");
-  thprintinfnan(this->dls_x);
-  thprint(";\n\tpgrade->dls_y = ");
-  thprintinfnan(this->dls_y);
-  thprint(";\n\tpgrade->dls_z = ");
-  thprintinfnan(this->dls_z);
-  thprint(";\n");
+  fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
+  out << "\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n";
+  fmt::print(out, "\tpgrade->dls_length = {};\n", thprintinfnan(this->dls_length));
+  fmt::print(out, "\tpgrade->dls_bearing = {};\n", thprintinfnan(this->dls_bearing));
+  fmt::print(out, "\tpgrade->dls_gradient = {};\n", thprintinfnan(this->dls_gradient));
+  fmt::print(out, "\tpgrade->dls_counter = {};\n", thprintinfnan(this->dls_counter));
+  fmt::print(out, "\tpgrade->dls_depth = {};\n", thprintinfnan(this->dls_depth));
+  fmt::print(out, "\tpgrade->dls_dx = {};\n", thprintinfnan(this->dls_dx));
+  fmt::print(out, "\tpgrade->dls_dy = {};\n", thprintinfnan(this->dls_dy));
+  fmt::print(out, "\tpgrade->dls_dz = {};\n", thprintinfnan(this->dls_dz));
+  fmt::print(out, "\tpgrade->dls_x = {};\n", thprintinfnan(this->dls_x));
+  fmt::print(out, "\tpgrade->dls_y = {};\n", thprintinfnan(this->dls_y));
+  fmt::print(out, "\tpgrade->dls_z = {};\n", thprintinfnan(this->dls_z));
 }
 
 thdata thgrade::data;

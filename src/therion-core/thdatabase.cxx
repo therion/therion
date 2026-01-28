@@ -701,31 +701,31 @@ class thlookup * thdatabase::get_lookup(const char * gname)
 }
 
 
-void thdatabase::self_print_library()
+void thdatabase::self_print_library(std::ostream& out)
 {
-  thprint(thlibrarydata_init_text);
+  out << thlibrarydata_init_text;
 
   // print survey grades
-  thprint(thlibrarydata_grades_text);
+  out << thlibrarydata_grades_text;
   thdb_grade_map_type::iterator gi = this->grade_map.begin();
   while (gi != this->grade_map.end()) {
-    thprint("\n\tpgrade = thdb.create<thgrade>(thobjectsrc(\"therion\",0));\n");
-    dynamic_cast<thgrade*>(gi->second)->self_print_library();
+    out << "\n\tpgrade = thdb.create<thgrade>(thobjectsrc(\"therion\",0));\n";
+    dynamic_cast<thgrade*>(gi->second)->self_print_library(out);
     gi++;
-    thprint("\tthdb.insert(std::move(pgrade));\n");
+    out << "\tthdb.insert(std::move(pgrade));\n";
   }
-  thprint("}\n\n");
+  out << "}\n\n";
 
   // print map layouts
-  thprint(thlibrarydata_layouts_text);
+  out << thlibrarydata_layouts_text;
   thdb_layout_map_type::iterator li = this->layout_map.begin();
   while (li != this->layout_map.end()) {
-    thprint("\n\tplayout = thdb.create<thlayout>(thobjectsrc(\"therion\",0));\n");
-    dynamic_cast<thlayout*>(li->second)->self_print_library();
+    out << "\n\tplayout = thdb.create<thlayout>(thobjectsrc(\"therion\",0));\n";
+    dynamic_cast<thlayout*>(li->second)->self_print_library(out);
     li++;
-    thprint("\tthdb.insert(std::move(playout));\n");
+    out << "\tthdb.insert(std::move(playout));\n";
   }
-  thprint("}\n\n");
+  out << "}\n\n";
   
 }
 

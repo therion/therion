@@ -39,6 +39,8 @@
 #include "thdatabase.h"
 #include "thlog.h"
 
+#include <fstream>
+
 extern const thstok thtt_texts [];
 
 const char * thhelp_text =
@@ -183,10 +185,13 @@ int main(int argc, char * argv[]) {
 #endif 
 
     // After reading printing
-    switch (thcmdln.get_print_state()) {
-      case THPS_LIB_SRC:
-        thdb.self_print_library();
-        thexit(EXIT_SUCCESS);
+    if (thcmdln.get_print_state() == THPS_LIB_SRC) {
+      std::fstream output("thlibrarydata.cxx", std::ios::out | std::ios::trunc);
+      if (!output) {
+        therror("can't write therion library to thlibrarydata.cxx");
+      }
+      thdb.self_print_library(output);
+      return EXIT_SUCCESS;
     }
 
     // process 2D references
