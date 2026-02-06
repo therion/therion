@@ -67,7 +67,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
   unsigned long lnn;
   special_lines_only = ((lnend >= lnstart) && (lnstart > 0));
   
-  this->inp.report_missing = true;
+  this->inp.report_if_missing();
   this->inp.set_file_name(ifname);
   this->inp.cmd_sensitivity_on();
   this->inp.set_search_path(spath);

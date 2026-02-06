@@ -56,7 +56,7 @@ static const thstok thtt_input[] = {
   {"encoding", TT_ENCODING},
   {"input", TT_INPUT},
   {"require", TT_REQUIRE},
-  {NULL, TT_UNKNOWN_INPUT}
+  {nullptr, TT_UNKNOWN_INPUT}
 };
 
 
@@ -143,8 +143,8 @@ thinput::thinput()
   this->last_ptr = this->first_ptr.get();
   this->lnbuffer = std::unique_ptr<char[]>(new char [thinput::max_line_size]);
   this->pifo = false;
-  this->pifoid = NULL;
-  this->pifoproc = NULL;
+  this->pifoid = nullptr;
+  this->pifoproc = nullptr;
   this->report_missing = false;
 }
 
@@ -236,23 +236,23 @@ void thinput::set_file_suffix(const char * fsx)
 
 void thinput::open_file(char * fname)
 {
-  char * srcfile = NULL;
+  char * srcfile = nullptr;
   if (this->last_ptr->sh.is_open())
     srcfile = this->last_ptr->name;
   
   // as first, let's find appropriate ifile
   ifile * ifptr;
   ifptr = this->last_ptr;
-  while (ifptr->sh.is_open() && (ifptr->next_ptr != NULL))
+  while (ifptr->sh.is_open() && (ifptr->next_ptr != nullptr))
     ifptr = ifptr->next_ptr.get();
-  if (ifptr->sh.is_open() && (ifptr->next_ptr == NULL)) {
+  if (ifptr->sh.is_open() && (ifptr->next_ptr == nullptr)) {
     ifptr->next_ptr = std::unique_ptr<ifile>(new ifile(ifptr));
     ifptr = ifptr->next_ptr.get();
   }
   
   // now, let's open the file
   // first let's set the path to source file path
-  if (srcfile != NULL)
+  if (srcfile != nullptr)
     thsplit_fpath(&ifptr->path, srcfile);
   else
     ifptr->path = "";
@@ -313,16 +313,16 @@ void thinput::open_file(char * fname)
   [[maybe_unused]] unsigned int n_rec = 0;
   
   if (!ifptr->sh.is_open()) {
-    if ((srcfile != NULL) || (this->report_missing)) {
+    if ((srcfile != nullptr) || (this->report_missing)) {
       throw thexception(fmt::format("can't open file for input -- {}", fname));
     }
   }
   else {
     tmptr = ifptr->prev_ptr;
 #ifdef THWIN32
-    while ((tmptr != NULL) && (n_rec < THMAXFREC)) {
+    while ((tmptr != nullptr) && (n_rec < THMAXFREC)) {
 #else
-    while ((tmptr != NULL) && !is_rec) {
+    while ((tmptr != nullptr) && !is_rec) {
 #endif
       is_rec = is_rec || tmptr->is_equal(ifptr);
       tmptr = tmptr->prev_ptr;
@@ -342,13 +342,13 @@ void thinput::open_file(char * fname)
     else {
       this->last_ptr = ifptr;
       if (this->pifo) {
-        if (this->pifoproc != NULL)
+        if (this->pifoproc != nullptr)
           this->pifoproc(ifptr->name.get_buffer());
-        if (this->pifoid != NULL)
+        if (this->pifoid != nullptr)
           *(this->pifoid) = true;
         this->pifo = false;
-        this->pifoid = NULL;
-        this->pifoproc = NULL;
+        this->pifoid = nullptr;
+        this->pifoproc = nullptr;
       }
 #ifdef THDEBUG
       thprint(fmt::format("open file -- {}\n", this->last_ptr->name.get_buffer()));
@@ -366,10 +366,10 @@ void thinput::close_file()
     thprint(fmt::format("close file -- {}\n", this->last_ptr->name.get_buffer()));
 #endif
     this->last_ptr->close();
-    if (this->last_ptr->prev_ptr != NULL) {
+    if (this->last_ptr->prev_ptr != nullptr) {
       this->last_ptr = this->last_ptr->prev_ptr; 
       // Is next cmd it really like this ?????
-      this->last_ptr->next_ptr = NULL;
+      this->last_ptr->next_ptr = nullptr;
     }
   }
 }
@@ -378,7 +378,7 @@ void thinput::reset()
 {
   // first, let's close all open files
   ifile * iptr = this->first_ptr.get();
-  while(iptr != NULL) {
+  while(iptr != nullptr) {
     iptr->close();
     iptr = iptr->next_ptr.get();
   }
@@ -525,7 +525,7 @@ char * thinput::read_line()
   if (ln_state == 1)
     return this->linebf.get_buffer();
   else
-    return NULL;
+    return nullptr;
 }
 
 
@@ -605,7 +605,7 @@ int thinput::get_cif_encoding()
 
 void thinput::print_if_opened(void (* pifop)(char *), bool * printed) {
   this->pifo = true;
-  if (printed != NULL)
+  if (printed != nullptr)
     this->pifoid = printed;
   this->pifoproc = pifop;
 }
@@ -622,8 +622,12 @@ bool thinput::get_input_sensitivity()
   return this->input_sensitivity;
 }
 
-bool thinput::is_first_file()
+bool thinput::is_first_file() const
 {
-  return ((this->first_ptr == NULL) || (this->first_ptr->next_ptr == NULL));
+  return ((this->first_ptr == nullptr) || (this->first_ptr->next_ptr == nullptr));
 }
 
+void thinput::report_if_missing()
+{
+  this->report_missing = true;
+}

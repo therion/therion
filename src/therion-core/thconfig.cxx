@@ -316,7 +316,7 @@ thconfig::~thconfig()
 void thconfig::set_file_name(char * fn)
 {
   this->fname = fn;
-  this->cfg_file.report_missing = true;
+  this->cfg_file.report_if_missing();
 }
 
    

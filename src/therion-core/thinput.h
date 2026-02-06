@@ -26,12 +26,12 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef thinput_h
-#define thinput_h
+#pragma once
 
 #include "thbuffer.h"
 #include "thmbuffer.h"
 #include <memory>
+#include <string>
 
 class ifile;
 
@@ -41,10 +41,9 @@ class ifile;
  * This class provides standard functions, that work with therion input
  * and configuration files.
  */
- 
 class thinput {
 
-  public:
+private:
 
   bool cmd_sensitivity,  ///< Command sensitivity ID.
     input_sensitivity,  /// < Whether dive into subfiles.
@@ -67,30 +66,14 @@ class thinput {
   std::unique_ptr<ifile> first_ptr;  ///< Pointer to the first file.
   ifile * last_ptr;  ///< Pointer to the last file.
 
-
-  bool is_first_file();
-
-
-  /**
-   * Open new file for input.
-   */
-   
+private:
   void open_file(char * fname);
-  
-  
-  /**
-   * Close file open for input.
-   */
-   
   void close_file();
   
-  
-  public:  
-  
+public:
   /**
    * Standard constructor.
    */
-  
   thinput();
 
   /**
@@ -99,79 +82,63 @@ class thinput {
   ~thinput();
 
   /**
+   * @brief Is this input file the first one?
+   */
+  bool is_first_file() const;
+
+  /**
    * Set command sensitivity state.
    */
-   
   void set_cmd_sensitivity(bool cs);
-  
   
   /**
    * Turn on command sensitivity.
    */
-   
   void cmd_sensitivity_on();
-  
   
   /**
    * Turn off command sensitivity.
    */
-   
   void cmd_sensitivity_off();
-  
   
   /**
    * Retrieve command sensitivity.
    */
-   
   bool get_cmd_sensitivity();
-  
   
   /**
    * Set search path scanning state.
    */
-   
   void set_sp_scan(bool spss);
-  
   
   /**
    * Turn on search path scanning for input files.
    */
-   
   void sp_scan_on();
-  
   
   /**
    * Turn off search path scanning for input files.
    */
-   
   void sp_scan_off();
-  
   
   /**
    * Retrieve search path scanning state.
    */
-   
   bool get_sp_scan();
-  
   
   /**
    * Set main input file name.
    */
-   
   void set_file_name(const char * fname);
-  
   
   /**
    * Retrieve main input file name.
    */
-   
   char * get_file_name();
-  
   
   /**
    * Set search path.
    */
-   
   void set_search_path(const char * spath);
 
   /**
@@ -179,19 +146,15 @@ class thinput {
    *
    * Used, when unable to open input file.
    */
-   
   void set_file_suffix(const char * fsx);
 
   bool get_input_sensitivity();
   void set_input_sensitivity(bool s);
   
-  
   /**
    * Reset input.
    */
-   
   void reset();
-	
 	
 	/**
 	 * Reads line from input and return pointer to it.
@@ -206,22 +169,18 @@ class thinput {
    * - if some suffixes are set, program tries to find files
    *   by adding these suffixes.
 	 */
-	 
 	char * read_line();
-	
 	
 	/**
 	 * Return command string.
 	 *
 	 * Applicable only in when cmd_sensitivity is on.
 	 */
-	 
 	char * get_cmd();
 	
 	/**
 	 * Return line string.
    */
-   
 	char * get_line();
 	
 	/**
@@ -229,50 +188,40 @@ class thinput {
 	 *
 	 * Applicable only in when cmd_sensitivity is on.
 	 */
-	 
   char * get_value();
-  
 
   /**
    * Return full current input file name.
    */  
-   
   char * get_cif_name();
-
 
   /**
    * Return current input file path.
    */  
-   
   char * get_cif_path();
   
   /**
    * Return current absolute input file path.
    */  
-   
   std::string get_cif_abspath(const char * fname_ptr = "");
   
   /**
    * Return current input line number.
    */
-   
   unsigned long get_cif_line_number();
-  
   
   /**
    * Return current input encoding.
    */
-  
   int get_cif_encoding();
   
   /**
    * Text to print some file was opened.
    */
-   
   void print_if_opened(void (* pifop)(char *), bool * printed);
-   
+  
+  /**
+   * @brief Report if the file is missing.
+   */
+  void report_if_missing();
 };
-
-#endif
-
-
