@@ -57,18 +57,32 @@
 
 
 const char * thlibrarydata_init_text =
-  "/**\n"
-  " * @file librarydata.cxx\n"
-  " *\n"
-  " * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!\n"
-  " */\n\n\n"
-  "#include \"thdatabase.h\"\n"
-  "#include \"thobjectsrc.h\"\n"
-  "#include \"thinfnan.h\"\n"
-  "#include \"thchencdata.h\"\n"
-  "#include \"thlayout.h\"\n"
-  "#include \"thlang.h\"\n"
-  "#include \"thgrade.h\"\n\n\n";
+R"(/**
+ * @file thlibrarydata.cxx
+ *
+ * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
+ */
+
+
+#include "thlibrarydata.h"
+#include "thdatabase.h"
+#include "thobjectsrc.h"
+#include "thinfnan.h"
+#include "thchencdata.h"
+#include "thlayout.h"
+#include "thlang.h"
+#include "thgrade.h"
+
+void thlibrary_init_grades();
+void thlibrary_init_layouts();
+
+void thlibrary_init()
+{
+  thlibrary_init_grades();
+  thlibrary_init_layouts();
+}
+
+)";
 
 const char * thlibrarydata_grades_text =
   "void thlibrary_init_grades()\n"

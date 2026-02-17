@@ -59,7 +59,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlayoutclr.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlayoutln.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlegenddata.cxx
-    ${CMAKE_SOURCE_DIR}/src/therion-core/thlibrary.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thline.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlocale.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlog.cxx
