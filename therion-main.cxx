@@ -29,7 +29,7 @@
 #include "thcmdline.h"
 #include "thconfig.h"
 #include "thdatareader.h"
-#include "thlibrary.h"
+#include "thlibrarydata.h"
 #include "thinit.h"
 #include "thversion.h"
 #include "thtexfonts.h"
