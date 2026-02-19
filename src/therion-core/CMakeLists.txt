@@ -3,6 +3,7 @@ add_library(therion-core STATIC ${THERION_SOURCES})
 target_include_directories(therion-core PUBLIC ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(therion-core SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/extern/stl_reader)
 target_link_libraries(therion-core PUBLIC
+    therion-mpost
     therion-tex
     proj-interface
     shp-interface
@@ -17,7 +18,6 @@ add_dependencies(therion-core
     thversion
     generate_thsymbolsetlist
     generate_thlang
-    generate_mpost
     generate_thchencdata
     generate_thcsdata
 )

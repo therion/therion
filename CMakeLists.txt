@@ -64,10 +64,6 @@ set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
     ${CMAKE_BINARY_DIR}/thlangdata.h
     ${CMAKE_BINARY_DIR}/thlangdatafields.h
-    ${CMAKE_BINARY_DIR}/thmpost.h 
-    ${CMAKE_BINARY_DIR}/thmpost.cxx
-    ${CMAKE_BINARY_DIR}/thsymbolsets.h
-    ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
     ${CMAKE_BINARY_DIR}/thversion.h
     ${CMAKE_BINARY_DIR}/thcsdata.h
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
@@ -91,7 +87,7 @@ macro(therion_make_files_lists LIST_NAME)
 endmacro()
 
 # copy files needed by some build steps
-therion_copy_files(thcsdata.tcl thsymbolsetfont.txt .clang-tidy)
+therion_copy_files(thcsdata.tcl .clang-tidy)
 
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
@@ -108,11 +104,11 @@ add_custom_target(generate_thcsdata DEPENDS
 # generate thsymbolsetlist sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
     COMMAND perl
-    ARGS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl
+    ARGS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl ${CMAKE_BINARY_DIR}
     DEPENDS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl 
-            ${CMAKE_BINARY_DIR}/mpost/thTrans.mp
-            ${CMAKE_BINARY_DIR}/thsymbolsetfont.txt
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            ${CMAKE_SOURCE_DIR}/src/therion-mpost/thTrans.mp
+            ${CMAKE_SOURCE_DIR}/thsymbolsetfont.txt
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
@@ -164,7 +160,6 @@ if (BUILD_THERION)
         endif()"
         COMPONENT th-runtime)
 
-    add_subdirectory(mpost)
     add_subdirectory(thchencdata)
     add_subdirectory(thlang)
     add_subdirectory(samples)
