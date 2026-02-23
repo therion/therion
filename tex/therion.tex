@@ -294,7 +294,9 @@
 \def\calibrX#1{\tmpdimen=#1\advance\tmpdimen by\overlap\advance\tmpdimen by\extraW}
 \def\calibrY#1{\tmpdimen=#1\advance\tmpdimen by\overlap\advance\tmpdimen by\extraS}
 
-\def\TITLE#1{\eject\hbox{}\vskip5cm\centerline{\size[24]#1}\vfil\eject}
+\def\setsize[#1]{\size[#1]\basefontsize=#1\relax }
+
+\def\TITLE#1{\eject\hbox{}\vskip5cm\centerline{\setsize[24]#1}\vfil\eject}
 
 % processing of the E-W-N-S references
 
@@ -413,9 +415,9 @@
   \bigskip
   \line{%
     \vbox to \ht\navbox{
-      \hbox{\size[20]\the\pagelabel
+      \hbox{\setsize[20]\the\pagelabel
         \ifpagenumbering\space(\the\pagenum)\fi
-        \space\size[16]\the\pagename}
+        \space\setsize[16]\the\pagename}
       \ifpagenumbering
         \medskip
         \hbox{\qquad\qquad
@@ -488,14 +490,14 @@
 \newtoks\gridconv
 \newtoks\currentdate
 \newtoks\legendtextcolor\legendtextcolor={\black}
-\newtoks\legendtextsize\legendtextsize={\size[12]}
-\newtoks\legendtextheadersize\legendtextheadersize={\size[26]}
-\newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
+\newtoks\legendtextsize\legendtextsize={\setsize[12]}
+\newtoks\legendtextheadersize\legendtextheadersize={\setsize[26]}
+\newtoks\legendtextsectionsize\legendtextsectionsize={\setsize[14]}
 
 \def\scalebar{\pdfrefxform\getref{THWscalebar}}
 \def\altitudebar{\pdfrefxform\getref{THWaltitudebar}}
 \def\northarrow{\pdfrefxform\getref{THWnortharrow}}
-\def\gridfont{\rm\size[10]}
+\def\gridfont{\rm\setsize[10]}
 \newdimen\legendwidth %\legendwidth=14cm
 \newcount\legendcolumns \legendcolumns=2
 
@@ -566,20 +568,20 @@
   \fi
   {\rightskip=0pt plus 3em\parskip=3bp
     \edef\tmp{\the\comment} \ifx\tmp\empty \else
-      {\size[12]\the\comment\par}\medskip
+      {\setsize[12]\the\comment\par}\medskip
     \fi
     \everypar{\hangindent=2em\hangafter=1}
     \edef\tmp{\the\exploteam} \ifx\tmp\empty \else
-      {\size[12]\si\the\explotitle: \ss\the\exploteam\par}
+      {\setsize[12]\si\the\explotitle: \ss\the\exploteam\par}
     \fi
     \edef\tmp{\the\topoteam} \ifx\tmp\empty \else
-      {\size[12]\si\the\topotitle: \ss\the\topoteam\par}
+      {\setsize[12]\si\the\topotitle: \ss\the\topoteam\par}
     \fi
     \edef\tmp{\the\cartoteam} \ifx\tmp\empty \else
-      {\size[12]\si\the\cartotitle: \ss\the\cartoteam\par}
+      {\setsize[12]\si\the\cartotitle: \ss\the\cartoteam\par}
     \fi
     \edef\tmp{\the\copyrights} \ifx\tmp\empty \else
-      {\size[12]\ss\the\copyrights\par}
+      {\setsize[12]\ss\the\copyrights\par}
     \fi
     \edef\tmp{\the\cavelength} \ifx\tmp\empty \else
       {\the\legendtextsize\si\the\cavelengthtitle: \ss\the\cavelength\par}
