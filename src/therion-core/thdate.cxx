@@ -661,6 +661,8 @@ void thdate::print_str(int fmt) {
         tm s{}, e{};
         date2tm(this->syear, this->smonth, this->sday, this->shour, this->smin, this->ssec, &s);
         date2tm(this->eyear, this->emonth, this->eday, this->ehour, this->emin, this->esec, &e);
+        mktime(&s);
+        mktime(&e);
         setlocale (LC_TIME,"");
         if (this->shour >= 0)
           strftime(dst, tl, "%c", &s);
