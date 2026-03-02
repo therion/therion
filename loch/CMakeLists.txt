@@ -2,7 +2,20 @@ set(LOCH_DEFINITIONS LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_
 
 # loch resource file
 if (WIN32)
-    add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc "-I$<JOIN:${wxWidgets_INCLUDE_DIRS},;-I>" -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/loch.res -O coff
+    # prepare list with wxWidgets include path flags for the resource compiler
+    if (MSVC)
+        set(LOCH_INCLUDE_FLAG_PREFIX "/I")
+    else()
+        set(LOCH_INCLUDE_FLAG_PREFIX "-I")
+    endif()
+    list(TRANSFORM wxWidgets_INCLUDE_DIRS PREPEND ${LOCH_INCLUDE_FLAG_PREFIX} OUTPUT_VARIABLE LOCH_WX_PATHS)
+
+    if (MSVC)
+        set(LOCH_RC_COMMAND ${CMAKE_RC_COMPILER} /fo ${CMAKE_CURRENT_BINARY_DIR}/loch.res ${LOCH_WX_PATHS} ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc)
+    else()
+        set(LOCH_RC_COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc ${LOCH_WX_PATHS} -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/loch.res -O coff)
+    endif()
+    add_custom_command(COMMAND ${LOCH_RC_COMMAND}
                         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/loch.res
                         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc ${CMAKE_CURRENT_SOURCE_DIR}/loch.ico
                         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

@@ -36,6 +36,10 @@
 #include <mpdebug.h>
 #endif
 
+#ifdef _MSC_VER
+#include <Windows.h>
+#endif
+
 #ifdef LXMACOSX
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
