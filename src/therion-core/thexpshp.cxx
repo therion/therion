@@ -3,7 +3,6 @@
  */
   
 /* Copyright (C) 2000 Stacho Mudrak 
- * [Modified by Alex38Lyon 2026 02 24]
  * 
  * $Date: $
  * $RCSfile: $
@@ -47,7 +46,6 @@
 #include "thproj.h"
 #include "therion.h"
 #include <filesystem>
-
 #include "thexpshp.h"
 
 
@@ -251,8 +249,7 @@ void insert_line_segment(thline * ln, bool reverse, std::list<thexpshpf_data> & 
 {
   thdb2dlp * cpt, * prevpt;
   thdb2dpt * cp1, * cp2;
-	// double t, tt, ttt, t_, tt_, ttt_, nx, ny, nz, na, px, py;
-  double t, tt, ttt, t_, tt_, ttt_, nx, ny, nz, px, py;            // [modified by Alex38Lyon 2026 02 24]
+  double t, tt, ttt, t_, tt_, ttt_, nx, ny, nz, px, py;          
   long pnum;
 
   prevpt = NULL;
@@ -297,11 +294,9 @@ void insert_line_segment(thline * ln, bool reverse, std::list<thexpshpf_data> & 
 							  3.0 * tt * t_ * cp2->yt + 
 							  ttt * cpt->point->yt;
 					  nz = t_ * cpt->point->zt + t * prevpt->point->zt;
-					  // na = t_ * cpt->point->at + t * prevpt->point->at;    // [modified by Alex38Lyon 2026 02 24]
             // resolution 0.1 m
 					  if (std::hypot(nx - px, ny - py) > 0.1) {
-			        // lst.push_back(thexpshpf_data(nx + ln->fscrapptr->proj->rshift_x, ny + ln->fscrapptr->proj->rshift_y, nz + ln->fscrapptr->proj->rshift_z, na));       // [modified by Alex38Lyon 2026 02 24]
-						  lst.push_back(thexpshpf_data(nx + ln->fscrapptr->proj->rshift_x, ny + ln->fscrapptr->proj->rshift_y, nz + ln->fscrapptr->proj->rshift_z , 0.0));        // [modified by Alex38Lyon 2026 02 24]
+						  lst.push_back(thexpshpf_data(nx + ln->fscrapptr->proj->rshift_x, ny + ln->fscrapptr->proj->rshift_y, nz + ln->fscrapptr->proj->rshift_z , 0.0));    
               px = nx;
 						  py = ny;
 					  }
@@ -312,12 +307,7 @@ void insert_line_segment(thline * ln, bool reverse, std::list<thexpshpf_data> & 
 
     // insert point it self
     if ((pnum >= startp) && ((endp < 0) || (pnum <= endp))) {
-      // lst.push_back(thexpshpf_data(cpt->point->xt + ln->fscrapptr->proj->rshift_x, cpt->point->yt + ln->fscrapptr->proj->rshift_y, cpt->point->zt + ln->fscrapptr->proj->rshift_z, cpt->point->at));         // [modified by Alex38Lyon 2026 02 24]   
-      lst.push_back(thexpshpf_data(cpt->point->xt + ln->fscrapptr->proj->rshift_x, cpt->point->yt + ln->fscrapptr->proj->rshift_y,  cpt->point->zt + ln->fscrapptr->proj->rshift_z, cpt->tags));                // [modified by Alex38Lyon 2026 02 24]
-    
-      if (cpt->tags != 0 ) {
-    		//  [Note by Alex38Lyon 2026 03 01 : Todo altitude to point]
-      }
+      lst.push_back(thexpshpf_data(cpt->point->xt + ln->fscrapptr->proj->rshift_x, cpt->point->yt + ln->fscrapptr->proj->rshift_y,  cpt->point->zt + ln->fscrapptr->proj->rshift_z, cpt->tags));           
     }
 
     // next point
@@ -485,9 +475,9 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
               (thmatch_string(ppt->subtype, thtt_point_subtypes)) : ppt->m_subtype_str);
         this->m_fpoints.m_attributes.copy_attributes(thdb.attr.get_object(ppt->id));
         switch (ppt->type) {
-          case TT_POINT_TYPE_HEIGHT:                                                                               // [added by Alex38Lyon 2026 02 24]
-            this->m_fpoints.m_attributes.insert_attribute("_TEXT", std::to_string(ppt->xsize).c_str());            // [added by Alex38Lyon 2026 02 24]
-            this->m_fpoints.m_attributes.insert_attribute("_TAGS", (long) ppt->tags);                              // [added by Alex38Lyon 2026 02 24]
+          case TT_POINT_TYPE_HEIGHT:                                                                              
+            this->m_fpoints.m_attributes.insert_attribute("_TEXT", std::to_string(ppt->xsize).c_str());            
+            this->m_fpoints.m_attributes.insert_attribute("_TAGS", (long) ppt->tags);                              
             break; 
           case TT_POINT_TYPE_LABEL:
           case TT_POINT_TYPE_REMARK:
@@ -502,8 +492,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
             }
             break;
         }
-    this->m_fpoints.m_attributes.insert_attribute("_SCALE", (long) ppt->scale);                              // [added by Alex38Lyon 2026 02 24]
-    this->m_fpoints.m_attributes.insert_attribute("_ALIGN", (long) ppt->align);                              // [added by Alex38Lyon 2026 02 24]
+    this->m_fpoints.m_attributes.insert_attribute("_SCALE", (long) ppt->scale);                              
+    this->m_fpoints.m_attributes.insert_attribute("_ALIGN", (long) ppt->align);                            
 				break;
 		  case TT_LINE_CMD:
 				pln = dynamic_cast<thline*>(obj);
@@ -519,13 +509,13 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
             insert_line_segment(pln, false, this->m_flines.m_point_list, sp, cp);
             this->m_flines.object_insert();
 			      this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) pln->fscrapptr->id);
-            this->m_flines.m_attributes.insert_attribute("_SCRAP", pln->fscrapptr->name);                                           // [added by Alex38Lyon 2026 02 24]
+            this->m_flines.m_attributes.insert_attribute("_SCRAP", pln->fscrapptr->name);                                          
             this->m_flines.m_attributes.insert_attribute("_TYPE",thmatch_string(pln->type, thtt_line_types));
             this->m_flines.m_attributes.insert_attribute("_CLIP", ((obj->tags & TT_2DOBJ_TAG_CLIP_AUTO) ? "auto" : ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) ? "on" : "off")));
-            this->m_flines.m_attributes.insert_attribute("_TAGS", (long) pln->tags);                                                // [added by Alex38Lyon 2026 02 24]
+            this->m_flines.m_attributes.insert_attribute("_TAGS", (long) pln->tags);                                               
             this->m_flines.m_attributes.insert_attribute("_SUBTYPE", pln->type != TT_LINE_TYPE_U ?
               (thmatch_string(csubtype, thtt_line_subtypes)) : pln->m_subtype_str);
-            this->m_flines.m_attributes.insert_attribute("_SCALE", (long) pln->scale);                                               // [added by Alex38Lyon 2026 02 24]
+            this->m_flines.m_attributes.insert_attribute("_SCALE", (long) pln->scale);                                           
             this->m_flines.m_attributes.copy_attributes(thdb.attr.get_object(pln->id));
             switch (pln->type) {
               case TT_LINE_TYPE_LABEL:
@@ -553,13 +543,13 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
         if (this->m_fareas.m_object_id > -1) {
           // system attributes
           this->m_fareas.m_attributes.insert_attribute("_SCRAP_ID",(long) parea->fscrapptr->id);
-          this->m_fareas.m_attributes.insert_attribute("_SCRAP", parea->fscrapptr->name);                          // [added by Alex38Lyon 2026 02 24]
+          this->m_fareas.m_attributes.insert_attribute("_SCRAP", parea->fscrapptr->name);                          
           this->m_fareas.m_attributes.insert_attribute("_TYPE",thmatch_string(parea->type, thtt_area_types));
           this->m_fareas.m_attributes.insert_attribute("_CLIP", ((obj->tags & TT_2DOBJ_TAG_CLIP_AUTO) ? "auto" : ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) ? "on" : "off")));
-          this->m_fareas.m_attributes.insert_attribute("_TAGS", (long) parea->tags);                               // [added by Alex38Lyon 2026 02 24]
+          this->m_fareas.m_attributes.insert_attribute("_TAGS", (long) parea->tags);                           
           this->m_fareas.m_attributes.insert_attribute("_SUBTYPE",parea->m_subtype_str);
           this->m_fareas.m_attributes.copy_attributes(thdb.attr.get_object(parea->id));
-          this->m_fareas.m_attributes.insert_attribute("_SCALE", (long) parea->scale);                             // [added by Alex38Lyon 2026 02 24]
+          this->m_fareas.m_attributes.insert_attribute("_SCALE", (long) parea->scale);                       
         }
         
         break;
