@@ -10,8 +10,6 @@
 * $Revision: $
 */
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <math.h>
 #include <stdlib.h>
 #include <wx/dcclient.h>
@@ -29,8 +27,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
-#endif  
-//LXDEPCHECK - standard libraries
 
 #include "lxGLC.h"
 #include "lxGUI.h"
@@ -41,16 +37,12 @@
 #include "lxFNT10x20_bdf.h"
 #include "lxFNTFreeSans_ttf.h"
 #include "lxRender.h"
-#include "lxTR.h"
 
-#ifdef LXWIN32
-#include "lxR2D.h"
-#endif
-#ifdef LXLINUX
-#include "lxR2P.h"
-#endif
+#include <TR/tr.h>
 
-#include <fmt/printf.h>
+#include <fmt/format.h>
+
+#include <numbers>
 
 #define LXTRCBORDER (this->m_renderData->m_scaleMode == LXRENDER_FIT_SCREEN ? 0 : 16)
 
@@ -132,7 +124,6 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
   this->m_fntTitleO = new OGLFT::Filled(this->m_ftFace3);
   this->m_fntNumericO = new OGLFT::Filled(this->m_ftFace3);
 
-  this->m_OSC = NULL;
   this->m_TRC = NULL;
 
   this->m_sMoveLock = LXGLCML_NONE;
@@ -158,7 +149,6 @@ bool lxGLCanvas::IsRenderingOff()
 
 lxGLCanvas::~lxGLCanvas()
 {
-  this->OSCDestroy();
   this->TRCDestroy();
   delete this->m_fntTitleS;
   delete this->m_fntNumericS;
@@ -323,8 +313,6 @@ void lxGLCanvas::UpdateRenderContents()
       this->m_maxTSizeO = newTSizeO;
       this->ctx.SetCurrent(*this);
       this->data->m_textureSurface.CreateTexImages(this->m_maxTSizeS, this->m_maxTSizeO);
-      if (this->m_isO)
-        this->OSCMakeCurrent();      
     }
     if (this->m_initTextures) {
       glGenTextures(1, & this->m_idTexSurface);
@@ -763,17 +751,17 @@ void lxGLCanvas::SetCamera() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   lxVec up = lxVec(
-    sin(this->setup->cam_tilt / 180.0 * lxPI) * sin(this->setup->cam_dir / 180.0 * lxPI),
-    sin(this->setup->cam_tilt / 180.0 * lxPI) * cos(this->setup->cam_dir / 180.0 * lxPI),
-    cos(this->setup->cam_tilt / 180.0 * lxPI)
+    sin(this->setup->cam_tilt / 180.0 * std::numbers::pi) * sin(this->setup->cam_dir / 180.0 * std::numbers::pi),
+    sin(this->setup->cam_tilt / 180.0 * std::numbers::pi) * cos(this->setup->cam_dir / 180.0 * std::numbers::pi),
+    cos(this->setup->cam_tilt / 180.0 * std::numbers::pi)
     );
   //printf("LOOK FROM: %12.2f%12.2f%12.f\n", lxShiftVecXYZ(this->setup->cam_pos,this->shift));
   //printf("       TO: %12.2f%12.2f%12.f\n", lxShiftVecXYZ(this->setup->cam_center,this->shift));
   //printf("       UP: %12.2f%12.2f%12.f\n", lxVecXYZ(up));  
   if (this->setup->cam_anaglyph) {
     lxVec aRPosShift = (this->setup->cam_anaglyph_left ? -1.0 : 1.0) * (this->setup->cam_anaglyph_eyesep * this->setup->cam_dist) * lxVec(
-      -cos(this->setup->cam_dir / 180.0 * lxPI),
-      sin(this->setup->cam_dir / 180.0 * lxPI),
+      -cos(this->setup->cam_dir / 180.0 * std::numbers::pi),
+      sin(this->setup->cam_dir / 180.0 * std::numbers::pi),
       0
       );
     gluLookAt(lxShiftVecXYZ(this->setup->cam_pos,this->shift + aRPosShift),
@@ -1277,9 +1265,9 @@ void lxGLCanvas::RenderOffList()
       // altitude
       if (this->setup->m_stlabel_altitude) {
         if (this->frame->m_iniUnits == 1) {
-          strCBar = fmt::sprintf("%.0f ft", st->pos.z / 0.3048);
+          strCBar = fmt::format("{:.0f} ft", st->pos.z / 0.3048);
         } else {
-          strCBar = fmt::sprintf("%.0f m", st->pos.z);
+          strCBar = fmt::format("{:.0f} m", st->pos.z);
         }
         if (cmnt.length() > 0) cmnt += ":";
         cmnt += strCBar;
@@ -1525,8 +1513,8 @@ void lxGLCanvas::RenderICompass(double size) {
   glBegin(GL_TRIANGLE_FAN);
   for(t = 0; t < 360; t++) {
     v2r(
-      (size - hlw) * sin(double(t)/180.0*lxPI),
-      (size - hlw) * cos(double(t)/180.0*lxPI));
+      (size - hlw) * sin(double(t)/180.0*std::numbers::pi),
+      (size - hlw) * cos(double(t)/180.0*std::numbers::pi));
   }
   glEnd();
 
@@ -1535,19 +1523,19 @@ void lxGLCanvas::RenderICompass(double size) {
     glBegin(GL_TRIANGLE_STRIP);
     for(t = 0; t <= 360; t++) {
       v2r(
-        (size - hlw) * sin(double(t)/180.0*lxPI),
-        (size - hlw) * cos(double(t)/180.0*lxPI));
+        (size - hlw) * sin(double(t)/180.0*std::numbers::pi),
+        (size - hlw) * cos(double(t)/180.0*std::numbers::pi));
       v2r(
-        (size + hlw) * sin(double(t)/180.0*lxPI),
-        (size + hlw) * cos(double(t)/180.0*lxPI));
+        (size + hlw) * sin(double(t)/180.0*std::numbers::pi),
+        (size + hlw) * cos(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   } else {
     glBegin(GL_LINE_STRIP);
     for(t = 0; t <= 360; t++) {
       v2r(
-        (size - hlw) * sin(double(t)/180.0*lxPI),
-        (size - hlw) * cos(double(t)/180.0*lxPI));
+        (size - hlw) * sin(double(t)/180.0*std::numbers::pi),
+        (size - hlw) * cos(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   }
@@ -1604,8 +1592,8 @@ void lxGLCanvas::RenderIClino(double size)
     v2r(0.0, 0.0);
     for(t = 0; t <= 20; t++) {
       v2r(
-        (-size) * cos(double(t) * (tilt / 20.0) / 180.0 * lxPI),
-        (size) *  sin(double(t) * (tilt / 20.0) / 180.0 * lxPI));
+        (-size) * cos(double(t) * (tilt / 20.0) / 180.0 * std::numbers::pi),
+        (size) *  sin(double(t) * (tilt / 20.0) / 180.0 * std::numbers::pi));
     }
     glEnd();
   }
@@ -1616,19 +1604,19 @@ void lxGLCanvas::RenderIClino(double size)
     glBegin(GL_TRIANGLE_STRIP);
     for(t = 0; t <= 90; t += 5) {
       v2r(
-        (-1.0) * (size - hlw) * cos(double(t)/180.0*lxPI),
-        (neg ? -1.0 : 1.0) * (size - hlw) * sin(double(t)/180.0*lxPI));
+        (-1.0) * (size - hlw) * cos(double(t)/180.0*std::numbers::pi),
+        (neg ? -1.0 : 1.0) * (size - hlw) * sin(double(t)/180.0*std::numbers::pi));
       v2r(      
-        (-1.0) * (size + hlw) * cos(double(t)/180.0*lxPI),
-        (neg ? -1.0 : 1.0) * (size + hlw) * sin(double(t)/180.0*lxPI));
+        (-1.0) * (size + hlw) * cos(double(t)/180.0*std::numbers::pi),
+        (neg ? -1.0 : 1.0) * (size + hlw) * sin(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   } else {
     glBegin(GL_LINE_STRIP);
     for(t = 0; t <= 90; t += 5) {
       v2r(
-        (-1.0) * (size) * cos(double(t)/180.0*lxPI),
-        (neg ? -1.0 : 1.0) * (size) * sin(double(t)/180.0*lxPI));
+        (-1.0) * (size) * cos(double(t)/180.0*std::numbers::pi),
+        (neg ? -1.0 : 1.0) * (size) * sin(double(t)/180.0*std::numbers::pi));
     }
     glEnd();
   }
@@ -1702,9 +1690,9 @@ void lxGLCanvas::RenderIDepthbar(double size)
     clrOutCntr();
     this->RenderILine(dbw, double(t) * size / 10.0, dbw + dbtw, double(t) * size / 10.0);
     if (this->frame->m_iniUnits == 1) {
-      strCBar = fmt::sprintf("%.0f ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
+      strCBar = fmt::format("{:.0f} ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
     } else {
-      strCBar = fmt::sprintf("%.0f m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
+      strCBar = fmt::format("{:.0f} m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
     }
     this->GetFontNumeric()->draw(this->m_indRes * dbw + lxFNTSW, this->m_indRes * (double(t) * size / 10.0) - 0.333 * lxFNTSH, strCBar);
   }
@@ -1762,11 +1750,11 @@ void lxGLCanvas::RenderIScalebar(double size)
 
 
     if (miles)
-      strLen = fmt::sprintf("%.0f mi", sblen);
+      strLen = fmt::format("{:.0f} mi", sblen);
     else if (sblen > 4.0)
-      strLen = fmt::sprintf("%.0f ft", sblen);
+      strLen = fmt::format("{:.0f} ft", sblen);
     else
-      strLen = fmt::sprintf("%g in", 12.0 * sblen);
+      strLen = fmt::format("{:g} in", 12.0 * sblen);
 
   } else {
 
@@ -1780,13 +1768,13 @@ void lxGLCanvas::RenderIScalebar(double size)
     size = sblen / scale / this->m_indRes;
 
     if (sblen >= 10000.0)
-      strLen = fmt::sprintf("%.0f km", sblen / 1000.0);
+      strLen = fmt::format("{:.0f} km", sblen / 1000.0);
     else if (sblen >= 4.0)
-      strLen = fmt::sprintf("%.0f m", sblen);
+      strLen = fmt::format("{:.0f} m", sblen);
     else if (sblen >= 0.01)
-      strLen = fmt::sprintf("%.0f mm", sblen * 1000.0);
+      strLen = fmt::format("{:.0f} mm", sblen * 1000.0);
     else
-      strLen = fmt::sprintf("%g mm", sblen * 1000.0);
+      strLen = fmt::format("{:g} mm", sblen * 1000.0);
   }
 
 
@@ -1896,103 +1884,7 @@ void lxGLCanvas::SetFontColors()
 }
 
 
-
-
-struct OSC {
-
-  int m_Width, m_Height;
-  bool m_OK;
-
-#ifdef LXWIN32
-  R2DContext * m_r2d;
-#endif
-#ifdef LXLINUX
-  R2PContext * m_r2p;
-#endif
-
-
-  OSC() {
-#ifdef LXWIN32
-    this->m_r2d = NULL;
-#endif
-#ifdef LXLINUX
-    this->m_r2p = NULL;
-#endif
-    this->m_Width = 0;
-    this->m_Height = 0;
-    this->m_OK = false;
-  }
-};
-
-bool lxGLCanvas::OSCMakeCurrent()
-{
-
-	if (!this->m_OSC->m_OK) {
-	  int w, h;
-		this->GetClientSize(&w, &h);
-		w = int(this->GetContentScaleFactor() * w);
-		h = int(this->GetContentScaleFactor() * h);
-		this->m_OSC->m_Width = w;
-		this->m_OSC->m_Height = h;
-		return true;
-	}
-
-  // urobime context current
-#ifdef LXWIN32  
-  if (this->m_OSC->m_r2d) {
-    R2DMakeCurrent(this->m_OSC->m_r2d);
-    return true;
-  }
-#endif
-#ifdef LXLINUX  
-  if (this->m_OSC->m_r2p) {
-    R2PMakeCurrent(this->m_OSC->m_r2p);
-    return true;
-  }
-#endif
-  return false;
-}
-
-
-bool lxGLCanvas::OSCInit(GLint w, GLint h)
-{
-  // vytvorime dib
-  // vytvorime context
-  this->m_OSC = new OSC();
-  this->m_OSC->m_Width = w;
-  this->m_OSC->m_Height = h;
-  this->m_OSC->m_OK = false;
-
-#ifdef LXWIN32
-  this->m_OSC->m_r2d = R2DCreate(w, h);
-  if (this->m_OSC->m_r2d) this->m_OSC->m_OK = true;
-#endif
-#ifdef LXLINUX
-  //this->m_OSC->m_r2p = R2PCreate(w, h);
-  if (this->m_OSC->m_r2p) this->m_OSC->m_OK = true;
-#endif
-  return this->m_OSC->m_OK;
-}
-
-
-void lxGLCanvas::OSCDestroy()
-{
-  if (this->m_OSC != NULL) {
-#ifdef LXWIN32
-    if (this->m_OSC->m_r2d)
-      R2DDestroy(this->m_OSC->m_r2d);
-#endif
-#ifdef LXLINUX
-    if (this->m_OSC->m_r2p)
-      R2PDestroy(this->m_OSC->m_r2p);
-#endif
-    delete this->m_OSC;
-  }
-  this->m_OSC = NULL;
-}
-
-
-struct TRctx * lxGLCanvas::TRCGetContext()
+TRcontext * lxGLCanvas::TRCGetContext()
 {
   if (this->m_TRC != NULL)
     return this->m_TRC->m_ctx;
@@ -2013,18 +1905,12 @@ void lxGLCanvas::TRCInit(int type, GLint w, GLint h, GLint tw, GLint th)
     if (tw < 64)
       tw = 64;
 
-    if (th > this->m_OSC->m_Height)
-      th = this->m_OSC->m_Height;
-    if (tw > this->m_OSC->m_Width)
-      tw = this->m_OSC->m_Width;
-
     tw = tw - tw % 8;
     th = th - th % 8;
 
     TRcontext * ctx = this->m_TRC->m_ctx = trNew();
     GLubyte * buff = this->m_TRC->m_buff = new GLubyte [3 * sizeof(GLubyte) * (type == LXGLCTR_IMAGE ? w : tw) * (type == LXGLCTR_IMAGE ? h : th)];
 
-    this->OSCMakeCurrent();
     this->OpenGLInit();
 
     trTileSize(ctx, tw, th, LXTRCBORDER);
@@ -2066,7 +1952,6 @@ void lxGLCanvas::TRCDestroy()
 void lxGLCanvas::TRCBeginTile()
 {
   if (this->m_TRC != NULL) {
-    this->OSCMakeCurrent();
     trBeginTile(this->m_TRC->m_ctx);
   }
 }

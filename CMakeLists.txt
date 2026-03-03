@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(PreventInSourceBuilds)
 
 project(therion)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -19,6 +19,7 @@ include(Dependencies)
 include(TherionSources)
 include(ECMEnableSanitizers)
 include(Warnings)
+include(CTest)
 
 # strip binaries in release build
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
@@ -117,19 +118,11 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
 )
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
-# check if there are artifacts from the legacy Makefile in the source dir,
-# which could interfere with the CMake build
-add_custom_target(legacy-make 
-    ${CMAKE_COMMAND} -P cmake/DetectLegacyBuild.cmake
-    COMMENT "Checking for legacy build"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
 # generate version files
-add_custom_target(version python3 set_version.py ${CMAKE_BINARY_DIR}
+add_custom_target(thversion python3 set_version.py ${CMAKE_BINARY_DIR}
                   COMMENT "Updating version"
                   BYPRODUCTS ${CMAKE_BINARY_DIR}/thversion.h
                              ${CMAKE_BINARY_DIR}/thbook/version.tex
-                  DEPENDS legacy-make
                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 # generate InnoSetup config file
@@ -145,27 +138,9 @@ else()
 endif()
 
 if (BUILD_THERION)
-    add_subdirectory(extern/quickhull)
-
-    # therion lib
-    add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
-    target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}")
-    target_include_directories(therion-common SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/extern/stl_reader)
-    target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull)
-    target_compile_definitions(therion-common PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
-    add_dependencies(therion-common 
-        version
-        generate_thsymbolsetlist
-        generate_thlang
-        generate_tex
-        generate_mpost
-        generate_thchencdata
-        generate_thcsdata
-    )
-
     # therion executable
     add_executable(therion therion-main.cxx)
-    target_link_libraries(therion therion-common)
+    target_link_libraries(therion therion-core therion-librarydata)
 
     # therion resource file
     if (WIN32)
@@ -191,36 +166,6 @@ if (BUILD_THERION)
         endif()"
         COMPONENT th-runtime)
 
-    # unit tests
-    add_executable(utest 
-        utest-main.cxx
-        utest-proj.cxx
-        utest-str.cxx
-        utest-thdatastation.cxx
-        utest-thdb2dab.cxx
-        utest-thdouble.cxx
-        utest-thexception.cxx
-        utest-thlayoutln.cxx
-        utest-thlogfile.cxx
-        utest-thobjectid.cxx
-        utest-thobjectsrc.cxx
-        utest-thscrapen.cxx
-        utest-thscraplo.cxx
-    )
-    target_link_libraries(utest PUBLIC therion-common catch2-interface)
-    enable_testing()
-    add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    if (ENABLE_CODE_COVERAGE)
-        set_property(TEST utest PROPERTY ENVIRONMENT LLVM_PROFILE_FILE=${COVERAGE_FOLDER}/utest.profraw)
-    endif()
-
-    # updates thlibrarydata.cxx
-    add_custom_target(library 
-        ${CMAKE_COMMAND} -D THERION=$<TARGET_FILE:therion> -P cmake/Library.cmake
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
-
-    add_subdirectory(extern/poly2tri)
     add_subdirectory(mpost)
     add_subdirectory(thchencdata)
     add_subdirectory(tex)
@@ -228,9 +173,15 @@ if (BUILD_THERION)
     add_subdirectory(samples)
 endif()
 
-add_subdirectory(loch)
+add_subdirectory(extern)
+add_subdirectory(src)
+add_subdirectory(tests)
 add_subdirectory(thbook)
 add_subdirectory(xtherion)
+
+if (BUILD_LOCH)
+    add_subdirectory(loch)
+endif()
 
 # deployment of DLL dependencies on Windows
 if (BUILD_THERION AND BUILD_LOCH AND WIN32)

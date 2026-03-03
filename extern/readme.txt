@@ -5,3 +5,4 @@ https://github.com/jhasse/poly2tri
 https://github.com/akuukka/quickhull
 https://github.com/OSGeo/shapelib      // apply shpopen.patch
 https://github.com/ojwb/survex
+https://www.ssec.wisc.edu/~billh/bp/TR.html

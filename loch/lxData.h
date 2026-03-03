@@ -29,8 +29,6 @@
 #ifndef lxData_h
 #define lxData_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <limits>   // required to compile with vtk 9.0.1 and gcc 11
 #include <vtkPolyData.h>
 #include <vtkLookupTable.h>
@@ -42,9 +40,6 @@
 #include <wx/string.h>
 #include <vector>
 #include <set>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxMath.h"
 #include "lxImgIO.h"

@@ -1,8 +1,6 @@
 #ifndef lxWX_h
 #define lxWX_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/spinctrl.h>
 #include <wx/slider.h>
 #include <wx/gbsizer.h>
@@ -10,9 +8,6 @@
 #include <wx/checkbox.h>
 #include <wx/panel.h>
 #include <wx/textctrl.h>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #ifdef __WXGTK__
 #define lxBORDER 3

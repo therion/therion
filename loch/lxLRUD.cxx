@@ -1,14 +1,10 @@
 #include "lxLRUD.h"
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <map>
 #include <vector>
 #include <list>
 #include <algorithm>
 #include <math.h>
-#endif  
-//LXDEPCHECK - standard libraries
 
 static const double lxVecPrec = 0.01;
 

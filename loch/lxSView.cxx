@@ -1,13 +1,8 @@
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/choice.h>
 #include <wx/listbox.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <cmath>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxSView.h"
 #include "lxSetup.h"
@@ -152,7 +147,6 @@ void lxViewpointSetupDlg::OnSlider(wxScrollEvent& event)
   wxCommandEvent tmpEvent(wxEVT_COMMAND_TEXT_UPDATED);
   switch (event.GetId()) {
     case LXVSTP_FACINGSLIDE:
-#ifndef LXDEPCHECK
       lxFTextCtrl(LXVSTP_FACING)->ChangeValue(wxString::Format(_T("%d"), event.GetInt()));
       tmpEvent.SetId(LXVSTP_FACING);
       break;
@@ -167,7 +161,6 @@ void lxViewpointSetupDlg::OnSlider(wxScrollEvent& event)
     case LXVSTP_DISTSLIDE:
       lxFTextCtrl(LXVSTP_DIST)->ChangeValue(wxString::Format(_T("%d"), int(pow(200.0 * this->m_mainFrame->setup->data_limits_diam, (double(event.GetInt()) / 1000.0)))));
       tmpEvent.SetId(LXVSTP_DIST);
-#endif      
       break;
     case LXVSTP_ROTSPEED:
       this->m_mainFrame->canvas->m_sCameraAutoRotateAngle = (event.GetInt() >= 0 ? 1.0 : -1.0) * 

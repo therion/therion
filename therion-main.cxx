@@ -29,7 +29,7 @@
 #include "thcmdline.h"
 #include "thconfig.h"
 #include "thdatareader.h"
-#include "thlibrary.h"
+#include "thlibrarydata.h"
 #include "thinit.h"
 #include "thversion.h"
 #include "thtexfonts.h"
@@ -38,6 +38,8 @@
 #include "thproj.h"
 #include "thdatabase.h"
 #include "thlog.h"
+
+#include <fstream>
 
 extern const thstok thtt_texts [];
 
@@ -60,7 +62,7 @@ const char * thhelp_text =
 	  "        [--verify-output-crc]\n\n";
 
 const char * thversion_text = THVERSION;
-const char * thversion_format = "therion %s";
+constexpr const char * thversion_format = "therion {}";
 
 int main(int argc, char * argv[]) {
 
@@ -84,10 +86,10 @@ int main(int argc, char * argv[]) {
     // print some help messages and exit if demanded
     if (thcmdln.get_version_disp_state())
     {
-      thprintf(thversion_format, thversion_text);
-      thprintf("\n");
-      thprintf("  - using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
-                                                         thcs_get_proj_version_headers().c_str());
+      thprint(fmt::format(thversion_format, thversion_text));
+      thprint("\n");
+      thprint(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(),
+                                                         thcs_get_proj_version_headers()));
       thexit(EXIT_SUCCESS);
     }
 
@@ -100,7 +102,7 @@ int main(int argc, char * argv[]) {
     
     if (thcmdln.get_help_disp_state()) 
     {
-      thprintf(thhelp_text);
+      thprint(thhelp_text);
       thexit(EXIT_SUCCESS);
     }
     
@@ -120,12 +122,11 @@ int main(int argc, char * argv[]) {
     }
     
     // print version information
-    thprintf(thversion_format, thversion_text);
-    thprintf("\n");
+    thprint(fmt::format(thversion_format, thversion_text));
+    thprint("\n");
     thlog(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     if (thcs_get_proj_version() != thcs_get_proj_version_headers())
-      thwarning(("Proj version mismatch: using %s, compiled against %s", thcs_get_proj_version().c_str(),
-                                                         thcs_get_proj_version_headers().c_str()));
+      thwarning(fmt::format("Proj version mismatch: using {}, compiled against {}", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     
     // load initialization file
     thini.load();
@@ -156,9 +157,9 @@ int main(int argc, char * argv[]) {
     thconfig_src_list * sources = thcfg.get_sources();
     thconfig_src_list::iterator srcit;
     if (sources->size() == 0)
-      therror(("source files not specified"));
+      therror("source files not specified");
 #ifndef THDEBUG
-    thprintf("reading source files ... ");
+    thprint("reading source files ... ");
     thtext_inline = true;
 #endif 
 
@@ -166,28 +167,31 @@ int main(int argc, char * argv[]) {
     for(srcit = sources->begin(); srcit != sources->end(); srcit++) {
 
 #ifdef THDEBUG
-      thprintf("\nreading input -- %s\n", srcit->fname);
+      thprint(fmt::format("\nreading input -- {}\n", srcit->fname));
 #endif 
 
       thdbreader.read(srcit->fname, srcit->startln, srcit->endln, 
         thcfg.get_search_path(), &thdb);
 
 #ifdef THDEBUG
-    thprintf("input read\n");
+    thprint("input read\n");
 #endif 
 
     }
 
 #ifndef THDEBUG
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif 
 
     // After reading printing
-    switch (thcmdln.get_print_state()) {
-      case THPS_LIB_SRC:
-        thdb.self_print_library();
-        thexit(EXIT_SUCCESS);
+    if (thcmdln.get_print_state() == THPS_LIB_SRC) {
+      std::fstream output("thlibrarydata.cxx", std::ios::out | std::ios::trunc);
+      if (!output) {
+        therror("can't write therion library to thlibrarydata.cxx");
+      }
+      thdb.self_print_library(output);
+      return EXIT_SUCCESS;
     }
 
     // process 2D references
@@ -201,15 +205,15 @@ int main(int argc, char * argv[]) {
 
     // selecting objects for output
 #ifdef THDEBUG
-    thprintf("\n\nselecting export objects\n");
+    thprint("\n\nselecting export objects\n");
 #else
-    thprintf("selecting export objects ... ");
+    thprint("selecting export objects ... ");
     thtext_inline = true;
 #endif 
     thcfg.select_data();
 #ifdef THDEBUG
 #else
-    thprintf("done\n");
+    thprint("done\n");
     thtext_inline = false;
 #endif
 
@@ -221,17 +225,17 @@ int main(int argc, char * argv[]) {
     thcfg.xth_save();
 
 #ifdef THDEBUG
-    thprintf("\n\nlisting database\n");
+    thprint("\n\nlisting database\n");
     if (thverbose_mode)
       thdb.self_print(stdout);
     thdb.self_print(get_thlogfile().get_fileh());
-    thprintf("\ndatabase listed\n\n");
+    thprint("\ndatabase listed\n\n");
 #endif   
 
     // write the CPU time
-    thprintf("compilation time: %.0f sec\n", difftime(time(NULL), tmUserStart));
+    thprint(fmt::format("compilation time: {:.0f} sec\n", difftime(time(NULL), tmUserStart)));
 #ifdef THDEBUG
-    thprintf("\n");
+    thprint("\n");
 #endif   
 
     // log statistics
@@ -251,7 +255,7 @@ int main(int argc, char * argv[]) {
   }
   catch(const std::exception& e)
   {
-      therror((e.what()));
+      therror(e.what());
   }
 #endif
 

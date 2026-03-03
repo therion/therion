@@ -13,12 +13,7 @@
 #ifndef lxAboutDlg_h
 #define lxAboutDlg_h
 
-
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/window.h>
-#endif  
-//LXDEPCHECK - standard libraries
 
 void lxShowAboutDialog(wxWindow * parent);
 

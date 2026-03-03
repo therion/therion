@@ -3341,6 +3341,16 @@ rs: veštački zid
 ru: каменная кладка
 sl: zidarstvo
 
+therion: point borehole
+en: borehole
+sk: vrt
+de: Bohrloch
+fr: forage
+it: foro di sondaggio
+pt: furo de sondagem
+rs: bušotina
+ru: скважина
+cz: vrt
 
 therion: point minus
 de: Minus

@@ -5,14 +5,12 @@ if (CMAKE_CROSSCOMPILING)
 endif()
 
 if (BUILD_THERION OR BUILD_LOCH)
-    add_subdirectory(extern/img)
     find_package(fmt REQUIRED)
 endif()
 
 # therion dependencies
 if (BUILD_THERION)
     include(PROJ)
-    include(Catch2)
     include(Shapelib)
 endif()
 
@@ -41,6 +39,5 @@ if (BUILD_LOCH)
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(X11 REQUIRED)
     find_package(Gettext REQUIRED)
 endif()

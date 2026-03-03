@@ -26,17 +26,16 @@
  * -------------------------------------------------------------------- 
  */
 
-#ifndef lx_h
-#define lx_h
+#pragma once
 
-// Standard libraries
-#ifndef LXDEPCHECK
+#include "lxMath.h"
+#include "lxOGLFT.h"
+
+#include <TR/tr.h>
+
 #include <wx/glcanvas.h>
 #include <wx/timer.h>
 #include <wx/image.h>
-#include "lxOGLFT.h"
-#endif  
-//LXDEPCHECK - standard libraries
 
 enum {
   LXGLCML_NONE,
@@ -50,8 +49,6 @@ enum {
   LXGLCTR_TILE,
   LXGLCTR_IMAGE
 };
-
-#include "lxMath.h"
 
 class lxGLCanvas: public wxGLCanvas {
 
@@ -128,17 +125,12 @@ class lxGLCanvas: public wxGLCanvas {
     void RenderOffList();
 
     // offscreen funkcie a premenne
-    struct OSC * m_OSC;
     struct TRC * m_TRC;
 
     GLint m_maxTSizeS, m_maxTSizeO;
 
-    bool OSCMakeCurrent();
-    void OSCDestroy();
-    bool OSCInit(GLint w, GLint h);
-
     void TRCInit(int type, GLint w, GLint h, GLint tw = 0, GLint th = 0);
-    struct TRctx * TRCGetContext();
+    TRcontext * TRCGetContext();
     void TRCDestroy();
     GLint TRCGet(int param);
     GLubyte * TRCGetBuffer();
@@ -176,13 +168,10 @@ class lxGLCanvas: public wxGLCanvas {
 
 
 struct TRC {
-  struct TRctx * m_ctx;
+  TRcontext * m_ctx;
   GLubyte * m_buff;
   TRC() {
     this->m_ctx = NULL;
     this->m_buff = NULL;
   }
 };
-
-
-#endif

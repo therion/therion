@@ -13,14 +13,8 @@
 #ifndef lxPres_h
 #define lxPres_h
 
-
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <wx/minifram.h>
 #include <wx/treectrl.h>
-#endif  
-//LXDEPCHECK - standard libraries
-
 
 #include "lxWX.h"
 

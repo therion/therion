@@ -14,15 +14,21 @@
 # interface library for setting compiler and linker flags
 add_library(code-coverage INTERFACE)
 
-if (ENABLE_CODE_COVERAGE)
-    if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        message(FATAL_ERROR "Code coverage requires Clang compiler.")
-    endif()
-
-    set(COVERAGE_FLAGS -fprofile-instr-generate -fcoverage-mapping)
-    target_compile_options(code-coverage INTERFACE ${COVERAGE_FLAGS})
-    target_link_options(code-coverage INTERFACE ${COVERAGE_FLAGS})
+if (NOT ENABLE_CODE_COVERAGE)
+    return()
 endif()
+
+if (NOT BUILD_TESTING)
+    message(FATAL_ERROR "Code coverage requires enabled unit tests.")
+endif()
+
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    message(FATAL_ERROR "Code coverage requires Clang compiler.")
+endif()
+
+set(COVERAGE_FLAGS -fprofile-instr-generate -fcoverage-mapping)
+target_compile_options(code-coverage INTERFACE ${COVERAGE_FLAGS})
+target_link_options(code-coverage INTERFACE ${COVERAGE_FLAGS})
 
 set(COVERAGE_FOLDER ${CMAKE_BINARY_DIR}/coverage)
 

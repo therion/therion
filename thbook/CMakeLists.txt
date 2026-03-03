@@ -21,6 +21,8 @@ set(THBOOK_FORMAT "0" CACHE STRING "thbook format selection, use values 0-3.")
 find_program(PDFTEX NAMES pdftex.exe pdftex
     PATHS /home/runner/work/therion/therion-batteries/bin/windows/
           /home/runner/work/therion-batteries/therion-batteries/bin/windows/
+          c:/a/therion/therion-batteries/bin/windows/
+          c:/a/therion-batteries/therion-batteries/bin/windows/
           d:/a/therion/therion-batteries/bin/windows/
           d:/a/therion-batteries/therion-batteries/bin/windows/)
 if (NOT PDFTEX)
@@ -47,6 +49,6 @@ add_custom_command(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_target(thbook ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf)
-add_dependencies(thbook version)
+add_dependencies(thbook thversion)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf TYPE DOC COMPONENT th-docs)

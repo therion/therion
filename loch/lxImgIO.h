@@ -1,13 +1,9 @@
 #ifndef lxImgIO_h
 #define lxImgIO_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
-#endif  
-//LXDEPCHECK - standard libraries
 
 extern const char * lxImgIOError;
 

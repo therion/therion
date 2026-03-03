@@ -1,12 +1,7 @@
 #ifndef lxLRUD_h
 #define lxLRUD_h
 
-// Standard libraries
-#ifndef LXDEPCHECK
-#endif  
-//LXDEPCHECK - standard libraries
-
-#include "lxMath.h"
+#include "lxTriGeom.h"
 
 #include <any>
 
