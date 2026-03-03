@@ -692,7 +692,7 @@ void thdb2d::process_map_references(thmap * mptr)
       case TT_MAP_CMD:
         mapp = dynamic_cast<thmap*>(optr);
         // if not defined - process recursively
-        if (mapp->projection_id == 0 && citem->type == TT_MAPITEM_NORMAL) {
+        if (mapp->projection_id == 0) {
           try {
             this->process_map_references(mapp);
           }
@@ -713,7 +713,7 @@ void thdb2d::process_map_references(thmap * mptr)
           proj_id = mapp->projection_id;
         } else {
           // check projection
-          if (mapp->projection_id != proj_id) {
+          if (mapp->projection_id != -1 && mapp->projection_id != proj_id) {
             if (citem->name.survey != NULL)
               throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
                 citem->source.name, citem->source.line, 
