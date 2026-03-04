@@ -1,10 +1,11 @@
 /**
- * @file librarydata.cxx
+ * @file thlibrarydata.cxx
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */
 
 
+#include "thlibrarydata.h"
 #include "thdatabase.h"
 #include "thobjectsrc.h"
 #include "thinfnan.h"
@@ -13,6 +14,14 @@
 #include "thlang.h"
 #include "thgrade.h"
 
+void thlibrary_init_grades();
+void thlibrary_init_layouts();
+
+void thlibrary_init()
+{
+  thlibrary_init_grades();
+  thlibrary_init_layouts();
+}
 
 void thlibrary_init_grades()
 {

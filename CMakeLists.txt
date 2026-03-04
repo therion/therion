@@ -140,7 +140,7 @@ endif()
 if (BUILD_THERION)
     # therion executable
     add_executable(therion therion-main.cxx)
-    target_link_libraries(therion therion-core)
+    target_link_libraries(therion therion-core therion-librarydata)
 
     # therion resource file
     if (WIN32)
@@ -165,12 +165,6 @@ if (BUILD_THERION)
             file(INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/therion.ini DESTINATION ${TH_PATH_INI})
         endif()"
         COMPONENT th-runtime)
-
-    # updates thlibrarydata.cxx
-    add_custom_target(library
-        $<TARGET_FILE:therion> --print-library-src ${CMAKE_SOURCE_DIR}/thlibrarydata.thcfg
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src/therion-core
-    )
 
     add_subdirectory(mpost)
     add_subdirectory(thchencdata)
