@@ -58,40 +58,43 @@ void thbuffer::enlarge(size_t min_size)
 }
 
 
-char * thbuffer::assign(const char * src, size_t n)
+thbuffer & thbuffer::assign(const char * src, size_t n)
 {
   if (n >= this->size)
     this->enlarge(n);
   ::strncpy(this->buff, src, n);
   this->buff[n] = 0;
-  return this->buff;
+  return *this;
 }
 
 
-char * thbuffer::assign(const char * src)
+thbuffer & thbuffer::assign(const char * src)
 {
   size_t srclen = strlen(src);
   if (srclen >= this->size)
     this->enlarge(srclen);
-  return ::strcpy(this->buff, src);
+  ::strcpy(this->buff, src);
+  return *this;
 }
 
 
-char * thbuffer::append(const char * src)
+thbuffer & thbuffer::append(const char * src)
 {
   size_t newlen = strlen(src) + strlen(this->buff);
   if (newlen >= this->size)
     this->enlarge(newlen);
-  return ::strcat(this->buff, src);
+  ::strcat(this->buff, src);
+  return *this;
 }
 
 
-char * thbuffer::append(const char * src, size_t n)
+thbuffer & thbuffer::append(const char * src, size_t n)
 {
   size_t newlen = n + 1 + strlen(this->buff);
   if (newlen >= this->size)
     this->enlarge(newlen);
-  return ::strncat(this->buff, src, n);
+  ::strncat(this->buff, src, n);
+  return *this;
 }
 
 

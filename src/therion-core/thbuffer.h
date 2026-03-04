@@ -81,7 +81,7 @@ class thbuffer {
    * @param src Given string.
    */
    
-  char * assign(const char * src);
+  thbuffer & assign(const char * src);
 
 
   /**
@@ -92,7 +92,7 @@ class thbuffer {
    * @param n Source length.
    */
    
-  char * assign(const char * src, size_t n);
+  thbuffer & assign(const char * src, size_t n);
   
   
   /**
@@ -100,7 +100,7 @@ class thbuffer {
    * @param src Given string.
    */
    
-  char * append(const char * src);
+  thbuffer & append(const char * src);
   
   
   /**
@@ -109,7 +109,7 @@ class thbuffer {
    * @param src Given string.
    */
    
-  char * append(const char * src, size_t n);
+  thbuffer & append(const char * src, size_t n);
   
 
   /**
