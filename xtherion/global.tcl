@@ -315,7 +315,12 @@ switch -- $tcl_platform(platform) {
 
 switch -- $tcl_platform(os) {
   Darwin {
-    set xth(gui,rmb) 2
+    # Tk 9 on macOS reports secondary click as Button-3; Tk 8 Aqua used Button-2
+    if {![catch {package provide Tk} tkver] && [package vcompare $tkver 9.0] >= 0} {
+      set xth(gui,rmb) 3
+    } else {
+      set xth(gui,rmb) 2
+    }
   }
 }
 
