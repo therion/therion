@@ -162,7 +162,7 @@ class thbuffer {
    */
    
   thbuffer & operator+=(const char * src);
-  thbuffer & operator+=(const thbuffer& src) { return operator+=(src.buff); }
+  thbuffer & operator+=(const thbuffer& src) { return *this += src.buff; }
   
 
 };
