@@ -73,7 +73,7 @@ class thbuffer {
   /**
    * True if strlen() == 0
    */
-  bool empty() const { return !buff[0]; };
+  [[nodiscard]] bool empty() const { return !buff[0]; };
 
 
   /**
