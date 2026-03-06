@@ -479,7 +479,59 @@ void thdb1d::scan_data()
       catch (const std::exception& e) {
         throw thexception(fmt::format("{} [{}]", lei->srcf.name, lei->srcf.line), e);
       }
-          
+
+      // average consecutive legs between the same pair of stations
+      // (multiple readings of the same shot, as is common practice)
+      {
+        thdataleg_list::iterator prev_lei = dp->leg_list.end();
+        int avg_count = 0;
+        for (lei = dp->leg_list.begin(); lei != dp->leg_list.end(); lei++) {
+          if (!lei->is_valid)
+            continue;
+          if (avg_count > 0
+              && prev_lei != dp->leg_list.end()
+              && lei->from.id == prev_lei->from.id
+              && lei->to.id == prev_lei->to.id
+              && lei->data_type == prev_lei->data_type
+              && lei->flags == prev_lei->flags) {
+            // merge this leg into prev_lei using running arithmetic mean
+            // of the Cartesian vectors (same approach as survex)
+            prev_lei->total_dx = (prev_lei->total_dx * avg_count + lei->total_dx) / (avg_count + 1);
+            prev_lei->total_dy = (prev_lei->total_dy * avg_count + lei->total_dy) / (avg_count + 1);
+            prev_lei->total_dz = (prev_lei->total_dz * avg_count + lei->total_dz) / (avg_count + 1);
+
+            prev_lei->adj_dx = prev_lei->total_dx;
+            prev_lei->adj_dy = prev_lei->total_dy;
+            prev_lei->adj_dz = prev_lei->total_dz;
+
+            // recompute polar values from the averaged Cartesian
+            prev_lei->total_length = thdxyz2length(prev_lei->total_dx, prev_lei->total_dy, prev_lei->total_dz);
+            prev_lei->total_bearing = thdxyz2bearing(prev_lei->total_dx, prev_lei->total_dy, prev_lei->total_dz);
+            prev_lei->total_gradient = thdxyz2clino(prev_lei->total_dx, prev_lei->total_dy, prev_lei->total_dz);
+
+            // update raw polar values so write_survey_leg() exports the averaged shot
+            prev_lei->length = (prev_lei->length * avg_count + lei->length) / (avg_count + 1);
+            if (prev_lei->direction) {
+              prev_lei->bearing = prev_lei->total_bearing;
+              prev_lei->gradient = prev_lei->total_gradient;
+            } else {
+              prev_lei->bearing = prev_lei->total_bearing - 180.0;
+              if (prev_lei->bearing < 0.0)
+                prev_lei->bearing += 360.0;
+              prev_lei->gradient = -prev_lei->total_gradient;
+            }
+
+            prev_lei->calc_total_stds();
+
+            lei->is_valid = false;
+            avg_count++;
+          } else {
+            prev_lei = lei;
+            avg_count = 1;
+          }
+        }
+      }
+
       // scan data fixes
       fii = dp->fix_list.begin();
       thdb1ds * tmps;
@@ -516,6 +568,12 @@ void thdb1d::scan_data()
   
     obi++;
   }
+
+  // remove leg_vec entries whose legs were invalidated by averaging
+  this->leg_vec.erase(
+    std::remove_if(this->leg_vec.begin(), this->leg_vec.end(),
+      [](const thdb1dl & l) { return !l.leg->is_valid; }),
+    this->leg_vec.end());
 
   // process equates separately
   obi = this->db->object_list.begin();
