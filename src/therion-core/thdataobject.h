@@ -346,7 +346,7 @@ class thdataobject {
    * Whether cmd is end.
    */
    
-  virtual bool get_cmd_ends_match(char * cmd);
+  virtual bool get_cmd_ends_match(const char * cmd);
   
   
   /**
@@ -457,7 +457,7 @@ class thdataobject {
    * Read coordinates and estimate approximate location for PROJ conversions.
    */
 
-  void read_cs(char * src_x, char * src_y, double & dst_x, double & dst_y, bool adj_bbox = true);
+  void read_cs(const char * src_x, const char * src_y, double & dst_x, double & dst_y, bool adj_bbox = true);
 
 
   /**
@@ -476,7 +476,7 @@ class thdataobject {
    * Parse object attributes.
    */
 
-  void parse_attribute(char * name, char * value);
+  void parse_attribute(const char * name, const char * value);
 
 };
 

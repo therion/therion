@@ -332,10 +332,10 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
             survey_optr->full_name = survey_optr->name;
             survey_optr->reverse_full_name = survey_optr->name;
           } else {
-            this->buff_tmp.strcpy(survey_optr->name);
-            this->buff_tmp.strcat(".");
-            this->buff_tmp.strcat(this->csurveyptr->full_name);
-            survey_optr->full_name = this->strstore(this->buff_tmp.get_buffer());
+            this->buff_tmp.assign(survey_optr->name);
+            this->buff_tmp.append(".");
+            this->buff_tmp.append(this->csurveyptr->full_name);
+            survey_optr->full_name = this->strstore(this->buff_tmp.c_str());
             survey_optr->reverse_full_name = this->strstore(survey_optr->full_name);
             survey_optr->full_name_reverse();
           }
@@ -383,12 +383,12 @@ thsurvey * thdatabase::get_survey_noexc(const char * sn, thsurvey * ps)
   thdb_survey_map_type::iterator si;
   
   if (sn != NULL) {
-    this->buff_tmp.strcpy(sn);
+    this->buff_tmp.assign(sn);
     if ((ps != NULL) && (ps->id != this->fsurveyptr->id)) {
-      this->buff_tmp.strcat(".");
-      this->buff_tmp.strcat(ps->full_name);
+      this->buff_tmp.append(".");
+      this->buff_tmp.append(ps->full_name);
     }
-    si = this->survey_map.find(thsurveyname(this->buff_tmp.get_buffer()));
+    si = this->survey_map.find(thsurveyname(this->buff_tmp.c_str()));
     if (si != this->survey_map.end())
       return si->second->get_nss();
     else
@@ -409,12 +409,12 @@ thsurvey * thdatabase::get_exact_survey_noexc(const char * sn, thsurvey * ps)
   thdb_survey_map_type::iterator si;
   
   if (sn != NULL) {
-    this->buff_tmp.strcpy(sn);
+    this->buff_tmp.assign(sn);
     if ((ps != NULL) && (ps->id != this->fsurveyptr->id)) {
-      this->buff_tmp.strcat(".");
-      this->buff_tmp.strcat(ps->full_name);
+      this->buff_tmp.append(".");
+      this->buff_tmp.append(ps->full_name);
     }
-    si = this->survey_map.find(thsurveyname(this->buff_tmp.get_buffer()));
+    si = this->survey_map.find(thsurveyname(this->buff_tmp.c_str()));
     if (si != this->survey_map.end())
       return si->second;
     else
@@ -574,12 +574,12 @@ class thdataobject * thdatabase::revise(char * nn, class thsurvey * fathersptr,
   if ((this->mbuff_tmp.get_size() == 2)) {
     divname = this->mbuff_tmp.get_buffer();
     objname = divname[0];
-    this->buff_tmp.strcpy(divname[1]);
+    this->buff_tmp.assign(divname[1]);
     if ((fathersptr != NULL) && (fathersptr->level > 1)) {
-      this->buff_tmp.strcat(".");
-      this->buff_tmp.strcat(fathersptr->full_name);
+      this->buff_tmp.append(".");
+      this->buff_tmp.append(fathersptr->full_name);
     }
-    sfullname = this->buff_tmp.get_buffer();
+    sfullname = this->buff_tmp.data();
     thsurveyname xxx = thsurveyname(sfullname);
     iii = this->survey_map.find(xxx);
     if (iii == this->survey_map.end())

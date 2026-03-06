@@ -177,7 +177,7 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
 
     case TT_LINE_TEXT:
       thencode(&(this->db->buff_enc), *args, argenc);
-      this->parse_text(this->db->buff_enc.get_buffer());
+      this->parse_text(this->db->buff_enc.c_str());
       break;
 
     case TT_LINE_SMOOTH:
@@ -269,7 +269,7 @@ void thline::self_print_properties(FILE * outf)
 }
 
 
-void thline::parse_type(char * ss)
+void thline::parse_type(const char * ss)
 {
   this->type = thmatch_token(ss,thtt_line_types);
   switch (this->type) {
@@ -309,7 +309,7 @@ void thline::parse_type(char * ss)
 }
 
 
-void thline::parse_subtype(char * ss)
+void thline::parse_subtype(const char * ss)
 {
 //  int prevcsubtype = this->csubtype;
   if (this->type == TT_LINE_TYPE_U) {
@@ -381,7 +381,7 @@ void thline::parse_subtype(char * ss)
 
 
 
-void thline::insert_line_point(int nargs, char ** args, double * nums)
+void thline::insert_line_point(int nargs, char const * const * args, double * nums)
 {
   // check number of parameters
   if ((nargs != 6) && (nargs != 2))
@@ -389,7 +389,7 @@ void thline::insert_line_point(int nargs, char ** args, double * nums)
 
   double cp1x, cp1y, cp2x, cp2y, x, y;
   int pidx = 0, sv;
-  char * invs = NULL;
+  const char * invs = NULL;
   bool invnum = false;
 
   if (nargs == 6) {
@@ -487,7 +487,7 @@ void thline::insert_line_point(int nargs, char ** args, double * nums)
 }
 
 
-void thline::insert_point_mark(char * ss)
+void thline::insert_point_mark(const char * ss)
 {
   if (!th_is_keyword(ss))
     throw thexception(fmt::format("mark not a key word -- {}",ss));
@@ -1206,7 +1206,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
 }
 
 
-void thline::parse_border(char * ss) {
+void thline::parse_border(const char * ss) {
   int bd;
   if (this->type != TT_LINE_TYPE_SLOPE)
     throw thexception(fmt::format("-border not valid with type {}", thmatch_string(this->type,thtt_line_types)));
@@ -1240,7 +1240,7 @@ static const thstok thtt_line_gradient[] = {
 };
 
 
-void thline::parse_gradient(char * ss) {
+void thline::parse_gradient(const char * ss) {
   int gd;
   if (this->type != TT_LINE_TYPE_CONTOUR)
     throw thexception(fmt::format("-gradient not valid with type {}", thmatch_string(this->type,thtt_line_types)));
@@ -1268,7 +1268,7 @@ void thline::parse_gradient(char * ss) {
 }
 
 
-void thline::parse_direction(char * ss) {
+void thline::parse_direction(const char * ss) {
   int gd;
   if (this->type != TT_LINE_TYPE_SECTION)
     throw thexception(fmt::format("-direction not valid with type {}", thmatch_string(this->type,thtt_line_types)));
@@ -1305,7 +1305,7 @@ void thline::parse_direction(char * ss) {
 
 
 
-void thline::parse_head(char * ss) {
+void thline::parse_head(const char * ss) {
   int gd;
   if (this->type != TT_LINE_TYPE_ARROW)
     throw thexception(fmt::format("-direction not valid with type {}", thmatch_string(this->type,thtt_line_types)));
@@ -1330,7 +1330,7 @@ void thline::parse_head(char * ss) {
 }
 
 
-void thline::parse_adjust(char * ss) {
+void thline::parse_adjust(const char * ss) {
   if (this->last_point != NULL)
     this->last_point->adjust = thmatch_token(ss,thtt_line_adjusts);
   else
@@ -1343,7 +1343,7 @@ void thline::parse_adjust(char * ss) {
 }
 
 
-void thline::parse_size(int w, char * ss) {
+void thline::parse_size(int w, const char * ss) {
   int sv;
   double sz;
   if (this->last_point == NULL)
@@ -1386,7 +1386,7 @@ void thline::parse_size(int w, char * ss) {
 }
 
 
-void thline::parse_altitude(char * ss) {
+void thline::parse_altitude(const char * ss) {
 
   if (this->type != TT_LINE_TYPE_WALL)
     throw thexception(fmt::format("-altitude not valid with type {}", thmatch_string(this->type,thtt_line_types)));
@@ -1399,7 +1399,7 @@ void thline::parse_altitude(char * ss) {
   this->last_point->tags |= TT_LINEPT_TAG_ALTITUDE;
 }
 
-void thline::parse_text(char * ss) {
+void thline::parse_text(const char * ss) {
   if (this->type != TT_LINE_TYPE_LABEL)
     throw thexception(fmt::format("-text not valid with type {}", thmatch_string(this->type,thtt_line_types)));
   if (strlen(ss) > 0)
@@ -1438,7 +1438,7 @@ void thline::start_insert() {
 
 
 
-void thline::parse_height(char * ss) {
+void thline::parse_height(const char * ss) {
   switch (this->type) {
     case TT_LINE_TYPE_PIT:
       break;

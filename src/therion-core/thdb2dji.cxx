@@ -55,8 +55,8 @@ thdb2dji::thdb2dji()
 void thdb2dji::parse_item(char * istr)
 {
 /*
-  thdb.buff_tmp.strcpy(istr);
-  char * p_name = thdb.buff_tmp.get_buffer(), * s_name = "", * tmpch;
+  thdb.buff_tmp.assign(istr);
+  char * p_name = thdb.buff_tmp.data(), * s_name = "", * tmpch;
   tmpch = p_name;
   size_t snl = strlen(istr), sni;
   for(sni = 0; sni < snl; sni++, tmpch++)
@@ -76,12 +76,12 @@ void thdb2dji::parse_item(char * istr)
       throw thexception(fmt::format("line mark not a keyword -- {}",istr));
   }
   /*
-  thdb.buff_enc.strcpy(pars[0]);
+  thdb.buff_enc.assign(pars[0]);
   if (strlen(s_name) > 0) {
     thdb.buff_enc += "@";
     thdb.buff_enc += s_name;
   }*/
-//  thparse_objectname(this->name, & thdb.buff_stations, thdb.buff_enc.get_buffer());
+//  thparse_objectname(this->name, & thdb.buff_stations, thdb.buff_enc.data());
   thparse_objectname(this->name, & thdb.buff_stations, pars[0]);
 }
 

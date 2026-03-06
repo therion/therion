@@ -3069,7 +3069,7 @@ void thdb1d::process_xelev()
   thdata * dp;
   thdb1d_tree_node * nodes = this->get_tree_nodes(), * from_node, * to_node;
   thdb1d_tree_arrow * carrow;
-  thbuffer tmpbf;
+  std::string tmpbf;
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
@@ -3100,7 +3100,7 @@ void thdb1d::process_xelev()
                   tmpbf += "@";
                   tmpbf += xi->to.survey;
                 }
-                throw thexception(fmt::format("survey shot not found -- {}", tmpbf.get_buffer()));
+                throw thexception(fmt::format("survey shot not found -- {}", tmpbf.c_str()));
               } else {
                 // the leg is in carrow - set its extend
                 if ((xi->extend & TT_EXTENDFLAG_DIRECTION) != 0) {

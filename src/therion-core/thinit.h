@@ -101,38 +101,38 @@ class thinit {
    * Return cavern executable path.
    */
    
-  char * get_path_cavern();
+  const char * get_path_cavern();
 
   /**
    * Return ImageMagick convert executable path.
    */
    
-  char * get_path_convert();
+  const char * get_path_convert();
 
   /**
    * Return ImageMagick identify executable path.
    */
-  char * get_path_identify();
+  const char * get_path_identify();
 
   /**
    * Return metapost options.
    */
 
-  char * get_opt_mpost();
+  const char * get_opt_mpost();
   
   
   /**
    * Return metapost executable path.
    */
    
-  char * get_path_mpost();
-  char * get_path_otftotfm();
+  const char * get_path_mpost();
+  const char * get_path_otftotfm();
 
   /**
    * Return pdftex executable path.
    */
    
-  char * get_path_pdftex();
+  const char * get_path_pdftex();
 
   int get_lang();
 

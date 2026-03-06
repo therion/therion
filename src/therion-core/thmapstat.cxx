@@ -309,8 +309,8 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
     				b += "<thsp>";
     				b += layout->units.format_i18n_length_units();
     		} else {
-          	  	    std::snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
-          	  	    b += c.get_buffer();
+          	  	    std::snprintf(c.data(),127,"%.0f",pd[i].crit);
+          	  	    b += c.c_str();
     		}
             b += ")";
           }
@@ -353,8 +353,8 @@ void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const cha
 			b += pd[i].data.date.get_str(TT_DATE_FMT_UTF8_Y);
 			if (show_lengths) {
 			  b += " (";
-			  std::snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
-			  b += c.get_buffer();
+			  std::snprintf(c.data(),127,"%.0f",pd[i].crit);
+			  b += c.c_str();
 			  b += ")";
 			}
             if (i < (maxcnt-1))
@@ -473,14 +473,14 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   ldata->cavelengthtitle = "";
   if (clen > 0) {
     //b = "";  
-    //std::snprintf(b.get_buffer(),255,"%.0f",clen);
+    //std::snprintf(b.data(),255,"%.0f",clen);
 		b = layout->units.format_length(clen);
     b += "<thsp>";
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavelengthtitle={%s}\n",utf2tex(thT("title cave length",layout->lang)).c_str());
-    fprintf(f,"\\cavelength={%s}\n",utf2tex(b.get_buffer()).c_str());
-    ldata->cavelength = thutf82xhtml(b.get_buffer());
+    fprintf(f,"\\cavelength={%s}\n",utf2tex(b.c_str()).c_str());
+    ldata->cavelength = thutf82xhtml(b.c_str());
     ldata->cavelengthtitle = thT("title cave length",layout->lang);
   }
   
@@ -489,23 +489,23 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 
   if (!thisnan(z_top)) {
     //b = "";  
-    //std::snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot);
+    //std::snprintf(b.data(),255,"%.0f",z_top-z_bot);
 	b = layout->units.format_length(z_top - z_bot);
     b += "<thsp>";
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)).c_str());
-    fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.get_buffer()).c_str());
-    ldata->cavedepth = thutf82xhtml(b.get_buffer());
+    fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.c_str()).c_str());
+    ldata->cavedepth = thutf82xhtml(b.c_str());
     ldata->cavedepthtitle = thT("title cave depth",layout->lang);
 	b = layout->units.format_length(z_top);
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\cavemaxz={%s}\n",utf2tex(b.get_buffer()).c_str());
+    fprintf(f,"\\cavemaxz={%s}\n",utf2tex(b.c_str()).c_str());
 	b = layout->units.format_length(z_bot);
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\caveminz={%s}\n",utf2tex(b.get_buffer()).c_str());
+    fprintf(f,"\\caveminz={%s}\n",utf2tex(b.c_str()).c_str());
 
   }
   

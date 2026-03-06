@@ -67,7 +67,7 @@ private:
   ifile * last_ptr;  ///< Pointer to the last file.
 
 private:
-  void open_file(char * fname);
+  void open_file(const char * fname);
   void close_file();
   
 public:
@@ -134,7 +134,7 @@ public:
   /**
    * Retrieve main input file name.
    */
-  char * get_file_name();
+  const char * get_file_name();
   
   /**
    * Set search path.
@@ -176,29 +176,29 @@ public:
 	 *
 	 * Applicable only in when cmd_sensitivity is on.
 	 */
-	char * get_cmd();
+	const char * get_cmd();
 	
 	/**
 	 * Return line string.
    */
-	char * get_line();
+	const char * get_line();
 	
 	/**
 	 * Return value string.
 	 *
 	 * Applicable only in when cmd_sensitivity is on.
 	 */
-  char * get_value();
+  const char * get_value();
 
   /**
    * Return full current input file name.
    */  
-  char * get_cif_name();
+  const char * get_cif_name();
 
   /**
    * Return current input file path.
    */  
-  char * get_cif_path();
+  const char * get_cif_path();
   
   /**
    * Return current absolute input file path.
