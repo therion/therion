@@ -72,8 +72,6 @@ set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thcsdata.h
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
-    ${CMAKE_BINARY_DIR}/thtex.h
-    ${CMAKE_BINARY_DIR}/thtex.cxx
     PROPERTIES GENERATED TRUE 
 )
 
@@ -168,7 +166,6 @@ if (BUILD_THERION)
 
     add_subdirectory(mpost)
     add_subdirectory(thchencdata)
-    add_subdirectory(tex)
     add_subdirectory(thlang)
     add_subdirectory(samples)
 endif()
