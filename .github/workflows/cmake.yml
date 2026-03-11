@@ -1,4 +1,6 @@
 name: CMake
+permissions:
+  contents: read
 on: [push, pull_request]
 jobs:
   Ubuntu:
