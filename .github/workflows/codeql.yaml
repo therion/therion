@@ -10,14 +10,14 @@ jobs:
     - name: Enable parallel compilation
       run:  echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Install Dependencies
       run: |
         sudo apt -qq update
         sudo apt install -y texlive-binaries texlive-metapost libproj-dev libshp-dev libwxgtk3.2-dev libvtk9-dev survex imagemagick ghostscript ninja-build gettext libfmt-dev catch2
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+      uses: github/codeql-action/autobuild@v4
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4
