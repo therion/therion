@@ -2,6 +2,7 @@ name: CodeQL
 on: [push, pull_request]
 permissions:
   contents: read
+  security-events: read
 jobs:
   CodeQL:
     runs-on: ubuntu-24.04
