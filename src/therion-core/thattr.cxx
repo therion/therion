@@ -439,7 +439,7 @@ void thattr::export_dbf(const char * fname, int encoding)
             break;
           case THATTR_STRING:
             thdecode(&enc, encoding, ca->m_val_string.c_str());
-            DBFWriteStringAttribute(h, (int) oi->m_id, cf->m_xdbf_field, enc.get_buffer());
+            DBFWriteStringAttribute(h, (int) oi->m_id, cf->m_xdbf_field, enc.c_str());
             //DBFWriteStringAttribute(h, (int) oi->m_id, cf->m_xdbf_field, ca->m_val_string.c_str());
             break;
         }
@@ -486,7 +486,7 @@ void thattr::export_mp_object_begin(FILE * f, long user_id)
       news = ca->m_val_string;
       thdecode_mp(&enc, news.c_str());
       fprintf(f,"string %s;\n", cf->m_xmp_name.c_str());
-      fprintf(f,"%s := \"%s\";\n", cf->m_xmp_name.c_str(), enc.get_buffer());
+      fprintf(f,"%s := \"%s\";\n", cf->m_xmp_name.c_str(), enc.c_str());
     }
   }
 }
@@ -742,8 +742,8 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
       } else {
         ca = &(ai->second);
         if (ca->m_type == THATTR_DOUBLE) {
-          std::snprintf(valb.get_buffer(), 127, cf->m_double_format.c_str(), ca->m_val_double);
-          value = valb.get_buffer();
+          std::snprintf(valb.data(), 127, cf->m_double_format.c_str(), ca->m_val_double);
+          value = valb.c_str();
         } else
           value = ca->m_val_string.c_str();
       }

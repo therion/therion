@@ -1,4 +1,6 @@
 name: CMake
+permissions:
+  contents: read
 on: [push, pull_request]
 jobs:
   Ubuntu:
@@ -16,7 +18,7 @@ jobs:
       CXX: ${{ matrix.cxx }}
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install dependencies
         run: |
           sudo apt -qq update
@@ -38,7 +40,7 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         run: cmake --build build -t samples-verify-crc -- -j 4
       - run: cmake --build build -t samples-verify-ref -- -j 4
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: matrix.os == 'ubuntu-24.04' && always()
         with:
           name: samples-${{ matrix.os }}-${{ matrix.cc }}-${{ matrix.type }}
@@ -54,7 +56,7 @@ jobs:
     env:
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install dependencies
         run: |
           find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
@@ -74,7 +76,7 @@ jobs:
           sudo tlmgr install collection-langczechslovak
           cmake --build build -t samples-verify-crc -- -j 4
           cmake --build build -t samples-verify-ref -- -j 4
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: samples-${{ matrix.os }}
@@ -96,7 +98,7 @@ jobs:
       THDIR: ${{ github.workspace }}
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.config.msystem }}
@@ -131,7 +133,7 @@ jobs:
       - run: cmake --build build -t test
       - run: cmake --build build -t samples-verify-crc -- -j 4
       - run: cmake --build build -t samples-verify-ref -- -j 4
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: samples-windows-${{ matrix.config.msystem }}

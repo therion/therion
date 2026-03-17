@@ -692,7 +692,7 @@ void thdb2d::process_map_references(thmap * mptr)
       case TT_MAP_CMD:
         mapp = dynamic_cast<thmap*>(optr);
         // if not defined - process recursively
-        if (mapp->projection_id == 0 && citem->type == TT_MAPITEM_NORMAL) {
+        if (mapp->projection_id == 0) {
           try {
             this->process_map_references(mapp);
           }
@@ -713,7 +713,7 @@ void thdb2d::process_map_references(thmap * mptr)
           proj_id = mapp->projection_id;
         } else {
           // check projection
-          if (mapp->projection_id != proj_id) {
+          if (mapp->projection_id != -1 && mapp->projection_id != proj_id) {
             if (citem->name.survey != NULL)
               throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
                 citem->source.name, citem->source.line, 
@@ -3545,7 +3545,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 #ifdef THDEBUG
   thprint("running metapost\n");
 #endif
-  retcode = system(com.get_buffer());
+  retcode = system(com.c_str());
   thexpmap_log_log_file("data.log",
   "####################### metapost log file ########################\n",
   "#################### end of metapost log file ####################\n",true);
@@ -3560,7 +3560,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   double n[6] = {};
   com.guarantee(256);
   std::unique_ptr<thline> cln;
-  char * buff = com.get_buffer();
+  char * buff = com.data();
   ti = todo.begin();
   while ((fscanf(af.get(),"%32s",buff) > 0) && (ti != todo.end())) {
     if (cnt < 6) {

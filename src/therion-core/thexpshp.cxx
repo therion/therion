@@ -61,11 +61,11 @@ bool thexpshpf::open()
 
   // set file path
   this->m_is_open = false;
-  thbuffer fp;
+  std::string fp;
   fp = this->m_xshp->m_dirname;
   fp += "/";
   fp += this->m_fnm;
-  this->m_fpath = thdb.strstore(fp);
+  this->m_fpath = thdb.strstore(fp.c_str());
 
   this->m_hndl = SHPCreate(this->m_fpath, this->m_type);
   if (this->m_hndl == NULL)
@@ -372,9 +372,6 @@ void thexpshpf::polygon_close_ring()
 
 void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/) // TODO unused parameter xbasic
 {
-	
-	thbuffer stnbuff;
-
   // export scrap outline
   this->m_fscrap.object_clear();
   thscraplo * lo = scrap->get_outline(), * lo2;

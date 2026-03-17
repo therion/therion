@@ -205,7 +205,7 @@ void thgrade::self_print_library(std::ostream& out) {
   fmt::print(out, "\toname = \"{}\";\n", this->get_name());
   fmt::print(out, "\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);\n");
   thdecode_c(&(this->db->buff_enc), this->get_title());
-  fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.c_str());
   fmt::print(out, "\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
   fmt::print(out, "\tpgrade->dls_length = {};\n", thprintinfnan(this->dls_length));
   fmt::print(out, "\tpgrade->dls_bearing = {};\n", thprintinfnan(this->dls_bearing));

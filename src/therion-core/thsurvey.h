@@ -233,7 +233,7 @@ class thsurvey : public thdataobject {
    * Return reverse full survey name.
    */
    
-   virtual const char * get_reverse_full_name() {return this->reverse_full_name;}
+   virtual const char * get_reverse_full_name() {return this->reverse_full_name.c_str();}
   
 
   /**

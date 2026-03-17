@@ -201,8 +201,8 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
       this->layout->set(thcmd_option_desc(TT_LAYOUT_COPY), &(args[argx]), this->cfgptr->cfg_file.get_cif_encoding(), 0); // = thdb.strstore(args[argx],true);
       this->layoutopts += " -layout ";
       thencode(&(this->cfgptr->bf1), args[argx], this->cfgptr->cfg_file.get_cif_encoding());
-      thdecode_arg(&(this->cfgptr->bf2), this->cfgptr->bf1.get_buffer());
-      this->layoutopts += this->cfgptr->bf2.get_buffer();
+      thdecode_arg(&(this->cfgptr->bf2), this->cfgptr->bf1.c_str());
+      this->layoutopts += this->cfgptr->bf2.c_str();
       argx++;
       break;
 
@@ -256,9 +256,9 @@ void thexpmap::parse_layout_option(int & argx, int nargs, char ** args) {
 
   for (i = 0; i < o.nargs; i++) {
     thencode(&(this->cfgptr->bf1), args[argx], this->cfgptr->cfg_file.get_cif_encoding());
-    thdecode_arg(&(this->cfgptr->bf2), this->cfgptr->bf1.get_buffer());
+    thdecode_arg(&(this->cfgptr->bf2), this->cfgptr->bf1.c_str());
     this->layoutopts += " ";
-    this->layoutopts += this->cfgptr->bf2.get_buffer();
+    this->layoutopts += this->cfgptr->bf2.c_str();
     argx++;
   }  
  
@@ -277,8 +277,8 @@ void thexpmap::dump_body(FILE * xf)
   thexport::dump_body(xf);
   if (this->format != TT_EXPMAP_FMT_UNKNOWN)
     fprintf(xf," -format %s", thmatch_string(this->format, thtt_expmap_fmt));
-  thdecode(&(this->cfgptr->bf1), this->cfgptr->cfg_fenc, this->layoutopts.get_buffer());
-  fprintf(xf,"%s",this->cfgptr->bf1.get_buffer());
+  thdecode(&(this->cfgptr->bf1), this->cfgptr->cfg_fenc, this->layoutopts.c_str());
+  fprintf(xf,"%s",this->cfgptr->bf1.c_str());
 }
 
 
@@ -534,7 +534,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   xmin -= shx; xmax -= shx; gxo -= shx;
   ymin -= shy; ymax -= shy; gyo -= shy;
 
-  thbuffer stname;
+  std::string stname;
   thsurvey * css;
   fprintf(pltf,"set XVIstations {\n");
   for(i = 0; i < nstvec; i++) {
@@ -557,7 +557,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
       stvec[(j)].x -= shx; \
       stvec[(j)].y -= shy; \
       if (!cs->is_temporary()) { \
-        fprintf(pltf,"  {%12.2f %12.2f %s}\n", stvec[(j)].x, stvec[(j)].y, stname.get_buffer()); \
+        fprintf(pltf,"  {%12.2f %12.2f %s}\n", stvec[(j)].x, stvec[(j)].y, stname.c_str()); \
       } \
     }
 
@@ -1208,7 +1208,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   unsigned sscrap = 0;
   thexpmap_xmps exps;
   const char * chtitle;
-  thbuffer tit;
+  std::string tit;
   bool quick_map_exp = false;
   double origin_shx, origin_shy, new_shx, new_shy, srot = 0.0, crot = 1.0, rrot = 0.0;
   thexpmapmpxs out;
@@ -2134,14 +2134,14 @@ if (ENC_NEW.NFSS==0) {
       thbuffer texb;
       texb.guarantee(128);
       thdecode(& texb,TT_ISO8859_2,(strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name));      
-      thdecode_tex(& encb, texb.get_buffer());
-      fprintf(plf,"\t\tN => '%s',\n",encb.get_buffer());
+      thdecode_tex(& encb, texb.c_str());
+      fprintf(plf,"\t\tN => '%s',\n",encb.c_str());
       LAYER_ITER->second.N = (strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name);
       LAYER_ITER->second.Nraw = cmap->map->name;
       if ((chtitle != NULL) && ((cmap->next_item == NULL) || (cmap->next_item->title))) {
         thdecode(& texb,TT_ISO8859_2,chtitle);      
-        thdecode_tex(& encb, texb.get_buffer());
-        fprintf(plf,"\t\tT => '%s',\n",encb.get_buffer());
+        thdecode_tex(& encb, texb.c_str());
+        fprintf(plf,"\t\tT => '%s',\n",encb.c_str());
         LAYER_ITER->second.T = chtitle;
         chtitle = NULL;
       }
@@ -2224,10 +2224,10 @@ if (ENC_NEW.NFSS==0) {
   //QUICK_MAP_EXPORT:
 
   //if (strlen(this->layout->doc_title) == 0) {
-  tit.strcpy(thdb.db2d.get_projection_title(prj));
-    //LAYOUT.doc_title = tit.get_buffer();
+  tit.assign(thdb.db2d.get_projection_title(prj));
+    //LAYOUT.doc_title = tit.c_str();
   //} else
-  //  tit.strcpy(LAYOUT.doc_title.c_str());
+  //  tit.assign(LAYOUT.doc_title.c_str());
     
   tf = fopen(thtmp.get_file_name("th_texts.tex"),"w");
   fprintf(tf,"\\legendtitle={%s}\n",utf2tex(thT("title legend",this->layout->lang)).c_str());
@@ -2267,8 +2267,8 @@ if (ENC_NEW.NFSS==0) {
   }
 
   // ak neni atlas, tak nastavi legendcavename
-  fprintf(tf,"\\cavename={%s}\n",ths2tex(tit.get_buffer(), this->layout->lang).c_str());
-  ldata.cavename = tit.get_buffer();
+  fprintf(tf,"\\cavename={%s}\n",ths2tex(tit.c_str(), this->layout->lang).c_str());
+  ldata.cavename = tit.c_str();
   ldata.comment = "";
 
   if (strlen(this->layout->doc_comment) > 0) {
@@ -2295,7 +2295,7 @@ if (ENC_NEW.NFSS==0) {
 
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
   auto tmp_handle = thtmp.switch_to_tmpdir();
-  thbuffer com;
+  std::string com;
   
   // vypise kodovania
   print_fonts_setup();
@@ -2360,7 +2360,7 @@ if (ENC_NEW.NFSS==0) {
 #ifdef THDEBUG
     thprint("running metapost\n");
 #endif
-    retcode = system(com.get_buffer());
+    retcode = system(com.c_str());
     thexpmap_log_log_file("data.log",
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
@@ -2397,7 +2397,7 @@ if (ENC_NEW.NFSS==0) {
 #ifdef THDEBUG
       thprint("running pdftex\n");
 #endif
-      retcode = system(com.get_buffer());
+      retcode = system(com.c_str());
       thexpmap_log_log_file("data.log",
       "######################## pdftex log file #########################\n",
       "##################### end of pdftex log file #####################\n",false);
@@ -3070,7 +3070,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 fprintf(out->file,",");
                 lp->export_nextcp_mp(out);
                 thdb.buff_enc.guarantee(4096);
-                //sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize - out->layout->goz);
+                //sprintf(thdb.buff_enc.data(),"%.0f",lp->rsize - out->layout->goz);
                 fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(out->layout->units.format_length(lp->rsize - out->layout->goz)).c_str());
 //                fprintf(out->file,",\"%.0f\");\n",lp->rsize);
               }
@@ -3219,7 +3219,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*
       clr.alpha_correct(tmp_alpha);
       clr.set_color(this->layout->color_model, clrec.col_legend);
 //      opacity_correction(clrec.R, clrec.G, clrec.B);
-      //sprintf(tmpb.get_buffer(), "%.0f", curz - this->layout->goz);
+      //sprintf(tmpb.data(), "%.0f", curz - this->layout->goz);
       clrec.texname = utf2tex(this->layout->units.format_length(curz - this->layout->goz));
       clrec.texname += "\\thinspace ";			
       clrec.texname += utf2tex(this->layout->units.format_i18n_length_units());
@@ -3338,9 +3338,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 
   img * pimg;
   img_output_version = 4;
-  thbuffer fname;
-  fname = "cave";
-  pimg = img_open_write(fnm, fname.get_buffer(), 1);
+  pimg = img_open_write(fnm, "cave", 1);
   if (pimg == NULL) {
     thwarning(fmt::format("can't open {} for output",fnm))
     return;
@@ -3442,7 +3440,7 @@ void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
 	
 	img * pimg;
 	pimg = (img *) out;
-	thbuffer stnbuff;
+	std::string stnbuff;
 	
 	double avx = 0.0, avy = 0.0, avz = 0.0, avn = 0.0;
 #define avadd(x,y,z) {avx	+= x; avy += y; avz += z; avn += 1.0;}
@@ -3510,7 +3508,7 @@ void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
 			stnbuff = "";
 		}
 		stnbuff += scrap->name;
-		img_write_item(pimg, img_LABEL, 0, stnbuff, avx/avn, avy/avn, avz/avn);
+		img_write_item(pimg, img_LABEL, 0, stnbuff.c_str(), avx/avn, avy/avn, avz/avn);
 	}
 		
 }

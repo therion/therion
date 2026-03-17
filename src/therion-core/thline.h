@@ -340,19 +340,19 @@ class thline : public th2ddataobject {
   class thdb2dlp * first_point,  ///< First line point.
     * last_point;  ///< Last line point.
 
-  void parse_type(char * ss);  ///< Parse line type.
-  void parse_subtype(char * ss);  ///< Parse line subtype.
-  void parse_border(char * ss);  ///< Parse line type.
-  void parse_size(int w, char * ss);  ///< Parse line size.
-  void parse_gradient(char * ss);  ///< Parse line subtype.
-  void parse_direction(char * ss);  ///< Parse line direction.
-  void parse_altitude(char * ss);  ///< Parse wall altitude
-  void parse_head(char * ss);  ///< Parse line head.
-  void parse_adjust(char * ss);  ///< Parse line head.
-  void parse_height(char * ss);  ///< Parse pit/chimney height.
-  void parse_text(char * ss);  ///< Parse line text.
-  void insert_line_point(int nargs, char ** args, double * nums = NULL);  ///< Insert line point.
-  void insert_point_mark(char * ss);  ///< Insert line point mark.
+  void parse_type(const char * ss);  ///< Parse line type.
+  void parse_subtype(const char * ss);  ///< Parse line subtype.
+  void parse_border(const char * ss);  ///< Parse line type.
+  void parse_size(int w, const char * ss);  ///< Parse line size.
+  void parse_gradient(const char * ss);  ///< Parse line subtype.
+  void parse_direction(const char * ss);  ///< Parse line direction.
+  void parse_altitude(const char * ss);  ///< Parse wall altitude
+  void parse_head(const char * ss);  ///< Parse line head.
+  void parse_adjust(const char * ss);  ///< Parse line head.
+  void parse_height(const char * ss);  ///< Parse pit/chimney height.
+  void parse_text(const char * ss);  ///< Parse line text.
+  void insert_line_point(int nargs, char const * const * args, double * nums = NULL);  ///< Insert line point.
+  void insert_point_mark(const char * ss);  ///< Insert line point mark.
 
   void preprocess();  ///< Reverse if necessary and close.
 

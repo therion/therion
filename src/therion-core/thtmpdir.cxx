@@ -98,14 +98,14 @@ void thtmpdir::create() try
     return;
 
   fs::path dir_path;
-  this->tmp_remove_script = thini.tmp_remove_script.get_buffer();
+  this->tmp_remove_script = thini.tmp_remove_script.c_str();
 
 #ifdef THDEBUG
   // the debugging temp directory
   dir_path = "thTMPDIR";
 #else
-  if (strlen(thini.tmp_path.get_buffer()) > 0) {
-    dir_path = thini.tmp_path.get_buffer();
+  if (!thini.tmp_path.empty()) {
+    dir_path = thini.tmp_path.c_str();
   } else if (this->debug) {
     dir_path = "thTMPDIR";
   } else {

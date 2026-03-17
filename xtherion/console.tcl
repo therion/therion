@@ -808,8 +808,10 @@ proc console {W args} {
     pack $w.label
     return
   }
-  bind [winfo toplevel $w] <Button-3> "tk_popup $w.pop %X %Y"
-  bind $text <Button-3> "tk_popup $w.pop %X %Y"
+  foreach btn {2 3} {
+    bind [winfo toplevel $w] <Button-$btn> "tk_popup $w.pop %X %Y"
+    bind $text <Button-$btn> "tk_popup $w.pop %X %Y"
+  }
 
   pack [menubutton $w.con  -text "Console"  -un 0 -menu $w.con.m] -side left
   $w.pop add cascade -label "Console" -un 0 -menu $w.pop.con

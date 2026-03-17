@@ -25,7 +25,7 @@ sub init_symbol {
 
 sub process_symbols {
   my ($s1, $s2, $s3, %ss);
-  open(OUT, ">../SYMBOLS.txt");
+  open(OUT, ">$out_dir/SYMBOLS.txt");
   $thmpost_library .= "\n";
   foreach $s1 (reverse sort keys %SYMBOLS) {
     print OUT "\n\n[",
@@ -50,7 +50,7 @@ sub process_symbols {
     $i++;
   }
 
-  open(OUT, ">../thsymbolsets.h");
+  open(OUT, ">$out_dir/thsymbolsets.h");
   print OUT "#ifndef thsymbolsets_h\n#define thsymbolsets_h\n\n";
   print OUT "#include \"thsymbolsetlist.h\"\n\n";
   print OUT "#include <map>\n";
@@ -65,7 +65,7 @@ sub process_symbols {
   print OUT "#endif\n\n";
   close(OUT);
 
-  open(OUT, ">../thsymbolsets.cxx");
+  open(OUT, ">$out_dir/thsymbolsets.cxx");
   print OUT "#include \"thsymbolsets.h\"\n\n";
   print OUT "int thsymsets_symbols [thsymbolset_size][thsymsets_size];\n\n";
   print OUT "int thsymsets_figure [thsymbolset_size][thsymsets_size+1];\n\n";
@@ -87,6 +87,8 @@ sub process_symbols {
   print OUT "}\n";
   close(OUT);
 }
+
+our ($out_dir) = @ARGV;
 
 print "reading therion.mp\n";
 
@@ -118,29 +120,7 @@ close(INPT);
 
 process_symbols();
 
-open(OUTPT,">../thmpost.h");
-print OUTPT <<ENDOUTPT;
-/**
- * \@file thmpost.h
- *
- * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
- */
-
-#ifndef thmpost_h
-#define thmpost_h
-
-/**
- * Metapost source file.
- */
-
-extern const char * thmpost_library;
-
-
-#endif
-ENDOUTPT
-close(OUTPT);
-
-open(OUTPT,">../thmpost.cxx");
+open(OUTPT,">$out_dir/thmpost.cxx");
 print OUTPT <<ENDOUTPT;
 /**
  * \@file thmpost.cxx

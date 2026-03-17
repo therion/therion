@@ -4,4 +4,7 @@ endif()
 
 if (BUILD_THERION)
     add_subdirectory(therion-core)
+    add_subdirectory(therion-librarydata)
+    add_subdirectory(therion-mpost)
+    add_subdirectory(therion-tex)
 endif()

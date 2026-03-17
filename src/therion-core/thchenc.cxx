@@ -36,7 +36,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
   // check if source is not UTF-8
   if (srcenc == TT_UTF_8) {
     thdecode(dest,TT_ASCII,src);
-    dest->strcpy(src);
+    dest->assign(src);
     return;
   }
   
@@ -44,7 +44,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
   unsigned char * srcp, * dstp;
   // check buffer size
   dest->guarantee(srcln + srcln + srcln + srcln + srcln + srcln);
-  dstp = (unsigned char *) dest->get_buffer();
+  dstp = (unsigned char *) dest->c_str();
   srcp = (unsigned char *) src;
   
   while (srcx < srcln) {
@@ -96,14 +96,14 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
 {
   // chack if source is not UTF-8
   if (destenc == TT_UTF_8) {
-    dest->strcpy(src);
+    dest->assign(src);
     return;
   }
   
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
   dest->guarantee(srcln);  // check buffer size
-  dstp = (unsigned char*) dest->get_buffer();
+  dstp = (unsigned char*) dest->c_str();
   srcp = (unsigned char*) src;
   char32_t sch = 0;    
   

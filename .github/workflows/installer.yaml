@@ -1,5 +1,7 @@
 name: Installer
 on: push
+permissions:
+  contents: read
 jobs:
   Windows_installer:
     runs-on: windows-latest
@@ -23,7 +25,7 @@ jobs:
           install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxwidgets3.2-gtk3 mingw-w64-${{ matrix.config.arch }}-wxwidgets3.2-msw mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
       - name: prevent git EOL conversion
         run: git config --global core.autocrlf input
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Fetch tags (relevant for forks only)
@@ -56,7 +58,7 @@ jobs:
           curl -L https://github.com/${{ github.repository }}/archive/$THID.tar.gz -o therion-$FID.tar.gz
           curl -L https://github.com/${{ github.repository }}/archive/$THID.zip -o therion-$FID.zip
           sha256sum thbook-$THID.pdf therion-$FID.tar.gz therion-$FID.zip therion-setup-$THID.exe > sha256-$THID.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: therion-setup-msys2-${{ steps.build.outputs.THID_out }}
           path: |
@@ -74,7 +76,7 @@ jobs:
           URL="https://uploads.github.com/repos/${{ github.repository }}/releases/${URL}/assets{?name,label}"
           echo "URL=$URL" >> $GITHUB_ENV
       - name: Download binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: therion-setup-msys2-${{ needs.Windows_installer.outputs.THID }}
       - name: Upload installer

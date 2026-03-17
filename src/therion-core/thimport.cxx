@@ -279,7 +279,7 @@ const char * thimport::station_name(const char * sn, const char separator, struc
   static thsurvey * prevpsurvey;
   long i, l;
   bx = sn;
-  char * buff = bx.get_buffer(), * rv;
+  const char * buff = bx.c_str(), * rv;
     
   switch (this->format) {
     case TT_IMPORT_FMT_3D:
@@ -359,13 +359,13 @@ const char * thimport::station_name(const char * sn, const char separator, struc
               nsurvey = this->db->get_survey_noexc(cbf[active_survey], csurvey);
             }
             if (nsurvey != NULL) {
-              if (strlen(prevsurvey.get_buffer()) == 0) {
+              if (prevsurvey.empty()) {
                 prevsurvey = cbf[active_survey];
               } else {
-                bx = prevsurvey.get_buffer();
+                bx = prevsurvey.c_str();
                 prevsurvey = cbf[active_survey];
                 prevsurvey += ".";
-                prevsurvey += bx.get_buffer();
+                prevsurvey += bx.c_str();
               }
               csurvey = nsurvey;
               prevpsurvey = csurvey;
@@ -383,16 +383,16 @@ const char * thimport::station_name(const char * sn, const char separator, struc
           bx += cbf[i];
         }
         sst->survey = prevpsurvey;
-        sst->name = bx.get_buffer();
-        if (strlen(prevsurvey.get_buffer()) > 0) {
+        sst->name = bx.c_str();
+        if (!prevsurvey.empty()) {
           bx += "@";
           bx += prevsurvey;
         }
-        return bx.get_buffer();
+        return bx.c_str();
       }
       break;      
     default:
-      l = (long)strlen(bx);
+      l = (long)strlen(bx.c_str());
       rv = buff;
       for(i = 0; i < l; i++) {
         if ((buff[i] == separator) && ((i + 1) < l)) {
@@ -600,7 +600,7 @@ void thimport::import_file_img()
           args[1] = xb.data();
           args[2] = yb.data();
           args[3] = zb.data();
-          args[0] = n1.get_buffer();
+          args[0] = n1.data();
           tmpdata->cs = this->cs;
           // only fix the first station, use equate for the others
           if (svxpos2ths[tmppos].size() == 1 || this->fsptr == nullptr) {
@@ -610,13 +610,13 @@ void thimport::import_file_img()
           }
           // ak bude entrance, vlozi aj station
           if ((pimg->flags & img_SFLAG_ENTRANCE) != 0) {
-            args[0] = n2.get_buffer();
+            args[0] = n2.data();
 	    args[1] = strcpy(a1, "");
             args[2] = strcpy(a2, "entrance");
             tmpdata->set_data_station(3, args, TT_UTF_8);
           }
           if ((pimg->flags & img_SFLAG_FIXED) == 0) {
-            args[0] = n2.get_buffer();
+            args[0] = n2.data();
             args[1] = strcpy(a1, "");
             args[2] = strcpy(a2, "not");
             args[3] = strcpy(a3, "fixed");

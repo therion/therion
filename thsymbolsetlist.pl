@@ -1,5 +1,8 @@
 #!/usr/bin/perl
-open(I,"mpost/thTrans.mp");
+
+my ($out_dir) = @ARGV;
+
+open(I,"src/therion-mpost/thTrans.mp");
 while (<I>) {
   if (/^\s*(\S+)\s+([plas]{1}[a-z_]+)/) {
     $SYMHASH{$2} = "";
@@ -103,7 +106,7 @@ foreach $k (sort keys(%SYMHASH)) {
   $i++;
 }
 
-open(O,">thsymbolsetlist.h");
+open(O,">$out_dir/thsymbolsetlist.h");
 print O <<ENDO;
 /**
  * @file thsymbolsetlist.h

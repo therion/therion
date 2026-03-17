@@ -64,16 +64,10 @@ set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
     ${CMAKE_BINARY_DIR}/thlangdata.h
     ${CMAKE_BINARY_DIR}/thlangdatafields.h
-    ${CMAKE_BINARY_DIR}/thmpost.h 
-    ${CMAKE_BINARY_DIR}/thmpost.cxx
-    ${CMAKE_BINARY_DIR}/thsymbolsets.h
-    ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
     ${CMAKE_BINARY_DIR}/thversion.h
     ${CMAKE_BINARY_DIR}/thcsdata.h
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
-    ${CMAKE_BINARY_DIR}/thtex.h
-    ${CMAKE_BINARY_DIR}/thtex.cxx
     PROPERTIES GENERATED TRUE 
 )
 
@@ -93,7 +87,7 @@ macro(therion_make_files_lists LIST_NAME)
 endmacro()
 
 # copy files needed by some build steps
-therion_copy_files(thcsdata.tcl thsymbolsetfont.txt .clang-tidy)
+therion_copy_files(thcsdata.tcl .clang-tidy)
 
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
@@ -110,11 +104,11 @@ add_custom_target(generate_thcsdata DEPENDS
 # generate thsymbolsetlist sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
     COMMAND perl
-    ARGS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl
+    ARGS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl ${CMAKE_BINARY_DIR}
     DEPENDS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl 
-            ${CMAKE_BINARY_DIR}/mpost/thTrans.mp
-            ${CMAKE_BINARY_DIR}/thsymbolsetfont.txt
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            ${CMAKE_SOURCE_DIR}/src/therion-mpost/thTrans.mp
+            ${CMAKE_SOURCE_DIR}/thsymbolsetfont.txt
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
@@ -140,7 +134,7 @@ endif()
 if (BUILD_THERION)
     # therion executable
     add_executable(therion therion-main.cxx)
-    target_link_libraries(therion therion-core)
+    target_link_libraries(therion therion-core therion-librarydata)
 
     # therion resource file
     if (WIN32)
@@ -166,15 +160,7 @@ if (BUILD_THERION)
         endif()"
         COMPONENT th-runtime)
 
-    # updates thlibrarydata.cxx
-    add_custom_target(library
-        $<TARGET_FILE:therion> --print-library-src ${CMAKE_SOURCE_DIR}/thlibrarydata.thcfg
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src/therion-core
-    )
-
-    add_subdirectory(mpost)
     add_subdirectory(thchencdata)
-    add_subdirectory(tex)
     add_subdirectory(thlang)
     add_subdirectory(samples)
 endif()
