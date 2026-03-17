@@ -16,7 +16,6 @@ target_link_libraries(therion-core PUBLIC
 target_compile_definitions(therion-core PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
 add_dependencies(therion-core
     thversion
-    generate_thsymbolsetlist
     generate_thlang
     generate_thchencdata
     generate_thcsdata

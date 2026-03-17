@@ -2,7 +2,7 @@
 
 my ($out_dir) = @ARGV;
 
-open(I,"src/therion-mpost/thTrans.mp");
+open(I,"thTrans.mp");
 while (<I>) {
   if (/^\s*(\S+)\s+([plas]{1}[a-z_]+)/) {
     $SYMHASH{$2} = "";
