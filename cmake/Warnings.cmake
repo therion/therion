@@ -5,7 +5,7 @@ add_library(enable-warnings INTERFACE)
 add_library(disable-warnings INTERFACE)
 
 if (MSVC)
-    target_compile_options(enable-warnings INTERFACE /W4)
+    target_compile_options(enable-warnings INTERFACE /W1)
     target_compile_options(disable-warnings INTERFACE /w)
 else()
     target_compile_options(enable-warnings INTERFACE
