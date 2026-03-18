@@ -279,9 +279,8 @@ the working directory just before running \MP\ and \TeX\ (unless the
 some macros in the configuration file at the run-time.
 
 However, it's possible to make permanent changes to the macro files. After
-modifying the files in the |mpost| and |tex| directories it's necessary to run
-Perl scripts |genmpost.pl| and |gentex.pl|, which generate C++ header files,
-and compile Therion executable again.
+modifying the files in the |src/therion-mpost| and |src/therion-tex| directories it's necessary to run
+Therion executable compilation again, which will also generate C++ header files.
 
 {\it Updating the geomagnetic model}
 
