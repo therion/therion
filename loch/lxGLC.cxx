@@ -20,6 +20,11 @@
 #include <vtkPointData.h>
 #include <vtkDataArray.h>
 #include <math.h>
+
+#ifdef _MSC_VER
+#include <Windows.h>
+#endif
+
 #ifdef LXMACOSX
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>

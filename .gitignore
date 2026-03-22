@@ -31,3 +31,4 @@ CMakeLists.txt.user
 build/
 rel_notes.md
 .vs/
+out/
