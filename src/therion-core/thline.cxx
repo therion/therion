@@ -534,13 +534,32 @@ void thline::preprocess()
     return;
 
   // check closure
-  this->is_closed = ((this->closed == TT_TRUE) ||
-      ((this->closed == TT_AUTO) &&
+  if (this->closed == TT_TRUE) {
+    this->is_closed = true;
+    if ((this->first_point->point->x != this->last_point->point->x) ||
+        (this->first_point->point->y != this->last_point->point->y)) {
+      thdb2dlp * plp = this->db->db2d.insert_line_point();
+      plp->subtype = this->last_point->subtype;
+      plp->smooth = TT_AUTO;
+      plp->smooth_orig = TT_AUTO;
+      plp->cp1 = NULL;
+      plp->cp2 = NULL;
+      thdb2dpt * pt = this->db->db2d.insert_point();
+      pt->x = this->first_point->point->x;
+      pt->y = this->first_point->point->y;
+      pt->pscrap = this->first_point->point->pscrap;
+      plp->point = pt;
+      this->last_point->nextlp = plp;
+      plp->prevlp = this->last_point;
+      plp->nextlp = NULL;
+      this->last_point = plp;
+    }
+  } else if (this->closed == TT_AUTO) {
+    this->is_closed = (
       (this->first_point->point->x == this->last_point->point->x) &&
-      (this->first_point->point->y == this->last_point->point->y)));
-  if (this->is_closed) {
-      this->last_point->point->x = this->first_point->point->x;
-      this->last_point->point->y = this->first_point->point->y;
+      (this->first_point->point->y == this->last_point->point->y));
+  } else {
+    this->is_closed = false;
   }
 
   // check reversion
