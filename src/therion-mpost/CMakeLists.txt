@@ -1,5 +1,19 @@
 add_custom_command(
     COMMAND
+        perl thsymbolsetlist.pl ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/thsymbolsetlist.pl 
+        ${CMAKE_CURRENT_SOURCE_DIR}/thTrans.mp
+        ${CMAKE_CURRENT_SOURCE_DIR}/thsymbolsetfont.txt
+    OUTPUT
+        ${CMAKE_CURRENT_BINARY_DIR}/thsymbolsetlist.h
+    WORKING_DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/thsymbolsetlist.h)
+
+add_custom_command(
+    COMMAND
         perl genmpost.pl ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS 
         genmpost.pl

@@ -67,7 +67,6 @@ set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thversion.h
     ${CMAKE_BINARY_DIR}/thcsdata.h
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
-    ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
     PROPERTIES GENERATED TRUE 
 )
 
@@ -100,17 +99,6 @@ add_custom_target(generate_thcsdata DEPENDS
     ${CMAKE_BINARY_DIR}/thcsdata.h
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
 )
-
-# generate thsymbolsetlist sources
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
-    COMMAND perl
-    ARGS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl ${CMAKE_BINARY_DIR}
-    DEPENDS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl 
-            ${CMAKE_SOURCE_DIR}/src/therion-mpost/thTrans.mp
-            ${CMAKE_SOURCE_DIR}/thsymbolsetfont.txt
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
 # generate version files
 add_custom_target(thversion python3 set_version.py ${CMAKE_BINARY_DIR}
