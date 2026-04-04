@@ -1,0 +1,31 @@
+# Two maps which reference each other (circular reference).
+#
+# Expected result: Therion detects and breaks the cycle. Either rejecting
+# further processing, or gracefully rendering up to the broken cycle.
+
+source
+  input scraps.th2
+
+  map map1
+    scrap1
+  endmap
+
+  map map2
+    map1
+    break
+    map3
+  endmap
+
+  map map3
+    map2
+  endmap
+
+endsource
+
+select map3
+
+layout L
+  map-header 0 0 off
+endlayout
+
+export map -layout L -o out-circular.svg

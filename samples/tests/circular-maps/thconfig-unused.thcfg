@@ -1,0 +1,30 @@
+# Two maps which are not used in the output,
+# one references the other as preview.
+#
+# Expected result: No map projection errors, only scrap3 rendered
+
+source
+  input scraps.th2
+
+  map map1
+    scrap1
+    preview above map2
+  endmap
+
+  map map2
+    scrap2
+  endmap
+
+  map map3
+    scrap3
+  endmap
+
+endsource
+
+select map3
+
+layout L
+  map-header 0 0 off
+endlayout
+
+export map -layout L -o out-unused.svg
