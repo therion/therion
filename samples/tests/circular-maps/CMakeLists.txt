@@ -12,6 +12,7 @@ circular_map_sample(circular-offset)
 circular_map_sample(preview-basic)
 circular_map_sample(preview-mix)
 circular_map_sample(unused)
+circular_map_sample(projection)
 
 # no output, "error -- recursive map reference" in therion.log
 # circular_map_sample(circular)

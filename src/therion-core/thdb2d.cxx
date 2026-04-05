@@ -709,11 +709,19 @@ void thdb2d::process_map_references(thmap * mptr)
                 e);
           }
         }
+        mptr->is_basic = false;
+        citem->object = mapp;
+        if (mapp->projection_id == -1) {
+          thwarning(fmt::format(
+              "{} [{}] -- map processing incomplete: projection not yet known",
+              citem->source.name, citem->source.line));
+          break;
+        }
         if (proj_id == -1) {
           proj_id = mapp->projection_id;
         } else {
           // check projection
-          if (mapp->projection_id != -1 && mapp->projection_id != proj_id) {
+          if (mapp->projection_id != proj_id) {
             if (citem->name.survey != NULL)
               throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
                 citem->source.name, citem->source.line, 
@@ -724,7 +732,6 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->name.name));
           }
         }
-        mptr->is_basic = false;
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
             throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
@@ -735,7 +742,6 @@ void thdb2d::process_map_references(thmap * mptr)
               citem->source.name, citem->source.line, 
               citem->name.name));
         }
-        citem->object = mapp;
         break;
 
 
