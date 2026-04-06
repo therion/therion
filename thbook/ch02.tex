@@ -373,7 +373,7 @@ the command may be used anywhere.
           endgroup
           walls <auto/on/off>
           vthreshold <number> <units>
-          extend <spec> [<station> [<station>]]
+          extend <spec> [<station> [<station> [<station>]]]
           station-names <prefix> <suffix>
           ...
           [SURVEY DATA]
@@ -558,12 +558,13 @@ the command may be used anywhere.
     good. In the case of vertical shots, UD is interpreted as north-south
     dimension from the station to allow tube-like modeling of verticals.
 
-  * |extend <spec> [<station> [<station>]]| =
-    control how the centerline is extended. |<spec>| is one of the following
+  * |extend <spec> [<station> [<station> [<station>]]]| =
+    control how the centerline is extended. |<spec>| may be one of the
+    following keywords
 
     |normal/reverse| = extend given and following stations
-     to the same/reverse direction as previous station. If two
-     stations are given---direction is applied only to given shot.
+     to the same/reverse direction as previous station. If station names are
+     given, direction is applied only to the specified station or shot.
 
     |left/right| = same as above, but direction is specified explicitly.
 
@@ -577,9 +578,30 @@ the command may be used anywhere.
 
     |hide| = do not show specified station (shot) in extended elevation
 
+    or a percentage in the range |0| to |200|. This sets the extend ratio,
+    i.e.\ the factor used for the horizontal component of a leg in extended
+    elevation. Therion keeps the vertical component unchanged and multiplies
+    only the horizontal displacement by the ratio. Thus |100| means the normal
+    width of the extended leg, |50| compresses it to one half, |200| stretches
+    it to double width, and |0| suppresses any horizontal displacement
+    (effectively the same result as |vertical| for that leg).
 
-    If no stations are specified, |<spec>| is valid for following shots
-    specified.
+    The optional station arguments are interpreted as follows:
+
+    |extend <spec>| = set the default extend behaviour for subsequent shots
+    in the current centreline.
+
+    |extend <spec> <from>| = apply the extend setting to a station.
+
+    |extend <spec> <from> <to>| = apply the extend setting to a specific shot.
+
+    |extend <spec> <before> <from> <to>| = apply the extend setting to a
+    specific shot, with an additional |before| station condition.
+    This form is primarily useful with |ignore|, where the shot is ignored only
+    if the extended-elevation traversal reaches |<from>| from |<before>|.
+
+    Station names use the normal Therion object reference syntax, so
+    |station@survey| may be used.
 
   * |station-names <prefix> <suffix>| = adds given prefix/suffix to
     all survey stations in the current centreline. Saves some typing.
