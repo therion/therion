@@ -597,19 +597,6 @@ static thdb2dmi * promote_to_map(thdb2dmi * citem, thscrap * scrapp = nullptr) {
 
 void thdb2d::process_map_references(thmap * mptr)
 {
-  if (!mptr->asoc_survey.is_empty()) {
-		thdataobject * obj = this->db->get_object(mptr->asoc_survey, mptr->asoc_survey.psurvey);
-		if ((obj == NULL) || (obj->get_class_id() != TT_SURVEY_CMD)) {
-			if (mptr->asoc_survey.survey != NULL) 
-        throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}@{}",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name, mptr->asoc_survey.survey));
-			else
-        throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name));
-		}
-		mptr->asoc_survey.psurvey = dynamic_cast<thsurvey*>(obj);
-	}
-
   if (mptr->projection_id > 0)
     return;
   if (mptr->first_item == NULL) {
@@ -795,6 +782,16 @@ void thdb2d::process_map_references(thmap * mptr)
     }
     citem = citem->next_item;
   }
+
+  if (!mptr->asoc_survey.is_empty()) {
+    thdataobject *obj = this->db->get_object(mptr->asoc_survey, mptr->asoc_survey.psurvey);
+    if ((obj == nullptr) || (obj->get_class_id() != TT_SURVEY_CMD)) {
+      throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}",
+                                    mptr->source.name, mptr->source.line, mptr->asoc_survey.print_name()));
+    }
+    mptr->asoc_survey.psurvey = dynamic_cast<thsurvey *>(obj);
+  }
+
 #ifdef THDEBUG
   thprint(fmt::format("\nmap projection {} -> {}\n",mptr->name,proj_id));
 #endif 

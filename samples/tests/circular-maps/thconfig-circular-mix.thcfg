@@ -6,12 +6,15 @@
 source
   input scraps.th2
 
+  survey foo
+  endsurvey
+
   map map1
     scrap1
     map2
   endmap
 
-  map map2
+  map map2 -survey foo
     scrap2
     map1
   endmap

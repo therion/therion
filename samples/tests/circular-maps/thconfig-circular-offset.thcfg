@@ -6,7 +6,7 @@
 source
   input scraps.th2
 
-  map map1
+  map map1 -survey foo
     scrap1
     map2 [0 4 m] none
   endmap
@@ -16,11 +16,14 @@ source
     map1 [9 0 m] none
   endmap
 
-  map map3
+  map map3 -survey foo
     map1
     break
     map2
   endmap
+
+  survey foo
+  endsurvey
 
 endsource
 
