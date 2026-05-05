@@ -165,6 +165,7 @@ class thdb2d {
   void pp_smooth_joins(thdb2dprj * prj);  ///< ???
   void pp_calc_distortion(thdb2dprj * prj);  ///< ???
 
+  std::vector<const thmap *> _basic_maps_insert_trace = {}; ///< For detecting circular map references
   void insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift = thdb2dmi_shift()); ///< ???
   thdb2dxm * insert_maps(thdb2dxm * selection,thdb2dxm * insert_after,thmap * map,
     unsigned long selection_level, int level, int title_level, int map_level); ///< ???

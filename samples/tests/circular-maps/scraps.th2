@@ -1,0 +1,61 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust 0 300 1000 1200
+##XTHERION## xth_me_area_zoom_to 50
+
+
+
+scrap scrap1 -scale [100 1 m]
+
+line wall -close on
+  100 800
+  400 800
+  500 1100
+  100 1100
+  100 800
+endline
+
+endscrap
+
+
+
+scrap scrap2 -scale [100 1 m]
+
+line wall -close on
+  500 800
+  900 800
+  900 1100
+  600 1100
+  500 800
+endline
+
+endscrap
+
+
+
+scrap scrap3 -scale [100 1 m]
+
+line wall -close on
+  100 400
+  500 400
+  400 700
+  100 700
+  100 400
+endline
+
+endscrap
+
+
+
+scrap scrap4 -scale [100 1 m]
+
+line wall -close on
+  600 400
+  900 400
+  900 700
+  500 700
+  600 400
+endline
+
+endscrap
+
+

@@ -193,6 +193,8 @@ void thmapstat::scanmap(class thmap * map) {
   if (map->stat.scanned)
     return;
     
+  map->stat.scanned = true;
+
   // prejde najprv podmapy - 
   // ak mapy - tak zavola scanmap z ich statu a prida ich do map->statu
   // ak scrapy - tak prida do map->statu manualne autorov, copyrighty a 
@@ -233,14 +235,6 @@ void thmapstat::scanmap(class thmap * map) {
 		}
 		map->stat.adddata(&dm);
 	}
-
-  
-  // potom prida do map->statu autorov a copyrighty z map
-  // map->stat.addobj(map);
-
-  // nakoniec nastavi ze uz bola scanovana
-  map->stat.scanned = true;
-  
 }
 
 

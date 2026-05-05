@@ -598,19 +598,6 @@ static thdb2dmi * promote_to_map(thdb2dmi * citem, thscrap * scrapp = nullptr) {
 
 void thdb2d::process_map_references(thmap * mptr)
 {
-  if (!mptr->asoc_survey.is_empty()) {
-		thdataobject * obj = this->db->get_object(mptr->asoc_survey, mptr->asoc_survey.psurvey);
-		if ((obj == NULL) || (obj->get_class_id() != TT_SURVEY_CMD)) {
-			if (mptr->asoc_survey.survey != NULL) 
-        throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}@{}",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name, mptr->asoc_survey.survey));
-			else
-        throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name));
-		}
-		mptr->asoc_survey.psurvey = dynamic_cast<thsurvey*>(obj);
-	}
-
   if (mptr->projection_id > 0)
     return;
   if (mptr->first_item == NULL) {
@@ -710,11 +697,19 @@ void thdb2d::process_map_references(thmap * mptr)
                 e);
           }
         }
+        mptr->is_basic = false;
+        citem->object = mapp;
+        if (mapp->projection_id == -1) {
+          thwarning(fmt::format(
+              "{} [{}] -- map processing incomplete: projection not yet known",
+              citem->source.name, citem->source.line));
+          break;
+        }
         if (proj_id == -1) {
           proj_id = mapp->projection_id;
         } else {
           // check projection
-          if (mapp->projection_id != -1 && mapp->projection_id != proj_id) {
+          if (mapp->projection_id != proj_id) {
             if (citem->name.survey != NULL)
               throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
                 citem->source.name, citem->source.line, 
@@ -725,7 +720,6 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->name.name));
           }
         }
-        mptr->is_basic = false;
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
             throw thexception(fmt::format("{} [{}] -- incompatible map projection -- {}@{}",
@@ -736,7 +730,6 @@ void thdb2d::process_map_references(thmap * mptr)
               citem->source.name, citem->source.line, 
               citem->name.name));
         }
-        citem->object = mapp;
         break;
 
 
@@ -790,6 +783,16 @@ void thdb2d::process_map_references(thmap * mptr)
     }
     citem = citem->next_item;
   }
+
+  if (!mptr->asoc_survey.is_empty()) {
+    thdataobject *obj = this->db->get_object(mptr->asoc_survey, mptr->asoc_survey.psurvey);
+    if ((obj == nullptr) || (obj->get_class_id() != TT_SURVEY_CMD)) {
+      throw thexception(fmt::format("{} [{}] -- invalid survey reference -- {}",
+                                    mptr->source.name, mptr->source.line, mptr->asoc_survey.print_name()));
+    }
+    mptr->asoc_survey.psurvey = dynamic_cast<thsurvey *>(obj);
+  }
+
 #ifdef THDEBUG
   thprint(fmt::format("\nmap projection {} -> {}\n",mptr->name,proj_id));
 #endif 

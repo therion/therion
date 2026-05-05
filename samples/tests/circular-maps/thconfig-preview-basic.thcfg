@@ -1,0 +1,56 @@
+# Two maps which reference each other as previews.
+# Using basic maps (no scrap/map mix).
+#
+# Expected result: Normal map items overwrite preview items
+#
+# scrap1: normal
+# scrap2: preview above
+# scrap3: normal
+# scrap4: normal
+
+source
+  input scraps.th2
+
+  map mscrap1
+    scrap1
+  endmap
+
+  map mscrap2
+    scrap2
+  endmap
+
+  map mscrap3
+    scrap3
+  endmap
+
+  map mscrap4
+    scrap4
+  endmap
+
+  map map1
+    mscrap1
+    mscrap3
+    preview above map2
+  endmap
+
+  map map2
+    preview above mscrap2
+    mscrap4
+    preview below map1
+  endmap
+
+  map map3
+    map1
+    break
+    map2
+  endmap
+
+endsource
+
+select map3
+
+layout L
+  map-header 0 0 off
+endlayout
+
+export map -layout L -o out-preview-basic.svg

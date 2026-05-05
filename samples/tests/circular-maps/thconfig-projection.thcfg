@@ -1,0 +1,37 @@
+# Circular preview references with `-projection` argument on one of the maps.
+#
+# Expected result: Therion detects and breaks the cycle.
+
+source
+  input scraps.th2
+
+  map map5
+    preview below map2
+    preview below map3
+    map1
+  endmap
+
+  map map2
+    scrap2
+    preview below map3
+  endmap
+
+  map map3 -projection plan
+    preview above map2
+    scrap3
+  endmap
+
+  map map1
+    scrap1
+    scrap4
+  endmap
+
+endsource
+
+select map5
+
+layout L
+  map-header 0 0 off
+endlayout
+
+export map -layout L -o out-projection.svg

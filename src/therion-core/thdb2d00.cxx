@@ -27,6 +27,7 @@
  
 #include "thdb2d.h"
 #include "thdatabase.h"
+#include "therion.h"
 #include "thmap.h"
 #include "thscrap.h"
 #include "thsurvey.h"
@@ -38,7 +39,23 @@
 #include <cstring>
 #include "thmapstat.h"
 
+/**
+ * @param fmap Export map to insert into
+ * @param map Sub-map to insert
+ * @param mode Type of sub-map item (normal/above/below)
+ * @param level Nesting depth
+ * @param shift Cumulated sub-map offset
+ */
 void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift) {
+
+  if (std::find(_basic_maps_insert_trace.begin(), _basic_maps_insert_trace.end(), map) != _basic_maps_insert_trace.end()) {
+    thwarning(fmt::format("{} -- Breaking circular reference for map {}",
+                          map->throw_source(), map->get_name()));
+    return;
+  }
+
+  _basic_maps_insert_trace.push_back(map);
+
   thdb2dxs * xs, * txs = NULL;
   bool found = false;
   if (map->has_direct_scrap_children()) {
@@ -127,6 +144,8 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
     }
   }
   
+  assert(_basic_maps_insert_trace.back() == map);
+  _basic_maps_insert_trace.pop_back();
 }
 
 
