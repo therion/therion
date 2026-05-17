@@ -1857,14 +1857,14 @@ if (ENC_NEW.NFSS==0) {
     	  for(const auto& ti : this->layout->m_lookup->m_table) {
     		  sv_max = ti.m_valueDbl;
     	  }
-          fprintf(mpf,"beginfig(%d);\ns_altitudebar(%g, %g, \"%s\")(",
+          fprintf(mpf,"beginfig(%d);\ns_altitudebar(%f, %f, \"%s\")(",
             sfig++, this->layout->units.convert_length(sv_max),
                     this->layout->units.convert_length(sv_min),
                     this->layout->units.format_i18n_length_units());
     	  for(auto& ti : this->layout->m_lookup->m_table) {
     		  if (sv_next) fprintf(mpf, ",");
     		  sv_next = true;
-    		  fprintf(mpf,"%g,",(ti.m_valueDbl - sv_min)/(sv_max - sv_min));
+    		  fprintf(mpf,"%f,",(ti.m_valueDbl - sv_min)/(sv_max - sv_min));
     		  ti.m_color.print_to_file(this->layout->color_model, mpf);
     	  }
     	  sv_next = false;
@@ -1873,7 +1873,7 @@ if (ENC_NEW.NFSS==0) {
         	  for(auto& ti : this->layout->m_lookup->m_table) {
         		  if (sv_next) fprintf(mpf, ",");
         		  sv_next = true;
-        		  fprintf(mpf,"%g,\"%s\"",(ti.m_valueDbl - sv_min)/(sv_max - sv_min), ti.m_labelTeX.c_str());        		  
+        		  fprintf(mpf,"%f,\"%s\"",(ti.m_valueDbl - sv_min)/(sv_max - sv_min), ti.m_labelTeX.c_str());        		  
         	  }
     	  } else {
     		  fprintf(mpf,"\"\"");
