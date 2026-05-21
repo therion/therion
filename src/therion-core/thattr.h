@@ -35,6 +35,7 @@
 #include <cstdio>
 #include "thmbuffer.h"
 #include "thchenc.h"
+#include "thchencdata.h"
 
 enum {
   THATTR_NA,

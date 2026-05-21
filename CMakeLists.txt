@@ -61,7 +61,7 @@ endif()
 # tell CMake which files must be generated now, doing so in subfolders is too late
 set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thchencdata.h
-    ${CMAKE_BINARY_DIR}/thchencdata.cxx
+    ${CMAKE_BINARY_DIR}/thchencdatatable.h
     ${CMAKE_BINARY_DIR}/thversion.h
     PROPERTIES GENERATED TRUE 
 )

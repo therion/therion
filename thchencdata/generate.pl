@@ -150,16 +150,15 @@ print "done\n";
 
   
   
-open(OUTPT, ">../thchencdata.cxx");
+open(OUTPT, ">../thchencdatatable.h");
 print OUTPT <<ENDOUTPT;
 /**
- * \@file thchencdata.cxx
+ * \@file thchencdatatable.h
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */  
  
-#ifndef thchencdata_cxx
-#define thchencdata_cxx
+#pragma once
 
 #include <cstddef>
 
@@ -197,8 +196,6 @@ $thencode_tbl
 $thdecode_tbl_idx
 
 $thdecode_tbl
-
-#endif
 ENDOUTPT
 close(OUTPT);
 

@@ -12,14 +12,14 @@ set(THCHENCDATA_SOURCES
     
 set(GENERATED_SOURCES
     ${CMAKE_BINARY_DIR}/thchencdata.h
-    ${CMAKE_BINARY_DIR}/thchencdata.cxx)
+    ${CMAKE_BINARY_DIR}/thchencdatatable.h)
 
 therion_copy_files(${THCHENCDATA_SOURCES})
 therion_make_files_lists(${THCHENCDATA_SOURCES})
 
 add_custom_command(OUTPUT ${GENERATED_SOURCES}
                    COMMAND perl generate.pl
-                   DEPENDS ${THCHENCDATA_BIN}
+                   DEPENDS ${THCHENCDATA_BIN} generate.pl
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 add_custom_target(generate_thchencdata DEPENDS ${GENERATED_SOURCES})

@@ -39,6 +39,7 @@
 #include "thproj.h"
 #include "thpdfdbg.h"
 #include "thparse.h"
+#include "thchencdata.h"
 #include "icase.h"
 #include <filesystem>
 

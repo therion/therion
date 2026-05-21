@@ -26,7 +26,8 @@
  */
  
 #include "thchenc.h"
-#include "thchencdata.cxx"
+#include "thchencdata.h"
+#include "thchencdatatable.h"
 #include "therion.h"
 #include "thexception.h"
 #include "thparse.h"
