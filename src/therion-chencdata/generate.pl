@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+$out_dir = $ARGV[0];
+
 %ifiles = (
   'ascii' => 'ASCII.TXT',
   'iso8859-1' => '8859-1.TXT',
@@ -150,7 +152,7 @@ print "done\n";
 
   
   
-open(OUTPT, ">../thchencdatatable.h");
+open(OUTPT, ">$out_dir/thchencdatatable.h");
 print OUTPT <<ENDOUTPT;
 /**
  * \@file thchencdatatable.h
@@ -200,7 +202,7 @@ ENDOUTPT
 close(OUTPT);
 
 
-open(OUTPT, ">../thchencdata.h");
+open(OUTPT, ">$out_dir/thchencdata.h");
 print OUTPT <<ENDOUTPT;
 /**
  * \@file thchencdata.h
