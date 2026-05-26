@@ -25,7 +25,7 @@ while getopts "bi:mp:" opt; do
 done
 
 SRCPATH=$(dirname $BASH_SOURCE)
-PROJVER=${PROJVER:-6.3.1 6.3.2 7.0.1 7.2.1 8.0.0 8.2.1 9.0.0 9.8.0}
+PROJVER=${PROJVER:-8.0.0 8.2.1 9.0.0 9.8.1}
 
 URL=https://download.osgeo.org/proj/proj
 
@@ -61,7 +61,7 @@ do
   export PROJ_LIB="$PREFIX/proj-$ver/share/proj";
   cmake -DCMAKE_PREFIX_PATH="$PREFIX/proj-$ver" -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON -DENABLE_CCACHE=ON -GNinja $SRCPATH
   ninja utest
-  ./utest
+  ./tests/utest
   rm -f CMakeCache.txt
 done
 
