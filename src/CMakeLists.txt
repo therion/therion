@@ -3,6 +3,7 @@ if (BUILD_THERION OR BUILD_LOCH)
 endif()
 
 if (BUILD_THERION)
+    add_subdirectory(therion-chencdata)
     add_subdirectory(therion-core)
     add_subdirectory(therion-lang)
     add_subdirectory(therion-librarydata)
