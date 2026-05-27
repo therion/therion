@@ -39,6 +39,12 @@ The script prints:
 - total number of missing translations
 - list of missing "therion:" keys
 
+Statistics Mode
+----------------
+To get an overview of translation coverage for all languages, run:
+
+    python check_lang_missing_strings.py stat
+
 """
 
 from pathlib import Path
@@ -48,71 +54,100 @@ import sys
 # Configuration
 # -------------------------------------------------------------------
 
-# Translation file to check
 file_path = Path("texts.txt")
+original_language = "en"
 
 # -------------------------------------------------------------------
 # Command-line arguments
 # -------------------------------------------------------------------
 
-# Check if language argument was provided
 if len(sys.argv) < 2:
     print("Usage:")
-    print("    python check_lang_missing_strings.py <language>\n")
-    print("Example:")
+    print("    python check_lang_missing_strings.py <language>")
+    print("    python check_lang_missing_strings.py stat")
+    print("\nExample:")
     print("    python check_lang_missing_strings.py sl")
+    print("    python check_lang_missing_strings.py stat")
     sys.exit(1)
 
-# Language code to validate
-language = sys.argv[1]
+command = sys.argv[1]
 
 # -------------------------------------------------------------------
 # Read translation file
 # -------------------------------------------------------------------
 
-# Read the entire file using UTF-8 encoding
 text = file_path.read_text(encoding="utf-8")
-
-# Translation entries are separated by empty lines
 blocks = text.split("\n\n")
 
-# List of missing translation keys
+# -------------------------------------------------------------------
+# Statistics mode
+# -------------------------------------------------------------------
+
+if command == "stat":
+    language_counts = {}
+
+    for block in blocks:
+        lines = block.strip().splitlines()
+
+        if not lines:
+            continue
+
+        for line in lines:
+            if ":" not in line:
+                continue
+
+            lang_code = line.split(":", 1)[0].strip()
+
+            # Skip Therion keys
+            if lang_code == "therion":
+                continue
+
+            language_counts[lang_code] = language_counts.get(lang_code, 0) + 1
+
+    original_count = language_counts.get(original_language, 0)
+
+    print(f'\nOriginal "{original_language}" strings: {original_count}\n')
+    print("Translation statistics:\n")
+
+    sorted_languages = sorted(
+        language_counts.items(), key=lambda item: item[1], reverse=True
+    )
+
+    for lang_code, count in sorted_languages:
+
+        if original_count > 0:
+            percentage = (count / original_count) * 100
+        else:
+            percentage = 0
+
+        print(f"{lang_code}: {count} strings ({percentage:.2f}%)")
+
+    sys.exit(0)
+
+# -------------------------------------------------------------------
+# Missing translation mode
+# -------------------------------------------------------------------
+
+language = command
 missing_translations = []
 
-# -------------------------------------------------------------------
-# Process translation blocks
-# -------------------------------------------------------------------
-
 for block in blocks:
-
-    # Split block into individual lines
     lines = block.strip().splitlines()
 
-    # Skip empty blocks
     if not lines:
         continue
 
     key = None
     has_translation = False
 
-    # Check all lines inside the block
     for line in lines:
-
-        # Main translation key
         if line.startswith("therion:"):
             key = line.strip()
-
-        # Translation for selected language
         elif line.startswith(f"{language}:"):
             has_translation = True
 
-    # Store missing translation keys
     if key and not has_translation:
         missing_translations.append(key)
-
-# -------------------------------------------------------------------
-# Output results
-# -------------------------------------------------------------------
 
 print(f'\nMissing "{language}" translations: {len(missing_translations)}\n')
 
