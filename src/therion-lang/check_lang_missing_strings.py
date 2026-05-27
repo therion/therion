@@ -1,7 +1,7 @@
 """
 Therion Translation Checker
-By: Marko Zakrajsek
-Last updated: 2026-05-08
+By: Marko Zakrajsek (marko@zakrajsek.org)
+Last updated: 2026-05-27
 ===========================
 
 Small utility script for checking missing translations
@@ -20,14 +20,18 @@ translation is missing.
 Usage
 -----
 1. Place this script in the same folder as the TXT
-    file (texts.txt). Or adjust the file_path variable
-    to point to the correct location.
-2. Update the values of:
-       file_path (if needed)
-       language
-3. Run:
-       python check_lang_missing_strings.py
+   file (texts.txt), or adjust the file_path variable
+   to point to the correct location.
 
+2. Run the script from the command line:
+
+       python check_lang_missing_strings.py <language>
+
+3. Example:
+
+       python check_lang_missing_strings.py sl
+       python check_lang_missing_strings.py de
+       python check_lang_missing_strings.py bg
 
 Output
 ------
@@ -35,15 +39,10 @@ The script prints:
 - total number of missing translations
 - list of missing "therion:" keys
 
-Optional Improvements
----------------------
-Possible future upgrades:
-- auto-generate empty translation rows
-- direct translating through this script
-- compare multiple languages
 """
 
 from pathlib import Path
+import sys
 
 # -------------------------------------------------------------------
 # Configuration
@@ -52,8 +51,20 @@ from pathlib import Path
 # Translation file to check
 file_path = Path("texts.txt")
 
+# -------------------------------------------------------------------
+# Command-line arguments
+# -------------------------------------------------------------------
+
+# Check if language argument was provided
+if len(sys.argv) < 2:
+    print("Usage:")
+    print("    python check_lang_missing_strings.py <language>\n")
+    print("Example:")
+    print("    python check_lang_missing_strings.py sl")
+    sys.exit(1)
+
 # Language code to validate
-language = "sl"
+language = sys.argv[1]
 
 # -------------------------------------------------------------------
 # Read translation file
@@ -103,7 +114,7 @@ for block in blocks:
 # Output results
 # -------------------------------------------------------------------
 
-print(f'Missing "{language}" translations: {len(missing_translations)}\n')
+print(f'\nMissing "{language}" translations: {len(missing_translations)}\n')
 
 for item in missing_translations:
     print(item)
