@@ -29,7 +29,6 @@
 #ifndef thchenc_h
 #define thchenc_h
 
-#include "thchencdata.h"
 #include "thbuffer.h"
 
 

@@ -1,5 +1,8 @@
 Therion 6.4.1 (in progress):
 
+Windows installer:
+ * use TeXLive 2026 binaries instead of dated W32TeX distribution
+ * include LuaTeX as an alternative to pdfTeX
 
 --------------------------------------------------------------------------------
 

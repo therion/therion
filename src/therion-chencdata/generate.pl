@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+$out_dir = $ARGV[0];
+
 %ifiles = (
   'ascii' => 'ASCII.TXT',
   'iso8859-1' => '8859-1.TXT',
@@ -150,16 +152,15 @@ print "done\n";
 
   
   
-open(OUTPT, ">../thchencdata.cxx");
+open(OUTPT, ">$out_dir/thchencdatatable.h");
 print OUTPT <<ENDOUTPT;
 /**
- * \@file thchencdata.cxx
+ * \@file thchencdatatable.h
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */  
  
-#ifndef thchencdata_cxx
-#define thchencdata_cxx
+#pragma once
 
 #include <cstddef>
 
@@ -197,13 +198,11 @@ $thencode_tbl
 $thdecode_tbl_idx
 
 $thdecode_tbl
-
-#endif
 ENDOUTPT
 close(OUTPT);
 
 
-open(OUTPT, ">../thchencdata.h");
+open(OUTPT, ">$out_dir/thchencdata.h");
 print OUTPT <<ENDOUTPT;
 /**
  * \@file thchencdata.h

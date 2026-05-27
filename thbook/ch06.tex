@@ -611,12 +611,17 @@ XTherion starts. The file is commented; see the comments for details.
    are used to store references to the graphic objects.]
             $2\times pages + images + patterns + 6 (scraps + sections) < 32\,500$ when using pdf\TeX\
             (or approximately $65\,000$ when using Lua\TeX\[To use Lua\TeX,
-            set |pdftex-path  "luatex"| in the initialization file.])
+            set |pdftex-path  "<path-to-luatex>"| in the initialization file.])
 
    \TeX\ limit in macro mode:\[Instead of using count registers, each reference is stored in
    a separate macro. This mode is activated by setting |tex-refs-registers off| in
-   the initialization file.] limited only by memory available to \TeX\[Note, that you need to
-   modify |texmf.cnf| configuration file in your \TeX\ distribution to change the limits.]
+   the initialization file.] limited only by memory available to \TeX
+*  TeX memory =
+
+   pdf\TeX: static memory limits are set in the |texmf.cnf| configuration file in your \TeX\ distribution;
+   note that the total memory available is quite limited, regardless of the RAM available
+
+   Lua\TeX: the memory is dynamically allocated
 \endlist
 
 

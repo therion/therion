@@ -66,9 +66,6 @@ thcs_config thcs_cfg;
 std::string sanitize_crs(std::string s) {
   s = std::regex_replace(s, reg_trim, "$1");
   s = std::regex_replace(s, reg_space, " ");
-  if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
-    s = std::regex_replace(s, reg_czech, " +axis=wsu");
-  }
   if (std::regex_match(s,reg_epsg_ok)) return s;
   else if (std::regex_match(s,reg_init)) return regex_replace(s, reg_init, "$1:$2");   // get epsg:nnnn format
   else if (!std::regex_search(s,reg_type)) return s + " +type=crs";                    // add +type=crs to explicitly declare CRS
@@ -138,14 +135,9 @@ proj_cache cache;
 
 void th_init_proj(PJ * &P, std::string s) {
   P = proj_create(PJ_DEFAULT_CTX, s.c_str());
-#if PROJ_VER >= 7
   // try to download the missing grids if proj_create() fails
   if (P==0 && thcs_cfg.proj_auto_grid == GRID_DOWNLOAD && proj_errno(P) ==
-#if PROJ_VER >= 8
     PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID
-#else
-    -38 // PJD_ERR_FAILED_TO_LOAD_GRID is not exposed
-#endif
       ) {
       thprint("trying to recover from the error listed above...\n");
       std::smatch m1, m2;
@@ -169,12 +161,8 @@ void th_init_proj(PJ * &P, std::string s) {
       therror("couldn't enable network access for Proj");
     }
     for (auto & f: grids) {
-#if PROJ_VER >= 8  // supported since 7.1.0
       thprint(fmt::format("downloading the grid {} from {} into {}...\n", f, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
                                                                 proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0)));
-#else
-      thprint(fmt::format("downloading the grid {}...\n", f));
-#endif
       if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
         proj_destroy(P);
         therror("couldn't download the grid");
@@ -189,7 +177,6 @@ void th_init_proj(PJ * &P, std::string s) {
     // try once again after downloading the grids
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
   }
-#endif  // PROJ_VER >= 7
   if (P==0) {
     std::ostringstream u;
     u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << "): " << s;
@@ -206,16 +193,13 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
   std::string s = thcs_get_params(si);
   std::string t = thcs_get_params(ti);
 
-  if
-#if PROJ_VER >= 7
-  (thcs_cfg.proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
+  if (thcs_cfg.proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
     if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
       therror("couldn't enable network access for Proj");
     }
     proj_grid_cache_set_enable(PJ_DEFAULT_CTX, 1);
     thprint("network access for Proj library enabled...\n");
   } else if
-#endif
   (thcs_cfg.proj_auto_grid == GRID_WARN || thcs_cfg.proj_auto_grid == GRID_FAIL || thcs_cfg.proj_auto_grid == GRID_DOWNLOAD) {
     // start of missing grid detection
     PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
@@ -257,19 +241,14 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
               proj_list_destroy(ops);
               therror(s_tmp);
               break;
-#if PROJ_VER >= 7
             case GRID_DOWNLOAD:
               if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
                 proj_destroy(P_tmp);
                 proj_list_destroy(ops);
                 therror("couldn't enable network access for Proj");
               }
-#if PROJ_VER >= 8  // supported since 7.1.0
               thprint(fmt::format("downloading the grid {} from {} into {}...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
                                                                         proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0)));
-#else
-              thprint(fmt::format("downloading the grid {}... ", url));
-#endif
               if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
                 proj_destroy(P_tmp);
                 proj_list_destroy(ops);
@@ -282,7 +261,6 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
               }
               thprint("done\n");
               break;
-#endif
           }
         }
       }
@@ -329,22 +307,17 @@ void thcs2cs(int si, int ti,
   if (std::isnan(c)) c = 0.0;
   PJ* P = NULL;
 
-// set CA bundle path; supported since proj 7.2.0
+// set CA bundle path
 #ifdef THWIN32
-#if PROJ_VER >= 8
   std::string ca_path = fmt::format("{}\\lib\\cacert.pem", thcfg.install_path.c_str());
   proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
 #endif
-#endif
 
-#if PROJ_VER >= 7         // grids in .tif format supported since v7
   std::string transf;
   if ((transf = thcs_get_trans(si, ti)) != "") {  // use the preconfigured precise transformation
     th_init_proj(P, transf.c_str());
     precise_transf[{si,ti}] = transf;
-  } else
-#endif
-  {  // let PROJ find the best transformation
+  } else {  // let PROJ find the best transformation
     th_init_proj_auto(P, si, ti);
     if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
       undo_radians = 180.0 / std::numbers::pi;
@@ -494,17 +467,12 @@ int thcs_parse_gridhandling(const char * s) {
   auto i = grid_map.find(std::string(s));
   if (i != grid_map.end()) {
     int res = i->second;
-#if PROJ_VER < 7
-    if (res == GRID_CACHE || res == GRID_DOWNLOAD)
-      res = GRID_FAIL;
-#endif
     return res;
   } else
     return GRID_INVALID;
 }
 
 void thcs_log_transf_used() {
-#if PROJ_VER >= 7
   if (precise_transf.size() > 0) {
     thlog("\n################# custom transformations used ##################\n");
     for (auto &j: precise_transf) {
@@ -512,7 +480,6 @@ void thcs_log_transf_used() {
     }
     thlog("############ end of custom transformations used ################\n");
   }
-#endif
   thlog(cache.log());
 }
 
