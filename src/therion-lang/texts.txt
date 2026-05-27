@@ -3351,6 +3351,7 @@ pt: furo de sondagem
 rs: bušotina
 ru: скважина
 cz: vrt
+sl: vrtina
 
 therion: point minus
 de: Minus
