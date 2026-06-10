@@ -550,7 +550,7 @@ void thdecode_c(thbuffer * dest, const char * src)
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
   unsigned num;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -600,7 +600,7 @@ void thdecode_tcl(thbuffer * dest, const char * src)
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
   unsigned num;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -635,7 +635,7 @@ void thdecode_mp(thbuffer * dest, const char * src)
 {
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -676,7 +676,7 @@ void thdecode_tex(thbuffer * dest, const char * src)
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
 //  unsigned num;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -809,7 +809,7 @@ void thdecode_sql(thbuffer * dest, const char * src)
     *dest = "NULL";
     return;
   }
-  dest->guarantee(srcln * 8 + 3);  // check buffer size
+  dest->resize(srcln * 8 + 3);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   *dstp = '\'';
@@ -865,7 +865,7 @@ void thdecode_arg(thbuffer * dest, const char * src)
   }
   
   // zaciatocna uvodzovka
-  dest->guarantee(srcln * 8 + 3);  // check buffer size
+  dest->resize(srcln * 8 + 3);  // check buffer size
   srcx = 0;
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
@@ -1121,7 +1121,7 @@ const char * thutf82xhtml(const char * src)
   size_t sx, dx, sl = strlen(src);
   bool inspec;
   char * res;
-  tmp.guarantee(sl);
+  tmp.resize(sl);
   res = tmp.data();
 
   inspec = false;

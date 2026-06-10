@@ -113,12 +113,12 @@ class thbuffer {
   
 
   /**
-   * Guarantee buffer size.
+   * Resize buffer size.
    *
    * @param bs Minimal buffer size.  
    */
    
-  void guarantee(size_t bs);
+  void resize(size_t bs);
   
   
   /**
