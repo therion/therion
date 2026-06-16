@@ -5,7 +5,7 @@ permissions:
   security-events: write
 jobs:
   CodeQL:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
     - name: Enable parallel compilation
       run:  echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
