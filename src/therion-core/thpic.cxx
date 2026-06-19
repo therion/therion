@@ -73,7 +73,7 @@ void thpic::init(const char * pfname, const char * incfnm)
 
   std::error_code ec;
   auto pict_path = fs::current_path(ec);
-  thassert(!ec)
+  thassert(!ec);
 
   if (incfnm != NULL) {
     if (fs::path(incfnm).is_absolute())

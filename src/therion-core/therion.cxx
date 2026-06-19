@@ -182,3 +182,11 @@ void thexit(int exit_code)
   if (exit_code == EXIT_FAILURE) thcfg.xth_save();
   exit(exit_code);
 }
+
+void thassert(const bool cond, const std::source_location loc)
+{
+  if (!cond) {
+    thprint2err(fmt::format("{}{} ({}:{}): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, loc.file_name(), loc.line()));
+    std::exit(EXIT_FAILURE);
+  }
+}

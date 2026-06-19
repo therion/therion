@@ -313,7 +313,7 @@ void thscan::parse_data_source(char ** args) {
 
   std::error_code ec;
   auto pict_path = fs::current_path(ec);
-  thassert(!ec)
+  thassert(!ec);
 
   if (fs::path(thdb.csrc.name).is_absolute())
 	  pict_path = thdb.csrc.name;
