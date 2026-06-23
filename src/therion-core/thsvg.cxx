@@ -39,7 +39,7 @@
 #include <cfloat>
 #include <cmath>
 #include <numbers>
-#include <fmt/core.h>
+#include <fmt/format.h>
 #include <fmt/ostream.h>
 
 #include "thepsparse.h"

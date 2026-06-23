@@ -30,7 +30,7 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 thjoin::thjoin()
 {

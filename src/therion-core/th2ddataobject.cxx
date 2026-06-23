@@ -31,7 +31,7 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 th2ddataobject::th2ddataobject()
 {

@@ -31,7 +31,7 @@
 #include "thparse.h"
 #include <string.h>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 void thperson::reset()
 {
