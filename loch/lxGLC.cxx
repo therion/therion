@@ -38,6 +38,7 @@
 #include "lxData.h"
 #include "lxSetup.h"
 #include "lxSView.h"
+#include "lxPres.h"
 #include "lxFNT6x13_bdf.h"
 #include "lxFNT10x20_bdf.h"
 #include "lxFNTFreeSans_ttf.h"
@@ -465,6 +466,291 @@ bool lxGLCanvas::CameraAutoRotate() {
     return false;
 }
 
+long lxGLCanvas::GetPresentationSceneCount() {
+  wxXmlNode * r = this->frame->m_pres->GetRoot();
+  wxXmlNode * n;
+  long count = 0;
+
+  if (r == NULL)
+    return 0;
+
+  n = r->GetChildren();
+  while (n != NULL) {
+    if (n->GetName() == _T("Scene"))
+      count++;
+    n = n->GetNext();
+  }
+
+  return count;
+}
+
+wxXmlNode * lxGLCanvas::GetPresentationScene(long index) {
+  wxXmlNode * r = this->frame->m_pres->GetRoot();
+  wxXmlNode * n;
+  long c = 0;
+
+  if (r == NULL)
+    return NULL;
+
+  n = r->GetChildren();
+  while (n != NULL) {
+    if (n->GetName() == _T("Scene")) {
+      if (index == c)
+        return n;
+      c++;
+    }
+    n = n->GetNext();
+  }
+
+  return NULL;
+}
+
+bool lxGLCanvas::GetPresentationLoopAnimation() {
+  wxXmlNode * r = this->frame->m_pres->GetRoot();
+  wxString value;
+
+  if (r == NULL)
+    return true;
+
+  value = r->GetAttribute(_T("loop-animation"), _T("true"));
+  return (value != _T("false")) && (value != _T("0"));
+}
+
+bool lxGLCanvas::GetPresentationSceneChanges() {
+  wxXmlNode * r = this->frame->m_pres->GetRoot();
+  wxString value;
+
+  if (r == NULL)
+    return false;
+
+  value = r->GetAttribute(_T("scene-changes"), _T("false"));
+  return (value == _T("true")) || (value == _T("1"));
+}
+
+void lxGLCanvas::ApplyPresentationScene(long index) {
+  if (!this->GetPresentationSceneChanges() || (index == this->m_sCameraPresentationAppliedScene))
+    return;
+
+  wxXmlNode * scene = this->GetPresentationScene(index);
+  if (scene == NULL)
+    return;
+
+  this->setup->LoadSceneFromXMLNode(scene);
+  this->m_sCameraPresentationAppliedScene = index;
+  this->UpdateRenderContents();
+  this->UpdateRenderList();
+}
+
+void lxGLCanvas::SelectPresentationScene(long index) {
+  if ((this->frame == NULL) || (this->frame->m_presentationDlg == NULL))
+    return;
+
+  this->frame->m_presentationDlg->SelectScene(index);
+}
+
+double lxGLCanvas::GetPresentationSceneDuration(wxXmlNode * n) {
+  wxString duration;
+  double seconds;
+
+  if (n != NULL)
+    duration = n->GetAttribute(_T("duration"), wxEmptyString);
+
+  if (duration.empty() || !duration.ToDouble(&seconds) || (seconds <= 0.0))
+    seconds = 3.0;
+
+  return seconds;
+}
+
+long lxGLCanvas::GetPresentationSceneRotations(wxXmlNode * n) {
+  wxString rotations;
+  long value;
+
+  if (n != NULL)
+    rotations = n->GetAttribute(_T("rotations"), wxEmptyString);
+
+  if (rotations.empty() || !rotations.ToLong(&value))
+    value = 0;
+
+  return value;
+}
+
+double lxGLCanvas::GetPresentationSceneRotationDuration(wxXmlNode * n) {
+  wxString duration;
+  double seconds;
+
+  if (n != NULL)
+    duration = n->GetAttribute(_T("rotation-duration"), wxEmptyString);
+
+  if (duration.empty() || !duration.ToDouble(&seconds) || (seconds <= 0.0))
+    seconds = 15.0;
+
+  return seconds;
+}
+
+bool lxGLCanvas::StartCameraPresentationAnimation() {
+  long count;
+
+  this->m_sCameraAutoRotate = false;
+  this->m_sCameraPresentationAnimate = true;
+  this->m_sCameraPresentationCounter = 0;
+  this->m_sCameraPresentationFrom = 0;
+  this->m_sCameraPresentationTo = 1;
+  this->m_sCameraPresentationAppliedScene = -1;
+  this->m_sCameraPresentationSWatch.Start();
+  this->m_sCameraPresentationStartTime = 0;
+  count = this->GetPresentationSceneCount();
+  if (count > 0)
+    this->SelectPresentationScene(0);
+  if (count == 1) {
+    this->setup->LoadFromXMLNode(this->GetPresentationScene(0));
+    this->ApplyPresentationScene(0);
+  }
+  this->setup->StartCameraMovement();
+  this->m_sCameraPresentationStartDir = this->setup->cam_dir;
+  this->ForceRefresh();
+  return true;
+}
+
+void lxGLCanvas::StopCameraPresentationAnimation() {
+  this->m_sCameraPresentationAnimate = false;
+  if (this->frame != NULL)
+    this->frame->UpdateM2TB();
+}
+
+bool lxGLCanvas::CameraPresentationAnimate() {
+  long count, now, elapsed, rotationDuration, transitionDuration, stepDuration;
+  long rotations;
+  wxXmlNode * from, * to;
+  double t;
+  int guard = 0;
+  bool loopAnimation;
+
+  if (!this->m_sCameraPresentationAnimate)
+    return false;
+
+  count = this->GetPresentationSceneCount();
+  if (count < 2)
+    return this->CameraPresentationRotate();
+
+  loopAnimation = this->GetPresentationLoopAnimation();
+  this->m_sCameraPresentationFrom %= count;
+  this->m_sCameraPresentationTo %= count;
+  now = this->m_sCameraPresentationSWatch.Time();
+
+  while (guard < count + 1) {
+    from = this->GetPresentationScene(this->m_sCameraPresentationFrom);
+    to = this->GetPresentationScene(this->m_sCameraPresentationTo);
+    rotations = this->GetPresentationSceneRotations(from);
+    rotationDuration = long(fabs(double(rotations)) * this->GetPresentationSceneRotationDuration(from) * 1000.0);
+    transitionDuration = long(this->GetPresentationSceneDuration(to) * 1000.0);
+    if (transitionDuration < 1)
+      transitionDuration = 1;
+    stepDuration = rotationDuration + transitionDuration;
+    elapsed = now - this->m_sCameraPresentationStartTime;
+    if (elapsed < stepDuration)
+      break;
+    this->setup->LoadFromXMLNode(to);
+    this->ApplyPresentationScene(this->m_sCameraPresentationTo);
+    this->SelectPresentationScene(this->m_sCameraPresentationTo);
+    if (!loopAnimation && (this->m_sCameraPresentationTo == count - 1)) {
+      this->StopCameraPresentationAnimation();
+      this->ForceRefresh();
+      return false;
+    }
+    this->m_sCameraPresentationFrom = this->m_sCameraPresentationTo;
+    this->m_sCameraPresentationTo = this->m_sCameraPresentationTo + 1;
+    if (this->m_sCameraPresentationTo >= count)
+      this->m_sCameraPresentationTo = 0;
+    this->m_sCameraPresentationStartTime += stepDuration;
+    guard++;
+  }
+
+  from = this->GetPresentationScene(this->m_sCameraPresentationFrom);
+  to = this->GetPresentationScene(this->m_sCameraPresentationTo);
+  if ((from == NULL) || (to == NULL)) {
+    this->StopCameraPresentationAnimation();
+    return false;
+  }
+
+  rotations = this->GetPresentationSceneRotations(from);
+  rotationDuration = long(fabs(double(rotations)) * this->GetPresentationSceneRotationDuration(from) * 1000.0);
+  transitionDuration = long(this->GetPresentationSceneDuration(to) * 1000.0);
+  if (transitionDuration < 1)
+    transitionDuration = 1;
+  elapsed = now - this->m_sCameraPresentationStartTime;
+  if (elapsed < 0)
+    elapsed = 0;
+  if (elapsed < rotationDuration) {
+    this->setup->LoadFromXMLNode(from);
+    this->ApplyPresentationScene(this->m_sCameraPresentationFrom);
+    t = rotationDuration == 0 ? 1.0 : double(elapsed) / double(rotationDuration);
+    if (t > 1.0)
+      t = 1.0;
+    t = t * t * (3.0 - 2.0 * t);
+    this->setup->cam_dir += 360.0 * double(rotations) * t;
+    while (this->setup->cam_dir >= 360.0)
+      this->setup->cam_dir -= 360.0;
+    this->setup->UpdatePos();
+  } else {
+    this->ApplyPresentationScene(this->m_sCameraPresentationFrom);
+    t = double(elapsed - rotationDuration) / double(transitionDuration);
+    if (t > 1.0)
+      t = 1.0;
+    t = t * t * (3.0 - 2.0 * t);
+    this->setup->LoadFromXMLNode(from, to, t);
+  }
+
+  auto start = this->m_sCameraPresentationSWatch.Time();
+  this->ForceRefresh();
+  auto render_elapsed = this->m_sCameraPresentationSWatch.Time() - start;
+  if (render_elapsed < 10) wxMilliSleep(10 - render_elapsed);
+  this->m_sCameraPresentationCounter++;
+  return true;
+}
+
+bool lxGLCanvas::CameraPresentationRotate() {
+  long now, elapsed;
+  double t;
+  bool loopAnimation;
+
+  if (!this->m_sCameraPresentationAnimate)
+    return false;
+
+  this->ApplyPresentationScene(0);
+  loopAnimation = this->GetPresentationLoopAnimation();
+  now = this->m_sCameraPresentationSWatch.Time();
+  elapsed = now - this->m_sCameraPresentationStartTime;
+  if (!loopAnimation && (elapsed >= 15000)) {
+    this->setup->cam_dir = this->m_sCameraPresentationStartDir + 360.0;
+    while (this->setup->cam_dir >= 360.0)
+      this->setup->cam_dir -= 360.0;
+    this->setup->UpdatePos();
+    this->StopCameraPresentationAnimation();
+    this->ForceRefresh();
+    return false;
+  }
+  while (elapsed >= 15000) {
+    this->m_sCameraPresentationStartTime += 15000;
+    elapsed -= 15000;
+    this->m_sCameraPresentationStartDir += 360.0;
+  }
+
+  if (elapsed < 0)
+    elapsed = 0;
+  t = double(elapsed) / 15000.0;
+  this->setup->cam_dir = this->m_sCameraPresentationStartDir + 360.0 * t;
+  while (this->setup->cam_dir >= 360.0)
+    this->setup->cam_dir -= 360.0;
+  this->setup->UpdatePos();
+
+  auto start = this->m_sCameraPresentationSWatch.Time();
+  this->ForceRefresh();
+  auto render_elapsed = this->m_sCameraPresentationSWatch.Time() - start;
+  if (render_elapsed < 10) wxMilliSleep(10 - render_elapsed);
+  this->m_sCameraPresentationCounter++;
+  return true;
+}
+
 
 void lxGLCanvas::OnIdle(wxIdleEvent& event)	{
 
@@ -483,7 +769,7 @@ void lxGLCanvas::OnIdle(wxIdleEvent& event)	{
     case LXGLCML_PANY:
       break;		
     default:
-      if (this->CameraAutoRotate())
+      if (this->CameraAutoRotate() || this->CameraPresentationAnimate())
     	  event.RequestMore();
       break;
   }
@@ -1968,8 +2254,3 @@ bool lxGLCanvas::TRCEndTile()
   else
     return false;
 }
-
-
-
-
-

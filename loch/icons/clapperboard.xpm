@@ -1,0 +1,23 @@
+/* XPM */
+static const char * clapperboard_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c None",
+". c black",
+"X c white",
+"o c #4A90E2",
+"................",
+".XX.XX.XX.XX.XX.",
+"..XX.XX.XX.XX.X.",
+"................",
+".oooooooooooooo.",
+"................",
+".XXXXXXXXXXXXXX.",
+".XXXXXXXXXXXXXX.",
+".XXXXXXXXXXXXXX.",
+".XXXXXXXXXXXXXX.",
+".XXXXXXXXXXXXXX.",
+".XXXXXXXXXXXXXX.",
+".XXXXXXXXXXXXXX.",
+".XXXXXXXXXXXXXX.",
+"................"};
