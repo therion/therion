@@ -32,7 +32,7 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 unsigned long thdatareader_get_opos(bool inlineid, bool cfgid)
 {

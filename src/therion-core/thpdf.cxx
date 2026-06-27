@@ -41,7 +41,7 @@
 #include <cmath>
 #include <regex>
 #include <numbers>
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "thpdfdbg.h"
 #include "thconfig.h"

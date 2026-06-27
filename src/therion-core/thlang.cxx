@@ -33,7 +33,7 @@
 #include "thexception.h"
 #include "thparse.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include <map>
 

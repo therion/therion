@@ -4,7 +4,7 @@
 #include "thlang.h"
 #include "thinit.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #define LCBUFFNUM 10
 #define LCBUFFLEN 1024
