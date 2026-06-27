@@ -4,6 +4,9 @@ Windows installer:
  * use TeXLive 2026 binaries instead of dated W32TeX distribution
  * include LuaTeX as an alternative to pdfTeX
 
+loch:
+ * added presentation animation mode and export
+
 --------------------------------------------------------------------------------
 
 Therion 6.4.0 (2026-05-07):
