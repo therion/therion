@@ -26,9 +26,9 @@
  */
  
 #include "therion.h"
+
 #include "thconfig.h"
 #include "thinit.h"
-#include "thlayout.h"
 #include "thpoint.h"
 #include "thline.h"
 #include "tharea.h"
@@ -36,10 +36,7 @@
 #include "thparse.h"
 #include "thlog.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string>
+#include <fmt/format.h>
 
 int therion_exit_state = 2;
 
@@ -48,6 +45,32 @@ bool thverbose_mode = true;
 bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
+
+void therror(std::string_view message, [[maybe_unused]] const std::source_location loc)
+{
+#ifdef THDEBUG
+  thprint2err(fmt::format("{}{} ({}:{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, thexecute_cmd, loc.file_name(), loc.line()));
+#else
+  thprint2err(fmt::format("{}{}: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
+#endif
+  thprint2err(message);
+  thprint2err("\n");
+  thpause_exit();
+  therion_exit_state = 0;
+  thexit(EXIT_FAILURE);
+}
+
+void thwarning(std::string_view message, [[maybe_unused]] const std::source_location loc)
+{
+#ifdef THDEBUG
+  thprint2err(fmt::format("{}{} ({}:{}): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, loc.file_name(), loc.line()));
+#else
+  thprint2err(fmt::format("{}{}: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
+#endif
+  thprint2err(message);
+  thprint2err("\n");
+  therion_exit_state = 1;
+}
 
 static void thprint_impl(const bool verbose, FILE* f, std::string_view msg)
 {

@@ -38,6 +38,8 @@
 #include "therion.h"
 #include "icase.h"
 
+#include <fmt/format.h>
+
 thdata::thdata()
 {
   this->team_set.clear();

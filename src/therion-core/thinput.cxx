@@ -32,6 +32,8 @@
 #include "thversion.h"
 #include "thparse.h"
 
+#include <fmt/format.h>
+
 #include <algorithm>
 #include <array>
 #include <cstdio>
@@ -129,7 +131,7 @@ bool ifile::is_equal(ifile* f)
   try {
     return fs::equivalent(name.c_str(), f->name.c_str());
   } catch(const std::exception& e) {
-    thwarning(fmt::format("unable to compare files -- {}", e.what()))
+    thwarning(fmt::format("unable to compare files -- {}", e.what()));
     return false;
   }
 }
@@ -472,7 +474,7 @@ char * thinput::read_line()
             if (this->tmpmb.get_size() != 1)
               therror(fmt::format("{} [{}] -- one input file name expected -- {}", \
                 this->get_cif_name(), this->get_cif_line_number(), \
-                this->valuebf.c_str()))
+                this->valuebf.c_str()));
             else
               this->open_file(*(this->tmpmb.get_buffer()));
           }

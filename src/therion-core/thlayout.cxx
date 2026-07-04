@@ -1772,7 +1772,7 @@ static bool is_copy_src(thlayoutln const &ll) {
 void thlayout::process_copy() {
   // ak je locknuty -> tak warning a koniec
   if (this->lock) {
-    thwarning(fmt::format("{} -- recursive layout copying", this->throw_source()))
+    thwarning(fmt::format("{} -- recursive layout copying", this->throw_source()));
     return;
   }
   this->lock = true;
@@ -1785,7 +1785,7 @@ void thlayout::process_copy() {
     // najdeme si layout podla mena
     thlayout * srcl = this->db->get_layout(csp->line);
     if (srcl == NULL) {
-      thwarning(fmt::format("{} -- source layout not found -- {}", this->throw_source(), csp->line))
+      thwarning(fmt::format("{} -- source layout not found -- {}", this->throw_source(), csp->line));
     } else {
       // ak ma este nevyriesene zavislosti
       srcl->process_copy();

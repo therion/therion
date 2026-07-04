@@ -41,6 +41,9 @@
 #include "thparse.h"
 #include "thchencdata.h"
 #include "icase.h"
+
+#include <fmt/format.h>
+
 #include <filesystem>
 
 #ifdef THWIN32

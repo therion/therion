@@ -45,6 +45,8 @@
   #include "thconfig.h"
 #endif
 
+#include <fmt/format.h>
+
 std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
 std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
 std::regex reg_type(R"(\+type\s*=\s*crs\b)");

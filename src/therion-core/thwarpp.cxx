@@ -34,6 +34,8 @@
 #include "thdatabase.h"
 #include "thdataleg.h"
 
+#include <fmt/format.h>
+
 thwarpp::~thwarpp() {}
 
 

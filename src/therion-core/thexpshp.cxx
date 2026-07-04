@@ -50,6 +50,8 @@
 
 #include "thexpshp.h"
 
+#include <fmt/format.h>
+
 thexpshpf::thexpshpf(struct thexpshp * xshp, const char * fnm, int type):
   m_fnm(fnm), m_xshp(xshp), m_type(type)
 {}
@@ -551,7 +553,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
 
   if (maps == NULL) {
     thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
-      this->src.name, this->src.line, this->projstr))
+      this->src.name, this->src.line, this->projstr));
     return;
   }
 
@@ -562,7 +564,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
   xs.m_xproj = prj;
   xs.m_expmap = this;
   if (!xs.open(fnm)) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
 
@@ -612,7 +614,7 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
   thexpshp xs;
   xs.m_expmodel = this;
   if (!xs.open(fnm)) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
 

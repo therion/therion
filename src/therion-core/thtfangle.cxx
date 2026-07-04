@@ -30,6 +30,9 @@
 #include "thtfangle.h"
 #include "thexception.h"
 #include "thinfnan.h"
+
+#include <fmt/format.h>
+
 #include <math.h>
 
 thtfangle::thtfangle() : thtf(TT_TFU_DEG) {}

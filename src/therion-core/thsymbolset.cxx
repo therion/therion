@@ -46,6 +46,9 @@
 #include "therion.h"
 #include "thlog.h"
 #include "thparse.h"
+
+#include <fmt/format.h>
+
 #include <fstream>
 
 thsymbolset::thsymbolset()

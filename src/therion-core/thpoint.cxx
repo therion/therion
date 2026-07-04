@@ -39,6 +39,9 @@
 #include "therion.h"
 #include "thdataleg.h"
 #include "thparse.h"
+
+#include <fmt/format.h>
+
 #include <string>
 #include <cstdio>
 

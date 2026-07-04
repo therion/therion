@@ -41,6 +41,8 @@
 #include "thparse.h"
 #include "therion.h"
 
+#include <fmt/format.h>
+
 thexpdb::thexpdb() {
   this->format = TT_EXPDB_FMT_UNKNOWN;
   this->encoding = TT_UNKNOWN_ENCODING;
@@ -144,7 +146,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   FILE * sqlf;
   sqlf = fopen(fnm,"wb");
   if (sqlf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -447,7 +449,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
   FILE * out;
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output", fnm))
+    thwarning(fmt::format("can't open {} for output", fnm));
     return;
   }
   this->register_output(fnm);

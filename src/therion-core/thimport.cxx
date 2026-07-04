@@ -35,6 +35,9 @@
 #include "thparse.h"
 #include "therion.h"
 #include "img.h"
+
+#include <fmt/format.h>
+
 #include <string.h>
 #include <string>
 #include <map>

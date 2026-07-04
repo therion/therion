@@ -43,6 +43,8 @@
 #include "thparse.h"
 #include "therion.h"
 
+#include <fmt/format.h>
+
 #include <numbers>
 
 #define EXPORT3D_INVISIBLE true

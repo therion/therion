@@ -135,10 +135,10 @@ void thtmpdir::remove() try
   if (!this->tmp_remove_script.empty()) {
     const auto tmpfname = fmt::format("{} {}", this->tmp_remove_script, this->name);
     if (system(tmpfname.c_str()) != 0) {
-      thwarning(fmt::format("delete temporary directory error -- {} not successful", tmpfname))
+      thwarning(fmt::format("delete temporary directory error -- {} not successful", tmpfname));
     }
     if (fs::is_directory(this->name)) {
-      thwarning(fmt::format("error deleting temporary directory -- {}", this->name))    
+      thwarning(fmt::format("error deleting temporary directory -- {}", this->name));
     } else {
       this->name = ".";
       this->tried = false;
@@ -152,7 +152,7 @@ void thtmpdir::remove() try
   this->tried = false;
   this->exist = false;
 } catch (const std::exception& e) {
-  thwarning(fmt::format("error deleting temporary directory -- {}", e.what()))
+  thwarning(fmt::format("error deleting temporary directory -- {}", e.what()));
 }
 
 

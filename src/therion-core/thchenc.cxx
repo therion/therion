@@ -32,6 +32,7 @@
 #include "thexception.h"
 #include "thparse.h"
 
+#include <fmt/format.h>
 
 void thencode(thbuffer * dest, const char * src, int srcenc)
 {
