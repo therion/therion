@@ -1,28 +1,21 @@
 #include "icase.h"
 
 #include <algorithm>
-#include <functional>
 #include <cctype>
+#include <ranges>
 
-using uchar_type = const unsigned char; // we need to convert chars to unsigned chars because of std::tolower's requirements
-using str_it = std::string_view::const_iterator;
-using comparator = bool (*)(uchar_type, uchar_type);
-using algorithm = bool (*)(str_it, str_it, str_it, str_it, comparator);
-
-template <typename Comparator>
-bool icase_for_each(std::string_view a, std::string_view b, algorithm alg)
+static auto lower_range(std::string_view s)
 {
-    return alg(a.begin(), a.end(), 
-               b.begin(), b.end(),
-               [](uchar_type ca, uchar_type cb){ return Comparator()(std::tolower(ca), std::tolower(cb)); });
+     // we need to convert chars to unsigned chars because of std::tolower's requirements
+     return std::views::transform(s, [](const unsigned char c){ return std::tolower(c); });
 }
 
 bool icase_equals(std::string_view a, std::string_view b)
 {
-     return icase_for_each<std::equal_to<>>(a, b, std::equal);
+     return std::ranges::equal(lower_range(a), lower_range(b));
 }
 
 bool icase_less_than(std::string_view a, std::string_view b)
 {
-     return icase_for_each<std::less<>>(a, b, std::lexicographical_compare);
+     return std::ranges::lexicographical_compare(lower_range(a), lower_range(b));
 }
