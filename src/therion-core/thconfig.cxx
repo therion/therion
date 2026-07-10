@@ -162,7 +162,7 @@ thconfig::thconfig()
 #ifdef THWIN32
   thbuffer * tmpbf = &(this->bf1);
   // set search path according to Windows registers
-  tmpbf->guarantee(1024);
+  tmpbf->resize(1024);
   DWORD type = 0, length = 1024;
   HKEY key;
   bool loaded_ok = true;

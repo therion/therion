@@ -46,7 +46,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
   // check buffer size
-  dest->guarantee(srcln + srcln + srcln + srcln + srcln + srcln);
+  dest->resize(srcln + srcln + srcln + srcln + srcln + srcln);
   dstp = (unsigned char *) dest->c_str();
   srcp = (unsigned char *) src;
   
@@ -105,7 +105,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
   
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
-  dest->guarantee(srcln);  // check buffer size
+  dest->resize(srcln);  // check buffer size
   dstp = (unsigned char*) dest->c_str();
   srcp = (unsigned char*) src;
   char32_t sch = 0;    

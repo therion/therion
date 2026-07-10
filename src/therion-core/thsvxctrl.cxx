@@ -492,7 +492,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //   double sx, sy, sz;
 //   unsigned long ss;
 //   size_t lnsize = 4096, pix = 0, ppx = 0, clns;
-//   svxcom.guarantee(lnsize);
+//   svxcom.resize(lnsize);
 //   char * lnbuff = svxcom.data(),
 //     * p[4], * cps = lnbuff;
 //   posf.open(thtmp.get_file_name("data.pos"));

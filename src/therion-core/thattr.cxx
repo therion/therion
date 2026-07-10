@@ -727,7 +727,7 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
   const char * value;
   bool header_value;
   thbuffer valb;
-  valb.guarantee(128);
+  valb.resize(128);
   std::string value_plus;
   for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
     fprintf(f,"<tr id=\"%s\">", oi->m_tree_node_id);

@@ -175,8 +175,8 @@ void th2dsplitTT(char * src, char ** type, char ** subtype)
   size_t sl, x, tl, stl;
   char * t, * st;
   sl = strlen(src);
-  sTTtype.guarantee(sl+1);
-  sTTsubtype.guarantee(sl+1);
+  sTTtype.resize(sl+1);
+  sTTsubtype.resize(sl+1);
   t = sTTtype.data();
   st = sTTsubtype.data();
   t[0] = 0;

@@ -439,8 +439,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   bool show_count;
   show_count = false;
   double clen, z_top, z_bot;
-  c.guarantee(256);
-  b.guarantee(256);
+  c.resize(256);
+  b.resize(256);
 
   if (!thcfg.reproducible_output)
     fprintf(f,"\\thversion={%s}\n",utf2tex(THVERSION).c_str());

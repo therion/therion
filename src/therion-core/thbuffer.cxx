@@ -130,7 +130,7 @@ thbuffer & thbuffer::operator+=(const char * src)
   return *this;
 }
 
-void thbuffer::guarantee(size_t bs)
+void thbuffer::resize(size_t bs)
 {
   if (this->size <= bs)
     this->enlarge(bs);
