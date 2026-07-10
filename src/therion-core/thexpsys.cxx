@@ -28,6 +28,8 @@
 #include "thexpsys.h"
 #include "therion.h"
 
+#include <fmt/format.h>
+
 thexpsys::thexpsys() {
   this->cmd = "";
 }
@@ -38,5 +40,5 @@ void thexpsys::process_db(class thdatabase * /*dbp*/)
   thprint(fmt::format("system: {}\n", this->cmd));
   int retcode = system(this->cmd);
   if (retcode != EXIT_SUCCESS)
-    thwarning(fmt::format("system exit code -- {}", retcode))
+    thwarning(fmt::format("system exit code -- {}", retcode));
 }

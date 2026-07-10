@@ -31,6 +31,9 @@
 #include "therion.h"
 #include "thchenc.h"
 #include "thparse.h"
+
+#include <fmt/format.h>
+
 #include <cctype>
 #include <cmath>
 #include <cstring>
@@ -417,7 +420,7 @@ void thattr::export_dbf(const char * fname, int encoding)
     }
     cf->m_xdbf_field = DBFAddField(h, cf->m_xdbf_name.c_str(), ftype, cf->m_xdbf_width, cf->m_xdbf_decimals); 
     if (cf->m_xdbf_field == -1) {
-      thwarning(fmt::format("error writing to {}", fname))
+      thwarning(fmt::format("error writing to {}", fname));
       goto EXPORT_DBF_EXIT;
     }
   }

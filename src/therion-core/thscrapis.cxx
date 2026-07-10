@@ -40,6 +40,8 @@
 
 #include <poly2tri/poly2tri.h>
 
+#include <fmt/format.h>
+
 #include <cmath>
 #include <cstring>
 

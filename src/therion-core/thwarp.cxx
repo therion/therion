@@ -35,6 +35,9 @@
 #include "thconfig.h"
 #include "thdatabase.h"
 #include "therion.h"
+
+#include <fmt/format.h>
+
 #include <cstring>
 
 thwarp::~thwarp() {}

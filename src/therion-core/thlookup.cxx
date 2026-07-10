@@ -38,6 +38,9 @@
 #include "thdatabase.h"
 #include "thparse.h"
 #include "therion.h"
+
+#include <fmt/format.h>
+
 #include <string.h>
 
 

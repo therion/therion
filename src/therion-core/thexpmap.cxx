@@ -72,6 +72,8 @@
 #include "img.h"
 #include <filesystem>
 
+#include <fmt/format.h>
+
 namespace fs = std::filesystem;
 
 thexpmap::thexpmap() {
@@ -407,7 +409,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -778,7 +780,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
   FILE * pltf;
   pltf = fopen(fnm,"wb");
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -1195,7 +1197,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   if (maps == NULL) {
     thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
-      this->src.name, this->src.line, this->projstr))
+      this->src.name, this->src.line, this->projstr));
     return;
   }
 
@@ -3331,7 +3333,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 
   if (maps == NULL) {
     thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
-      this->src.name, this->src.line, this->projstr))
+      this->src.name, this->src.line, this->projstr));
     return;
   }
 
@@ -3341,7 +3343,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
   img_output_version = 4;
   pimg = img_open_write(fnm, "cave", 1);
   if (pimg == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);

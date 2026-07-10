@@ -39,6 +39,8 @@
 #include "thdatabase.h"
 #include "thlog.h"
 
+#include <fmt/format.h>
+
 #include <fstream>
 
 extern const thstok thtt_texts [];

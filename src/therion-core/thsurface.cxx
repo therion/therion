@@ -42,6 +42,8 @@
 #include <filesystem>
 #include <numbers>
 
+#include <fmt/format.h>
+
 namespace fs = std::filesystem;
 
 enum {

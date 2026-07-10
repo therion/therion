@@ -41,6 +41,11 @@
 #include "thdb2dmi.h"
 #include "thdatabase.h"
 #include "thparse.h"
+#include "thsurvey.h"
+#include "therion.h"
+
+#include <fmt/format.h>
+
 #include <vector>
 #include <algorithm>
 #include <string.h>

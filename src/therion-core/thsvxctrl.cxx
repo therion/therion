@@ -41,6 +41,9 @@
 #include "thlog.h"
 #include "thparse.h"
 #include "img.h"
+
+#include <fmt/format.h>
+
 #include <math.h>
 #include <string>
 #include <fstream>

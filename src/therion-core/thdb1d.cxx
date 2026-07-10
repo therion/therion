@@ -55,6 +55,8 @@
 #include "thparse.h"
 #include "QuickHull.hpp"
 
+#include <fmt/format.h>
+
 //#define THUSESVX
 //#define THDEBUG
 
@@ -688,9 +690,9 @@ void thdb1d::scan_data()
 
   if (((used_declination & 1) != 0) && ((used_declination & 4) != 0)) {
     if (default_dpdeclinused)
-      thwarning(fmt::format("year {:.0f} magnetic declination used for undated surveys", this->min_year))
+      thwarning(fmt::format("year {:.0f} magnetic declination used for undated surveys", this->min_year));
     else
-      thwarning("unable to determine magnetic declination used for undated surveys")
+      thwarning("unable to determine magnetic declination used for undated surveys");
     thprint("undated surveys:\n");
     for(auto usi = undated_surveys_set.begin(); usi != undated_surveys_set.end(); usi++) {
       thprint(usi->c_str());
@@ -699,7 +701,7 @@ void thdb1d::scan_data()
   }
 
   if (thcfg.m_decl_out_of_geomag_range)
-    thwarning(fmt::format("magnetic declination calculated for dates outside of optimal model range ({} - {})", thgeomag_minyear, thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1) - 1))
+    thwarning(fmt::format("magnetic declination calculated for dates outside of optimal model range ({} - {})", thgeomag_minyear, thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1) - 1));
 
   thcfg.log_outcs(this->min_year, this->max_year);
 
@@ -716,7 +718,7 @@ void thdb1d::process_data()
 		try {
 		  survex.process_survey_data(this->db);
 	  } catch (const std::exception& e) {
-			thwarning(e.what())
+			thwarning(e.what());
 		}
 	}
   this->process_survey_stat();
@@ -1137,7 +1139,7 @@ void thdb1d::process_tree()
         prev_leg->leg->from.id,
         (prev_leg->reverse ? "<=" : "=>"),
         prev_leg->leg->to.id,
-        series, tarrows);
+        series, tarrows));
 #endif
 
       if (!current_node->last_arrow->end_node->is_attached) {

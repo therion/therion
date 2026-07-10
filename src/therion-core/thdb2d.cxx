@@ -54,6 +54,8 @@
 #include <algorithm>
 #include <numbers>
 
+#include <fmt/format.h>
+
 static void print_double(const double dbl)
 {
 	if (thisnan(dbl))

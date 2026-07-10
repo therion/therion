@@ -43,6 +43,8 @@
 #include <algorithm>
 #include "icase.h"
 
+#include <fmt/format.h>
+
 thmbuffer thparse_mbuff;
 
 template <typename Equality, typename Ordering>
