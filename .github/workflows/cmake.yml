@@ -22,7 +22,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt -qq update
-          sudo apt install -y ${{ matrix.pkgs }} texlive-binaries texlive-metapost libproj-dev libshp-dev survex imagemagick ghostscript ninja-build clang-tidy gettext libfmt-dev libwxgtk3.2-dev libvtk9-dev
+          sudo apt install -y ${{ matrix.pkgs }} texlive-binaries texlive-metapost libproj-dev libshp-dev survex imagemagick libmagick++-dev ghostscript ninja-build clang-tidy gettext libfmt-dev libwxgtk3.2-dev libvtk9-dev
       - name: install additional texlive languages
         if: matrix.os == 'ubuntu-26.04'
         run:  sudo apt install -y texlive-lang-czechslovak texlive-lang-cyrillic
@@ -120,6 +120,7 @@ jobs:
             mingw-w64-${{ matrix.config.arch }}-bwidget
             mingw-w64-${{ matrix.config.arch }}-fmt
             mingw-w64-${{ matrix.config.arch }}-catch
+            mingw-w64-${{ matrix.config.arch }}-imagemagick
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Set up the batteries
