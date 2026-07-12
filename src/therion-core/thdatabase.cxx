@@ -83,6 +83,14 @@ void thlibrary_init()
   thlibrary_init_layouts();
 }
 
+// Workaround to convert a single string to char**.
+static char** buffer_to_ptr(thbuffer& buff)
+{
+	static char* data;
+	data = buff.data();
+	return &data;
+}
+
 )";
 
 const char * thlibrarydata_grades_text =

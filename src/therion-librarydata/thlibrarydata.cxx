@@ -23,6 +23,14 @@ void thlibrary_init()
   thlibrary_init_layouts();
 }
 
+// Workaround to convert a single string to char**.
+static char** buffer_to_ptr(thbuffer& buff)
+{
+	static char* data;
+	data = buff.data();
+	return &data;
+}
+
 void thlibrary_init_grades()
 {
 	std::unique_ptr<thgrade> pgrade;
@@ -30,9 +38,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "BCRA3";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "BCRA grade 3";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = 0.25;
 	pgrade->dls_bearing = 1.25;
 	pgrade->dls_gradient = 1.25;
@@ -48,9 +56,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "BCRA5";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "BCRA grade 5";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = 0.05;
 	pgrade->dls_bearing = 0.5;
 	pgrade->dls_gradient = 0.5;
@@ -66,9 +74,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_-1";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 ungraded survey without map";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = thnan;
 	pgrade->dls_bearing = thnan;
 	pgrade->dls_gradient = thnan;
@@ -84,9 +92,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_0";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 ungraded survey";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = thnan;
 	pgrade->dls_bearing = thnan;
 	pgrade->dls_gradient = thnan;
@@ -102,9 +110,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_1";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 survey grade 1";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = thnan;
 	pgrade->dls_bearing = thnan;
 	pgrade->dls_gradient = thnan;
@@ -120,9 +128,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_2";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 survey grade 2";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = thnan;
 	pgrade->dls_bearing = thnan;
 	pgrade->dls_gradient = thnan;
@@ -138,9 +146,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_3";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 survey grade 3";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = 0.25;
 	pgrade->dls_bearing = 2.5;
 	pgrade->dls_gradient = 15;
@@ -156,9 +164,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_4";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 survey grade 4";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = 0.05;
 	pgrade->dls_bearing = 1;
 	pgrade->dls_gradient = 1;
@@ -174,9 +182,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_5";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 survey grade 5";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = 0.025;
 	pgrade->dls_bearing = 0.5;
 	pgrade->dls_gradient = 0.5;
@@ -192,9 +200,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_6";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 survey grade 6";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = 0.01;
 	pgrade->dls_bearing = 0.125;
 	pgrade->dls_gradient = 0.125;
@@ -210,9 +218,9 @@ void thlibrary_init_grades()
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "UISv1_X";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),0,0);
 	oname = "UISv1 survey grade X";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	pgrade->dls_length = thnan;
 	pgrade->dls_bearing = thnan;
 	pgrade->dls_gradient = thnan;
@@ -234,9 +242,9 @@ void thlibrary_init_layouts()
 
 	playout = thdb.create<thlayout>(thobjectsrc("therion",0));
 	oname = "AUT";
-	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	oname = "Austrian symbol set";
-	playout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	playout->def_scale = 0;
 	playout->scale = 0.005;
 	playout->def_base_scale = 0;
@@ -376,7 +384,7 @@ void thlibrary_init_layouts()
 	playout->def_page_numbers = 0;
 	playout->pgsnum = true;
 	oname = "AUT";
-	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);
 	playout->get_last_line()->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
 	playout->get_last_line()->smid = SYMX_WATER;
@@ -402,9 +410,9 @@ void thlibrary_init_layouts()
 
 	playout = thdb.create<thlayout>(thobjectsrc("therion",0));
 	oname = "SCR200";
-	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	oname = "Computer screen layout";
-	playout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	playout->def_scale = 2;
 	playout->scale = 0.005;
 	playout->def_base_scale = 0;
@@ -547,7 +555,7 @@ void thlibrary_init_layouts()
 	playout->def_page_numbers = 0;
 	playout->pgsnum = true;
 	oname = "SKBB";
-	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),buffer_to_ptr(oname),TT_UTF_8,0);
 	playout->def_tex_lines = 2;
 	thdb.insert(std::move(playout));
 }

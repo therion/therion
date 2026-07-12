@@ -137,13 +137,6 @@ class thbuffer {
   
   
   /**
-   * Type conversion to char*.
-   */
-   
-  operator char** ();
-  
-  
-  /**
    * "=" operator.
    */
    

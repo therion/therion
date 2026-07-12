@@ -1151,11 +1151,11 @@ int thlayout::get_context()
 void thlayout::self_print_library(std::ostream& out) {
 
   fmt::print(out, "\toname = \"{}\";\n", this->get_name());
-  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
   // decode title
   thdecode_c(&(this->db->buff_enc), this->get_title());
   fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.c_str());
-  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
 
 
   fmt::print(out, "\tplayout->def_scale = {};\n", this->def_scale);
@@ -1434,7 +1434,7 @@ void thlayout::self_print_library(std::ostream& out) {
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS)
           fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
         else
-          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
+          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
