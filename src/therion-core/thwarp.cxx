@@ -374,7 +374,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
   }
 
 
-  this->mpic.rgba_save("PNG","png",thcfg.sketch_colors);
+  this->mpic.rgba_save(thcfg.sketch_colors);
   this->mpic.rgba_free();
   sketch->m_pic.rgba_free();
   this->mpic.scale = T3.m_scale;

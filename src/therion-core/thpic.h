@@ -49,15 +49,13 @@ struct thpic {
 
   void init(const char * fname, const char * incfnm);
 
-  const char * convert(const char * type, const char * ext, const std::string& options);
-
   void rgba_load();
 
   void rgba_free();
 
   void rgba_init(long width, long height);
 
-  void rgba_save(const char * type, const char * ext, int colors = -1);
+  void rgba_save(int colors = -1);
 
   char * rgba_get_pixel(long x, long y);
 

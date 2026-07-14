@@ -27,13 +27,13 @@
  */
 
 #include "thpic.h"
-#include "thbuffer.h"
 #include "thdatabase.h"
-#include "thinit.h"
 #include "thtmpdir.h"
 #include "thexception.h"
 #include "thconfig.h"
 #include "therion.h"
+
+#include <Magick++/Image.h>
 
 #include <fmt/format.h>
 
@@ -43,8 +43,6 @@
 namespace fs = std::filesystem;
 
 long thpic_convert_number(1);
-
-const char * thpic_tmp(NULL);
 
 thpic::thpic() {
   this->fname = NULL;
@@ -56,11 +54,6 @@ thpic::thpic() {
   this->x = 0.0;
   this->y = 0.0;
   this->scale = 1.0;
-
-  if (thpic_tmp == NULL) {
-    thdb.buff_tmp = thtmp.get_file_name("pic0000.txt");
-    thpic_tmp = thdb.strstore(thdb.buff_tmp.c_str());
-  }
 }
 
 
@@ -90,54 +83,15 @@ void thpic::init(const char * pfname, const char * incfnm)
   std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
   this->fname = thdb.strstore(pict_path_str.c_str());
 
-  thbuffer ccom;
-  int retcode;
-  bool isspc;
-
-  // program path
-  isspc = (strcspn(thini.get_path_identify()," \t") < strlen(thini.get_path_identify()));
-  ccom = "";
-  if (isspc) ccom += "\"";
-  ccom += thini.get_path_identify();
-  if (isspc) ccom += "\"";
-
-  // format
-  ccom += " -format \"%w\\n%h\\n\" ";
-
-  // filename
-  isspc = (strcspn(this->fname," \t") < strlen(this->fname));
-  if (isspc) ccom += "\"";
-  ccom += this->fname;
-  if (isspc) ccom += "\"";
-
-  // write into
-  ccom += " > ";
-  isspc = (strcspn(thpic_tmp," \t") < strlen(thpic_tmp));
-  if (isspc) ccom += "\"";
-  ccom += thpic_tmp;
-  if (isspc) ccom += "\"";
-  
-#ifdef THDEBUG
-  thprint("running convert\n");
-#endif
-
-  retcode = system(ccom.c_str());
-  if (retcode == EXIT_SUCCESS) {
-    FILE * tmp;
-    tmp = fopen(thpic_tmp,"r");
-    if (tmp == NULL)
-      retcode = EXIT_FAILURE;
-    else {
-      if (fscanf(tmp,"%ld",&this->width) != 1)
-        retcode = EXIT_FAILURE;
-      if (fscanf(tmp,"%ld",&this->height) != 1)
-        retcode = EXIT_FAILURE;
-      fclose(tmp);
-    }
+  try
+  {
+    const Magick::Image img(this->fname);
+    this->width = img.columns();
+    this->height = img.rows();
   }
-
-  if ((retcode != EXIT_SUCCESS) || (!this->exists())) {
-    thwarning(fmt::format("unable to read \"{}\"", this->fname));
+  catch (const Magick::Exception& e)
+  {
+    thwarning(fmt::format("unable to read {} -- {}", this->fname, e.what()));
     this->height = -1;
     this->width = -1;
   }
@@ -145,79 +99,22 @@ void thpic::init(const char * pfname, const char * incfnm)
 }
 
 
-const char * thpic::convert(const char * type, const char * ext, const std::string& options)
-{
-  if (!this->exists())
-    return NULL;
-
-  thbuffer ccom;
-  int retcode;
-  bool isspc;
-  const char * tmpf;
-  const auto tmpfn = fmt::format("pic{:04d}.{}", thpic_convert_number++, ext);
-  isspc = (strcspn(thini.get_path_convert()," \t") < strlen(thini.get_path_convert()));
-  ccom = "";
-  if (isspc) ccom += "\"";
-  ccom += thini.get_path_convert();
-  if (isspc) ccom += "\"";
-  ccom += " ";
-  ccom += options.c_str();
-  ccom += " ";
-
-  isspc = (strcspn(this->fname," \t") < strlen(this->fname));
-  if (isspc) ccom += "\"";
-  ccom += this->fname;
-  if (isspc) ccom += "\"";
-  ccom += " ";
-
-  tmpf = thtmp.get_file_name(tmpfn.c_str());
-  isspc = (strcspn(tmpf," \t") < strlen(tmpf));
-  if (isspc) ccom += "\"";
-  ccom += type;
-  ccom += ":";
-  ccom += tmpf;
-  if (isspc) ccom += "\"";
-
-  retcode = system(ccom.c_str());
-  if (retcode == EXIT_SUCCESS) {
-    ccom = thtmp.get_file_name(tmpfn.c_str());
-    size_t x, l;
-    l = strlen(ccom.c_str());
-    for (x = 0; x < l; x++) if (ccom.c_str()[x] == '\\') ccom.data()[x] = '/';
-    return (thdb.strstore(ccom.c_str()));
-  } else {
-    return NULL;
-  }
-
-}
-
-
 void thpic::rgba_load()
 {
-
   if (!this->exists())
     return;
 
-  if (this->rgbafn == NULL) {
-    this->rgbafn = this->convert("RGBA","rgba","-define jpeg:dct-method=islow -set colorspace RGB -depth 8");
+  try
+  {
+    Magick::Image img(this->fname);
+    this->rgba.resize(img.columns() * img.rows() * 4);
+    img.write(0, 0, img.columns(), img.rows(), "RGBA", MagickCore::CharPixel, this->rgba.data());
   }
-
-  if (this->rgbafn == NULL)
-    return;
-
-  FILE * f;
-  f = fopen(this->rgbafn,"rb");
-  if (f != NULL) {
-    size_t rawsize, readsize;
-    rawsize = (size_t)(this->width * this->height * 4);
-    this->rgba.resize(rawsize);
-    readsize = fread(this->rgba.data(), 1, rawsize, f);
-    if (readsize < rawsize) {
-      this->rgba_free();
-    }
-    fclose(f);
+  catch (const Magick::Exception& e)
+  {
+    thwarning(fmt::format("unable to load {} -- {}", this->fname, e.what()));
+    this->rgba_free();
   }
-
 }
 
 
@@ -236,7 +133,7 @@ void thpic::rgba_init(long w, long h)
   std::fill(this->rgba.begin(), this->rgba.end(), 0);
 }
 
-void thpic::rgba_save(const char * type, const char * ext, int colors)
+void thpic::rgba_save(const int colors)
 {
   if (this->rgba.empty()) {
     this->width = -1;
@@ -244,22 +141,26 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
     this->fname = NULL;
     return;
   }
-  thpic tmp;
-  tmp.width = this->width;
-  tmp.height = this->height;
-  auto tmpfn = fmt::format("pic{:04d}.rgba", thpic_convert_number++);
-  tmp.fname = thdb.strstore(thtmp.get_file_name(tmpfn.c_str()));
-  this->rgbafn = tmp.fname;
-  FILE * f;
-  f = fopen(tmp.fname,"wb");
-  fwrite(this->rgba.data(),1,4 * this->width * this->height,f);
-  fclose(f);
-  if ((colors > 1) && (!thcfg.reproducible_output))
-    this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300 +dither -colors {}", this->width, this->height, colors));
-  else
-    this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300", this->width, this->height));
-  tmpfn = fmt::format("pic{:04d}.{}", thpic_convert_number - 1, ext);
-  this->texfname = thdb.strstore(tmpfn.c_str());
+
+  const auto fileName = fmt::format("pic{:04d}.png", thpic_convert_number++);
+  const std::string tmpFile = thtmp.get_file_name(fileName.c_str());
+  try
+  {
+    Magick::Image image(this->width, this->height, "RGBA", Magick::CharPixel, this->rgba.data());
+    image.defineValue("PNG", "exclude-chunks", "date,time");
+    image.depth(8);
+    image.density("300");
+    if (colors > 1 && !thcfg.reproducible_output) {
+      image.quantizeColors(colors);
+      image.quantizeDither(true);
+    }
+    image.write(tmpFile);
+    this->texfname = thdb.strstore(fileName.c_str());
+  }
+  catch (const Magick::Exception& e)
+  {
+    thwarning(fmt::format("unable to create {} -- {}", tmpFile, e.what()));
+  }
 }
 
 

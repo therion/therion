@@ -28,6 +28,7 @@ target_link_libraries(therion-core PUBLIC
     common-utils
     QuickHull
     fmt::fmt
+    ImageMagick::Magick++
     $<$<PLATFORM_ID:Android>:log>
 )
 target_compile_definitions(therion-core PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)

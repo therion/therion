@@ -72,9 +72,33 @@
 #include "img.h"
 #include <filesystem>
 
+#include <Magick++/Image.h>
+
 #include <fmt/format.h>
 
 namespace fs = std::filesystem;
+
+static std::string convert_to_gif(const thpic& pic, const long resize = 0)
+{
+  static int counter = 0;
+  const auto file_name = fmt::format("thexpmap_pic{}.gif", ++counter);
+  const std::string tmp_file_path = thtmp.get_file_name(file_name.c_str());
+  try
+  {
+    Magick::Image image(pic.width, pic.height, "RGBA", Magick::CharPixel, pic.rgba.data());
+    if (resize > 0)
+    {
+      image.resize(std::to_string(resize));
+    }
+    image.write(tmp_file_path);
+    return tmp_file_path;
+  }
+  catch (const Magick::Exception& e)
+  {
+    thwarning(fmt::format("unable to create {} -- {}", tmp_file_path, e.what()));
+    return "";
+  }
+}
 
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
@@ -592,7 +616,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
           skpic = skit->morph(sf);
           if (skpic != NULL) {
             double nx, ny, ns;
-            const char * srcgif;
+            std::string srcgif;
             nx = sf * (skpic->x) - shx; 
             ny = sf * (skpic->y + skpic->scale * double(skpic->height)) - shy;
             ns = skpic->scale * sf;
@@ -612,17 +636,17 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
             thtext_inline = true;
 
             if (fabs(ns - 1.0) < 1e-8) {
-              srcgif = skpic->convert("GIF", "gif", "");            
+              srcgif = convert_to_gif(*skpic);
             } else {
-              srcgif = skpic->convert("GIF", "gif", fmt::format("-resize {}", long(ns * double(skpic->width) + 0.5)));
+              srcgif = convert_to_gif(*skpic, static_cast<long>(ns * double(skpic->width) + 0.5));
             }
             
             thprint(" done\n");
             thtext_inline = false;
 
-            if (srcgif != NULL) {
+            if (!srcgif.empty()) {
               fprintf(pltf,"{%.2f %.2f\n{", nx, ny);
-              thbase64_encode(srcgif, pltf);
+              thbase64_encode(srcgif.c_str(), pltf);
               fprintf(pltf,"}\n}\n");
             }
           }
@@ -845,7 +869,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
           skpic = skit->morph(sf);
           if (skpic != NULL) {
             double nx, ny, ns;
-            const char * srcgif;
+            std::string srcgif;
             nx = sf * (skpic->x - prj->shift_x) - shx; 
             ny = sf * (skpic->y - prj->shift_y + skpic->scale * double(skpic->height)) - shy;
             ns = skpic->scale * sf;
@@ -865,12 +889,12 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             thtext_inline = true;
 
             if (fabs(ns - 1.0) < 1e-8) {
-              srcgif = skpic->convert("GIF", "gif", "");            
+              srcgif = convert_to_gif(*skpic);
             } else {
-              srcgif = skpic->convert("GIF", "gif", fmt::format("-resize {}", long(ns * double(skpic->width) + 0.5)));
+              srcgif = convert_to_gif(*skpic, static_cast<long>(ns * double(skpic->width) + 0.5));
             }
             
-            if (srcgif != NULL) {              
+            if (!srcgif.empty()) {              
               // Let's copy results and log-file to working directory
 #ifdef THDEBUG
               thprint("copying results\n");
