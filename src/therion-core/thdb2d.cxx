@@ -3600,7 +3600,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   }
 #endif  
 
-  thbuffer com;
+  std::string com;
   // working directory will be the tmpdir until this scope ends
   const auto tmp_handle = thtmp.switch_to_tmpdir();
   int retcode;

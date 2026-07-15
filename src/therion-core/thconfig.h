@@ -31,7 +31,6 @@
 
 #include <list>
 
-#include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thinput.h"
 #include "thexporter.h"
@@ -69,7 +68,7 @@ class thconfig {
 
   public:
 
-  thbuffer fname,  ///< Configuration file name.
+  std::string fname,  ///< Configuration file name.
     search_path,  ///< Lib files search path.
     init_path,  ///< Initialization path.
     install_path,  ///< Installation path.

@@ -3,7 +3,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/src/therion-core/tharea.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thattr.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thbezier.cxx
-    ${CMAKE_SOURCE_DIR}/src/therion-core/thbuffer.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thcmdline.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thcomment.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thconfig.cxx

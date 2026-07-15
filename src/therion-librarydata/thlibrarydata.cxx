@@ -24,7 +24,7 @@ void thlibrary_init()
 }
 
 // Workaround to convert a single string to char**.
-static char** buffer_to_ptr(thbuffer& buff)
+static char** buffer_to_ptr(std::string& buff)
 {
 	static char* data;
 	data = buff.data();
@@ -34,7 +34,7 @@ static char** buffer_to_ptr(thbuffer& buff)
 void thlibrary_init_grades()
 {
 	std::unique_ptr<thgrade> pgrade;
-	thbuffer oname;
+	std::string oname;
 
 	pgrade = thdb.create<thgrade>(thobjectsrc("therion",0));
 	oname = "BCRA3";
@@ -238,7 +238,7 @@ void thlibrary_init_grades()
 void thlibrary_init_layouts()
 {
 	std::unique_ptr<thlayout> playout;
-	thbuffer oname;
+	std::string oname;
 
 	playout = thdb.create<thlayout>(thobjectsrc("therion",0));
 	oname = "AUT";

@@ -28,7 +28,6 @@
  
 #pragma once
 
-#include "thbuffer.h"
 #include "thmbuffer.h"
 #include <memory>
 #include <string>
@@ -51,12 +50,12 @@ private:
     pifo, ///< Print if open.
     * pifoid, ///< Identifier.
     report_missing; 
-  thbuffer file_name;  ///< Main input file name.
+  std::string file_name;  ///< Main input file name.
   thmbuffer search_path,  ///< Search paths.
     file_suffix,  ///< File suffixes.
     tmpmb;   ///< Temporary multi buffer.
   void (* pifoproc)(char *);  ///< Function to call if file was opened.
-  thbuffer linebf,  ///< Line buffer.
+  std::string linebf,  ///< Line buffer.
     cmdbf,  ///< Command buffer.
     valuebf;  ///< Value buffer.
     

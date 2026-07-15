@@ -283,7 +283,7 @@ struct thmapstat_copyright_data {
   }
 };
 
-void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, bool show_count, thlayout * layout, thbuffer & c){
+void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, bool show_count, thlayout * layout, std::string & c){
     fprintf(f, "\\%s={", team_name);
     std::vector<thmapstat_person_data> pd;
     for (auto pi = team_map.begin(); pi != team_map.end(); pi++) {
@@ -330,7 +330,7 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
 }
 
 
-void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * /*layout*/, thbuffer & c){ // TODO unused parameter layout
+void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * /*layout*/, std::string & c){ // TODO unused parameter layout
     fprintf(f, "\\%s={", team_name);
     std::vector<thmapstat_copyright_data> pd;
     for (auto pi = copy_map.begin(); pi != copy_map.end(); pi++) {
@@ -428,7 +428,7 @@ void thmapstat::get_min_max_alt(double & min, double & max) {
 
 void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata) {
 
-  thbuffer b,c;
+  std::string b,c;
   unsigned long cnt;
   thmapstat_personmap::iterator pi;
   thmapstat_copyrightmap::iterator ci;

@@ -30,7 +30,6 @@
 #define thinit_h
 
 #include <string>
-#include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thinput.h"
 
@@ -55,7 +54,7 @@ class thinit {
 
   int encoding_default = 0, encoding_sql = 0;  ///< Default encoding.
     
-  thbuffer path_cavern, ///< Survex executable full path.
+  std::string path_cavern, ///< Survex executable full path.
     path_pdftex, path_mpost,  ///< PDF tex and metapost path
     opt_mpost, path_otftotfm, 
     path_convert, path_identify,  ///< Path to ImageMagick convert and identify executables.

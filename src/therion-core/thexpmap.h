@@ -198,7 +198,7 @@ class thexpmap : public thexport {
   class thdb2dprj * projptr;  ///< Projection pointer.
   thsymbolset symset;
   
-  thbuffer layoutopts;  ///< Layout options buffer.
+  std::string layoutopts;  ///< Layout options buffer.
 
   unsigned items;  ///< Item types to be exported (As of 29/11/2016 affects only KML entrances)
   

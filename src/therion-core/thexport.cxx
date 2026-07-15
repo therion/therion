@@ -142,7 +142,7 @@ void thexport::dump_body(FILE * xf)
 
 const char * thexport::get_output(const char * defname)
 {
-  static thbuffer outptfname;
+  static std::string outptfname;
   outptfname = this->cfgpath.c_str();
   if (this->outpt_def) {
     if (thpath_is_absolute(this->outpt))

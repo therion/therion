@@ -32,7 +32,6 @@
 #include "thinfnan.h"
 #include "thdb2dprj.h"
 #include "thmbuffer.h"
-#include "thbuffer.h"
 #include "thdb2dpt.h"
 #include "thdb2dlp.h"
 #include "thdb2dab.h"
@@ -174,7 +173,7 @@ class thdb2d {
 
   thmbuffer mbf,  ///< Multi buffer.
     mbf2; ///< Second buffer.
-  thbuffer bf; /// Buffer.
+  std::string bf; /// Buffer.
 
   thdb2dxs_target_map m_target_map;
     

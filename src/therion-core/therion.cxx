@@ -116,7 +116,7 @@ void thprint_xtherion() {
   bool already_exported;
   int i, j, l;
   const char * lngstr, *trnstr, * tsrc;
-  thbuffer tdst;
+  std::string tdst;
   std::string tss;
   thprint("set xth(point_types) {\n");
   for(i = 0; thtt_point_types[i].tok != TT_POINT_TYPE_UNKNOWN; i++) {

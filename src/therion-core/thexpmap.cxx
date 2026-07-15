@@ -1272,7 +1272,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thdb2dxm * cmap = maps;
   thdb2dxs * cbm;
   thdb2dmi * cmi;
-  thbuffer encb;
+  std::string encb;
   thscrap * cs;
 
   thini.copy_fonts();
@@ -2158,7 +2158,7 @@ if (ENC_NEW.NFSS==0) {
       if (anyprev)
             fprintf(plf,"\",\n");      
       
-      thbuffer texb;
+      std::string texb;
       texb.resize(128);
       thdecode(& texb,TT_ISO8859_2,(strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name));      
       thdecode_tex(& encb, texb.c_str());
@@ -3237,7 +3237,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*
   
   // urobi altitude legendu
   long xalt;
-  thbuffer tmpb;
+  std::string tmpb;
   tmpb.resize(2048);
   if (addleg && (maxz > minz) && (this->layout->color_crit == TT_LAYOUT_CCRIT_ALTITUDE)) {
     for (xalt = 5; xalt >= 0; xalt--) {

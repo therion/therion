@@ -84,7 +84,7 @@ void thlibrary_init()
 }
 
 // Workaround to convert a single string to char**.
-static char** buffer_to_ptr(thbuffer& buff)
+static char** buffer_to_ptr(std::string& buff)
 {
 	static char* data;
 	data = buff.data();
@@ -97,14 +97,14 @@ const char * thlibrarydata_grades_text =
   "void thlibrary_init_grades()\n"
   "{\n"
   "\tstd::unique_ptr<thgrade> pgrade;\n"
-  "\tthbuffer oname;\n";
+  "\tstd::string oname;\n";
 
 
 const char * thlibrarydata_layouts_text =
   "void thlibrary_init_layouts()\n"
   "{\n"
   "\tstd::unique_ptr<thlayout> playout;\n"
-  "\tthbuffer oname;\n";
+  "\tstd::string oname;\n";
 
 
 bool operator < (const class thsurveyname & n1, const class thsurveyname & n2)

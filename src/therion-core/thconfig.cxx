@@ -160,7 +160,7 @@ thconfig::thconfig()
   this->m_decl_out_of_geomag_range = false;
 
 #ifdef THWIN32
-  thbuffer * tmpbf = &(this->bf1);
+  std::string * tmpbf = &(this->bf1);
   // set search path according to Windows registers
   tmpbf->resize(1024);
   DWORD type = 0, length = 1024;

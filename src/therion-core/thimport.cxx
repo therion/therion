@@ -277,7 +277,7 @@ const char * thimport::station_name(const char * sn, const char separator, struc
     return sn;
     
   
-  static thbuffer bx, prevsurvey;
+  static std::string bx, prevsurvey;
   static thmbuffer psurv, csurv;
   static long active_survey;
   static thsurvey * prevpsurvey;
@@ -520,7 +520,7 @@ void thimport::import_file_img()
   size_t filterl = 0;
   if (this->filter != NULL)
     filterl = strlen(this->filter);
-  thbuffer n1, n2;
+  std::string n1, n2;
   std::string xb, yb, zb;
   std::string orig_name, new_name;  
   img* pimg = img_open(this->fname);
