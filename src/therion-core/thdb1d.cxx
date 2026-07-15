@@ -419,7 +419,7 @@ void thdb1d::scan_data()
                 lei->total_dy = (lei->direction ? 1.0 : -1.0) * lei->dy;
                 lei->total_dz = (lei->direction ? 1.0 : -1.0) * lei->dz;
                 lei->total_length = thdxyz2length(lei->total_dx,lei->total_dy,lei->total_dz);
-                lei->total_bearing = thdxyz2bearing(lei->total_dx,lei->total_dy,lei->total_dz);
+                lei->total_bearing = thdxyz2bearing(lei->total_dx,lei->total_dy);
                 lei->total_gradient = thdxyz2clino(lei->total_dx,lei->total_dy,lei->total_dz);
                 if (lei->infer_plumbs && (!lei->plumbed)) {
                   lei->plumbed = (lei->dx == 0.0) && (lei->dy == 0.0) && (lei->dz != 0.0);
