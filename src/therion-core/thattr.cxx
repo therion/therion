@@ -530,7 +530,6 @@ void thattr::export_txt(const char * fname, int /*encoding*/) // TODO unused par
   thattr_obj_list::iterator oi;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  std::string enc;
 
   this->analyze_fields();
 
@@ -582,7 +581,6 @@ void thattr::export_kml(const char * fname, const char * name_field, const char 
   thattr_obj_list::iterator oi, oinext;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  std::string enc;
 
   this->analyze_fields();
   thattr_field * lat = get_field("Latitude", false), 
@@ -666,7 +664,6 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
   thattr_obj_list::iterator oi, oinext;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  std::string enc;
   const char * alstr;
 
   this->analyze_fields();
