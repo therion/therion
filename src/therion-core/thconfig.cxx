@@ -127,7 +127,6 @@ thconfig::thconfig()
   this->install_path.assign("");
   this->install_tex = false;
   this->install_tcltk = false;
-  this->install_im = false;
   this->lang = THLANG_UNKNOWN;
 
   this->auto_join = true;
@@ -187,8 +186,6 @@ thconfig::thconfig()
         this->install_tex = true;
       if (RegQueryValueEx(key,"TclTk",NULL,&type,(BYTE *)tmpbf->data(),&length) == ERROR_SUCCESS)
         this->install_tcltk = true;
-      if (RegQueryValueEx(key,"ImageMagick",NULL,&type,(BYTE *)tmpbf->data(),&length) == ERROR_SUCCESS)
-        this->install_im = true;
     }
   	RegCloseKey(key);
   }

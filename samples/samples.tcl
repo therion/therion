@@ -375,12 +375,7 @@ proc create_docs {} {
     close $fid 
   }
 
-  if {[string compare $tcl_platform(platform) windows] == 0} {
-    package require registry
-    set convpath [file normalize "[registry get HKEY_CURRENT_USER\\SOFTWARE\\Therion InstallDir]/bin/convert.exe"]
-  } else {
-    set convpath convert
-  }
+  set convpath convert
 
   # create output directory
   file mkdir $outd

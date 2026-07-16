@@ -107,8 +107,6 @@ void thprint_environment() {
   thprint(fmt::format("CAVERN={}\n",thini.get_path_cavern()));
   thprint(fmt::format("METAPOST={}\n",thini.get_path_mpost()));
   thprint(fmt::format("PDFTEX={}\n",thini.get_path_pdftex()));
-  thprint(fmt::format("IDENTIFY={}\n",thini.get_path_identify()));
-  thprint(fmt::format("CONVERT={}\n",thini.get_path_convert()));
 }
 
 

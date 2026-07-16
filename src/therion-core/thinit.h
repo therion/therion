@@ -57,7 +57,6 @@ class thinit {
   std::string path_cavern, ///< Survex executable full path.
     path_pdftex, path_mpost,  ///< PDF tex and metapost path
     opt_mpost, path_otftotfm, 
-    path_convert, path_identify,  ///< Path to ImageMagick convert and identify executables.
     tmp_path, tmp_remove_script;
     //path_3dtopos, 
 
@@ -102,16 +101,6 @@ class thinit {
    
   const char * get_path_cavern();
 
-  /**
-   * Return ImageMagick convert executable path.
-   */
-   
-  const char * get_path_convert();
-
-  /**
-   * Return ImageMagick identify executable path.
-   */
-  const char * get_path_identify();
 
   /**
    * Return metapost options.

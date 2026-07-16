@@ -111,8 +111,6 @@ enum {
   TTIC_ENCODING_SQL,
   TTIC_PATH_CAVERN,
 //  TTIC_PATH_3DTOPOS,
-  TTIC_PATH_CONVERT,
-  TTIC_PATH_IDENTIFY,
   TTIC_PATH_MPOST,
   TTIC_OPT_MPOST,
   TTIC_PATH_PDFTEX,
@@ -142,14 +140,12 @@ enum {
  
 static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
-  {"convert-path", TTIC_PATH_CONVERT},
   {"cs-def", TTIC_CS_DEF},
   {"cs-trans", TTIC_CS_TRANS},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
 //  {"path_3dtopos", TTIC_PATH_3DTOPOS},
-  {"identify-path", TTIC_PATH_IDENTIFY},
   {"language", TTIC_LANG},
   {"loop-closure", TTIC_LOOPC},
   {"mpost-options", TTIC_OPT_MPOST},
@@ -378,21 +374,7 @@ void thinit::load()
     this->path_otftotfm = "otftotfm";
 #ifdef THWIN32
   }
-#endif  
-
-#ifdef THWIN32
-  if (thcfg.install_im) {
-    this->path_convert = thcfg.install_path.c_str();
-    this->path_convert += "\\bin\\convert.exe";
-    this->path_identify = thcfg.install_path.c_str();
-    this->path_identify += "\\bin\\identify.exe";
-  } else {
-#endif  
-    this->path_convert = "convert";
-    this->path_identify = "identify";
-#ifdef THWIN32
-  }
-#endif  
+#endif
 
   set_proj_lib_path(false);  // don't use env in windows therion executable
   thcs_add_default_transformations();
@@ -423,8 +405,6 @@ void thinit::load()
       switch (argid) {      
         case TTIC_ENCODING_DEFAULT:
         case TTIC_PATH_CAVERN:
-        case TTIC_PATH_CONVERT:
-        case TTIC_PATH_IDENTIFY:
         case TTIC_LOOPC:
         case TTIC_TMP_PATH:
         case TTIC_LANG:
@@ -488,18 +468,6 @@ void thinit::load()
           if (strlen(args[1]) < 1)
             throw thexception("invalid path");
           this->path_cavern.assign(args[1]);
-          break;
-          
-        case TTIC_PATH_CONVERT:
-          if (strlen(args[1]) < 1)
-            throw thexception("invalid path");
-          this->path_convert.assign(args[1]);
-          break;
-          
-        case TTIC_PATH_IDENTIFY:
-          if (strlen(args[1]) < 1)
-            throw thexception("invalid path");
-          this->path_identify.assign(args[1]);
           break;
 
         case TTIC_TMP_PATH:
@@ -625,8 +593,6 @@ void thinit::load()
 
 #ifdef THWIN32
   thinit__make_short_path(&this->path_cavern);
-  thinit__make_short_path(&this->path_convert);
-  thinit__make_short_path(&this->path_identify);
   thinit__make_short_path(&this->path_mpost);
   thinit__make_short_path(&this->path_pdftex);
 #endif
@@ -723,18 +689,6 @@ void thinit::load()
 const char * thinit::get_path_cavern()
 {
   return this->path_cavern.c_str();
-}
-
-
-const char * thinit::get_path_convert()
-{
-  return this->path_convert.c_str();
-}
-
-
-const char * thinit::get_path_identify()
-{
-  return this->path_identify.c_str();
 }
 
 //const char * thinit::get_path_3dtopos()
