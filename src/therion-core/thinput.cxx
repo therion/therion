@@ -87,7 +87,7 @@ class ifile {
   public:
   
   std::ifstream sh;   ///< file stream.
-  thbuffer name,  ///< Input file name buffer.
+  std::string name,  ///< Input file name buffer.
     path;  ///< Input file path buffer.
   unsigned long lnumber;  /// Position at the file.
   int encoding;  /// Current file encoding.
@@ -557,7 +557,7 @@ const char * thinput::get_cif_name()
 
 const char * thinput::get_cif_path()
 {
-  static thbuffer cifpath;
+  static std::string cifpath;
   thsplit_fpath(&cifpath, this->last_ptr->name.c_str());
   return cifpath.c_str();
 }

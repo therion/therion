@@ -169,7 +169,7 @@ void th2ddataobject::self_print_properties(FILE * outf)
   // insert intended print of object properties here
 }
 
-thbuffer sTTtype, sTTsubtype;
+std::string sTTtype, sTTsubtype;
 void th2dsplitTT(char * src, char ** type, char ** subtype)
 {
   size_t sl, x, tl, stl;

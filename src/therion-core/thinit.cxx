@@ -189,7 +189,7 @@ static const thstok thtt_loopc[] = {
 
 
 #ifdef THWIN32
-void thinit__make_short_path(thbuffer * bf) {
+void thinit__make_short_path(std::string * bf) {
   if (bf->empty())
     return;
   DWORD short_buf_size = GetShortPathName(bf->c_str(), nullptr, 0);
@@ -244,7 +244,7 @@ int thinit::get_lang() {
 
 void thinit::check_font_path(const char * fname, int index) {
 
-  static thbuffer pfull, pshort, tmpb;
+  static std::string pfull, pshort, tmpb;
 
   pshort.assign("");
   pfull.assign("");
@@ -312,7 +312,7 @@ void thinit::load()
   // set cavern path according to Windows registers
   this->path_cavern.resize(1024);
   thmbuffer mbf;
-  thbuffer bf;
+  std::string bf;
   DWORD type(0), length = 1024;
   HKEY key;
   bool loaded_ok = true;
@@ -348,7 +348,7 @@ void thinit::load()
 
 	// try running survex
 	if (this->loopc == THINIT_LOOPC_UNKNOWN) {
-	  thbuffer svxcom;
+	  std::string svxcom;
 	  svxcom = "\"";
 	  svxcom += thini.get_path_cavern();
 	  svxcom += "\" --version";  
@@ -687,7 +687,7 @@ void thinit::load()
       fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       fclose(ff);
 
-      thbuffer com;
+      std::string com;
       const auto tmp_handle = thtmp.switch_to_tmpdir();
       int retcode;
 

@@ -88,7 +88,7 @@ const char * thmatch_tstring(int token, const thstok *tab, int tab_size)
 }
 
 
-void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src)
+void thsplit_word(std::string * dword, std::string * drest, const char * src)
 {
   long srcl = strlen(src),
     idx = 0,
@@ -368,7 +368,7 @@ void thsplit_args(thmbuffer * dest, const char * src)
 }
 
 
-void thsplit_fpath(thbuffer * dest, const char * src)
+void thsplit_fpath(std::string * dest, const char * src)
 {
   long len = strlen(src);
   const char * s = src + len++;
@@ -546,7 +546,7 @@ void thparse_double_dms(int & sv, double & dv, const char * src)
   }
 }
 
-void thdecode_c(thbuffer * dest, const char * src)
+void thdecode_c(std::string * dest, const char * src)
 {
 
   size_t srcln = strlen(src), srcx = 0;
@@ -597,7 +597,7 @@ void thdecode_c(thbuffer * dest, const char * src)
 }
 
 
-void thdecode_tcl(thbuffer * dest, const char * src)
+void thdecode_tcl(std::string * dest, const char * src)
 {
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
@@ -633,7 +633,7 @@ void thdecode_tcl(thbuffer * dest, const char * src)
 
 
 
-void thdecode_mp(thbuffer * dest, const char * src)
+void thdecode_mp(std::string * dest, const char * src)
 {
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
@@ -672,7 +672,7 @@ void thdecode_mp(thbuffer * dest, const char * src)
 
 
 
-void thdecode_tex(thbuffer * dest, const char * src)
+void thdecode_tex(std::string * dest, const char * src)
 {
 
   size_t srcln = strlen(src), srcx = 0;
@@ -716,10 +716,10 @@ void thdecode_tex(thbuffer * dest, const char * src)
 }
 
 
-void thdecode_utf2tex(thbuffer * dest, const char * src)
+void thdecode_utf2tex(std::string * dest, const char * src)
 {
 
-  static thbuffer tmpb;
+  static std::string tmpb;
   tmpb = src;
   size_t srcln = strlen(src), srcx = 0, tmpl;
   unsigned char * srcp, * dstp, * wsrcp, *tmpp;
@@ -801,7 +801,7 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
 
 
 
-void thdecode_sql(thbuffer * dest, const char * src)
+void thdecode_sql(std::string * dest, const char * src)
 {
 
   size_t srcln, srcx = 0;
@@ -840,7 +840,7 @@ void thdecode_sql(thbuffer * dest, const char * src)
 
 
 
-void thdecode_arg(thbuffer * dest, const char * src)
+void thdecode_arg(std::string * dest, const char * src)
 {
 
   size_t srcln = strlen(src), srcx;
@@ -1116,7 +1116,7 @@ void thset_grid(
 
 const char * thutf82xhtml(const char * src)
 {
-  static thbuffer tmp;
+  static std::string tmp;
   if (src == NULL)
     return "";
 
@@ -1203,7 +1203,7 @@ void thparse_length(int & sv, double & dv, const char * src)
   size_t strl, cx;
   strl = strlen(src);
   thtflength lt;
-  static thbuffer plb;
+  static std::string plb;
   char * srcb;
   
   plb.assign(src);  

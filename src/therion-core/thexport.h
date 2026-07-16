@@ -30,7 +30,6 @@
 #define thexport_h
 
 #include <stdio.h>
-#include "thbuffer.h"
 #include "thobjectsrc.h"
 #include "thlayout.h"
 #include <memory>
@@ -82,7 +81,7 @@ class thexport {
   class thdatabase * db = nullptr; ///< Exported database.
   
   const char * outpt;  ///< Output file name.
-  thbuffer cfgpath;  ///< Config path.
+  std::string cfgpath;  ///< Config path.
   bool outpt_def;  ///< Whether output file defined.  
   int cs; ///< Output coordinate system.
   int format{};  ///< Output format.

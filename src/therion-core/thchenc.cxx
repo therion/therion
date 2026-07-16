@@ -34,7 +34,7 @@
 
 #include <fmt/format.h>
 
-void thencode(thbuffer * dest, const char * src, int srcenc)
+void thencode(std::string * dest, const char * src, int srcenc)
 {
   // check if source is not UTF-8
   if (srcenc == TT_UTF_8) {
@@ -95,7 +95,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
 }
 
  
-void thdecode(thbuffer * dest, int destenc, const char * src)
+void thdecode(std::string * dest, int destenc, const char * src)
 {
   // chack if source is not UTF-8
   if (destenc == TT_UTF_8) {
