@@ -353,9 +353,9 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
                   "%ld, %ld, %ld, %ld, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f);\n",
                   ++shotx, lei->from.id, lei->to.id, dp->id,
                   sql_double(lei->total_length), sql_double(lei->total_bearing), sql_double(lei->total_gradient),
-				  sql_double(thdxyz2length(adx, ady, adz)), sql_double(thdxyz2bearing(adx, ady, adz)), sql_double(thdxyz2clino(adx, ady, adz)),
+				  sql_double(thdxyz2length(adx, ady, adz)), sql_double(thdxyz2bearing(adx, ady)), sql_double(thdxyz2clino(adx, ady, adz)),
 				  sql_double(thdxyz2length(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
-				  sql_double(thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
+				  sql_double(thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy)),
 				  sql_double(thdxyz2clino(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz))
                   );
                 if ((lei->flags & TT_LEGFLAG_SURFACE) != TT_LEGFLAG_NONE)
