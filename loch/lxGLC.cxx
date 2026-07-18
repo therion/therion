@@ -378,6 +378,14 @@ void lxGLCanvas::OnMouseUp(wxMouseEvent& event)
       if (event.MiddleUp() || (event.LeftUp() && this->m_sMoveSingle))
         this->m_sMoveLock = LXGLCML_NONE;
       break;
+    case LXGLCML_WALK:
+      if (event.MiddleUp())
+        this->m_sMoveLock = LXGLCML_NONE;
+      break;
+    case LXGLCML_LOOK:
+      if (event.LeftUp())
+        this->m_sMoveLock = LXGLCML_NONE;
+      break;
   }
   if ((this->m_sMoveLock == LXGLCML_NONE) && (this->HasCapture())) {
     this->ReleaseMouse();
@@ -822,10 +830,14 @@ void lxGLCanvas::OnMouseDown(wxMouseEvent& event)
       } else if (event.LeftDown() && event.ControlDown()) {
         this->m_sMoveLock = LXGLCML_TILT;
         this->m_sMoveSingle = true;
+      } else if (event.LeftDown() && this->m_sCameraWalkMode) {
+        this->m_sMoveLock = LXGLCML_LOOK;
       } else if (event.LeftDown()) {
         this->m_sMoveLock = LXGLCML_ZOOM2ROTATE;
       } else if (event.RightDown()) {
         this->m_sMoveLock = LXGLCML_PANX2Y;
+      } else if (event.MiddleDown() && this->m_sCameraWalkMode) {
+        this->m_sMoveLock = LXGLCML_WALK;
       } else if (event.MiddleDown()) {
         this->m_sMoveLock = LXGLCML_TILT;
       }
@@ -845,9 +857,10 @@ void lxGLCanvas::OnMouseWheel(wxMouseEvent& event)
 {
   if (this->m_sMoveLock == LXGLCML_NONE) {
     this->setup->StartCameraMovement();
-    if (this->m_sCameraWalkMode)
-      this->setup->WalkTiltCamera(-1.0 * double(event.GetWheelRotation()) / double(event.GetWheelDelta()));
-    else
+    if (this->m_sCameraWalkMode) {
+      double steps = double(event.GetWheelRotation()) / double(event.GetWheelDelta());
+      this->setup->WalkZoomCamera(pow(1.1, steps));
+    } else
       this->setup->TiltCamera(-1.0 * double(event.GetWheelRotation()) / double(event.GetWheelDelta()));
     this->ForceRefresh();
   }
@@ -918,6 +931,21 @@ void lxGLCanvas::OnMouseMove(wxMouseEvent& event)
       } else {
         this->ForceRefresh();
       }
+      break;
+
+    case LXGLCML_WALK:
+      f = pow(1.4142135623730950488016887242097, double(this->my - event.GetY()) / 20.0);
+      this->setup->WalkZoomCamera(f);
+      this->ForceRefresh();
+      break;
+
+    case LXGLCML_LOOK:
+      if (this->m_sCameraLockRotation)
+        ff = 0.0;
+      else
+        ff = double(event.GetX() - this->mx) / 2.0;
+      this->setup->WalkCamera(1.0, ff, double(event.GetY() - this->my) / 2.0);
+      this->ForceRefresh();
       break;
   }
 
@@ -1039,6 +1067,8 @@ void lxGLCanvas::SetCamera() {
   maxclip = 1.1 * maxclip;
   if (maxclip < minclip) maxclip = minclip + 1.0;
   if (minclip < (maxclip / 100.0)) minclip = maxclip / 100.0;
+  if (this->m_sCameraWalkMode)
+    minclip = 0.001;
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -1132,7 +1162,7 @@ void lxGLCanvas::RenderScrapWalls() {
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
   }
-  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
   glEnable(GL_COLOR_MATERIAL);
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0);
@@ -1678,7 +1708,7 @@ void lxGLCanvas::RenderAll() {
   if (this->setup->m_vis_centerline)
     this->RenderCenterline();
 
-  glEnable(GL_CULL_FACE);
+  glDisable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   if (this->setup->m_vis_walls)
     this->RenderScrapWalls();  
