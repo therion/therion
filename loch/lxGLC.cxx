@@ -136,6 +136,7 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
 
   this->m_sCameraAutoRotate = false;
   this->m_sCameraLockRotation = false;
+  this->m_sCameraWalkMode = false;
   this->m_sCameraAutoRotateAngle = 1.0;
 
   this->m_maxTSizeO = 0;
@@ -844,7 +845,10 @@ void lxGLCanvas::OnMouseWheel(wxMouseEvent& event)
 {
   if (this->m_sMoveLock == LXGLCML_NONE) {
     this->setup->StartCameraMovement();
-    this->setup->TiltCamera(-1.0 * double(event.GetWheelRotation()) / double(event.GetWheelDelta()));
+    if (this->m_sCameraWalkMode)
+      this->setup->WalkTiltCamera(-1.0 * double(event.GetWheelRotation()) / double(event.GetWheelDelta()));
+    else
+      this->setup->TiltCamera(-1.0 * double(event.GetWheelRotation()) / double(event.GetWheelDelta()));
     this->ForceRefresh();
   }
 }
@@ -867,7 +871,10 @@ void lxGLCanvas::OnMouseMove(wxMouseEvent& event)
       } else {
         ff = 0.0;
       }
-      this->setup->ZoomCamera(f);
+      if (this->m_sCameraWalkMode)
+        this->setup->WalkCamera(f, ff);
+      else
+        this->setup->ZoomCamera(f);
       if (this->m_sCameraAutoRotate) {
         this->m_sCameraAutoRotateAngle = this->m_sCameraStartAutoRotateAngle + ff / 50.0;
 #ifdef LXWIN32
@@ -875,7 +882,8 @@ void lxGLCanvas::OnMouseMove(wxMouseEvent& event)
           this->ForceRefresh();
 #endif      
       } else {
-        this->setup->RotateCamera(ff);			
+        if (!this->m_sCameraWalkMode)
+          this->setup->RotateCamera(ff);
         this->ForceRefresh();
       }
       break;
@@ -896,7 +904,10 @@ void lxGLCanvas::OnMouseMove(wxMouseEvent& event)
       break;
 
     case LXGLCML_TILT:
-      this->setup->TiltCamera(double(event.GetY() - this->my) / 2.0);
+      if (this->m_sCameraWalkMode)
+        this->setup->WalkTiltCamera(double(event.GetY() - this->my) / 2.0);
+      else
+        this->setup->TiltCamera(double(event.GetY() - this->my) / 2.0);
       if (this->m_sCameraAutoRotate) {
 #ifdef LXWIN32
         if (!this->CameraAutoRotate())
@@ -929,6 +940,8 @@ void lxGLCanvas::OnKeyPress(wxKeyEvent& event) {
       this->setup->StartCameraMovement();
       if (event.ShiftDown())
         this->setup->PanCamera(-0.02, 0.0);
+      else if (this->m_sCameraWalkMode)
+        this->setup->WalkRotateCamera(-1.0);
       else
         this->setup->RotateCamera(-1.0);
       this->ForceRefresh();
@@ -937,7 +950,9 @@ void lxGLCanvas::OnKeyPress(wxKeyEvent& event) {
       this->setup->StartCameraMovement();
       if (event.ShiftDown())
         this->setup->PanCamera(0.02, 0.0);
-      else 
+      else if (this->m_sCameraWalkMode)
+        this->setup->WalkRotateCamera(1.0);
+      else
         this->setup->RotateCamera(1.0);
       this->ForceRefresh();
       break;
@@ -945,20 +960,34 @@ void lxGLCanvas::OnKeyPress(wxKeyEvent& event) {
       this->setup->StartCameraMovement();
       if (event.ShiftDown())
         this->setup->PanCamera(0.0, -0.02);
-      else if (event.ControlDown())
-        this->setup->ZoomCamera(1.02);
-      else
-        this->setup->TiltCamera(-1.0);
+      else if (event.ControlDown()) {
+        if (this->m_sCameraWalkMode)
+          this->setup->WalkZoomCamera(1.02);
+        else
+          this->setup->ZoomCamera(1.02);
+      } else {
+        if (this->m_sCameraWalkMode)
+          this->setup->WalkTiltCamera(-1.0);
+        else
+          this->setup->TiltCamera(-1.0);
+      }
       this->ForceRefresh();
       break;
     case WXK_DOWN:
       this->setup->StartCameraMovement();
       if (event.ShiftDown())
         this->setup->PanCamera(0.0, 0.02);
-      else if (event.ControlDown())
-        this->setup->ZoomCamera(0.98);
-      else 
-        this->setup->TiltCamera(1.0);
+      else if (event.ControlDown()) {
+        if (this->m_sCameraWalkMode)
+          this->setup->WalkZoomCamera(0.98);
+        else
+          this->setup->ZoomCamera(0.98);
+      } else {
+        if (this->m_sCameraWalkMode)
+          this->setup->WalkTiltCamera(1.0);
+        else
+          this->setup->TiltCamera(1.0);
+      }
       this->ForceRefresh();
       break;
     default:

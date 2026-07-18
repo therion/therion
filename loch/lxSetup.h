@@ -65,9 +65,13 @@ struct lxSetup {
   
   void StartCameraMovement();
   void ZoomCamera(double zoom);
+  void WalkCamera(double zoom, double rot, double tilt = 0.0);
+  void WalkZoomCamera(double zoom);
   void PanCamera(double panx, double pany);
   void TiltCamera(double tilt);
+  void WalkTiltCamera(double tilt);
   void RotateCamera(double rot);
+  void WalkRotateCamera(double rot);
 	void RotateCameraF(double rot);
   void SetLens(double lens);
   void UpdatePos();

@@ -1,0 +1,23 @@
+/* XPM */
+static const char * walk_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c None",
+". c black",
+"X c #FFD36E",
+"R c #D02020",
+"      RRRR      ",
+"     RRRRRX     ",
+"     RRRRR.     ",
+"      ....      ",
+"      .RR.      ",
+"     .RRRR.     ",
+"    .RR..RR.    ",
+"   .RR.  .RR.   ",
+"      .RR.   .  ",
+"      .RR.  .   ",
+"     .R..R..    ",
+"    .R.  .R.    ",
+"   .R.    .R.   ",
+"  .R.      .R.  ",
+"  ..        ..  "};

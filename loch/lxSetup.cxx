@@ -231,6 +231,11 @@ void lxSetup::ZoomCamera(double zoom)
   this->UpdatePos();
 }
 
+void lxSetup::WalkZoomCamera(double zoom)
+{
+  this->WalkCamera(zoom, 0.0);
+}
+
 
 void lxSetup::PanCamera(double panx, double pany)
 {
@@ -254,6 +259,11 @@ void lxSetup::TiltCamera(double tilt)
   this->UpdatePos();
 }
 
+void lxSetup::WalkTiltCamera(double tilt)
+{
+  this->WalkCamera(1.0, 0.0, tilt);
+}
+
 
 void lxSetup::RotateCamera(double rot)
 {
@@ -264,6 +274,39 @@ void lxSetup::RotateCamera(double rot)
   if (this->cam_dir >= 360.0) {
     this->cam_dir -= 360.0 * floor(this->cam_dir / 360.0);
   }
+  this->UpdatePos();
+}
+
+void lxSetup::WalkRotateCamera(double rot)
+{
+  this->WalkCamera(1.0, rot);
+}
+
+void lxSetup::WalkCamera(double zoom, double rot, double tilt)
+{
+  double step;
+  lxVec camPos;
+
+  if (zoom <= 0.0)
+    return;
+
+  this->cam_dir = this->cam_orig_dir + rot;
+  if (this->cam_dir < 0.0) {
+    this->cam_dir += 360.0 * ceil(fabs(this->cam_dir) / 360.0);
+  }
+  if (this->cam_dir >= 360.0) {
+      this->cam_dir -= 360.0 * floor(this->cam_dir / 360.0);
+  }
+  this->cam_tilt = this->cam_orig_tilt + tilt;
+  if (this->cam_tilt > 90.0)
+    this->cam_tilt = 90.0;
+  if (this->cam_tilt < -90.0)
+    this->cam_tilt = -90.0;
+
+  step = this->cam_orig_dist - this->cam_orig_dist / zoom;
+  camPos = this->cam_orig_pos + lxPol2Vec(step, this->cam_dir, -this->cam_tilt);
+  this->cam_center = camPos - lxPol2Vec(this->cam_orig_dist, this->cam_dir + 180.0, this->cam_tilt);
+  this->cam_dist = this->cam_orig_dist;
   this->UpdatePos();
 }
 

@@ -64,6 +64,7 @@ enum {
   LXMENU_CAMERA_PRESENTATION_EXPORT,
   LXMENU_CAMERA_PRESENTATION_OPTIONS,
   LXMENU_CAMERA_LOCKROT,
+  LXMENU_CAMERA_WALKMODE,
 	LXMENU_VIEW,
   LXMENU_VIEW_FULLSCREEN,
   LXMENU_VIEW_MODELSTP,
@@ -116,6 +117,7 @@ enum {
   LXTB_HOME,
 	LXTB_FULLSCREEN,
 	LXTB_STEREO,
+  LXTB_WALKMODE,
 	LXTB_VIEWSTP,
 	LXTB_SCENESTP,
   LXTB_PRESENTDLG,
@@ -207,6 +209,7 @@ class lxFrame: public wxFrame
 		void ToggleRotation();
     void TogglePresentationAnimation();
 		void ToggleRotLock();
+    void ToggleWalkMode();
     void ToggleFullScreen();
     void ToggleModelSetup();
     void ToggleSurveyStats();

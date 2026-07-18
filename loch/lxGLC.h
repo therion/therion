@@ -96,7 +96,7 @@ class lxGLCanvas: public wxGLCanvas {
     GLdouble m_camera_projection[16] = {};
     GLint m_camera_viewport[4] = {};
 
-		bool m_sCameraAutoRotate, m_sCameraLockRotation;
+		bool m_sCameraAutoRotate, m_sCameraLockRotation, m_sCameraWalkMode;
     wxStopWatch m_sCameraAutoRotateSWatch;
     long m_sCameraAutoRotateCounter = 0;
     double m_sCameraAutoRotateAngle, m_sCameraStartAutoRotateAngle = 0.0;
