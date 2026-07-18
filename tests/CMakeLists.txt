@@ -9,6 +9,7 @@ add_executable(utest
     utest-proj.cxx
     utest-str.cxx
     utest-thdatastation.cxx
+    utest-thdb1d-avgleg.cxx
     utest-thdb2dab.cxx
     utest-thdouble.cxx
     utest-thexception.cxx
