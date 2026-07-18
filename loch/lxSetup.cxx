@@ -310,6 +310,18 @@ void lxSetup::WalkCamera(double zoom, double rot, double tilt)
   this->UpdatePos();
 }
 
+double lxSetup::AnimationTransitionProgress(double t, bool transitionFrom, bool transitionTo)
+{
+  double t2 = t * t;
+  double t3 = t2 * t;
+  double startVelocity = transitionFrom ? 1.0 : 0.0;
+  double endVelocity = transitionTo ? 1.0 : 0.0;
+
+  return (t3 - 2.0 * t2 + t) * startVelocity +
+    (-2.0 * t3 + 3.0 * t2) +
+    (t3 - t2) * endVelocity;
+}
+
 
 
 void lxSetup::RotateCameraF(double rot)

@@ -73,6 +73,7 @@ struct lxSetup {
   void RotateCamera(double rot);
   void WalkRotateCamera(double rot);
 	void RotateCameraF(double rot);
+  static double AnimationTransitionProgress(double t, bool transitionFrom, bool transitionTo);
   void SetLens(double lens);
   void UpdatePos();
 

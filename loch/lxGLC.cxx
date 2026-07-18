@@ -605,6 +605,15 @@ bool lxGLCanvas::GetPresentationSceneWalkerMode(wxXmlNode * n) {
   return (value == _T("true")) || (value == _T("1"));
 }
 
+bool lxGLCanvas::GetPresentationSceneTransitionView(wxXmlNode * n) {
+  wxString value;
+
+  if (n != NULL)
+    value = n->GetAttribute(_T("transition-view"), _T("false"));
+
+  return (value == _T("true")) || (value == _T("1"));
+}
+
 bool lxGLCanvas::StartCameraPresentationAnimation() {
   long count;
 
@@ -714,7 +723,10 @@ bool lxGLCanvas::CameraPresentationAnimate() {
     t = double(elapsed - rotationDuration) / double(transitionDuration);
     if (t > 1.0)
       t = 1.0;
-    t = t * t * (3.0 - 2.0 * t);
+    t = lxSetup::AnimationTransitionProgress(
+      t,
+      this->GetPresentationSceneTransitionView(from),
+      this->GetPresentationSceneTransitionView(to));
     this->setup->LoadFromXMLNode(from, to, t, this->GetPresentationSceneWalkerMode(to));
   }
 
