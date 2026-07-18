@@ -552,13 +552,33 @@ void interpolateBoolean(bool * value, wxString v1, wxString v2, double t)
   }
 }
 
-void lxSetup::LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn, double t)
+void lxSetup::LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn, double t, bool interpolateCameraPosition)
 {
 	if (n->GetName() != _T("Scene"))
 		return;
   char * prevlocale = setlocale(LC_NUMERIC,NULL);
   double d;
+  lxVec cameraPosition;
   setlocale(LC_NUMERIC,"C");
+  if (interpolateCameraPosition && (nn != NULL)) {
+    lxVec center1(
+      atof(getXmlValue(n, _T("CameraCenterX")).mbc_str()),
+      atof(getXmlValue(n, _T("CameraCenterY")).mbc_str()),
+      atof(getXmlValue(n, _T("CameraCenterZ")).mbc_str()));
+    lxVec center2(
+      atof(getXmlValue(nn, _T("CameraCenterX")).mbc_str()),
+      atof(getXmlValue(nn, _T("CameraCenterY")).mbc_str()),
+      atof(getXmlValue(nn, _T("CameraCenterZ")).mbc_str()));
+    lxVec position1 = center1 + lxPol2Vec(
+      atof(getXmlValue(n, _T("CameraDistance")).mbc_str()),
+      atof(getXmlValue(n, _T("CameraFacing")).mbc_str()) + 180.0,
+      atof(getXmlValue(n, _T("CameraTilt")).mbc_str()));
+    lxVec position2 = center2 + lxPol2Vec(
+      atof(getXmlValue(nn, _T("CameraDistance")).mbc_str()),
+      atof(getXmlValue(nn, _T("CameraFacing")).mbc_str()) + 180.0,
+      atof(getXmlValue(nn, _T("CameraTilt")).mbc_str()));
+    cameraPosition = (1.0 - t) * position1 + t * position2;
+  }
   interpolateAngle(&(this->cam_dir), getXmlValue(n, _T("CameraFacing")), getXmlValue(nn, _T("CameraFacing")), t);
   interpolateFloat(&(this->cam_tilt), getXmlValue(n, _T("CameraTilt")), getXmlValue(nn, _T("CameraTilt")), t);
   interpolateFloat(&(this->cam_center.x), getXmlValue(n, _T("CameraCenterX")), getXmlValue(nn, _T("CameraCenterX")), t);
@@ -569,6 +589,11 @@ void lxSetup::LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn, double t)
   interpolateFloat(&d, getXmlValue(n, _T("CameraFocus")), getXmlValue(nn, _T("CameraFocus")), t);
   this->SetLens(d);
   interpolateBoolean(&(this->cam_persp), getXmlValue(n, _T("CameraPerspective")), getXmlValue(nn, _T("CameraPerspective")), t);
-  this->UpdatePos();
+  if (interpolateCameraPosition && (nn != NULL)) {
+    this->cam_pos = cameraPosition;
+    this->cam_center = this->cam_pos - lxPol2Vec(this->cam_dist, this->cam_dir + 180.0, this->cam_tilt);
+  } else {
+    this->UpdatePos();
+  }
   setlocale(LC_NUMERIC,prevlocale);
 }

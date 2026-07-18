@@ -596,6 +596,15 @@ double lxGLCanvas::GetPresentationSceneRotationDuration(wxXmlNode * n) {
   return seconds;
 }
 
+bool lxGLCanvas::GetPresentationSceneWalkerMode(wxXmlNode * n) {
+  wxString value;
+
+  if (n != NULL)
+    value = n->GetAttribute(_T("walker-mode"), _T("false"));
+
+  return (value == _T("true")) || (value == _T("1"));
+}
+
 bool lxGLCanvas::StartCameraPresentationAnimation() {
   long count;
 
@@ -706,7 +715,7 @@ bool lxGLCanvas::CameraPresentationAnimate() {
     if (t > 1.0)
       t = 1.0;
     t = t * t * (3.0 - 2.0 * t);
-    this->setup->LoadFromXMLNode(from, to, t);
+    this->setup->LoadFromXMLNode(from, to, t, this->GetPresentationSceneWalkerMode(to));
   }
 
   auto start = this->m_sCameraPresentationSWatch.Time();

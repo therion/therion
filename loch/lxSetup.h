@@ -81,7 +81,7 @@ struct lxSetup {
   void ClearSurveySelection();
   
   void SaveToXMLNode(wxXmlNode * n);
-  void LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn = NULL, double t = 0.0);
+  void LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn = NULL, double t = 0.0, bool interpolateCameraPosition = false);
   void SaveSceneToXMLNode(wxXmlNode * n);
   void LoadSceneFromXMLNode(wxXmlNode * n);
 

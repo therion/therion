@@ -59,6 +59,7 @@ private:
   wxString GetSceneDuration(wxXmlNode * n);
   wxString GetSceneRotations(wxXmlNode * n);
   wxString GetSceneRotationDuration(wxXmlNode * n);
+  bool GetSceneWalkerMode(wxXmlNode * n);
   bool GetLoopAnimation();
   bool GetSceneChanges();
   void SetLoopAnimation(bool value);

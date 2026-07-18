@@ -338,6 +338,15 @@ wxString lxPresentDlg::GetSceneRotationDuration(wxXmlNode * n) {
   return duration;
 }
 
+bool lxPresentDlg::GetSceneWalkerMode(wxXmlNode * n) {
+  wxString value;
+
+  if (n != NULL)
+    value = n->GetAttribute(_T("walker-mode"), _T("false"));
+
+  return (value == _T("true")) || (value == _T("1"));
+}
+
 bool lxPresentDlg::GetLoopAnimation() {
   wxXmlNode * r = this->m_mainFrame->m_pres->GetRoot();
   wxString value;
@@ -427,6 +436,7 @@ void lxPresentDlg::MarkCurrentView() {
   p->AddAttribute(_T("duration"), _T("3"));
   p->AddAttribute(_T("rotations"), _T("0"));
   p->AddAttribute(_T("rotation-duration"), _T("15"));
+  p->AddAttribute(_T("walker-mode"), this->m_mainFrame->canvas->m_sCameraWalkMode ? _T("true") : _T("false"));
   sel = this->GetSelection();
   if (sel < 0) {
     r->AddChild(p);
@@ -474,6 +484,8 @@ void lxPresentDlg::EditSelected() {
   wxTextCtrl * durationTextCtrl = new wxTextCtrl(&dlg, wxID_ANY, this->GetSceneDuration(n));
   wxTextCtrl * rotationsTextCtrl = new wxTextCtrl(&dlg, wxID_ANY, this->GetSceneRotations(n));
   wxTextCtrl * rotationDurationTextCtrl = new wxTextCtrl(&dlg, wxID_ANY, this->GetSceneRotationDuration(n));
+  wxCheckBox * walkerModeCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Walker mode"));
+  walkerModeCheckBox->SetValue(this->GetSceneWalkerMode(n));
 
   fieldSizer->Add(new wxStaticText(&dlg, wxID_ANY, _("Name")), 0, wxALIGN_CENTER_VERTICAL);
   fieldSizer->Add(nameTextCtrl, 1, wxEXPAND);
@@ -486,6 +498,7 @@ void lxPresentDlg::EditSelected() {
   fieldSizer->AddGrowableCol(1);
 
   dialogSizer->Add(fieldSizer, 1, wxALL | wxEXPAND, lxBORDER);
+  dialogSizer->Add(walkerModeCheckBox, 0, wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
   dialogSizer->Add(dlg.CreateSeparatedButtonSizer(wxOK | wxCANCEL), 0, wxALL | wxEXPAND, lxBORDER);
   dlg.SetSizer(dialogSizer);
   dialogSizer->SetSizeHints(&dlg);
@@ -519,6 +532,8 @@ void lxPresentDlg::EditSelected() {
   n->AddAttribute(_T("rotations"), rotations);
   n->DeleteAttribute(_T("rotation-duration"));
   n->AddAttribute(_T("rotation-duration"), rotationDuration);
+  n->DeleteAttribute(_T("walker-mode"));
+  n->AddAttribute(_T("walker-mode"), walkerModeCheckBox->GetValue() ? _T("true") : _T("false"));
 
   this->UpdateList();
   this->SelectScene(sel);
@@ -713,7 +728,7 @@ void lxPresentDlg::ExportPresentation() {
     for (int j = 1; keepGoing && (j <= lastTransitionFrame); j++) {
       double t = double(j) / double(transitionFrames);
       t = t * t * (3.0 - 2.0 * t);
-      this->m_mainFrame->setup->LoadFromXMLNode(from, to, t);
+      this->m_mainFrame->setup->LoadFromXMLNode(from, to, t, this->GetSceneWalkerMode(to));
       if (j == transitionFrames)
         applyScene((i + 1) % count);
       else
