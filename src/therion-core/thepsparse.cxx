@@ -1555,7 +1555,7 @@ void thgraphics2pdf() {
       patt.data.print_pdf(F,patt.name);
       F << "}" << tex_set_ref(tex_Pname(ALL_PATTERNS[patt.name]), "\\pdflastobj") << "\n";
   }
-  if (GRADIENTS.size() > 0) F << "% GRADIENTS:\n";
+  if (!GRADIENTS.empty()) F << "% GRADIENTS:\n";
   for (auto &g: GRADIENTS) {
       F << "\\immediate\\pdfobj {<< /Type /Pattern /PatternType 2 /Shading <<\n";
       F << fmt::format("/ShadingType {:d} /ColorSpace /Device{:s}\n", g.second.type == gradient_lin ? 2 : 3, g.second.c0.model == colormodel::grey ? "Gray" : (g.second.c0.model == colormodel::cmyk ? "CMYK" : "RGB"));

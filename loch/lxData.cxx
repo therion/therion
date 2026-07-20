@@ -309,7 +309,7 @@ void lxData::Rebuild()
     sv.m_parent = sv_it->m_parent;
     sv.m_level = 0;
     sv.m_full_name = sv.m_name;
-    if (this->m_selected_surveys.size() == 0)
+    if (this->m_selected_surveys.empty())
     	sv.m_selected = true;
     else
     	sv.m_selected = (this->m_selected_surveys.find(sv.m_id) != this->m_selected_surveys.end());

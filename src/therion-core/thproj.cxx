@@ -475,7 +475,7 @@ int thcs_parse_gridhandling(const char * s) {
 }
 
 void thcs_log_transf_used() {
-  if (precise_transf.size() > 0) {
+  if (!precise_transf.empty()) {
     thlog("\n################# custom transformations used ##################\n");
     for (auto &j: precise_transf) {
       thlog(fmt::format("  [{} → {}] definition: [{}]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second));
