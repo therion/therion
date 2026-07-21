@@ -768,8 +768,6 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 //								thprint("LEG not found!!!\n");
 							}
 						}
-						else if (strcmp(b.get_buffer()[i-1],"=") == 0) {
-						}
 						prev_st = st;
 					}
 				}

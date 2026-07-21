@@ -19,20 +19,18 @@ struct thdouble
  * @param value value intended for printing
  * @return thdouble with precision set to 2
  */
-inline constexpr thdouble operator""_thd(long double value)
+constexpr thdouble operator""_thd(long double value)
 {
     return {static_cast<double>(value), 2};
 }
 
-namespace fmt
-{
 /**
  * @brief Extension for {fmt} for printing thdouble.
  * Will print floating point numbers in fixed format
  * and without trailing zeros.
  */
 template <>
-struct formatter<thdouble>: formatter<std::string> {
+struct fmt::formatter<thdouble>: formatter<std::string> {
     template <typename FormatContext>
     auto format(const thdouble& p, FormatContext& ctx) const {
         // fixed formatting with given precision
@@ -55,4 +53,3 @@ struct formatter<thdouble>: formatter<std::string> {
             ->formatter<std::string>::format(num, ctx);
     }
 };
-}

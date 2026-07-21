@@ -120,11 +120,11 @@ protected:
 	bool CheckValidator()	const
 	{
 		wxCHECK_MSG( m_validatorWindow,	FALSE,
-			_T("No	window associated	with validator") );
+			_T("No window associated with validator") );
 		wxCHECK_MSG( m_validatorWindow->IsKindOf(CLASSINFO(wxTextCtrl)), FALSE,
-			_T("wxNumberValidator is	only for wxTextCtrl's")	);
+			_T("wxNumberValidator is only for wxTextCtrl's")	);
 		wxCHECK_MSG( dynamic_cast<wxTextCtrl*>(m_validatorWindow)->IsSingleLine(),	FALSE,
-			_T("Multiline wxTextCtrl	not	allowed	yet")	);
+			_T("Multiline wxTextCtrl not allowed yet")	);
 
 		return TRUE;
 	}
@@ -155,7 +155,7 @@ protected:
 	bool CheckValidator()	const
 	{
 		wxCHECK_MSG( m_validatorWindow,	FALSE,
-			_T("No	window associated	with validator") );
+			_T("No window associated with validator") );
 		wxCHECK_MSG( m_validatorWindow->IsKindOf(CLASSINFO(wxRadioButton)), FALSE,
 			_T("wxRadioBtnValidator is only for wxRadioButtons")	);
 

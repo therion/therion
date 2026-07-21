@@ -57,8 +57,10 @@
 
 #include <fmt/format.h>
 
-//#define THUSESVX
-//#define THDEBUG
+[[noreturn]] static void report_problem(const std::source_location loc = std::source_location::current())
+{
+  throw thexception(fmt::format("a software BUG is present ({}:{})", loc.file_name(), loc.line()));
+}
 
 thdb1d_tree_arrow::thdb1d_tree_arrow() : is_discovery(false), is_nosurvey(false), is_reversed(false),
   start_node(NULL), end_node(NULL), 
@@ -694,8 +696,8 @@ void thdb1d::scan_data()
     else
       thwarning("unable to determine magnetic declination used for undated surveys");
     thprint("undated surveys:\n");
-    for(auto usi = undated_surveys_set.begin(); usi != undated_surveys_set.end(); usi++) {
-      thprint(usi->c_str());
+    for (const auto& us : undated_surveys_set) {
+      thprint(us);
       thprint("\n");
     }
   }
@@ -1058,7 +1060,7 @@ void thdb1d::process_tree()
       
       // something is wrong
       if (n2 == NULL) {
-        throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
+        report_problem();
 //#ifdef THDEBUG
 //        thprint("warning -- not all stations connected to the network\n");
 //#endif
@@ -2430,7 +2432,7 @@ void thdb1d::close_loops()
 		));
 #endif
     if (froms->placed == 0)
-      throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
+      report_problem();
     if (tos->placed == 0) {
       tos->placed += 1;
       if (cleg->reverse) {
@@ -2553,7 +2555,6 @@ void thdb1d::close_loops()
       ps->y = froms->y;
       ps->z = froms->z;
       if (ps->placed == 0) {
-//        ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
         throw thexception(fmt::format("can not connect {}@{} to centerline network",
           this->station_vec[i].name,
           this->station_vec[i].survey->get_full_name()));
