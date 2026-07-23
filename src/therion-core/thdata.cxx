@@ -1764,9 +1764,9 @@ void thdata::insert_data_leg(int nargs, char ** args)
         break;
         
       case TT_DATALEG_DIRECTION:
-        if (icase_equals(args[carg],"b"))
+        if (icase_equal{}(args[carg], "b"))
           this->cd_leg->direction = false;
-        else if (!icase_equals(args[carg], "f"))
+        else if (!icase_equal{}(args[carg], "f"))
           throw thexception(fmt::format("invalid survey direction -- {}", args[carg]));
         break;
         
