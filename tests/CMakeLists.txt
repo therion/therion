@@ -5,6 +5,7 @@ endif()
 include(Catch2)
 
 add_executable(utest 
+    utest-image.cxx
     utest-main.cxx
     utest-proj.cxx
     utest-str.cxx
