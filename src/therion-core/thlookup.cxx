@@ -445,7 +445,7 @@ void thlookup::export_color_legend(thlayout * layout) {
               clrec.name += tli->m_valueDate.get_str(TT_DATE_FMT_UTF8_Y);
             if (clrec.name.size() == 0)
               clrec.name = thT("not specified",layout->lang);
-            clrec.texname = utf2tex(clrec.name.c_str());
+            clrec.texname = utf2tex(clrec.name);
             break;
           default:
             clrec.texname = "";
@@ -474,7 +474,7 @@ void thlookup::export_color_legend(thlayout * layout) {
             }
             if (clrec.name.size() == 0)
               clrec.name = thT("not specified",layout->lang);
-            clrec.texname = utf2tex(clrec.name.c_str());
+            clrec.texname = utf2tex(clrec.name);
             break;
         }
       }

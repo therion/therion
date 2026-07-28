@@ -140,7 +140,7 @@ void thscrapis::insert_outline_lnsegment(bool newsegment, thline * line,
   bool first_point = true;
   std::list <thscrapislns> :: iterator it;
   thscrapisolpt * cpt;
-  if (tmplist.size() == 0)
+  if (tmplist.empty())
     return;
   if (reverse) {
     it = tmplist.end();
@@ -238,9 +238,9 @@ struct int3df {
   bool m_single, m_dim, m_pos, m_dir, m_setdim;
   thvec2 m_pf, m_pt;
   thline2 m_lf, m_lt, m_ln;
-  double m_lnl;
+  double m_lnl{};
   lxVec m_posf, m_post, m_direction;
-  double m_upf, m_upt, m_dnf, m_dnt;
+  double m_upf{}, m_upt{}, m_dnf{}, m_dnt{};
 
   int3df() : m_single(true), m_dim(false), m_pos(false), m_dir(false), m_setdim(false) {}
   

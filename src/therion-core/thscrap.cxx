@@ -1478,11 +1478,11 @@ void thscrap::parse_sketch(char ** args, int /*argenc*/) // TODO unused paramete
   // X
   thparse_double(sv,sk.m_x,args[1]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    throw thexception(fmt::format("invalid	number --	{}", args[1]));
+    throw thexception(fmt::format("invalid number -- {}", args[1]));
   // Y
   thparse_double(sv,sk.m_y,args[2]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    throw thexception(fmt::format("invalid	number --	{}", args[2]));
+    throw thexception(fmt::format("invalid number -- {}", args[2]));
   this->sketch_list.push_back(std::move(sk));
 }
 

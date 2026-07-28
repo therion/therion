@@ -129,7 +129,7 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
   while (!(lf.eof())) {
     std::getline(lf, lnbuff);
     if (mpbug && (!skip_this)) {
-      if (lnbuff.substr(0, 5) == "write") {
+      if (lnbuff.starts_with("write")) {
         skip_next = true;
         skip_this = true;
         peoln = false;
@@ -1522,7 +1522,7 @@ if (ENC_NEW.NFSS==0) {
   thsurface * surf;
   double surfscl = this->layout->scale * 11811.023622472446117783;
     
-  if (COLORLEGENDLIST.size() > 0) {
+  if (!COLORLEGENDLIST.empty()) {
     fprintf(plf,"# COLOR LEGEND\n");
     for (std::list<colorlegendrecord>::iterator cli = COLORLEGENDLIST.begin();
       cli != COLORLEGENDLIST.end(); cli++) {
@@ -2290,11 +2290,11 @@ if (ENC_NEW.NFSS==0) {
     if ((this->layout->m_lookup != NULL) && (strlen(this->layout->m_lookup->m_title) > 0)) {
       ldata.colorlegendtitle = this->layout->m_lookup->m_title;
     }
-    fprintf(tf,"\\colorlegendtitle={%s}\n", utf2tex(ldata.colorlegendtitle.c_str()).c_str());
+    fprintf(tf,"\\colorlegendtitle={%s}\n", utf2tex(ldata.colorlegendtitle).c_str());
   }
 
   // ak neni atlas, tak nastavi legendcavename
-  fprintf(tf,"\\cavename={%s}\n",ths2tex(tit.c_str(), this->layout->lang).c_str());
+  fprintf(tf,"\\cavename={%s}\n",ths2tex(tit, this->layout->lang).c_str());
   ldata.cavename = tit.c_str();
   ldata.comment = "";
 

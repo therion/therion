@@ -610,7 +610,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         }
         this->db->buff_enc.assign((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
-        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc.c_str()).c_str());
+        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc).c_str());
         postprocess_label = "p_label_mode_height";
       }
       postprocess = false;

@@ -79,7 +79,7 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
   while (!(lf.eof())) {
     std::getline(lf, lnbuff);
     if (mpbug && (!skip_this)) {
-      if (lnbuff.substr(0, 5) == "write") {
+      if (lnbuff.starts_with("write")) {
         skip_next = true;
         skip_this = true;
         peoln = false;

@@ -142,9 +142,9 @@ thinput::thinput()
   this->cmd_sensitivity = true;
   this->input_sensitivity = true;
   this->scan_search_path = false;
-  this->first_ptr = std::unique_ptr<ifile>(new ifile(nullptr));
+  this->first_ptr = std::make_unique<ifile>(nullptr);
   this->last_ptr = this->first_ptr.get();
-  this->lnbuffer = std::unique_ptr<char[]>(new char [thinput::max_line_size]);
+  this->lnbuffer = std::make_unique<char[]>(thinput::max_line_size);
   this->pifo = false;
   this->pifoid = nullptr;
   this->pifoproc = nullptr;
@@ -249,7 +249,7 @@ void thinput::open_file(const char * fname)
   while (ifptr->sh.is_open() && (ifptr->next_ptr != nullptr))
     ifptr = ifptr->next_ptr.get();
   if (ifptr->sh.is_open() && (ifptr->next_ptr == nullptr)) {
-    ifptr->next_ptr = std::unique_ptr<ifile>(new ifile(ifptr));
+    ifptr->next_ptr = std::make_unique<ifile>(ifptr);
     ifptr = ifptr->next_ptr.get();
   }
   
@@ -467,7 +467,7 @@ char * thinput::read_line()
         continue;
         
       // interpret commands
-      switch (thmatch_token(this->cmdbf.c_str(), thtt_input)) {
+      switch (thmatch_token(this->cmdbf, thtt_input)) {
       
         case TT_INPUT:
           if (this->input_sensitivity) {
@@ -606,11 +606,11 @@ int thinput::get_cif_encoding()
   return this->last_ptr->encoding;
 }
 
-void thinput::print_if_opened(void (* pifop)(char *), bool * printed) {
+void thinput::print_if_opened(std::function<void(char*)> pifop, bool * printed) {
   this->pifo = true;
   if (printed != nullptr)
     this->pifoid = printed;
-  this->pifoproc = pifop;
+  this->pifoproc = std::move(pifop);
 }
 
 

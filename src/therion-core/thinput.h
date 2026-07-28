@@ -29,6 +29,7 @@
 #pragma once
 
 #include "thmbuffer.h"
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -54,7 +55,7 @@ private:
   thmbuffer search_path,  ///< Search paths.
     file_suffix,  ///< File suffixes.
     tmpmb;   ///< Temporary multi buffer.
-  void (* pifoproc)(char *);  ///< Function to call if file was opened.
+   std::function<void(char*)> pifoproc;  ///< Function to call if file was opened.
   std::string linebf,  ///< Line buffer.
     cmdbf,  ///< Command buffer.
     valuebf;  ///< Value buffer.
@@ -217,7 +218,7 @@ public:
   /**
    * Text to print some file was opened.
    */
-  void print_if_opened(void (* pifop)(char *), bool * printed);
+  void print_if_opened(std::function<void(char*)> pifop, bool * printed);
   
   /**
    * @brief Report if the file is missing.
