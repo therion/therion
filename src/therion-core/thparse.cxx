@@ -43,6 +43,8 @@
 #include <algorithm>
 #include "icase.h"
 
+#include <Magick++/Image.h>
+
 #include <fmt/format.h>
 
 thmbuffer thparse_mbuff;
@@ -939,106 +941,46 @@ void thparse_altitude(const char * src, double & altv, double & fixv)
 
 void thparse_image(const char * fname, double & width, double & height, double & dpi, int & type)
 {
-
   type = TT_IMG_TYPE_UNKNOWN;
-
-  FILE * pictf = fopen(fname, "rb");
-#define picths 2048
-  size_t phsize;
-  double xdpi, ydpi;
-  unsigned char picth [picths], * scan;
-  size_t sx;
   width = 0.0;
   height = 0.0;
   dpi = 300.0;
-  if (pictf != NULL) {
-    phsize = fread(&(picth[0]), 1, picths, pictf);
-    fclose(pictf);
-    // najde si format a vytiahne informacie
-    if ((picth[0] == 0xFF) && (picth[1] == 0xD8) &&
-        (picth[2] == 0xFF) && (picth[3] == 0xE0)) {
-      // JPEG
-      type = TT_IMG_TYPE_JPEG;  
+
+  try {
+    const Magick::Image image(fname);
+    const auto format = image.magick();
+
+    if (format == "JPEG")
+      type = TT_IMG_TYPE_JPEG;
+    else if (format == "PNG")
+      type = TT_IMG_TYPE_PNG;
+    else
+      throw thexception(fmt::format("file format not supported -- {}", fname));
+
+    width = image.columns();
+    height = image.rows();
+
+    double xdpi = image.xResolution();
+    double ydpi = image.yResolution();
+    if (xdpi != ydpi)
+      throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
+
+    if (image.resolutionUnits() == Magick::PixelsPerCentimeterResolution) {
+      xdpi = std::round(xdpi * 2.54);
+      ydpi = std::round(ydpi * 2.54);
+    } else if (image.resolutionUnits() == Magick::PixelsPerInchResolution) {
+      xdpi = std::round(xdpi);
+      ydpi = std::round(ydpi);
+    } else {
       xdpi = 300.0;
       ydpi = 300.0;
-      switch (picth[13]) {
-        case 1:
-          xdpi = std::round(double(picth[14] * 256.0 + picth[15]));
-          ydpi = std::round(double(picth[16] * 256.0 + picth[17]));
-          break;
-        case 2:
-          xdpi = std::round(double(picth[14] * 256 + picth[15]) * 2.54);
-          ydpi = std::round(double(picth[16] * 256 + picth[17]) * 2.54);
-          break;
-      }
-      if (xdpi != ydpi) {
-        throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
-      }
-      dpi = xdpi;
-      if (dpi < 1.0) {
-        dpi = 300.0;
-      }      
-      //for(sx = 0, scan = &(picth[0]); sx < (phsize - 10); sx++, scan++) {
-      //  if ((scan[0] == 0xFF) && ((scan[1] == 0xC0) || (scan[1] == 0xC1))) {
-      //    height = thround(double(scan[5]) * 256.0 + double(scan[6]));
-      //    width = thround(double(scan[7]) * 256.0 + double(scan[8]));
-      //  }
-      //}
-      sx = 0;
-      int marker;
-      size_t len;
-      pictf = fopen(fname, "rb");      
-      thassert(fread(&(picth[0]), 1, 2, pictf) == 2);
-      height = -1.0;
-      width = -1.0;
-      while(getc(pictf) == 255) {
-        marker = getc(pictf);
-        len = 256 * (size_t) getc(pictf) + (size_t) getc(pictf);
-        if ((marker == 0xC0) || (marker == 0xC1)) {
-          getc(pictf);
-          height = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
-          width = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
-          break;
-        } 
-        fseek(pictf, len - 2, SEEK_CUR);
-      }
-      fclose(pictf);
-      if ((height < 0.0) || (width < 0.0))
-        throw thexception(fmt::format("unable to determine image size -- {}", fname));
-    } else if (
-      (picth[0] == 0x89) && (picth[1] == 0x50) &&
-      (picth[2] == 0x4E) && (picth[3] == 0x47) &&
-      (picth[4] == 0x0D) && (picth[5] == 0x0A) &&
-      (picth[6] == 0x1A) && (picth[7] == 0x0A)) {
-      // PNG
-      type = TT_IMG_TYPE_PNG;  
-      // najde pHYs za nim 4(x), 4(y), 1(units) = 01-meters, 00-unspec
-      for(sx = 0, scan = &(picth[0]); sx < (phsize - 12); sx++, scan++) {
-        if (strncmp((char *) scan,"pHYs",4) == 0) {
-          xdpi = double(scan[4] * 0x1000000 + scan[5] * 0x10000 + scan[6] * 0x100 + scan[7]);
-          ydpi = double(scan[8] * 0x1000000 + scan[9] * 0x10000 + scan[10] * 0x100 + scan[11]);
-          if (xdpi != ydpi) {
-            throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
-          }
-          switch (scan[12]) {
-            case 1:
-              xdpi = std::round(xdpi * 0.0254);
-              break;
-            default:
-              xdpi = 300.0;
-              break;
-          }
-          dpi = xdpi;
-          break;
-        }
-      }      
-      width = std::round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
-      height = std::round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
-    } else {
-      throw thexception(fmt::format("file format not supported -- {}", fname));
     }
-  } else {
-    throw thexception(fmt::format("file not found -- {}", fname));
+
+    if (xdpi >= 1.0)
+      dpi = xdpi;
+  }
+  catch (const Magick::Exception& e) {
+    throw thexception(fmt::format("unable to read image {}", fname), e);
   }
 
 #ifdef THDEBUG
@@ -1269,4 +1211,3 @@ std::string ths2txt(std::string original, int lang, int /*encoding*/)
   // TODO: encoding conversion & al.
   return select_lang(original, thlang_getid(lang));
 }
-
