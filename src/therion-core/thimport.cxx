@@ -224,13 +224,13 @@ void thimport::set_file_name(char * fnm)
   this->fname = this->db->strstore(impf_path_str.c_str());
 
   const auto ext = impf_path.extension().string();
-  for (const auto& [str, type] : {std::tuple{".3d", TT_IMPORT_FMT_3D}, 
-                                  std::tuple{".plt", TT_IMPORT_FMT_PLT}, 
-                                  std::tuple{".xyz", TT_IMPORT_FMT_XYZ}}) {
-    if (icase_equals(ext, str)) {
-      this->format = type;
-      return;
-    }
+  static const std::map<std::string, int, icase_less> extensions{
+    {".3d", TT_IMPORT_FMT_3D},
+    {".plt", TT_IMPORT_FMT_PLT},
+    {".xyz", TT_IMPORT_FMT_XYZ}};
+  if (auto it = extensions.find(ext); it != extensions.end())
+  {
+    this->format = it->second;
   }
 }
 

@@ -279,7 +279,7 @@ void thinit::check_font_path(const char * fname, int index) {
   }
 
   // checkne ci TTF
-  if ((l > 3) && icase_equals(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
+  if ((l > 3) && icase_equal{}(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
 
   font_src[index] = pfull.c_str();
   font_dst[index] = pshort.c_str();

@@ -9,7 +9,6 @@
 #include <fstream>
 #include <filesystem>
 
-#include "icase.h"
 #include "lxMath.h"
 #include "img.h"
 
@@ -708,22 +707,9 @@ void lxFile::ImportPLT(const char * fn)
   stPtrPrev = 0;
   bool hasPT = false;
 
-  char * sname = new char [strlen(fn)+1];
-  int x, xx;
-  xx = 0;
-  for (x = (strlen(fn) - 1); x >= 0; x--) {
-    if ((fn[x] == '\\') || (fn[x] == '/')) {
-      xx = x + 1;
-      break;
-    }
-  }
-  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
-    sname[x - xx] = fn[x];
-    sname[x - xx + 1] = 0;
-  }
+  const auto sname = fs::path(fn).stem().string();
   tmpSurvey = this->NewSurvey();
-  tmpSurvey->m_namePtr = this->m_surveysData.AppendStr(sname);
-  delete [] sname;
+  tmpSurvey->m_namePtr = this->m_surveysData.AppendStr(sname.c_str());
 
   std::string line;
   while (!input.eof()) {
@@ -839,22 +825,9 @@ void lxFile::Import3D(const char * fn)
   stPtrLRUDPrev = NULL;
   bool hasPT = false;
 
-  char * sname = new char [strlen(fn)+1];
-  int x, xx;
-  xx = 0;
-  for (x = (strlen(fn) - 1); x >= 0; x--) {
-    if ((fn[x] == '\\') || (fn[x] == '/')) {
-      xx = x + 1;
-      break;
-    }
-  }
-  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
-    sname[x - xx] = fn[x];
-    sname[x - xx + 1] = 0;
-  }
+  const auto sname = fs::path(fn).stem().string();
   tmpSurvey = this->NewSurvey();
-  tmpSurvey->m_namePtr = this->m_surveysData.AppendStr(sname);
-  delete [] sname;
+  tmpSurvey->m_namePtr = this->m_surveysData.AppendStr(sname.c_str());
 
   std::map<std::string, lxFileStation*> label_map;
   std::map<std::string, lxFileStation*>::iterator lmi;

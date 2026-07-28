@@ -253,7 +253,7 @@ void thexport::register_output(std::string fnm) {
 
 void thexport::set_format_by_extension(std::string_view extension, const int cformat)
 {
-  if (icase_equals(std::filesystem::path(this->outpt).extension().string(), extension)) {
+  if (icase_equal{}(std::filesystem::path(this->outpt).extension().string(), extension)) {
     this->format = cformat;
   }
 }

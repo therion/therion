@@ -10,12 +10,12 @@ static auto lower_range(std::string_view s)
      return std::views::transform(s, [](const unsigned char c){ return std::tolower(c); });
 }
 
-bool icase_equals(std::string_view a, std::string_view b)
+bool icase_equal::operator()(std::string_view a, std::string_view b) const
 {
      return std::ranges::equal(lower_range(a), lower_range(b));
 }
 
-bool icase_less_than(std::string_view a, std::string_view b)
+bool icase_less::operator()(std::string_view a, std::string_view b) const
 {
      return std::ranges::lexicographical_compare(lower_range(a), lower_range(b));
 }
