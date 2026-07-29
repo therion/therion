@@ -24,9 +24,10 @@
 * --------------------------------------------------------------------
 */
 
-// #include	<stdlib.h>
-#include <cmath>
 #include "thgeomagdata.h"
+
+#include <cmath>
+#include <numbers>
 
 #define	max(a,b)	(((a) > (b)) ? (a) : (b))
 
@@ -38,7 +39,6 @@ magfield_ magfield;*/
 #define nmax thgeomag_maxdeg
 #define nmaxl thgeomag_maxdeg
 
-#define pi 3.14159265358979
 #define a 6378.137
 #define b 6356.7523142
 #define r_0 6371.2
@@ -190,7 +190,7 @@ double thgeomag(double lat, double lon, double h, double dat) {
 
 
   /* Find geodetic field components: */
-  psi = theta - (pi / 2.0 - lat);
+  psi = theta - (std::numbers::pi / 2.0 - lat);
   sinpsi = sin(psi);
   cospsi = cos(psi);
   X = -B_theta * cospsi - B_r * sinpsi;
@@ -211,6 +211,6 @@ double thgeomag(double lat, double lon, double h, double dat) {
   magfield.Y = Y;
   magfield.Z = Z; */
 
-  return (X != 0. || Y != 0.) ? atan2(Y, X) * 180 / pi : (double) 0.; 
+  return (X != 0. || Y != 0.) ? atan2(Y, X) * 180 / std::numbers::pi : (double) 0.; 
 }
 

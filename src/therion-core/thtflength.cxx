@@ -30,7 +30,7 @@
 #include "thexception.h"
 #include "thparse.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 thtflength::thtflength() : thtf(TT_TFU_M) {}
 

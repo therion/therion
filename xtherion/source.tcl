@@ -63,7 +63,6 @@ source cp_procs.tcl
 source bac.tcl
 source cp.tcl
 source tools.tcl
-source mapcal.tcl
 #@DEBUG
 if {![string equal $xth(gui,platform) windows]} {
   source console.tcl

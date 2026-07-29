@@ -28,9 +28,10 @@
 #include "thperson.h"
 #include "thdatabase.h"
 #include "thexception.h"
+#include "thparse.h"
 #include <string.h>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 void thperson::reset()
 {
@@ -45,7 +46,7 @@ void thperson::identify(thdatabase * dbp)
   dbp->buff_tmp = this->n2;
   dbp->buff_tmp += "/";
   dbp->buff_tmp += this->n1;
-  this->nn = dbp->strstore(dbp->buff_tmp.get_buffer(), true);
+  this->nn = dbp->strstore(dbp->buff_tmp.c_str(), true);
 }
 
 
@@ -55,7 +56,7 @@ thperson::thperson()
 }
 
 
-void thperson::parse(thdatabase * dbp, char * src)
+void thperson::parse(thdatabase * dbp, const char * src)
 {
   this->reset();
   bool has_sep = (strchr(src,'/') != NULL);

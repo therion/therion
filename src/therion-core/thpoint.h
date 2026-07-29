@@ -498,19 +498,19 @@ class thpoint : public th2ddataobject {
 
   void start_insert() override;
 
-  void parse_type(char * tstr);  ///< Parse point type.
+  void parse_type(const char * tstr);  ///< Parse point type.
 
-  void parse_align(char * tstr);  ///< Parse point align.
+  void parse_align(const char * tstr);  ///< Parse point align.
 
-  void parse_subtype(char * ststr);  ///< Parse point subtype.
+  void parse_subtype(const char * ststr);  ///< Parse point subtype.
 
-  void parse_from(char * estr);  ///< Parse station extend.
+  void parse_from(const char * estr);  ///< Parse station extend.
 
-  void parse_text(char * ss);  ///< Parse point text.
+  void parse_text(const char * ss);  ///< Parse point text.
 
-  void parse_explored(char * ss);  ///< Parse explored length.
+  void parse_explored(const char * ss);  ///< Parse explored length.
 
-  void parse_value(char * ss, bool is_dist=false);  ///< Parse point value.
+  void parse_value(const char * ss, bool is_dist=false);  ///< Parse point value.
 
   void check_extra();
 

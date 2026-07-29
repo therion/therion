@@ -28,7 +28,7 @@
 #include "thdate.h"
 #include "thexception.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include <time.h>
 #include <locale.h>

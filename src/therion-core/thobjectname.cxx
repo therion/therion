@@ -30,6 +30,7 @@
 #include "thdatabase.h"
 #include "thdataobject.h"
 #include "thsurvey.h"
+#include "thparse.h"
 
 #include <fmt/format.h>
 
@@ -61,7 +62,7 @@ void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, thdat
     thdb.buff_tmp += src;
     if (psobj->stnsuff != NULL)
       thdb.buff_tmp += psobj->stnsuff;
-    src = thdb.buff_tmp.get_buffer();
+    src = thdb.buff_tmp.data();
   }
   ds.name = src;
   size_t snl = strlen(src), sni;

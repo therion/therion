@@ -38,6 +38,10 @@
 #include "thobjectname.h"
 #include "therion.h"
 #include "thdataleg.h"
+#include "thparse.h"
+
+#include <fmt/format.h>
+
 #include <string>
 #include <cstdio>
 
@@ -155,7 +159,7 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
 
     case TT_POINT_TEXT:
       thencode(&(this->db->buff_enc), *args, argenc);
-      this->parse_text(this->db->buff_enc.get_buffer());
+      this->parse_text(this->db->buff_enc.c_str());
       break;
 
     case TT_POINT_EXPLORED:
@@ -275,7 +279,7 @@ void thpoint::self_print_properties(FILE * outf)
 }
 
 
-void thpoint::parse_type(char * tstr)
+void thpoint::parse_type(const char * tstr)
 {
   this->type = thmatch_token(tstr, thtt_point_types);
   if (this->type == TT_POINT_TYPE_UNKNOWN)
@@ -294,7 +298,7 @@ void thpoint::parse_type(char * tstr)
 }
 
 
-void thpoint::parse_subtype(char * ststr)
+void thpoint::parse_subtype(const char * ststr)
 {
   if (this->type == TT_POINT_TYPE_UNKNOWN)
     throw thexception("point type must be specified before subtype");
@@ -341,7 +345,7 @@ void thpoint::parse_subtype(char * ststr)
     throw thexception("invalid point type - subtype combination");
 }
 
-void thpoint::parse_from(char * estr)
+void thpoint::parse_from(const char * estr)
 {
   thsplit_words(& this->db->db2d.mbf, estr);
   int npar = this->db->db2d.mbf.get_size();
@@ -386,8 +390,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   std::string attr_text;
   int macroid = -1, omacroid = -1, cmark;
   const char * postprocess_label = NULL;
-  this->db->buff_enc.guarantee(8128);
-//  char * buff = this->db->buff_enc.get_buffer();
+  this->db->buff_enc.resize(8128);
+//  char * buff = this->db->buff_enc.data();
   double xrr = (thisnan(this->orient) ? out->rr : 0.0);
 
   if (this->scale_numeric < out->layout->min_symbol_scale) return(false);
@@ -604,9 +608,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           //  sprintf(buff,"%.0f",this->xsize);
           fprintf(out->file,"%s",utf2tex(out->layout->units.format_human_length(this->xsize)).c_str());
         }
-        this->db->buff_enc.strcpy((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
+        this->db->buff_enc.assign((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
-        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc.get_buffer()).c_str());
+        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc).c_str());
         postprocess_label = "p_label_mode_height";
       }
       postprocess = false;
@@ -971,7 +975,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   return(false);
 }
 
-void thpoint::parse_align(char * tstr) {
+void thpoint::parse_align(const char * tstr) {
   switch (this->type) {
     case TT_POINT_TYPE_STATION:
       throw thexception(fmt::format("-align not valid with type {}", thmatch_string(this->type,thtt_point_types)));
@@ -983,7 +987,7 @@ void thpoint::parse_align(char * tstr) {
 }
 
 
-void thpoint::parse_text(char * ss) {
+void thpoint::parse_text(const char * ss) {
   switch (this->type) {
     case TT_POINT_TYPE_LABEL:
     case TT_POINT_TYPE_REMARK:
@@ -1001,7 +1005,7 @@ void thpoint::parse_text(char * ss) {
 }
 
 
-void thpoint::parse_explored(char * ss) {
+void thpoint::parse_explored(const char * ss) {
   switch (this->type) {
     case TT_POINT_TYPE_CONTINUATION:
       break;
@@ -1065,7 +1069,7 @@ void thpoint_parse_value(int & sv, double & dv, bool & qw, int & sign, char * st
 }
 
 
-void thpoint::parse_value(char * ss, bool is_dist) {
+void thpoint::parse_value(const char * ss, bool is_dist) {
   bool opt_ok = false;
   switch (this->type) {
     case TT_POINT_TYPE_EXTRA:

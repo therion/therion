@@ -29,8 +29,8 @@
 #ifndef thlogfile_h
 #define thlogfile_h
 
-#include "thbuffer.h"
 #include <stdio.h>
+#include <string>
 #include <string_view>
 
 /**
@@ -41,7 +41,7 @@
  
 class thlogfile {
 
-  thbuffer file_name;  ///< Name of log file.
+  std::string file_name;  ///< Name of log file.
   FILE* fileh;  ///< File handler.
   bool is_open;  ///< File is open ID.
   bool is_warned;  ///< File couldn't be opened ID.

@@ -38,7 +38,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cmath>
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "thtexfonts.h"
 #include "thtexenc.h"

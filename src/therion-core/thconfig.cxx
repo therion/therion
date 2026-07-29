@@ -46,11 +46,12 @@
 #include "thsketch.h"
 #include "thcs.h"
 #include "thlog.h"
+#include "thparse.h"
 #ifdef THWIN32
 #include <windows.h>
 #endif
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 
 enum {
@@ -71,7 +72,6 @@ enum {
   TT_MAPS,
   TT_MAPS_OFFSET,
   TT_LOG,
-  TT_PREVIEW_DEEP,
   TT_SCRAP_SORT,
 };
 
@@ -86,7 +86,6 @@ static const thstok thtt_cfg[] = {
   {"log", TT_LOG},
   {"maps", TT_MAPS},
   {"maps-offset", TT_MAPS_OFFSET},
-  {"preview-deep", TT_PREVIEW_DEEP},
   {"scrap-sort", TT_SCRAP_SORT},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
@@ -125,10 +124,9 @@ const char * THCCC_SOURCE = "# Name of the source file.\n";
 thconfig::thconfig()
 {
 
-  this->install_path.strcpy("");
+  this->install_path.assign("");
   this->install_tex = false;
   this->install_tcltk = false;
-  this->install_im = false;
   this->lang = THLANG_UNKNOWN;
 
   this->auto_join = true;
@@ -161,9 +159,9 @@ thconfig::thconfig()
   this->m_decl_out_of_geomag_range = false;
 
 #ifdef THWIN32
-  thbuffer * tmpbf = &(this->bf1);
+  std::string * tmpbf = &(this->bf1);
   // set search path according to Windows registers
-  tmpbf->guarantee(1024);
+  tmpbf->resize(1024);
   DWORD type = 0, length = 1024;
   HKEY key;
   bool loaded_ok = true;
@@ -179,17 +177,15 @@ thconfig::thconfig()
     }
   }
   if (loaded_ok) {
-    if (RegQueryValueEx(key,"InstallDir",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) != ERROR_SUCCESS) {
-      tmpbf->strcpy("");
+    if (RegQueryValueEx(key,"InstallDir",NULL,&type,(BYTE *)tmpbf->data(),&length) != ERROR_SUCCESS) {
+      tmpbf->assign("");
       this->install_path = "";
     } else {
-      this->install_path = tmpbf->get_buffer();
-      if (RegQueryValueEx(key,"TeX",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) == ERROR_SUCCESS)
+      this->install_path = tmpbf->c_str();
+      if (RegQueryValueEx(key,"TeX",NULL,&type,(BYTE *)tmpbf->data(),&length) == ERROR_SUCCESS)
         this->install_tex = true;
-      if (RegQueryValueEx(key,"TclTk",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) == ERROR_SUCCESS)
+      if (RegQueryValueEx(key,"TclTk",NULL,&type,(BYTE *)tmpbf->data(),&length) == ERROR_SUCCESS)
         this->install_tcltk = true;
-      if (RegQueryValueEx(key,"ImageMagick",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) == ERROR_SUCCESS)
-        this->install_im = true;
     }
   	RegCloseKey(key);
   }
@@ -231,8 +227,8 @@ thconfig::thconfig()
     if (sp != NULL) {
 #ifdef THWIN32
       this->search_path += "\\.therion;";
-      if (strlen(this->install_path.get_buffer()) > 0) {
-        this->search_path += this->install_path.get_buffer();
+      if (!this->install_path.empty()) {
+        this->search_path += this->install_path.c_str();
       } else {
         this->search_path += wincfg;
       }
@@ -244,8 +240,8 @@ thconfig::thconfig()
     }
     else {
 #ifdef THWIN32
-      if (strlen(this->install_path.get_buffer()) > 0) {
-        this->search_path += this->install_path.get_buffer();
+      if (!this->install_path.empty()) {
+        this->search_path += this->install_path.c_str();
       } else {
         this->search_path += wincfg;
       }
@@ -279,8 +275,8 @@ thconfig::thconfig()
     if (sp != NULL) {
 #ifdef THWIN32
       this->init_path += "\\.therion;";
-      if (strlen(this->install_path.get_buffer()) > 0) {
-        this->init_path += this->install_path.get_buffer();
+      if (!this->install_path.empty()) {
+        this->init_path += this->install_path.c_str();
       } else {
         this->init_path += winini;
       }
@@ -292,8 +288,8 @@ thconfig::thconfig()
     }
     else {
 #ifdef THWIN32
-      if (strlen(this->install_path.get_buffer()) > 0) {
-        this->init_path += this->install_path.get_buffer();
+      if (!this->install_path.empty()) {
+        this->init_path += this->install_path.c_str();
       } else {
         this->init_path += winini;
       }
@@ -320,13 +316,13 @@ void thconfig::set_file_name(char * fn)
 }
 
    
-char * thconfig::get_file_name()
+const char * thconfig::get_file_name() const
 {
-  return this->fname;
+  return this->fname.c_str();
 }
   
 
-void thconfig::append_source(char * fname, long startln, long endln)
+void thconfig::append_source(const char * fname, long startln, long endln)
 {
   thconfig_src xsrc;
   xsrc.fname = this->src_fnames.append(fname);
@@ -384,14 +380,14 @@ void thconfig::set_search_path(char * pth)
 }
 
   
-char * thconfig::get_search_path()
+const char * thconfig::get_search_path() const
 {
-  return this->search_path;
+  return this->search_path.c_str();
 }
 
-char * thconfig::get_initialization_path()
+const char * thconfig::get_initialization_path() const
 {
-  return this->init_path;
+  return this->init_path.c_str();
 }
 
 
@@ -427,11 +423,11 @@ void thconfig::load()
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_READ)) {
     this->cfg_file.cmd_sensitivity_on();
     this->cfg_file.sp_scan_off();
-    this->cfg_file.set_file_name(this->fname);
+    this->cfg_file.set_file_name(this->fname.c_str());
     this->cfg_file.print_if_opened(thconfig_pifo, &fstarted);
     this->cfg_file.reset();
     try {
-      char * cfgln = this->cfg_file.read_line();
+      const char * cfgln = this->cfg_file.read_line();
       while(cfgln != NULL) {
         this->cfg_fenc = this->cfg_file.get_cif_encoding();
         thsplit_args(&valuemb, this->cfg_file.get_value());
@@ -459,23 +455,14 @@ void thconfig::load()
                 throw thexception("one file name expected");
               this->append_source(valuemb.get_buffer()[0]);
 #ifdef THWIN32
-              this->search_path.strcat(";");
+              this->search_path.append(";");
 #else
-              this->search_path.strcat(":");
+              this->search_path.append(":");
 #endif
-              this->search_path.strcat(this->cfg_file.get_cif_path());
+              this->search_path.append(this->cfg_file.get_cif_path());
             }
             break;
 
-          case TT_PREVIEW_DEEP:
-            if (valuemb.get_size() != 1)
-              throw thexception("single preview-deep switch expected");
-            sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
-            if (sv == TT_UNKNOWN_BOOL)
-              throw thexception(fmt::format("invalid preview-deep switch -- {}", valuemb.get_buffer()[0]));
-            this->preview_deep = (sv == TT_TRUE);
-            break;
-            
           case TT_SCRAP_SORT:
             if (valuemb.get_size() != 1)
               throw thexception("single scrap-sort switch expected");
@@ -706,7 +693,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     }
 
     thencode(&this->bf1, this->cfg_file.get_line(), this->cfg_file.get_cif_encoding());  
-    this->cfg_dblines.append(this->bf1.get_buffer());  
+    this->cfg_dblines.append(this->bf1.c_str());  
 
     // analyze the commands options
 
@@ -760,25 +747,25 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
             this->cfg_file.get_cif_line_number(),endlnopt));
                       
         thencode(&this->bf1, ln, this->cfg_file.get_cif_encoding());  
-        this->cfg_dblines.append(this->bf1.get_buffer());  
+        this->cfg_dblines.append(this->bf1.c_str());  
 
         thsplit_word(&this->bf1, &this->bf2, ln);
              
         // if end_command option, set turn off inside_cmd
         // and insert object into database
-        if (strcmp(this->bf1.get_buffer(), endlnopt) == 0) {
+        if (strcmp(this->bf1.c_str(), endlnopt) == 0) {
           inside_cmd = false;
           this->cfg_file.cmd_sensitivity_on();
           continue;   
         }
   
         // let's parse if an option line
-        optd = objptr->get_cmd_option_desc(this->bf1.get_buffer());
+        optd = objptr->get_cmd_option_desc(this->bf1.c_str());
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
-          thsplit_args(&this->mbf1, this->bf2.get_buffer());
+          thsplit_args(&this->mbf1, this->bf2.c_str());
           if (this->mbf1.get_size() < optd.nargs)
             throw thexception(fmt::format("not enough option arguments -- {} -- must be {}",
-              this->bf1.get_buffer(), optd.nargs));
+              this->bf1.c_str(), optd.nargs));
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
             this->cfg_file.get_cif_encoding(),
@@ -813,7 +800,7 @@ void thconfig::save()
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_GENERATE)) {
   
 #ifdef THDEBUG
-    thprint(fmt::format("\nwriting configuration file -- {}\n", this->fname.get_buffer()));
+    thprint(fmt::format("\nwriting configuration file -- {}\n", this->fname.c_str()));
 #else
     thprint("writing configuration file ... ");
     thtext_inline = true;
@@ -821,9 +808,9 @@ void thconfig::save()
 
     // OK, let's open configuration file for output
     FILE * cf;
-    cf = fopen(this->fname.get_buffer(),"w");
+    cf = fopen(this->fname.c_str(),"w");
     if (cf == NULL) {
-      thwarning(fmt::format("can't open configuration file for output -- {}", this->fname.get_buffer()));
+      thwarning(fmt::format("can't open configuration file for output -- {}", this->fname.c_str()));
       return;
     }
   
@@ -852,7 +839,7 @@ void thconfig::save()
     bool some_layout = false;
     for(sid = 0; sid < this->cfg_dblines.get_size(); sid++, srcn++) {
       thdecode(&(this->bf1), this->cfg_fenc, *srcn);
-      fprintf(cf, "%s\n", this->bf1.get_buffer());
+      fprintf(cf, "%s\n", this->bf1.c_str());
       some_layout = true;
     }
     if (some_layout)
@@ -915,7 +902,7 @@ void thconfig::xth_save()
     FILE * cf;
     cf = fopen(".xtherion.dat","w");
     if (cf == NULL) {
-      thwarning(fmt::format("can't open xtherion file for output -- {}.xth", this->fname.get_buffer()));
+      thwarning(fmt::format("can't open xtherion file for output -- {}.xth", this->fname.c_str()));
       return;
     }
   

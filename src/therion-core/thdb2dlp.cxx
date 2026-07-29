@@ -32,6 +32,8 @@
 #include "thinfnan.h"
 #include "thexpmap.h"
 
+#include <numbers>
+
 thdb2dlp::thdb2dlp () {
 
   this->nextlp = NULL;
@@ -170,6 +172,6 @@ double thdb2dlp::get_rotation() {
   this->get_prevcp(dx,dy);
   x -= dx;
   y -= dy;
-  return (atan2(y,x) / 3.14159265358 * 180);
+  return (atan2(y,x) / std::numbers::pi * 180);
 }
 

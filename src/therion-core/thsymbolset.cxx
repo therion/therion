@@ -45,6 +45,10 @@
 #include "thdatabase.h"
 #include "therion.h"
 #include "thlog.h"
+#include "thparse.h"
+
+#include <fmt/format.h>
+
 #include <fstream>
 
 thsymbolset::thsymbolset()
@@ -75,7 +79,7 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
   while (!(lf.eof())) {
     std::getline(lf, lnbuff);
     if (mpbug && (!skip_this)) {
-      if (lnbuff.substr(0, 5) == "write") {
+      if (lnbuff.starts_with("write")) {
         skip_next = true;
         skip_this = true;
         peoln = false;
@@ -1713,7 +1717,7 @@ void export_all_symbols()
     const auto tmp_handle = thtmp.switch_to_tmpdir();
 
     // run MP
-    thbuffer com;
+    std::string com;
 
     // vypise kodovania
     print_fonts_setup();
@@ -1772,7 +1776,7 @@ void export_all_symbols()
 #ifdef THDEBUG
     thprint("running metapost\n");
 #endif
-    retcode = system(com.get_buffer());
+    retcode = system(com.c_str());
     thsymbolset_log_log_file("data.log",
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);

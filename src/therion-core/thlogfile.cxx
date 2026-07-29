@@ -28,6 +28,9 @@
 
 #include "thlogfile.h"
 #include "therion.h"
+
+#include <fmt/format.h>
+
 #include <string.h>
 
 const char * logfilemode = "w";
@@ -102,7 +105,7 @@ void thlogfile::set_file_name(const char *fname)
 
 const char* thlogfile::get_file_name()
 {
-    return this->file_name;
+    return this->file_name.c_str();
 }
 
 void  thlogfile::set_logging(bool log_io)

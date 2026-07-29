@@ -26,7 +26,6 @@ set(TCL_SOURCES
     init.tcl
     licence.tcl
     main.tcl
-    mapcal.tcl
     me_cmds.tcl
     me_cmds2.tcl
     me_imgs.tcl

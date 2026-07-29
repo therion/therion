@@ -34,8 +34,11 @@
 #include "thcsdata.h"
 #include "thdatareader.h"
 #include "thdatabase.h"
+#include "thparse.h"
 #include "therion.h"
 #include "icase.h"
+
+#include <fmt/format.h>
 
 thdata::thdata()
 {
@@ -195,7 +198,7 @@ static const thstok thdata_end_cmds[] = {
 };
 
 
-bool thdata::get_cmd_ends_match(char * cmd) {
+bool thdata::get_cmd_ends_match(const char * cmd) {
   return (thmatch_token(cmd,thdata_end_cmds) == TT_DATA_CMD);
 }
 
@@ -371,7 +374,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       if ((indataline & THOP_INLINE) == 0)
         throw thexception("not a command line option -- team");
       thencode(&(this->db->buff_enc), *args, argenc);
-      temp_person.parse(this->db, this->db->buff_enc.get_buffer());
+      temp_person.parse(this->db, this->db->buff_enc.data());
       this->team_set.insert(temp_person);
       // check person roles
       if (cod.nargs > 1) {
@@ -410,7 +413,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       if ((indataline & THOP_INLINE) == 0)
         throw thexception("not a command line option -- explo-team");
       thencode(&(this->db->buff_enc), *args, argenc);
-      temp_person.parse(this->db, this->db->buff_enc.get_buffer());
+      temp_person.parse(this->db, this->db->buff_enc.data());
       this->discovery_team_set.insert(temp_person);
       break;
 
@@ -1761,9 +1764,9 @@ void thdata::insert_data_leg(int nargs, char ** args)
         break;
         
       case TT_DATALEG_DIRECTION:
-        if (icase_equals(args[carg],"b"))
+        if (icase_equal{}(args[carg], "b"))
           this->cd_leg->direction = false;
-        else if (!icase_equals(args[carg], "f"))
+        else if (!icase_equal{}(args[carg], "f"))
           throw thexception(fmt::format("invalid survey direction -- {}", args[carg]));
         break;
         
@@ -2410,7 +2413,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
       case 1:
         if (strlen(args[1]) > 0) {
           thencode(&(this->db->buff_enc), args[1], argenc);
-          it->comment = this->db->strstore(this->db->buff_enc.get_buffer());
+          it->comment = this->db->strstore(this->db->buff_enc.c_str());
         }
         break;
       default:
@@ -2460,7 +2463,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
           //    it->code = NULL;
           //  } else {
           //    thencode(&(this->db->buff_enc), args[ai], argenc);
-          //    it->code = this->db->strstore(this->db->buff_enc.get_buffer());
+          //    it->code = this->db->strstore(this->db->buff_enc.data());
           //  }
           //  break;
           case TT_DATASFLAG_EXPLORED:
@@ -2502,7 +2505,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
             ai++;            
             if (strlen(args[ai]) > 0) {
               thencode(&(this->db->buff_enc), args[ai], argenc);
-              it->attr[attrname] = this->db->strstore(this->db->buff_enc.get_buffer());
+              it->attr[attrname] = this->db->strstore(this->db->buff_enc.c_str());
             } else {
               it->attr.erase(attrname);
             }

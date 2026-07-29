@@ -29,7 +29,7 @@
 #include "therion.h"
 #include "thinit.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include <cstdlib>
 #include <filesystem>
@@ -98,14 +98,14 @@ void thtmpdir::create() try
     return;
 
   fs::path dir_path;
-  this->tmp_remove_script = thini.tmp_remove_script.get_buffer();
+  this->tmp_remove_script = thini.tmp_remove_script.c_str();
 
 #ifdef THDEBUG
   // the debugging temp directory
   dir_path = "thTMPDIR";
 #else
-  if (strlen(thini.tmp_path.get_buffer()) > 0) {
-    dir_path = thini.tmp_path.get_buffer();
+  if (!thini.tmp_path.empty()) {
+    dir_path = thini.tmp_path.c_str();
   } else if (this->debug) {
     dir_path = "thTMPDIR";
   } else {
@@ -135,10 +135,10 @@ void thtmpdir::remove() try
   if (!this->tmp_remove_script.empty()) {
     const auto tmpfname = fmt::format("{} {}", this->tmp_remove_script, this->name);
     if (system(tmpfname.c_str()) != 0) {
-      thwarning(fmt::format("delete temporary directory error -- {} not successful", tmpfname))
+      thwarning(fmt::format("delete temporary directory error -- {} not successful", tmpfname));
     }
     if (fs::is_directory(this->name)) {
-      thwarning(fmt::format("error deleting temporary directory -- {}", this->name))    
+      thwarning(fmt::format("error deleting temporary directory -- {}", this->name));
     } else {
       this->name = ".";
       this->tried = false;
@@ -152,7 +152,7 @@ void thtmpdir::remove() try
   this->tried = false;
   this->exist = false;
 } catch (const std::exception& e) {
-  thwarning(fmt::format("error deleting temporary directory -- {}", e.what()))
+  thwarning(fmt::format("error deleting temporary directory -- {}", e.what()));
 }
 
 

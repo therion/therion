@@ -45,8 +45,11 @@
 #include "thtexfonts.h"
 #include "thlang.h"
 #include "thfilehandle.h"
+#include "thparse.h"
 #include "therion.h"
 #include <filesystem>
+
+#include <fmt/format.h>
 
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
@@ -219,7 +222,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   try {
     fnmb = std::filesystem::path(this->outpt).filename().string();
   } catch(const std::exception& e) {
-    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()))
+    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()));
   }
   if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
     pimg = img_open_write_cs(fnm, fnmb.c_str(), thcs_get_params(thcfg.outcs).c_str(), 1);
@@ -227,7 +230,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
     pimg = img_open_write(fnm, fnmb.c_str(), 1);
      
   if (!pimg) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   //this->register_output(fnm);
@@ -314,7 +317,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   }
 
   cis_exp = s_exp;
-  thbuffer stnbuf;
+  std::string stnbuf;
   thdb1ds * tmps;
   for(i = 0; i < nstat; i++, cis_exp++) {
     if ((*cis_exp != 0) || (s_exp[dbp->db1d.station_vec[i].uid - 1] != 0) || 
@@ -331,11 +334,11 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
         x_exp |= img_SFLAG_ENTRANCE;
       if (((tmps->flags & TT_STATIONFLAG_FIXED) != 0) && ((tmps->flags & TT_STATIONFLAG_NOTFIXED) == 0))
         x_exp |= img_SFLAG_FIXED;
-      stnbuf.strcpy(dbp->db1d.station_vec[i].survey->get_reverse_full_name());
-      if (strlen(stnbuf.get_buffer()) > 0) stnbuf.strcat(".");
-      stnbuf.strcat(dbp->db1d.station_vec[i].name);
+      stnbuf.assign(dbp->db1d.station_vec[i].survey->get_reverse_full_name());
+      if (!stnbuf.empty()) stnbuf.append(".");
+      stnbuf.append(dbp->db1d.station_vec[i].name);
       if (!tmps->is_temporary())
-        img_write_item(pimg, img_LABEL, x_exp, stnbuf,
+        img_write_item(pimg, img_LABEL, x_exp, stnbuf.c_str(),
           dbp->db1d.station_vec[i].x, dbp->db1d.station_vec[i].y, dbp->db1d.station_vec[i].z);
       else {
         x_exp |= img_SFLAG_ANON;
@@ -394,7 +397,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -668,7 +671,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -917,7 +920,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -1121,7 +1124,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"w");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -1921,7 +1924,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   expf.ExportLOX(fnm);
 
   if (expf.m_error.size() > 0) {
-    thwarning(fmt::format("error writing {}",fnm))
+    thwarning(fmt::format("error writing {}",fnm));
     return;
   }
   this->register_output(fnm);
@@ -1946,7 +1949,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.kml");
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);

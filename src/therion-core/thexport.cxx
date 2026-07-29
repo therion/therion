@@ -31,6 +31,7 @@
 #include "thdatabase.h"
 #include "thexporter.h"
 #include "thcs.h"
+#include "thparse.h"
 #include "icase.h"
 #include <stdio.h>
 #include <algorithm>
@@ -134,15 +135,15 @@ void thexport::dump_body(FILE * xf)
 {
   if (this->outpt_def) {
     thdecode_arg(&(this->cfgptr->bf1), this->outpt);
-    fprintf(xf," -output %s",this->cfgptr->bf1.get_buffer());
+    fprintf(xf," -output %s",this->cfgptr->bf1.c_str());
   }  
 }
 
 
 const char * thexport::get_output(const char * defname)
 {
-  static thbuffer outptfname;
-  outptfname = this->cfgpath.get_buffer();
+  static std::string outptfname;
+  outptfname = this->cfgpath.c_str();
   if (this->outpt_def) {
     if (thpath_is_absolute(this->outpt))
       return this->outpt;
@@ -151,7 +152,7 @@ const char * thexport::get_output(const char * defname)
   } else {
     outptfname += defname;
   }
-  return outptfname.get_buffer();
+  return outptfname.c_str();
 }
 
 // Generates a lookup table for the checksums of all 8-bit values.
@@ -252,7 +253,7 @@ void thexport::register_output(std::string fnm) {
 
 void thexport::set_format_by_extension(std::string_view extension, const int cformat)
 {
-  if (icase_equals(std::filesystem::path(this->outpt).extension().string(), extension)) {
+  if (icase_equal{}(std::filesystem::path(this->outpt).extension().string(), extension)) {
     this->format = cformat;
   }
 }

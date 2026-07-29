@@ -29,6 +29,7 @@
 #include "thdatabase.h"
 #include "thexception.h"
 #include "thepsparse.h"
+#include "thparse.h"
 #include <cmath>
 #include <fmt/format.h>
 

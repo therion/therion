@@ -39,6 +39,7 @@
 #include "thconfig.h"
 #include "th2ddataobject.h"
 #include "thdatabase.h"
+#include "thparse.h"
 #include "therion.h"
 
 #include <fmt/ostream.h>
@@ -458,7 +459,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             throw thexception(fmt::format("unknown option -- {}", *args));
           }
           thencode(&(this->db->buff_enc), *args, argenc);
-          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->line = this->db->strstore(this->db->buff_enc.c_str());
           last_line->code = this->ccode;
           last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
           break;
@@ -467,7 +468,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             if (!th_is_keyword(*args))
               throw thexception(fmt::format("invalid keyword -- {}", args[0]));
             thencode(&(this->db->buff_enc), *args, argenc);
-            last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+            last_line->line = this->db->strstore(this->db->buff_enc.c_str());
           }
           last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
           break;
@@ -480,7 +481,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           if (!th_is_keyword(args[2]))
             throw thexception(fmt::format("invalid keyword -- {}", args[2]));
           thencode(&(this->db->buff_enc), args[2], argenc);
-          last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          last_line->line = this->db->strstore(this->db->buff_enc.c_str());
           last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
           break;
 //        case TT_LAYOUT_MAP_ITEM:
@@ -490,7 +491,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 //          if (!th_is_keyword(args[1]))
 //            ththrow("invalid keyword -- %s", args[1]);
 //          thencode(&(this->db->buff_enc), args[1], argenc);
-//          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+//          this->last_line->line = this->db->strstore(this->db->buff_enc.c_str());
 //          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
 //          break;
         case TT_LAYOUT_SYMBOL_HIDE:
@@ -1016,7 +1017,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DOC_TITLE:
       if (strlen(args[0]) > 0) {
         thencode(&(this->db->buff_enc), args[0], argenc);
-        this->doc_title = this->db->strstore(this->db->buff_enc.get_buffer());
+        this->doc_title = this->db->strstore(this->db->buff_enc.c_str());
       } else
         this->doc_title = "";
       this->def_doc_title = 2;  
@@ -1025,7 +1026,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DOC_COMMENT:
       if (strlen(args[0]) > 0) {
         thencode(&(this->db->buff_enc), args[0], argenc);
-        this->doc_comment = this->db->strstore(this->db->buff_enc.get_buffer());
+        this->doc_comment = this->db->strstore(this->db->buff_enc.c_str());
       } else
         this->doc_comment = "";
       this->def_doc_comment = 2;  
@@ -1034,7 +1035,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DOC_AUTHOR:
       if (strlen(args[0]) > 0) {
         thencode(&(this->db->buff_enc), args[0], argenc);
-        this->doc_author = this->db->strstore(this->db->buff_enc.get_buffer());
+        this->doc_author = this->db->strstore(this->db->buff_enc.c_str());
       } else
         this->doc_author = "";
       this->def_doc_author = 2;  
@@ -1043,7 +1044,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DOC_SUBJECT:
       if (strlen(args[0]) > 0) {
         thencode(&(this->db->buff_enc), args[0], argenc);
-        this->doc_subject = this->db->strstore(this->db->buff_enc.get_buffer());
+        this->doc_subject = this->db->strstore(this->db->buff_enc.c_str());
       } else
         this->doc_subject = "";
       this->def_doc_subject = 2;  
@@ -1052,7 +1053,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DOC_KEYWORDS:
       if (strlen(args[0]) > 0) {
         thencode(&(this->db->buff_enc), args[0], argenc);
-        this->doc_keywords = this->db->strstore(this->db->buff_enc.get_buffer());
+        this->doc_keywords = this->db->strstore(this->db->buff_enc.c_str());
       } else
         this->doc_keywords = "";
       this->def_doc_keywords = 2;  
@@ -1150,11 +1151,11 @@ int thlayout::get_context()
 void thlayout::self_print_library(std::ostream& out) {
 
   fmt::print(out, "\toname = \"{}\";\n", this->get_name());
-  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
   // decode title
   thdecode_c(&(this->db->buff_enc), this->get_title());
-  fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
-  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
+  fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.c_str());
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
 
 
   fmt::print(out, "\tplayout->def_scale = {};\n", this->def_scale);
@@ -1315,29 +1316,29 @@ void thlayout::self_print_library(std::ostream& out) {
 
   fmt::print(out, "\tplayout->def_origin_label = {};\n", this->def_origin_label);
   thdecode_c(&(this->db->buff_enc), this->olx);
-  fmt::print(out, "\tplayout->olx = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\tplayout->olx = \"{}\";\n", this->db->buff_enc.c_str());
   thdecode_c(&(this->db->buff_enc), this->oly);
-  fmt::print(out, "\tplayout->oly = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\tplayout->oly = \"{}\";\n", this->db->buff_enc.c_str());
 
   fmt::print(out, "\tplayout->def_doc_title = {};\n", this->def_doc_title);
   thdecode_c(&(this->db->buff_enc), this->doc_title);
-  fmt::print(out, "\tplayout->doc_title = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\tplayout->doc_title = \"{}\";\n", this->db->buff_enc.c_str());
   
   fmt::print(out, "\tplayout->def_doc_comment = {};\n", this->def_doc_comment);
   thdecode_c(&(this->db->buff_enc), this->doc_comment);
-  fmt::print(out, "\tplayout->doc_comment = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\tplayout->doc_comment = \"{}\";\n", this->db->buff_enc.c_str());
   
   fmt::print(out, "\tplayout->def_doc_author = {};\n", this->def_doc_author);
   thdecode_c(&(this->db->buff_enc), this->doc_author);
-  fmt::print(out, "\tplayout->doc_author = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\tplayout->doc_author = \"{}\";\n", this->db->buff_enc.c_str());
 
   fmt::print(out, "\tplayout->def_doc_subject = {};\n", this->def_doc_author);
   thdecode_c(&(this->db->buff_enc), this->doc_subject);
-  fmt::print(out, "\tplayout->doc_subject = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\tplayout->doc_subject = \"{}\";\n", this->db->buff_enc.c_str());
   
   fmt::print(out, "\tplayout->def_doc_keywords = {};\n", this->def_doc_keywords);
   thdecode_c(&(this->db->buff_enc), this->doc_keywords);
-  fmt::print(out, "\tplayout->doc_keywords = \"{}\";\n", this->db->buff_enc.get_buffer());
+  fmt::print(out, "\tplayout->doc_keywords = \"{}\";\n", this->db->buff_enc.c_str());
   
   fmt::print(out, "\tplayout->def_excl_pages = {};\n", this->def_excl_pages);
   fmt::print(out, "\tplayout->excl_pages = {};\n",(this->excl_pages ? "true" : "false"));
@@ -1345,7 +1346,7 @@ void thlayout::self_print_library(std::ostream& out) {
     fmt::print(out, "\tplayout->excl_list = NULL;\n");
   } else {
     thdecode_c(&(this->db->buff_enc), this->excl_list);
-    fmt::print(out, "\tplayout->excl_list = \"{}\";\n", this->db->buff_enc.get_buffer());
+    fmt::print(out, "\tplayout->excl_list = \"{}\";\n", this->db->buff_enc.c_str());
   }
 
   fmt::print(out, "\tplayout->def_font_setup = {};\n", this->def_font_setup);
@@ -1417,7 +1418,7 @@ void thlayout::self_print_library(std::ostream& out) {
           }
           fmt::print(out, ";\n");
         }
-        fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
+        fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.c_str());
         fmt::print(out, "\tplayout->set(thcmd_option_desc(0,1),oname,TT_UTF_8,0);\n");
         break;
       case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
@@ -1428,12 +1429,12 @@ void thlayout::self_print_library(std::ostream& out) {
       case TT_LAYOUT_CODE_SYMBOL_COLOR:
         if (ln->line != NULL) {
           thdecode_c(&(this->db->buff_enc), ln->line);
-          fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.get_buffer());
+          fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.c_str());
         }
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS)
           fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
         else
-          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
+          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
@@ -1699,7 +1700,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
         	fprintf(o, "\\includeprefix={%s}\n", fix_path_slashes(last_path).c_str());
         }
         thdecode_utf2tex(&(this->db->buff_enc), ln->line);
-        fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
+        fprintf(o, "%s\n", this->db->buff_enc.c_str());
       }
   }
   
@@ -1716,7 +1717,6 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
 
 void thlayout::export_mpost(FILE * o) {
 
-  bool anyline = false;
   const char * last_path = "";
   for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
       if (ln->code == TT_LAYOUT_CODE_METAPOST) {
@@ -1724,15 +1724,10 @@ void thlayout::export_mpost(FILE * o) {
           last_path = ln->path;
           fprintf(o, "includeprefix := \"%s\";\n", fix_path_slashes(last_path).c_str());
         }
-        anyline = true;
         thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
-        fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
+        fprintf(o, "%s\n", this->db->buff_enc.c_str());
       }
   }
-  
-  if (!anyline) {
-  }
-
 }
 
 
@@ -1771,7 +1766,7 @@ static bool is_copy_src(thlayoutln const &ll) {
 void thlayout::process_copy() {
   // ak je locknuty -> tak warning a koniec
   if (this->lock) {
-    thwarning(fmt::format("{} -- recursive layout copying", this->throw_source()))
+    thwarning(fmt::format("{} -- recursive layout copying", this->throw_source()));
     return;
   }
   this->lock = true;
@@ -1784,7 +1779,7 @@ void thlayout::process_copy() {
     // najdeme si layout podla mena
     thlayout * srcl = this->db->get_layout(csp->line);
     if (srcl == NULL) {
-      thwarning(fmt::format("{} -- source layout not found -- {}", this->throw_source(), csp->line))
+      thwarning(fmt::format("{} -- source layout not found -- {}", this->throw_source(), csp->line));
     } else {
       // ak ma este nevyriesene zavislosti
       srcl->process_copy();

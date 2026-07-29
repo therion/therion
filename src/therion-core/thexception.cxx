@@ -1,6 +1,6 @@
 #include "thexception.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 thexception::thexception(const std::string& msg)
     : std::runtime_error(msg)

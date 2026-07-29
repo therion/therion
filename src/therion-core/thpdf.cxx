@@ -36,12 +36,12 @@
 #include <string>
 #include <climits>
 
-// #include <cstring>
 #include <cstdio>
 #include <cfloat>
 #include <cmath>
 #include <regex>
-#include <fmt/core.h>
+#include <numbers>
+#include <fmt/format.h>
 
 #include "thpdfdbg.h"
 #include "thconfig.h"
@@ -764,7 +764,7 @@ void print_surface_bitmaps (std::ofstream &PAGEDEF, double shiftx, double shifty
 }
 
 paired rotatedaround(paired x,paired o, double th) {
-  double theta = -th * 3.14159265358979 / 180;
+  double theta = -th * std::numbers::pi / 180;
   paired z, tmp;
   tmp.x = x.x - o.x;
   tmp.y = x.y - o.y;
@@ -832,8 +832,8 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
   double G_real_init_x = LAYOUT.XO + LAYOUT.XS * floor ((llnew.x-origin.x)/LAYOUT.hgridsize);
   double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.vgridsize);
   
-  double cosr = cos(-LAYOUT.gridrot * 3.14159265 / 180);
-  double sinr = sin(-LAYOUT.gridrot * 3.14159265 / 180);
+  double cosr = cos(-LAYOUT.gridrot * std::numbers::pi / 180);
+  double sinr = sin(-LAYOUT.gridrot * std::numbers::pi / 180);
 
   int row, col, elem;
 

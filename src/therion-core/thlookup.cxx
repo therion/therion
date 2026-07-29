@@ -36,7 +36,11 @@
 #include "thlayout.h"
 #include "thtexfonts.h"
 #include "thdatabase.h"
+#include "thparse.h"
 #include "therion.h"
+
+#include <fmt/format.h>
+
 #include <string.h>
 
 
@@ -111,7 +115,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
   const char * lkpindex;
   const char * lkpnname;
   char * tmpa[1];
-  thbuffer tmpb;
+  std::string tmpb;
 
   thcmd_option_desc defcod = this->get_default_cod(cod.id);
   switch (cod.id) {
@@ -135,7 +139,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 	case TT_LOOKUP_TITLE:
       if (strlen(args[0]) > 0) {
         thencode(&(this->db->buff_enc), args[0], argenc);
-        this->m_title = this->db->strstore(this->db->buff_enc.get_buffer());
+        this->m_title = this->db->strstore(this->db->buff_enc.c_str());
       } else
         this->m_title = "";
       break;
@@ -146,7 +150,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (this->m_type == TT_LAYOUT_CCRIT_UNKNOWN)
         throw thexception(fmt::format("invalid coloring criteria -- {}", args[0]));
       tmpb = lkpnname;
-      tmpa[0] = tmpb.get_buffer();
+      tmpa[0] = tmpb.data();
       args = tmpa;
       [[fallthrough]];
     default:
@@ -228,7 +232,7 @@ void thlookup::postprocess_object_references() {
     thlookup_table_row * tr;
     thlookup_table_list::iterator tli;
     thobjectname on;
-    thbuffer tmp;
+    std::string tmp;
     for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
       tr = &(*tli);
       switch (this->m_type) {
@@ -237,7 +241,7 @@ void thlookup::postprocess_object_references() {
         case TT_LAYOUT_CCRIT_SURVEY:
           if ((tr->m_ref == NULL) && (strlen(tr->m_valueString) > 0)) {
             tmp = tr->m_valueString;
-            thparse_objectname(on, &(thdb.buff_strings), tmp.get_buffer(), NULL);
+            thparse_objectname(on, &(thdb.buff_strings), tmp.data(), NULL);
             tr->m_ref = thdb.get_object(on, NULL);
             if (tr->m_ref == NULL) {
               thwarning(fmt::format("invalid reference -- {}", tr->m_valueString));
@@ -262,11 +266,10 @@ bool scrap_in_map(thscrap * s, thmap * m) {
   mi = m->first_item;
   while(mi != NULL) {
     if (mi->type == TT_MAPITEM_NORMAL) {
-      auto childmap = dynamic_cast<thmap *>(mi->object);
-      if (!childmap) {
+      if (m->is_basic) {
         if (s->id == mi->object->id) return true;
       } else {
-        if (scrap_in_map(s, childmap)) return true;
+        if (scrap_in_map(s, dynamic_cast<thmap*>(mi->object))) return true;
       }
     }
     mi = mi->next_item;
@@ -442,7 +445,7 @@ void thlookup::export_color_legend(thlayout * layout) {
               clrec.name += tli->m_valueDate.get_str(TT_DATE_FMT_UTF8_Y);
             if (clrec.name.size() == 0)
               clrec.name = thT("not specified",layout->lang);
-            clrec.texname = utf2tex(clrec.name.c_str());
+            clrec.texname = utf2tex(clrec.name);
             break;
           default:
             clrec.texname = "";
@@ -471,7 +474,7 @@ void thlookup::export_color_legend(thlayout * layout) {
             }
             if (clrec.name.size() == 0)
               clrec.name = thT("not specified",layout->lang);
-            clrec.texname = utf2tex(clrec.name.c_str());
+            clrec.texname = utf2tex(clrec.name);
             break;
         }
       }
@@ -488,7 +491,7 @@ void thlookup::export_color_legend(thlayout * layout) {
 void thlookup_parse_reference(const char * arg, int * type, const char ** index, const char ** nname) {
   // parse lookup type
   thmbuffer mbf;
-  thbuffer normname;
+  std::string normname;
   thsplit_strings(& mbf, arg, ':');
   if ((mbf.get_size() > 2) || (mbf.get_size() < 1))
     throw thexception(fmt::format("invalid lookup id -- {}", arg));
@@ -505,7 +508,7 @@ void thlookup_parse_reference(const char * arg, int * type, const char ** index,
     normname = "";
   normname += "_";
   normname += *index;
-  *nname = thdb.strstore(normname.get_buffer());
+  *nname = thdb.strstore(normname.c_str());
 }
 
 void thlookup::add_auto_item(class thdataobject * o, thlayout_color c) {

@@ -1,9 +1,72 @@
-Therion 6.3.5 (in progress):
+Therion 6.4.1 (in progress):
+
+Windows installer:
+ * use TeXLive 2026 binaries instead of dated W32TeX distribution
+ * include LuaTeX as an alternative to pdfTeX
+
+loch:
+ * added presentation animation mode and export
+
+--------------------------------------------------------------------------------
+
+Therion 6.4.0 (2026-05-07):
 
 therion:
+ * added scan command to include STL 3D mesh into cave 3D model
  * added point borehole
+ * added 'gps' as alias for 'position' team role [#711]
+ * added \monthname, \fullmonthname and \twodigit TeX macros
+ * added support for a non-breakable space (U+00A0) in map texts
+ * added splay and approximate shot flags to DB export
+ * allow any projection with point section [#699]
+ * new config command: scrap-sort on/off [#686]
+ * bugs fixed:
+   - fixed nosurvey length calculation with equate [#652]
+   - fixed floating point number logging
+   - added point stalactites/stalagmites to the speleothems group (fixes [#683])
+   - fix multi-level map shift [#687]
+   - support font <size:x> for named sizes and percentages outside of MP
+   - date formatting bugfix [#728]
+   - map reference processing bugfix [#733]
+   - documentation improvements [#647, #704, #708, #709, #715, #747, #748]
+
+xtherion:
+ * removed 'Help / Calibrate bitmap' function (Therion produces standard
+   geospatial PDF files starting with 6.3.0)
+ * bugs fixed:
+   - fixed segment subtype context menu
+   - fixed right-click behavior in XTherion for Tcl/Tk 9 on macOS [#735]
+
+infrastructure and compiler:
+ * removed Makefiles [#703]
+ * enabled C++20 [#668]
+ * code improvements: simplified printing functions [#655];
+   thscan improvements [#660]; cleanup of includes [#666, #667, #753];
+   use more fmt::format [#672]; thprintf() replacement [#674, #677, #678, #679];
+   removed fmt::sprintf [#680, #684, #685]; use std::numbers::pi [#696, #713,
+   #750]; C++20: replaced thmatch templates with std::span [#675];
+   refactored macro thexp_set_ext_fmt [#697]; remove LXDEPCHECK [#707];
+   remove dependency on X11 [#706]; refactoring of thlibrarydata [#721, #725];
+   thinput improvements [#722]; refactoring of thbuffer [#734]
+ * code reorganization: split lxMath.h [#671];
+   move sources to src [#714, #717] and tests [#719];
+   move TR library to extern [#720]; refactored library therion-tex [#736];
+   refactored library therion-mpost [#738];
+   refactored thsymbolsetlist generation [#739];
+   refactored thlang generation [#749]; moved thcsdata build definition [#752]
+ * enabled Loch compilation using MSVC [#740]
+ * fix new clang tidy warnings [#659]; enabled pedantic warnings [#724];
+   silence Clang 22 warning [#742]
+ * CMake: option ENABLE_WERROR [#661]; removed toolchain files [#670];
+   don't define _GNU_SOURCE [#701]; simplify -Werror [#702];
+   option to disable unit tests [#705];
+   fixed Loch help archive creation on macOS (libarchive xattr issue) [#732];
+   localization of loch on macOS [#489]
+ * fix MSYS2 pipelines [#664]
+ * Github Actions: allow c:/ drive along with d:/; macOS updates [#695, #743];
+   CMake test output on failure; fix workflow permissions; update GHA scripts
  * support compilation on Android (in termux)
- * add `gps` as alias for `position` team role
+ * Proj 9.8.0 included to the testing script
 
 --------------------------------------------------------------------------------
 

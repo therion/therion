@@ -1,4 +1,6 @@
 name: CMake
+permissions:
+  contents: read
 on: [push, pull_request]
 jobs:
   Ubuntu:
@@ -6,23 +8,23 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-22.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "libwxgtk3.0-gtk3-dev libvtk9-dev",        args: "-DUSE_BUNDLED_CATCH2=ON"                                        }
-          - { os: ubuntu-22.04, cc: clang, cxx: clang++, type: Release,        pkgs: "catch2 libwxgtk3.0-gtk3-dev libvtk9-dev", args: ""                                                               }
-          - { os: ubuntu-24.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\"" }
-          - { os: ubuntu-24.04, cc: clang, cxx: clang++, type: RelWithDebInfo, pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DECM_ENABLE_SANITIZERS=address"                                }
-          - { os: ubuntu-24.04, cc: clang, cxx: clang++, type: Debug,          pkgs: "catch2 libwxgtk3.2-dev libvtk9-dev",      args: "-DENABLE_CLANG_TIDY=ON"                                         }
+          - { os: ubuntu-24.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "",       args: "-DUSE_BUNDLED_CATCH2=ON -DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\"" }
+          - { os: ubuntu-24.04, cc: clang, cxx: clang++, type: Release,        pkgs: "catch2", args: ""                                                                                       }
+          - { os: ubuntu-26.04, cc: gcc,   cxx: g++,     type: Release,        pkgs: "catch2", args: "-DCMAKE_CXX_FLAGS=\"-Wno-array-bounds -Wno-stringop-overflow\""                         }
+          - { os: ubuntu-26.04, cc: clang, cxx: clang++, type: RelWithDebInfo, pkgs: "catch2", args: "-DECM_ENABLE_SANITIZERS=address"                                                        }
+          - { os: ubuntu-26.04, cc: clang, cxx: clang++, type: Debug,          pkgs: "catch2", args: "-DENABLE_CLANG_TIDY=ON"                                                                 }
     env:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install dependencies
         run: |
           sudo apt -qq update
-          sudo apt install -y ${{ matrix.pkgs }} texlive-binaries texlive-metapost libproj-dev libshp-dev survex imagemagick ghostscript ninja-build clang-tidy gettext libfmt-dev
+          sudo apt install -y ${{ matrix.pkgs }} texlive-binaries texlive-metapost libproj-dev libshp-dev survex imagemagick libmagick++-dev ghostscript ninja-build clang-tidy gettext libfmt-dev libwxgtk3.2-dev libvtk9-dev
       - name: install additional texlive languages
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-26.04'
         run:  sudo apt install -y texlive-lang-czechslovak texlive-lang-cyrillic
       - name: Configure CMake
         run: |
@@ -35,11 +37,11 @@ jobs:
       - run: cmake --build build
       - run: cmake --build build -t test
       - name: Run samples
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-26.04'
         run: cmake --build build -t samples-verify-crc -- -j 4
       - run: cmake --build build -t samples-verify-ref -- -j 4
-      - uses: actions/upload-artifact@v4
-        if: matrix.os == 'ubuntu-24.04' && always()
+      - uses: actions/upload-artifact@v6
+        if: matrix.os == 'ubuntu-26.04' && always()
         with:
           name: samples-${{ matrix.os }}-${{ matrix.cc }}-${{ matrix.type }}
           path: build/samples/
@@ -50,11 +52,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-14, macos-15, macos-26]
+        os: [macos-15, macos-26]
     env:
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install dependencies
         run: |
           find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
@@ -74,7 +76,7 @@ jobs:
           sudo tlmgr install collection-langczechslovak
           cmake --build build -t samples-verify-crc -- -j 4
           cmake --build build -t samples-verify-ref -- -j 4
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: samples-${{ matrix.os }}
@@ -96,7 +98,7 @@ jobs:
       THDIR: ${{ github.workspace }}
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.config.msystem }}
@@ -118,6 +120,7 @@ jobs:
             mingw-w64-${{ matrix.config.arch }}-bwidget
             mingw-w64-${{ matrix.config.arch }}-fmt
             mingw-w64-${{ matrix.config.arch }}-catch
+            mingw-w64-${{ matrix.config.arch }}-imagemagick
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Set up the batteries
@@ -125,13 +128,13 @@ jobs:
           THDIR="${THDIR:0:2}/a/therion"
           reg add HKCU\\Software\\Therion //v InstallDir //t REG_SZ //d "${THDIR}/therion-batteries"
           mkdir -p $HOME/.therion
-          echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
-          cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' build/innosetup.ini),proj-datumgrid}/ ../therion-batteries/lib/
+          cp -r ../therion-batteries/_proj/proj-$(awk -F "=" '/version/{print $2}' build/innosetup.ini)/ ../therion-batteries/lib/
       - run: cmake --build build -t test
       - run: cmake --build build -t samples-verify-crc -- -j 4
       - run: cmake --build build -t samples-verify-ref -- -j 4
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: samples-windows-${{ matrix.config.msystem }}

@@ -301,7 +301,7 @@ class thdata : public thdataobject {
    * Whether cmd is end.
    */
    
-  bool get_cmd_ends_match(char * cmd) override;
+  bool get_cmd_ends_match(const char * cmd) override;
   
   
   /**

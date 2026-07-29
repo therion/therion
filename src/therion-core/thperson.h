@@ -59,7 +59,7 @@ class thperson {
    * Parse the person name.
    */
    
-  void parse(thdatabase * dbp, char * src);
+  void parse(thdatabase * dbp, const char * src);
   
   
   /**

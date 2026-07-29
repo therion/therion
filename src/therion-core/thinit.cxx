@@ -38,7 +38,12 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thpdfdbg.h"
+#include "thparse.h"
+#include "thchencdata.h"
 #include "icase.h"
+
+#include <fmt/format.h>
+
 #include <filesystem>
 
 #ifdef THWIN32
@@ -106,8 +111,6 @@ enum {
   TTIC_ENCODING_SQL,
   TTIC_PATH_CAVERN,
 //  TTIC_PATH_3DTOPOS,
-  TTIC_PATH_CONVERT,
-  TTIC_PATH_IDENTIFY,
   TTIC_PATH_MPOST,
   TTIC_OPT_MPOST,
   TTIC_PATH_PDFTEX,
@@ -137,14 +140,12 @@ enum {
  
 static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
-  {"convert-path", TTIC_PATH_CONVERT},
   {"cs-def", TTIC_CS_DEF},
   {"cs-trans", TTIC_CS_TRANS},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
 //  {"path_3dtopos", TTIC_PATH_3DTOPOS},
-  {"identify-path", TTIC_PATH_IDENTIFY},
   {"language", TTIC_LANG},
   {"loop-closure", TTIC_LOOPC},
   {"mpost-options", TTIC_OPT_MPOST},
@@ -184,17 +185,17 @@ static const thstok thtt_loopc[] = {
 
 
 #ifdef THWIN32
-thbuffer short_path_buffer;
-void thinit__make_short_path(thbuffer * bf) {
-  DWORD rv;
-  size_t sl;
-  sl = strlen(bf->get_buffer());
-  if (sl == 0)
+void thinit__make_short_path(std::string * bf) {
+  if (bf->empty())
     return;
-  short_path_buffer.guarantee(2 * sl);
-  rv = GetShortPathName(bf->get_buffer(), short_path_buffer.get_buffer(), (DWORD) short_path_buffer.size);
-  if ((rv > 0) && (rv < (DWORD) short_path_buffer.size)) {
-    bf->strcpy(short_path_buffer.get_buffer());
+  DWORD short_buf_size = GetShortPathName(bf->c_str(), nullptr, 0);
+  if (short_buf_size > 0) {
+    auto short_buf = std::string(short_buf_size, '\0');
+    DWORD rv = GetShortPathName(bf->c_str(), short_buf.data(), short_buf_size);
+    if (rv != 0) {
+      thassert(rv < short_buf_size);
+      bf->assign(short_buf.c_str());
+    }
   }
 }
 #endif
@@ -220,10 +221,10 @@ void thinit::copy_fonts() {
 
 #ifdef THWIN32
   FILE * f = fopen(thtmp.get_file_name("pltotf.bat"),"w");
-  fprintf(f,"@\"%s\\bin\\windows\\pltotf.exe\" %%1 %%2\n",thcfg.install_path.get_buffer());
+  fprintf(f,"@\"%s\\bin\\windows\\pltotf.exe\" %%1 %%2\n",thcfg.install_path.c_str());
   fclose(f);
   f = fopen(thtmp.get_file_name("cfftot1.bat"),"w");
-  fprintf(f,"@\"%s\\bin\\windows\\cfftot1.exe\" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9\n",thcfg.install_path.get_buffer());
+  fprintf(f,"@\"%s\\bin\\windows\\cfftot1.exe\" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9\n",thcfg.install_path.c_str());
   fclose(f);
 #endif
   thprint("done.\n");
@@ -239,37 +240,37 @@ int thinit::get_lang() {
 
 void thinit::check_font_path(const char * fname, int index) {
 
-  static thbuffer pfull, pshort, tmpb;
+  static std::string pfull, pshort, tmpb;
 
-  pshort.strcpy("");
-  pfull.strcpy("");
+  pshort.assign("");
+  pfull.assign("");
   long i, l;
   tmpb = fname;
-  char * buff = tmpb.get_buffer();
+  char * buff = tmpb.data();
   l = (long) strlen(buff);
   bool search_sn = true;
   if (l == 0) throw thexception("missing font file name");
   for(i = (l-1); i >= 0; i--) {
     if ((buff[i] == '/') || (buff[i] == '\\')) {
       if (search_sn) {
-        pshort.strcpy(&(buff[i+1]));
+        pshort.assign(&(buff[i+1]));
         search_sn = false;
       }
       buff[i] = '/';
     }
   }
   
-  if (strlen(pshort.get_buffer()) == 0) throw thexception(fmt::format("invalid font name -- {}", fname));
+  if (pshort.empty()) throw thexception(fmt::format("invalid font name -- {}", fname));
 
   if ( 
 #ifdef THWIN32
       ((l > 1) && (buff[1] == ':')) ||
 #endif
       buff[0] == '/') {
-    pfull.strcpy(buff);
+    pfull.assign(buff);
   } else {
     if (strlen(this->ini_file.get_cif_path()) > 0) {
-      pfull.strcpy(this->ini_file.get_cif_path());
+      pfull.assign(this->ini_file.get_cif_path());
       pfull += "/";
     } else {
       pfull = "";
@@ -278,11 +279,11 @@ void thinit::check_font_path(const char * fname, int index) {
   }
 
   // checkne ci TTF
-  if ((l > 3) && icase_equals(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
+  if ((l > 3) && icase_equal{}(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
 
-  font_src[index] = pfull.get_buffer();
-  font_dst[index] = pshort.get_buffer();
-  ENC_NEW.otf_file[index] = pshort.get_buffer();
+  font_src[index] = pfull.c_str();
+  font_dst[index] = pshort.c_str();
+  ENC_NEW.otf_file[index] = pshort.c_str();
 
 }
 
@@ -305,9 +306,9 @@ void thinit::load()
 
 #ifdef THWIN32
   // set cavern path according to Windows registers
-  this->path_cavern.guarantee(1024);
+  this->path_cavern.resize(1024);
   thmbuffer mbf;
-  thbuffer bf;
+  std::string bf;
   DWORD type(0), length = 1024;
   HKEY key;
   bool loaded_ok = true;
@@ -317,7 +318,7 @@ void thinit::load()
     if (RegOpenKey(HKEY_CURRENT_USER,"survex.source\\shell\\Process\\command",&key) != ERROR_SUCCESS)
       loaded_ok = false;
   }
-  if (!loaded_ok || (RegQueryValueEx(key,NULL,NULL,&type,(BYTE *)this->path_cavern.get_buffer(),&length) != ERROR_SUCCESS)) {
+  if (!loaded_ok || (RegQueryValueEx(key,NULL,NULL,&type,(BYTE *)this->path_cavern.data(),&length) != ERROR_SUCCESS)) {
     loaded_ok = false;
   RegCloseKey(key);
   }
@@ -326,15 +327,15 @@ void thinit::load()
   if (type != REG_SZ)
     loaded_ok = false;
   if (loaded_ok) {
-    thsplit_args(&mbf,this->path_cavern.get_buffer());
+    thsplit_args(&mbf,this->path_cavern.c_str());
     this->path_cavern = *(mbf.get_buffer());
     // VG 120416: Replace "aven.exe" with "cavern.exe". New Survex versions write up aven, but therion needs cavern
     // See http://mailman.speleo.sk/pipermail/therion/2015-September/006072.html
-    int pathlen = strlen(this->path_cavern.get_buffer());
+    int pathlen = strlen(this->path_cavern.c_str());
     int suflen = strlen("aven.exe");
-    if ((pathlen > suflen) && (strncmp(this->path_cavern.get_buffer() + pathlen - suflen, "aven.exe", suflen ) == 0)) {
-      this->path_cavern.get_buffer()[pathlen - strlen("aven.exe")] = 0;
-      this->path_cavern.strcat("cavern.exe");
+    if ((pathlen > suflen) && (strncmp(this->path_cavern.c_str() + pathlen - suflen, "aven.exe", suflen ) == 0)) {
+      this->path_cavern.data()[pathlen - strlen("aven.exe")] = 0;
+      this->path_cavern.append("cavern.exe");
     }
   } else {
     this->path_cavern = "cavern";
@@ -343,14 +344,14 @@ void thinit::load()
 
 	// try running survex
 	if (this->loopc == THINIT_LOOPC_UNKNOWN) {
-	  thbuffer svxcom;
+	  std::string svxcom;
 	  svxcom = "\"";
 	  svxcom += thini.get_path_cavern();
 	  svxcom += "\" --version";  
 #ifdef THDEBUG
 	  thprint("testing cavern\n");
 #endif
-	  if (system(svxcom.get_buffer()) == EXIT_SUCCESS) {
+	  if (system(svxcom.c_str()) == EXIT_SUCCESS) {
 			this->loopc = THINIT_LOOPC_SURVEX;
 		} else {
 			this->loopc = THINIT_LOOPC_THERION;
@@ -360,9 +361,9 @@ void thinit::load()
 //  this->path_3dtopos = "3dtopos";
 #ifdef THWIN32
   if (thcfg.install_tex) {
-    this->path_mpost = thcfg.install_path.get_buffer();
-    this->path_pdftex = thcfg.install_path.get_buffer();
-    this->path_otftotfm = thcfg.install_path.get_buffer();
+    this->path_mpost = thcfg.install_path.c_str();
+    this->path_pdftex = thcfg.install_path.c_str();
+    this->path_otftotfm = thcfg.install_path.c_str();
     this->path_mpost += "\\bin\\windows\\mpost.exe";
     this->path_pdftex += "\\bin\\windows\\pdftex.exe";
     this->path_otftotfm += "\\bin\\windows\\otftotfm.exe";
@@ -373,21 +374,7 @@ void thinit::load()
     this->path_otftotfm = "otftotfm";
 #ifdef THWIN32
   }
-#endif  
-
-#ifdef THWIN32
-  if (thcfg.install_im) {
-    this->path_convert = thcfg.install_path.get_buffer();
-    this->path_convert += "\\bin\\convert.exe";
-    this->path_identify = thcfg.install_path.get_buffer();
-    this->path_identify += "\\bin\\identify.exe";
-  } else {
-#endif  
-    this->path_convert = "convert";
-    this->path_identify = "identify";
-#ifdef THWIN32
-  }
-#endif  
+#endif
 
   set_proj_lib_path(false);  // don't use env in windows therion executable
   thcs_add_default_transformations();
@@ -418,8 +405,6 @@ void thinit::load()
       switch (argid) {      
         case TTIC_ENCODING_DEFAULT:
         case TTIC_PATH_CAVERN:
-        case TTIC_PATH_CONVERT:
-        case TTIC_PATH_IDENTIFY:
         case TTIC_LOOPC:
         case TTIC_TMP_PATH:
         case TTIC_LANG:
@@ -482,23 +467,11 @@ void thinit::load()
         case TTIC_PATH_CAVERN:
           if (strlen(args[1]) < 1)
             throw thexception("invalid path");
-          this->path_cavern.strcpy(args[1]);
-          break;
-          
-        case TTIC_PATH_CONVERT:
-          if (strlen(args[1]) < 1)
-            throw thexception("invalid path");
-          this->path_convert.strcpy(args[1]);
-          break;
-          
-        case TTIC_PATH_IDENTIFY:
-          if (strlen(args[1]) < 1)
-            throw thexception("invalid path");
-          this->path_identify.strcpy(args[1]);
+          this->path_cavern.assign(args[1]);
           break;
 
         case TTIC_TMP_PATH:
-          this->tmp_path.strcpy(args[1]);
+          this->tmp_path.assign(args[1]);
           break;
 
         case TTIC_LANG:
@@ -537,23 +510,23 @@ void thinit::load()
             break;
 
         case TTIC_TMP_REMOVE_SCRIPT:
-          this->tmp_remove_script.strcpy(args[1]);
+          this->tmp_remove_script.assign(args[1]);
           break;
 
         case TTIC_PATH_MPOST:
           if (strlen(args[1]) < 1)
             throw thexception("invalid path");
-          this->path_mpost.strcpy(args[1]);
+          this->path_mpost.assign(args[1]);
           break;
 
         case TTIC_OPT_MPOST:
-          this->opt_mpost.strcpy(args[1]);
+          this->opt_mpost.assign(args[1]);
           break;
 
         case TTIC_PATH_PDFTEX:
           if (strlen(args[1]) < 1)
             throw thexception("invalid path");
-          this->path_pdftex.strcpy(args[1]);
+          this->path_pdftex.assign(args[1]);
           break;
           
         case TTIC_PATH_SOURCE:
@@ -620,8 +593,6 @@ void thinit::load()
 
 #ifdef THWIN32
   thinit__make_short_path(&this->path_cavern);
-  thinit__make_short_path(&this->path_convert);
-  thinit__make_short_path(&this->path_identify);
   thinit__make_short_path(&this->path_mpost);
   thinit__make_short_path(&this->path_pdftex);
 #endif
@@ -682,7 +653,7 @@ void thinit::load()
       fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       fclose(ff);
 
-      thbuffer com;
+      std::string com;
       const auto tmp_handle = thtmp.switch_to_tmpdir();
       int retcode;
 
@@ -691,7 +662,7 @@ void thinit::load()
       com += "\"";
     //  com += " --interaction nonstopmode data.tex";
       com += " --no-mktex=tfm fonttest.tex";
-      retcode = system(com.get_buffer());
+      retcode = system(com.c_str());
       thprint(fmt::format("checking optional fonts {} {} {} {} {} ...", J->rm, J->it, J->bf, J->ss, J->si));
       if (retcode != EXIT_SUCCESS) {
         thprint(" NOT INSTALLED\n");
@@ -715,52 +686,40 @@ void thinit::load()
 }
 
 
-char * thinit::get_path_cavern()
+const char * thinit::get_path_cavern()
 {
-  return this->path_cavern.get_buffer();
+  return this->path_cavern.c_str();
 }
 
-
-char * thinit::get_path_convert()
-{
-  return this->path_convert.get_buffer();
-}
-
-
-char * thinit::get_path_identify()
-{
-  return this->path_identify.get_buffer();
-}
-
-//char * thinit::get_path_3dtopos()
+//const char * thinit::get_path_3dtopos()
 //{
-//  return this->path_3dtopos.get_buffer();
+//  return this->path_3dtopos.c_str();
 //}
 
-char * thinit::get_path_mpost()
+const char * thinit::get_path_mpost()
 {
-  return this->path_mpost.get_buffer();
+  return this->path_mpost.c_str();
 }
 
-char * thinit::get_opt_mpost()
+const char * thinit::get_opt_mpost()
 {
-  return this->opt_mpost.get_buffer();
+  return this->opt_mpost.c_str();
 }
 
-char * thinit::get_path_pdftex()
+const char * thinit::get_path_pdftex()
 {
-  return this->path_pdftex.get_buffer();
+  return this->path_pdftex.c_str();
 }
 
-char * thinit::get_path_otftotfm()
+const char * thinit::get_path_otftotfm()
 {
-  return this->path_otftotfm.get_buffer();
+  return this->path_otftotfm.c_str();
 }
 
 void thinit::set_proj_lib_path([[maybe_unused]] bool use_env) {  // set PROJ library resources path; we need use_env for testing different versions of Proj
 #ifdef THWIN32
   if (!use_env || (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr)) {
-    const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.get_buffer(), PROJ_VER);
+    const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.c_str(), PROJ_VER);
     // Proj's method to get user-writable directory (filemanager.cpp)
     std::string local_path;
     const char *local_app_data = std::getenv("LOCALAPPDATA");

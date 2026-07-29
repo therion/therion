@@ -30,54 +30,24 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef therion_h
-#define therion_h
+#pragma once
 
-#include <stdlib.h>
-#include <fmt/format.h>
-
-#ifdef THDEBUG
-#define thprint_error_src() thprint2err(fmt::format("{}{} (" __FILE__ ":{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
-#else
-#define thprint_error_src() thprint2err(fmt::format("{}{}: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd))
-#endif
-
-
-#ifdef THDEBUG
-#define thprint_warning_src() thprint2err(fmt::format("{}{} (" __FILE__ ":{}): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__))
-#else
-#define thprint_warning_src() thprint2err(fmt::format("{}{}: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd))
-#endif
+#include <source_location>
+#include <string_view>
 
 /**
- * Error macro.
+ * Report error.
  *
  * Writes error message to stderr and terminates the program.
  */
- 
-#define therror(P) {\
-  thprint_error_src();\
-  thprint2err(P);\
-  thprint2err("\n");\
-  thpause_exit();\
-  therion_exit_state = 0;\
-  thexit(EXIT_FAILURE);\
-}
-
+[[noreturn]] void therror(std::string_view message, std::source_location loc = std::source_location::current());
 
 /**
- * Warning macro.
+ * Report warning.
  *
  * Writes warning message to stderr.
  */
- 
-#define thwarning(P) {\
-  thprint_warning_src();\
-  thprint2err(P);\
-  thprint2err("\n");\
-  therion_exit_state = 1;\
-}
-
+void thwarning(std::string_view message, std::source_location loc = std::source_location::current());
 
 /**
  * Verbose mode id.
@@ -130,8 +100,11 @@ extern int therion_exit_state;
 void thprint_environment();
 void thprint_xtherion();
 
-#define thassert(expr) {if (!(expr)) {thprint2err(fmt::format("{}{} (" __FILE__ ":{}): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__));exit(EXIT_FAILURE);}}
-
-#endif
-
-
+/**
+ * Assert condition.
+ *
+ * If the condition is false, prints error message and exits the program.
+ * @param cond Condition to check.
+ * @param loc Source location for better debugging.
+ */
+void thassert(bool cond, std::source_location loc = std::source_location::current());

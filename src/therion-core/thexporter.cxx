@@ -34,9 +34,11 @@
 #include "thexpdb.h"
 #include "thexpsys.h"
 #include "thexptable.h"
+#include "thparse.h"
 #include "therion.h"
 #include <stdio.h>
 
+#include <fmt/format.h>
 
 thexporter::thexporter()
 {

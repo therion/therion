@@ -29,7 +29,6 @@
 #ifndef thparse_h
 #define thparse_h
 
-#include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thstok.h"
 
@@ -207,7 +206,7 @@ void thparse_double_dms(int & sv, double & dv, const char * src);
  * Split given string into first word and the rest.
  */
  
-void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src);
+void thsplit_word(std::string * dword, std::string * drest, const char * src);
 
 
 /**
@@ -249,7 +248,7 @@ void thsplit_args(thmbuffer * dest, const char * src);
  * Separate path part from full file name.
  */
  
-void thsplit_fpath(thbuffer * dest, const char * src);
+void thsplit_fpath(std::string * dest, const char * src);
 
 
 /**
@@ -292,26 +291,26 @@ bool th_is_extkeyword(const char * str);
  * Decode string into C format.
  */
  
-void thdecode_c(thbuffer * dest, const char * src);
+void thdecode_c(std::string * dest, const char * src);
 
-void thdecode_tcl(thbuffer * dest, const char * src);
+void thdecode_tcl(std::string * dest, const char * src);
 
 
 /**
  * Decode string into TeX format.
  */
  
-void thdecode_tex(thbuffer * dest, const char * src);
-void thdecode_utf2tex(thbuffer * dest, const char * src);
-void thdecode_sql(thbuffer * dest, const char * src);
-void thdecode_mp(thbuffer * dest, const char * src);
+void thdecode_tex(std::string * dest, const char * src);
+void thdecode_utf2tex(std::string * dest, const char * src);
+void thdecode_sql(std::string * dest, const char * src);
+void thdecode_mp(std::string * dest, const char * src);
 
 
 /**
  * Decode into argument string.
  */
  
-void thdecode_arg(thbuffer * dest, const char * src);
+void thdecode_arg(std::string * dest, const char * src);
 
 
 /**

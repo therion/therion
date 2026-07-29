@@ -36,6 +36,7 @@
 #include <wx/glcanvas.h>
 #include <wx/timer.h>
 #include <wx/image.h>
+#include <wx/xml/xml.h>
 
 enum {
   LXGLCML_NONE,
@@ -99,6 +100,14 @@ class lxGLCanvas: public wxGLCanvas {
     wxStopWatch m_sCameraAutoRotateSWatch;
     long m_sCameraAutoRotateCounter = 0;
     double m_sCameraAutoRotateAngle, m_sCameraStartAutoRotateAngle = 0.0;
+    bool m_sCameraPresentationAnimate = false;
+    wxStopWatch m_sCameraPresentationSWatch;
+    long m_sCameraPresentationCounter = 0;
+    long m_sCameraPresentationFrom = 0;
+    long m_sCameraPresentationTo = 1;
+    long m_sCameraPresentationStartTime = 0;
+    long m_sCameraPresentationAppliedScene = -1;
+    double m_sCameraPresentationStartDir = 0.0;
 
     void OnPaint(wxPaintEvent& event);
     void OnSize(wxSizeEvent& event);
@@ -113,6 +122,19 @@ class lxGLCanvas: public wxGLCanvas {
     void OnKeyPress(wxKeyEvent& event);
     void OnIdle(wxIdleEvent& event);
 		bool CameraAutoRotate();
+    bool StartCameraPresentationAnimation();
+    void StopCameraPresentationAnimation();
+    bool CameraPresentationAnimate();
+    bool CameraPresentationRotate();
+    long GetPresentationSceneCount();
+    wxXmlNode * GetPresentationScene(long index);
+    bool GetPresentationLoopAnimation();
+    bool GetPresentationSceneChanges();
+    void ApplyPresentationScene(long index);
+    void SelectPresentationScene(long index);
+    double GetPresentationSceneDuration(wxXmlNode * n);
+    long GetPresentationSceneRotations(wxXmlNode * n);
+    double GetPresentationSceneRotationDuration(wxXmlNode * n);
      
     void InitializeS();
     void ForceRefresh(bool updateTB = true);

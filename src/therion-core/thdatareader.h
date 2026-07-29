@@ -43,7 +43,7 @@ class thdatabase;
 class thdatareader {
 
   thinput inp;   ///< Input files.
-  thbuffer bf1, bf2;  ///< Buffers.
+  std::string bf1, bf2;  ///< Buffers.
   thmbuffer mbf1;  ///< Multiple buffers.
 
   public:

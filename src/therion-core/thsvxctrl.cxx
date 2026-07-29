@@ -39,12 +39,14 @@
 #include "thlogfile.h"
 #include "therion.h"
 #include "thlog.h"
+#include "thparse.h"
 #include "img.h"
+
+#include <fmt/format.h>
+
 #include <math.h>
 #include <string>
 #include <fstream>
-
-#define THPI 3.1415926535898
 
 thsvxctrl::thsvxctrl()
 {
@@ -391,7 +393,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   fclose(svxf);
   
   // run survex
-  thbuffer svxcom;
+  std::string svxcom;
   int retcode;
   svxcom = "\"";
   svxcom += thini.get_path_cavern();
@@ -405,7 +407,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 #else
 //    thprint("processing ... ");
 #endif
-  retcode = system(svxcom.get_buffer());
+  retcode = system(svxcom.c_str());
 
   this->transcript_log_file(dbp, thtmp.get_file_name("data.log"));
 
@@ -456,7 +458,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 // #ifdef THDEBUG
 //   thprint("running 3dtopos\n");
 // #endif
-//   retcode = system(svxcom.get_buffer());
+//   retcode = system(svxcom.c_str());
 // 
 //   if (retcode != EXIT_SUCCESS)
 //     ththrow("3dtopos exit code -- %d", retcode);
@@ -469,12 +471,12 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 // // #endif
 // //   svxcom += thtmp.get_file_name("data.*");
 // //   svxcom += " ";
-// //   svxcom += wdir.get_buffer();
+// //   svxcom += wdir.c_str();
 // // #ifdef THDEBUG
 // //   thprint("copying results\n");
 // // #endif
 // // 
-// //   retcode = system(svxcom.get_buffer());
+// //   retcode = system(svxcom.c_str());
 // // 
 // //   if (retcode != EXIT_SUCCESS)
 // //     ththrow("cp exit code -- %d", retcode);
@@ -490,8 +492,8 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //   double sx, sy, sz;
 //   unsigned long ss;
 //   size_t lnsize = 4096, pix = 0, ppx = 0, clns;
-//   svxcom.guarantee(lnsize);
-//   char * lnbuff = svxcom.get_buffer(),
+//   svxcom.resize(lnsize);
+//   char * lnbuff = svxcom.data(),
 //     * p[4], * cps = lnbuff;
 //   posf.open(thtmp.get_file_name("data.pos"));
 //   if (!posf.is_open())
@@ -565,7 +567,7 @@ enum {THSVXLOGNUM_NONE, THSVXLOGNUM_LINE, THSVXLOGNUM_STATION};
 
 void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
 {
-  thbuffer tsbuff;
+  std::string tsbuff;
   thdb1ds * stp;
   std::string lnbuff;
   std::string numbuff;
@@ -650,10 +652,10 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               if (srcmi != this->src_map.end()) {
                 if (!fonline) {
                   fonline = true;
-                  tsbuff.strcat("\n");
+                  tsbuff.append("\n");
                 }
                 numbuff = fmt::format("{:2d}> input:{} -- {} [{}]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
-                tsbuff.strcat(numbuff.c_str());
+                tsbuff.append(numbuff.c_str());
               }
               break;
             case THSVXLOGNUM_STATION:
@@ -661,18 +663,18 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               if ((csn >= 0) && (csn < long(lsid))) {
                 if (fonline) {
                   numbuff = fmt::format("{:2d}> ",lnum);
-                  tsbuff.strcat(numbuff.c_str());
+                  tsbuff.append(numbuff.c_str());
                   fonline = false;
                 }
                 else {
-                  tsbuff.strcat(" -- ");
+                  tsbuff.append(" -- ");
                 }
                 numbuff = fmt::format("{} : ",(csn+1));
                 stp = & (dbp->db1d.station_vec[(unsigned int)csn]);
-                tsbuff.strcat(numbuff.c_str());
-                tsbuff.strcat(stp->name);
-                tsbuff.strcat("@");
-                tsbuff.strcat(stp->survey->get_full_name());
+                tsbuff.append(numbuff.c_str());
+                tsbuff.append(stp->name);
+                tsbuff.append("@");
+                tsbuff.append(stp->survey->get_full_name());
               }
               break;
             default:
@@ -688,11 +690,11 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
     }
     
     if (!fonline)
-        tsbuff.strcat("\n");
+        tsbuff.append("\n");
 
   }
   clf.close();
-  thlog(fmt::format("######################### transcription ########################\n{}",tsbuff.get_buffer()));
+  thlog(fmt::format("######################### transcription ########################\n{}",tsbuff.c_str()));
   thlog("#################### end of cavern log file ####################\n");
 }
 
@@ -765,8 +767,6 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 							else {
 //								thprint("LEG not found!!!\n");
 							}
-						}
-						else if (strcmp(b.get_buffer()[i-1],"=") == 0) {
 						}
 						prev_st = st;
 					}

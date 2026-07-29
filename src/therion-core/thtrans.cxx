@@ -27,6 +27,7 @@
  */
 #include <math.h>
 #include <map>
+#include <numbers>
 
 #include "thtrans.h"
 #include "thdatabase.h"
@@ -328,14 +329,14 @@ void thlintrans::init_points()
     this->m_fmat.m_yx = b;
     this->m_fmat.m_yy = a;
     this->m_scale = std::hypot(a,b);
-    this->m_rot = - atan2(b,a) / 3.14159265359 * 180.0;
+    this->m_rot = - atan2(b,a) / std::numbers::pi * 180.0;
   }
 
 }
 
 double thvec2::orientation()
 {
-  double o = atan2(this->m_x, this->m_y) / 3.14159265359 * 180.0;
+  double o = atan2(this->m_x, this->m_y) / std::numbers::pi * 180.0;
   if (o < 0.0)
     o += 360.0;
   return o;
@@ -362,7 +363,7 @@ void thlintrans::init(thvec2 srcF, thvec2 srcT, thvec2 dstF, thvec2 dstT)
   this->m_fmat = ss * thmat2(cos(rr), -sin(rr), sin(rr), cos(rr));
   this->m_shift = dstF - this->m_fmat * srcF;
   this->m_scale = ss;
-  this->m_rot = rr / 3.14159265358 * 180.0;
+  this->m_rot = rr / std::numbers::pi * 180.0;
 }
 
 

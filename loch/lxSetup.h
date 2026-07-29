@@ -78,6 +78,8 @@ struct lxSetup {
   
   void SaveToXMLNode(wxXmlNode * n);
   void LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn = NULL, double t = 0.0);
+  void SaveSceneToXMLNode(wxXmlNode * n);
+  void LoadSceneFromXMLNode(wxXmlNode * n);
 
 };
 

@@ -32,8 +32,12 @@
 #include "thdata.h"
 #include "thsurvey.h"
 #include "thdatabase.h"
+#include "thparse.h"
 #include "therion.h"
 #include "img.h"
+
+#include <fmt/format.h>
+
 #include <string.h>
 #include <string>
 #include <map>
@@ -220,13 +224,13 @@ void thimport::set_file_name(char * fnm)
   this->fname = this->db->strstore(impf_path_str.c_str());
 
   const auto ext = impf_path.extension().string();
-  for (const auto& [str, type] : {std::tuple{".3d", TT_IMPORT_FMT_3D}, 
-                                  std::tuple{".plt", TT_IMPORT_FMT_PLT}, 
-                                  std::tuple{".xyz", TT_IMPORT_FMT_XYZ}}) {
-    if (icase_equals(ext, str)) {
-      this->format = type;
-      return;
-    }
+  static const std::map<std::string, int, icase_less> extensions{
+    {".3d", TT_IMPORT_FMT_3D},
+    {".plt", TT_IMPORT_FMT_PLT},
+    {".xyz", TT_IMPORT_FMT_XYZ}};
+  if (auto it = extensions.find(ext); it != extensions.end())
+  {
+    this->format = it->second;
   }
 }
 
@@ -273,13 +277,13 @@ const char * thimport::station_name(const char * sn, const char separator, struc
     return sn;
     
   
-  static thbuffer bx, prevsurvey;
+  static std::string bx, prevsurvey;
   static thmbuffer psurv, csurv;
   static long active_survey;
   static thsurvey * prevpsurvey;
   long i, l;
   bx = sn;
-  char * buff = bx.get_buffer(), * rv;
+  const char * buff = bx.c_str(), * rv;
     
   switch (this->format) {
     case TT_IMPORT_FMT_3D:
@@ -359,13 +363,13 @@ const char * thimport::station_name(const char * sn, const char separator, struc
               nsurvey = this->db->get_survey_noexc(cbf[active_survey], csurvey);
             }
             if (nsurvey != NULL) {
-              if (strlen(prevsurvey.get_buffer()) == 0) {
+              if (prevsurvey.empty()) {
                 prevsurvey = cbf[active_survey];
               } else {
-                bx = prevsurvey.get_buffer();
+                bx = prevsurvey.c_str();
                 prevsurvey = cbf[active_survey];
                 prevsurvey += ".";
-                prevsurvey += bx.get_buffer();
+                prevsurvey += bx.c_str();
               }
               csurvey = nsurvey;
               prevpsurvey = csurvey;
@@ -383,16 +387,16 @@ const char * thimport::station_name(const char * sn, const char separator, struc
           bx += cbf[i];
         }
         sst->survey = prevpsurvey;
-        sst->name = bx.get_buffer();
-        if (strlen(prevsurvey.get_buffer()) > 0) {
+        sst->name = bx.c_str();
+        if (!prevsurvey.empty()) {
           bx += "@";
           bx += prevsurvey;
         }
-        return bx.get_buffer();
+        return bx.c_str();
       }
       break;      
     default:
-      l = (long)strlen(bx);
+      l = (long)strlen(bx.c_str());
       rv = buff;
       for(i = 0; i < l; i++) {
         if ((buff[i] == separator) && ((i + 1) < l)) {
@@ -516,7 +520,7 @@ void thimport::import_file_img()
   size_t filterl = 0;
   if (this->filter != NULL)
     filterl = strlen(this->filter);
-  thbuffer n1, n2;
+  std::string n1, n2;
   std::string xb, yb, zb;
   std::string orig_name, new_name;  
   img* pimg = img_open(this->fname);
@@ -600,7 +604,7 @@ void thimport::import_file_img()
           args[1] = xb.data();
           args[2] = yb.data();
           args[3] = zb.data();
-          args[0] = n1.get_buffer();
+          args[0] = n1.data();
           tmpdata->cs = this->cs;
           // only fix the first station, use equate for the others
           if (svxpos2ths[tmppos].size() == 1 || this->fsptr == nullptr) {
@@ -610,13 +614,13 @@ void thimport::import_file_img()
           }
           // ak bude entrance, vlozi aj station
           if ((pimg->flags & img_SFLAG_ENTRANCE) != 0) {
-            args[0] = n2.get_buffer();
+            args[0] = n2.data();
 	    args[1] = strcpy(a1, "");
             args[2] = strcpy(a2, "entrance");
             tmpdata->set_data_station(3, args, TT_UTF_8);
           }
           if ((pimg->flags & img_SFLAG_FIXED) == 0) {
-            args[0] = n2.get_buffer();
+            args[0] = n2.data();
             args[1] = strcpy(a1, "");
             args[2] = strcpy(a2, "not");
             args[3] = strcpy(a3, "fixed");

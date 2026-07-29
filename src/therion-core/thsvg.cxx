@@ -38,7 +38,8 @@
 #include <cstdio>
 #include <cfloat>
 #include <cmath>
-#include <fmt/core.h>
+#include <numbers>
+#include <fmt/format.h>
 #include <fmt/ostream.h>
 
 #include "thepsparse.h"
@@ -339,8 +340,8 @@ void print_grid(std::ofstream& PAGEDEF, double LLX,double LLY,double URX,double 
 double G_real_init_x = LAYOUT.XO + LAYOUT.XS * floor ((llnew.x-origin.x)/LAYOUT.hgridsize);
 double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.vgridsize);
 
-  double cosr = cos(-LAYOUT.gridrot * 3.14159265 / 180);
-  double sinr = sin(-LAYOUT.gridrot * 3.14159265 / 180);
+  double cosr = cos(-LAYOUT.gridrot * std::numbers::pi / 180);
+  double sinr = sin(-LAYOUT.gridrot * std::numbers::pi / 180);
 
   int row, col, elem;
 

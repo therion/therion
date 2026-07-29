@@ -40,7 +40,12 @@
 #include "thsketch.h"
 #include "thcsdata.h"
 #include "thdatabase.h"
+#include "thparse.h"
 #include "therion.h"
+
+#include <fmt/format.h>
+
+#include <numbers>
 
 #define EXPORT3D_INVISIBLE true
 
@@ -623,8 +628,8 @@ thscraplp * thscrap::get_polygon() {
   double sina = 0.0, cosa = 0.0;
   switch (this->proj->type) {
     case TT_2DPROJ_ELEV:
-      sina = sin(this->proj->pp1 / 180.0 * 3.14159265358);
-      cosa = cos(this->proj->pp1 / 180.0 * 3.14159265358);
+      sina = sin(this->proj->pp1 / 180.0 * std::numbers::pi);
+      cosa = cos(this->proj->pp1 / 180.0 * std::numbers::pi);
       break;
   }
   bool incp;
@@ -1473,11 +1478,11 @@ void thscrap::parse_sketch(char ** args, int /*argenc*/) // TODO unused paramete
   // X
   thparse_double(sv,sk.m_x,args[1]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    throw thexception(fmt::format("invalid	number --	{}", args[1]));
+    throw thexception(fmt::format("invalid number -- {}", args[1]));
   // Y
   thparse_double(sv,sk.m_y,args[2]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    throw thexception(fmt::format("invalid	number --	{}", args[2]));
+    throw thexception(fmt::format("invalid number -- {}", args[2]));
   this->sketch_list.push_back(std::move(sk));
 }
 

@@ -36,6 +36,8 @@
 #include "thexception.h"
 #include "thwarppt.h"
 
+#include <fmt/format.h>
+
 typedef unsigned int warpp_t;
 const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
 

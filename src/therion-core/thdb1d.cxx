@@ -52,10 +52,15 @@
 #include "thgeomagdata.h"
 #include "therion.h"
 #include "thlog.h"
+#include "thparse.h"
 #include "QuickHull.hpp"
 
-//#define THUSESVX
-//#define THDEBUG
+#include <fmt/format.h>
+
+[[noreturn]] static void report_problem(const std::source_location loc = std::source_location::current())
+{
+  throw thexception(fmt::format("a software BUG is present ({}:{})", loc.file_name(), loc.line()));
+}
 
 thdb1d_tree_arrow::thdb1d_tree_arrow() : is_discovery(false), is_nosurvey(false), is_reversed(false),
   start_node(NULL), end_node(NULL), 
@@ -416,7 +421,7 @@ void thdb1d::scan_data()
                 lei->total_dy = (lei->direction ? 1.0 : -1.0) * lei->dy;
                 lei->total_dz = (lei->direction ? 1.0 : -1.0) * lei->dz;
                 lei->total_length = thdxyz2length(lei->total_dx,lei->total_dy,lei->total_dz);
-                lei->total_bearing = thdxyz2bearing(lei->total_dx,lei->total_dy,lei->total_dz);
+                lei->total_bearing = thdxyz2bearing(lei->total_dx,lei->total_dy);
                 lei->total_gradient = thdxyz2clino(lei->total_dx,lei->total_dy,lei->total_dz);
                 if (lei->infer_plumbs && (!lei->plumbed)) {
                   lei->plumbed = (lei->dx == 0.0) && (lei->dy == 0.0) && (lei->dz != 0.0);
@@ -687,18 +692,18 @@ void thdb1d::scan_data()
 
   if (((used_declination & 1) != 0) && ((used_declination & 4) != 0)) {
     if (default_dpdeclinused)
-      thwarning(fmt::format("year {:.0f} magnetic declination used for undated surveys", this->min_year))
+      thwarning(fmt::format("year {:.0f} magnetic declination used for undated surveys", this->min_year));
     else
-      thwarning("unable to determine magnetic declination used for undated surveys")
+      thwarning("unable to determine magnetic declination used for undated surveys");
     thprint("undated surveys:\n");
-    for(auto usi = undated_surveys_set.begin(); usi != undated_surveys_set.end(); usi++) {
-      thprint(usi->c_str());
+    for (const auto& us : undated_surveys_set) {
+      thprint(us);
       thprint("\n");
     }
   }
 
   if (thcfg.m_decl_out_of_geomag_range)
-    thwarning(fmt::format("magnetic declination calculated for dates outside of optimal model range ({} - {})", thgeomag_minyear, thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1) - 1))
+    thwarning(fmt::format("magnetic declination calculated for dates outside of optimal model range ({} - {})", thgeomag_minyear, thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1) - 1));
 
   thcfg.log_outcs(this->min_year, this->max_year);
 
@@ -715,7 +720,7 @@ void thdb1d::process_data()
 		try {
 		  survex.process_survey_data(this->db);
 	  } catch (const std::exception& e) {
-			thwarning(e.what())
+			thwarning(e.what());
 		}
 	}
   this->process_survey_stat();
@@ -1055,7 +1060,7 @@ void thdb1d::process_tree()
       
       // something is wrong
       if (n2 == NULL) {
-        throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
+        report_problem();
 //#ifdef THDEBUG
 //        thprint("warning -- not all stations connected to the network\n");
 //#endif
@@ -1136,7 +1141,7 @@ void thdb1d::process_tree()
         prev_leg->leg->from.id,
         (prev_leg->reverse ? "<=" : "=>"),
         prev_leg->leg->to.id,
-        series, tarrows);
+        series, tarrows));
 #endif
 
       if (!current_node->last_arrow->end_node->is_attached) {
@@ -2427,7 +2432,7 @@ void thdb1d::close_loops()
 		));
 #endif
     if (froms->placed == 0)
-      throw thexception(fmt::format("a software BUG is present (" __FILE__ ":{})", __LINE__));
+      report_problem();
     if (tos->placed == 0) {
       tos->placed += 1;
       if (cleg->reverse) {
@@ -2550,7 +2555,6 @@ void thdb1d::close_loops()
       ps->y = froms->y;
       ps->z = froms->z;
       if (ps->placed == 0) {
-//        ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
         throw thexception(fmt::format("can not connect {}@{} to centerline network",
           this->station_vec[i].name,
           this->station_vec[i].survey->get_full_name()));
@@ -3069,7 +3073,7 @@ void thdb1d::process_xelev()
   thdata * dp;
   thdb1d_tree_node * nodes = this->get_tree_nodes(), * from_node, * to_node;
   thdb1d_tree_arrow * carrow;
-  thbuffer tmpbf;
+  std::string tmpbf;
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
@@ -3100,7 +3104,7 @@ void thdb1d::process_xelev()
                   tmpbf += "@";
                   tmpbf += xi->to.survey;
                 }
-                throw thexception(fmt::format("survey shot not found -- {}", tmpbf.get_buffer()));
+                throw thexception(fmt::format("survey shot not found -- {}", tmpbf.c_str()));
               } else {
                 // the leg is in carrow - set its extend
                 if ((xi->extend & TT_EXTENDFLAG_DIRECTION) != 0) {

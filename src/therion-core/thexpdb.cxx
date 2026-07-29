@@ -38,7 +38,10 @@
 #include "thchenc.h"
 #include <map>
 #include "thinfnan.h"
+#include "thparse.h"
 #include "therion.h"
+
+#include <fmt/format.h>
 
 thexpdb::thexpdb() {
   this->format = TT_EXPDB_FMT_UNKNOWN;
@@ -143,7 +146,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   FILE * sqlf;
   sqlf = fopen(fnm,"wb");
   if (sqlf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -174,8 +177,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
             thdecode(&(dbp->buff_enc),enc,str); \
           else \
             dbp->buff_enc = ""; \
-          thdecode_sql(&(dbp->buff_tmp),dbp->buff_enc.get_buffer());}
-#define ESTR (dbp->buff_tmp.get_buffer())
+          thdecode_sql(&(dbp->buff_tmp),dbp->buff_enc.c_str());}
+#define ESTR (dbp->buff_tmp.c_str())
 
 #define CHECK_STRLEN(var,str) {if (strlen(str) > var) var = strlen(str);}
 #define INSERTPERSON \
@@ -350,9 +353,9 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
                   "%ld, %ld, %ld, %ld, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f);\n",
                   ++shotx, lei->from.id, lei->to.id, dp->id,
                   sql_double(lei->total_length), sql_double(lei->total_bearing), sql_double(lei->total_gradient),
-				  sql_double(thdxyz2length(adx, ady, adz)), sql_double(thdxyz2bearing(adx, ady, adz)), sql_double(thdxyz2clino(adx, ady, adz)),
+				  sql_double(thdxyz2length(adx, ady, adz)), sql_double(thdxyz2bearing(adx, ady)), sql_double(thdxyz2clino(adx, ady, adz)),
 				  sql_double(thdxyz2length(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
-				  sql_double(thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz)),
+				  sql_double(thdxyz2bearing(adx - lei->total_dx, ady - lei->total_dy)),
 				  sql_double(thdxyz2clino(adx - lei->total_dx, ady - lei->total_dy, adz - lei->total_dz))
                   );
                 if ((lei->flags & TT_LEGFLAG_SURFACE) != TT_LEGFLAG_NONE)
@@ -446,7 +449,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
   FILE * out;
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output", fnm))
+    thwarning(fmt::format("can't open {} for output", fnm));
     return;
   }
   this->register_output(fnm);

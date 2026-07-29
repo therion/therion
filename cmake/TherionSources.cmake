@@ -1,13 +1,8 @@
 set(THERION_SOURCES
-    ${CMAKE_BINARY_DIR}/thcsdata.cxx
-    ${CMAKE_BINARY_DIR}/thmpost.cxx
-    ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
-    ${CMAKE_BINARY_DIR}/thtex.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/th2ddataobject.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/tharea.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thattr.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thbezier.cxx
-    ${CMAKE_SOURCE_DIR}/src/therion-core/thbuffer.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thcmdline.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thcomment.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thconfig.cxx
@@ -59,7 +54,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlayoutclr.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlayoutln.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlegenddata.cxx
-    ${CMAKE_SOURCE_DIR}/src/therion-core/thlibrary.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thline.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlocale.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thlog.cxx

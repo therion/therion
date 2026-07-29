@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:noble
+FROM mcr.microsoft.com/devcontainers/base:resolute
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y \

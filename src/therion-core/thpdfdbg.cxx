@@ -26,7 +26,7 @@
  */
  
 #include <string>
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"

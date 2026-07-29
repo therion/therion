@@ -35,7 +35,6 @@
 #include <memory>
 
 #include "thmbuffer.h"
-#include "thbuffer.h"
 #include "thdb1d.h"
 #include "thdb2d.h"
 #include "thobjectname.h"
@@ -179,8 +178,8 @@ class thdatabase {
 
   public:
   
-  thbuffer buff_enc;   ///< Encoding buffer.  
-  thbuffer buff_tmp;  ///< Temporary buffer.
+  std::string buff_enc;   ///< Encoding buffer.  
+  std::string buff_tmp;  ///< Temporary buffer.
   thmbuffer mbuff_tmp, mbuff_tmp2;  ///< Temporary mbuffer.
   thmbuffer buff_stations;  ///< Stations storage buffer.
   thdb_revision_set_type revision_set;  ///< Object revisions.

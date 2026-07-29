@@ -373,7 +373,7 @@ the command may be used anywhere.
           endgroup
           walls <auto/on/off>
           vthreshold <number> <units>
-          extend <spec> [<station> [<station>]]
+          extend <spec> [<station> [<station> [<station>]]]
           station-names <prefix> <suffix>
           ...
           [SURVEY DATA]
@@ -558,12 +558,13 @@ the command may be used anywhere.
     good. In the case of vertical shots, UD is interpreted as north-south
     dimension from the station to allow tube-like modeling of verticals.
 
-  * |extend <spec> [<station> [<station>]]| =
-    control how the centerline is extended. |<spec>| is one of the following
+  * |extend <spec> [<station> [<station> [<station>]]]| =
+    control how the centerline is extended. |<spec>| may be one of the
+    following keywords
 
     |normal/reverse| = extend given and following stations
-     to the same/reverse direction as previous station. If two
-     stations are given---direction is applied only to given shot.
+     to the same/reverse direction as previous station. If station names are
+     given, direction is applied only to the specified station or shot.
 
     |left/right| = same as above, but direction is specified explicitly.
 
@@ -577,9 +578,30 @@ the command may be used anywhere.
 
     |hide| = do not show specified station (shot) in extended elevation
 
+    or a percentage in the range |0| to |200|. This sets the extend ratio,
+    i.e.\ the factor used for the horizontal component of a leg in extended
+    elevation. Therion keeps the vertical component unchanged and multiplies
+    only the horizontal displacement by the ratio. Thus |100| means the normal
+    width of the extended leg, |50| compresses it to one half, |200| stretches
+    it to double width, and |0| suppresses any horizontal displacement
+    (effectively the same result as |vertical| for that leg).
 
-    If no stations are specified, |<spec>| is valid for following shots
-    specified.
+    The optional station arguments are interpreted as follows:
+
+    |extend <spec>| = set the default extend behaviour for subsequent shots
+    in the current centreline.
+
+    |extend <spec> <from>| = apply the extend setting to a station.
+
+    |extend <spec> <from> <to>| = apply the extend setting to a specific shot.
+
+    |extend <spec> <before> <from> <to>| = apply the extend setting to a
+    specific shot, with an additional |before| station condition.
+    This form is primarily useful with |ignore|, where the shot is ignored only
+    if the extended-elevation traversal reaches |<from>| from |<before>|.
+
+    Station names use the normal Therion object reference syntax, so
+    |station@survey| may be used.
 
   * |station-names <prefix> <suffix>| = adds given prefix/suffix to
     all survey stations in the current centreline. Saves some typing.
@@ -944,12 +966,23 @@ Point is a command for drawing a point map symbol.
   * |dist <distance>| =  if the point type is extra, specifies the distance to the nearest
     station (or station specified using |-from| option. If not specified,
     appropriate value from LRUD data is used.
-  * |from <station>| =  if the point type is extra, specifies reference station.
+  * |from <station>| = specifies a reference station.
+    This option is primarily intended for points of type |extra|. If omitted,
+    Therion uses the nearest station, and if |-dist| is not specified,
+    an appropriate value from LRUD data is used.
+
+    If the point type is |station| and the scrap projection is extended
+    elevation, this option specifies the neighbouring survey station that
+    should be used as origin (from station) when placing the station point on the 
+    extended centreline. This is useful at junctions, where the same survey station may
+    be reached by more than one shot and the cartographer needs to choose which branch
+    the point should follow. If |-from| is not given, Therion falls back to
+    the nearest matching branch in the scrap.
+
+    Therion accepts this option also for other point types, but it has no
+    defined effect there.
   * |name <reference>| = if the point type is station, this
     option gives the reference to the real survey station.
-  * |extend [prev[ious] <station>]| = if the point type is station and scrap
-    projection is extended elevation, you can
-    adjust the extension of the centreline using this option.
   * |scrap <reference>| = if the point type is section, this is a
     reference to a cross-section scrap.
   * |explored <length>| = if the point type is continuation, you can specify
@@ -1367,7 +1400,7 @@ none, survey
 \subsubchapter `map'.
 
 \description
-  A map is a collection of scraps and/or other maps of the same projection
+  A map is a collection of either scraps or other maps of the same projection
   type. It's possible to include survey in the map---this will display
   centreline in the map.
   Map object simplifies the data management when selecting data for output.
@@ -1489,6 +1522,81 @@ endsurface|
 
 \endcomopt
 
+
+\subsubchapter `scan'.
+
+\description
+ The |scan| command imports a 3D triangulated mesh into the cave model. It is
+ intended for meshes measured outside Therion, for example by laser scanning or
+ photogrammetry. The mesh is tied to the survey centreline by calibration lines:
+ each calibration line gives the coordinates, in the mesh coordinate system, of
+ one survey station already known from the centreline.
+
+ The command contributes geometry to 3D model exports. It does not create 2D map
+ symbols and does not replace scraps used for map drawing.
+\enddescription
+
+\syntax
+|scan
+   file <filename>
+   units <units>
+   axes <x-spec> <y-spec> <z-spec>
+   <station> <x> <y> <z>
+   ...
+endscan|
+\endsyntax
+
+\context
+none, survey
+\endcontext
+
+\arguments
+ The |scan| command itself has no obligatory arguments. Data lines inside the
+ command have the following form:
+
+ * |<station>| = name of an existing survey station. If the |scan| command is
+  inside a |survey|, normal survey name-space rules apply. Use |station@survey|
+  if a station from another visible survey must be referenced.
+
+ * |<x> <y> <z>| = coordinates of |<station>| in the mesh coordinate system.
+  These numbers are interpreted using the current |units| command-like option
+  of the |scan| object.
+\endarguments
+
+\comopt
+
+ * |file <file-name>| = mesh file to import. This command-like option is
+  required. The current implementation reads STL meshes. Relative file names are
+  resolved relative to the file that contains the |scan| command.
+
+ * |units <length units>| = length unit used by coordinates in the mesh file and
+  in the station calibration lines \,\defval{m}.
+
+ * |axes <x-axis> <y-axis> <z-axis>| = orientation of the mesh coordinates before
+  the station calibration is applied. Each argument is one of |x|, |y|, |z|,
+  |-x|, |-y| or |-z|, and the three arguments must contain all three coordinate
+  names. The default is |x y z|. The first argument defines Therion's local
+  |x| coordinate, the second its local |y| coordinate, and the third its local
+  |z| coordinate. For example, |axes -z -x y| transforms a mesh point
+  |(x,y,z)| to |(-z,-x,y)|.
+
+\endcomopt
+
+\notes
+
+ Calibration lines should refer to stations whose 3D positions are already known
+ from the centreline. A single station can only shift the mesh. With two stations
+ Therion can determine horizontal rotation and scale; additional well-distributed
+ stations give a better local morphing of the mesh. Avoid using stations that are
+ very close to each other or nearly vertical above one another as the only
+ calibration points.
+
+ The |units| and |axes| command-like options are applied both to vertices read
+ from the mesh file and to the station coordinates given in the |scan| block.
+ If an imported mesh is mirrored or rotated, change |axes| rather than changing
+ the station calibration coordinates.
+
+\endnotes
 
 \subsubchapter `import'.
 

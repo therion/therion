@@ -29,6 +29,8 @@
 #include "thcsdata.h"
 #include "thparse.h"
 
+#include <numbers>
+
 thdataleg::thdataleg()
 {
   this->clear();
@@ -185,9 +187,9 @@ void thdataleg::calc_total_stds()
   setd(dl, this->counter_sd, 0.1);
   setd(dZ, this->depth_sd, 0.1);
   setd(dT, this->bearing_sd, 1.0);
-    dT = dT / 180.0 * 3.14159265359;
+    dT = dT / 180.0 * std::numbers::pi;
   setd(dC, this->gradient_sd, 1.0);
-    dC = dC / 180.0 * 3.14159265359;
+    dC = dC / 180.0 * std::numbers::pi;
   setd(ddx, this->dx_sd, 0.057735026919);
   setd(ddy, this->dy_sd, 0.057735026919);
   setd(ddz, this->dz_sd, 0.057735026919);
@@ -200,8 +202,8 @@ void thdataleg::calc_total_stds()
   x = this->total_dx;
   y = this->total_dy;
   z = this->total_dz;
-  T = this->total_bearing / 180.0 * 3.14159265359;
-  C = this->total_gradient / 180.0 * 3.14159265359;
+  T = this->total_bearing / 180.0 * std::numbers::pi;
+  C = this->total_gradient / 180.0 * std::numbers::pi;
   L = this->total_length;
   h = std::hypot(this->total_dx, this->total_dy);
 

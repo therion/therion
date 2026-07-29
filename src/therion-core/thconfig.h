@@ -31,7 +31,6 @@
 
 #include <list>
 
-#include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thinput.h"
 #include "thexporter.h"
@@ -69,7 +68,7 @@ class thconfig {
 
   public:
 
-  thbuffer fname,  ///< Configuration file name.
+  std::string fname,  ///< Configuration file name.
     search_path,  ///< Lib files search path.
     init_path,  ///< Initialization path.
     install_path,  ///< Installation path.
@@ -83,7 +82,6 @@ class thconfig {
     generate_xthcfg,  ///< Generate xtherion log file.
     install_tcltk, ///< Whether tcltk is installed with therion.
     install_tex, ///< Whether TeX is installed with therion.
-    install_im, ///< Whether ImageMagick is installed with therion.
     auto_join,  ///< Whether scraps in one file should be automatically joined
     use_maps,  ///< Whether to use map structure for output
     use_maps_offset,  ///< Whether to use map's offset
@@ -91,7 +89,6 @@ class thconfig {
 	crc_generate, ///< Generate CRC files for output files.
 	crc_verify, ///< Verify CRC files for output files.
     log_extend; ///< Log extended elevation construction.
-  bool preview_deep = true;  ///< Whether to show preview of previews
   bool scrap_sort = true;  ///< Whether scraps should be z-sorted
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
@@ -142,14 +139,14 @@ class thconfig {
    * Retrieve config file name.
    */
    
-  char * get_file_name();
+  const char * get_file_name() const;
   
   
   /**
    * Set input file name.
    */
   
-  void append_source(char * fname, long startln = -1, long endln = -1);
+  void append_source(const char * fname, long startln = -1, long endln = -1);
   
   
   /**
@@ -187,9 +184,9 @@ class thconfig {
    
   void set_search_path(char * pth);
   
-  char * get_search_path();
+  const char * get_search_path() const;
   
-  char * get_initialization_path();
+  const char * get_initialization_path() const;
   
   /**
    * Load input from configuration file.

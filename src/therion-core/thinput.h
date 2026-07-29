@@ -28,8 +28,8 @@
  
 #pragma once
 
-#include "thbuffer.h"
 #include "thmbuffer.h"
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -51,12 +51,12 @@ private:
     pifo, ///< Print if open.
     * pifoid, ///< Identifier.
     report_missing; 
-  thbuffer file_name;  ///< Main input file name.
+  std::string file_name;  ///< Main input file name.
   thmbuffer search_path,  ///< Search paths.
     file_suffix,  ///< File suffixes.
     tmpmb;   ///< Temporary multi buffer.
-  void (* pifoproc)(char *);  ///< Function to call if file was opened.
-  thbuffer linebf,  ///< Line buffer.
+   std::function<void(char*)> pifoproc;  ///< Function to call if file was opened.
+  std::string linebf,  ///< Line buffer.
     cmdbf,  ///< Command buffer.
     valuebf;  ///< Value buffer.
     
@@ -67,7 +67,7 @@ private:
   ifile * last_ptr;  ///< Pointer to the last file.
 
 private:
-  void open_file(char * fname);
+  void open_file(const char * fname);
   void close_file();
   
 public:
@@ -134,7 +134,7 @@ public:
   /**
    * Retrieve main input file name.
    */
-  char * get_file_name();
+  const char * get_file_name();
   
   /**
    * Set search path.
@@ -176,29 +176,29 @@ public:
 	 *
 	 * Applicable only in when cmd_sensitivity is on.
 	 */
-	char * get_cmd();
+	const char * get_cmd();
 	
 	/**
 	 * Return line string.
    */
-	char * get_line();
+	const char * get_line();
 	
 	/**
 	 * Return value string.
 	 *
 	 * Applicable only in when cmd_sensitivity is on.
 	 */
-  char * get_value();
+  const char * get_value();
 
   /**
    * Return full current input file name.
    */  
-  char * get_cif_name();
+  const char * get_cif_name();
 
   /**
    * Return current input file path.
    */  
-  char * get_cif_path();
+  const char * get_cif_path();
   
   /**
    * Return current absolute input file path.
@@ -218,7 +218,7 @@ public:
   /**
    * Text to print some file was opened.
    */
-  void print_if_opened(void (* pifop)(char *), bool * printed);
+  void print_if_opened(std::function<void(char*)> pifop, bool * printed);
   
   /**
    * @brief Report if the file is missing.
