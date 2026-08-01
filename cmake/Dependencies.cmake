@@ -12,6 +12,7 @@ endif()
 if (BUILD_THERION)
     include(PROJ)
     include(Shapelib)
+    find_package(ImageMagick COMPONENTS Magick++ REQUIRED)
 endif()
 
 # loch dependencies

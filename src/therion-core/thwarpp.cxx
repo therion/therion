@@ -34,6 +34,8 @@
 #include "thdatabase.h"
 #include "thdataleg.h"
 
+#include <fmt/format.h>
+
 thwarpp::~thwarpp() {}
 
 
@@ -173,7 +175,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
     origin,	unit,
     4	);
 
-  this->mpic.rgba_save("PNG","png",thcfg.sketch_colors);
+  this->mpic.rgba_save(thcfg.sketch_colors);
   this->mpic.rgba_free();
   this->m_sketch->m_pic.rgba_free();
 #if	0

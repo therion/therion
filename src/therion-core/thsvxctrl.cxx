@@ -41,6 +41,9 @@
 #include "thlog.h"
 #include "thparse.h"
 #include "img.h"
+
+#include <fmt/format.h>
+
 #include <math.h>
 #include <string>
 #include <fstream>
@@ -489,7 +492,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //   double sx, sy, sz;
 //   unsigned long ss;
 //   size_t lnsize = 4096, pix = 0, ppx = 0, clns;
-//   svxcom.guarantee(lnsize);
+//   svxcom.resize(lnsize);
 //   char * lnbuff = svxcom.data(),
 //     * p[4], * cps = lnbuff;
 //   posf.open(thtmp.get_file_name("data.pos"));
@@ -764,8 +767,6 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 							else {
 //								thprint("LEG not found!!!\n");
 							}
-						}
-						else if (strcmp(b.get_buffer()[i-1],"=") == 0) {
 						}
 						prev_st = st;
 					}

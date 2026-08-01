@@ -40,6 +40,8 @@
 #include "thparse.h"
 #include "therion.h"
 
+#include <fmt/format.h>
+
 thselector::thselector() {
   this->number = 0;
   this->cfgptr = NULL;
@@ -485,7 +487,7 @@ void thselector::select_db(class thdatabase * db)
         break;
       default:
         thwarning(fmt::format("{} [{}] -- invalid object specification", 
-          ii->src_name, ii->src_ln))
+          ii->src_name, ii->src_ln));
         to_cont = false;
     }
     
@@ -507,7 +509,7 @@ void thselector::select_db(class thdatabase * db)
       }
       if (objptr == NULL) {
         thwarning(fmt::format("{} [{}] -- object not found -- \"{}\"", 
-          ii->src_name, ii->src_ln, nobj))
+          ii->src_name, ii->src_ln, nobj));
         to_cont = false;
       }
     }

@@ -26,9 +26,9 @@
  */
  
 #include "therion.h"
+
 #include "thconfig.h"
 #include "thinit.h"
-#include "thlayout.h"
 #include "thpoint.h"
 #include "thline.h"
 #include "tharea.h"
@@ -36,10 +36,7 @@
 #include "thparse.h"
 #include "thlog.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string>
+#include <fmt/format.h>
 
 int therion_exit_state = 2;
 
@@ -48,6 +45,32 @@ bool thverbose_mode = true;
 bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
+
+void therror(std::string_view message, [[maybe_unused]] const std::source_location loc)
+{
+#ifdef THDEBUG
+  thprint2err(fmt::format("{}{} ({}:{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, thexecute_cmd, loc.file_name(), loc.line()));
+#else
+  thprint2err(fmt::format("{}{}: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
+#endif
+  thprint2err(message);
+  thprint2err("\n");
+  thpause_exit();
+  therion_exit_state = 0;
+  thexit(EXIT_FAILURE);
+}
+
+void thwarning(std::string_view message, [[maybe_unused]] const std::source_location loc)
+{
+#ifdef THDEBUG
+  thprint2err(fmt::format("{}{} ({}:{}): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, loc.file_name(), loc.line()));
+#else
+  thprint2err(fmt::format("{}{}: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
+#endif
+  thprint2err(message);
+  thprint2err("\n");
+  therion_exit_state = 1;
+}
 
 static void thprint_impl(const bool verbose, FILE* f, std::string_view msg)
 {
@@ -84,8 +107,6 @@ void thprint_environment() {
   thprint(fmt::format("CAVERN={}\n",thini.get_path_cavern()));
   thprint(fmt::format("METAPOST={}\n",thini.get_path_mpost()));
   thprint(fmt::format("PDFTEX={}\n",thini.get_path_pdftex()));
-  thprint(fmt::format("IDENTIFY={}\n",thini.get_path_identify()));
-  thprint(fmt::format("CONVERT={}\n",thini.get_path_convert()));
 }
 
 
@@ -93,7 +114,7 @@ void thprint_xtherion() {
   bool already_exported;
   int i, j, l;
   const char * lngstr, *trnstr, * tsrc;
-  thbuffer tdst;
+  std::string tdst;
   std::string tss;
   thprint("set xth(point_types) {\n");
   for(i = 0; thtt_point_types[i].tok != TT_POINT_TYPE_UNKNOWN; i++) {

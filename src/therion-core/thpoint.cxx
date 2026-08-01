@@ -39,6 +39,9 @@
 #include "therion.h"
 #include "thdataleg.h"
 #include "thparse.h"
+
+#include <fmt/format.h>
+
 #include <string>
 #include <cstdio>
 
@@ -387,7 +390,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   std::string attr_text;
   int macroid = -1, omacroid = -1, cmark;
   const char * postprocess_label = NULL;
-  this->db->buff_enc.guarantee(8128);
+  this->db->buff_enc.resize(8128);
 //  char * buff = this->db->buff_enc.data();
   double xrr = (thisnan(this->orient) ? out->rr : 0.0);
 
@@ -607,7 +610,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         }
         this->db->buff_enc.assign((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
-        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc.c_str()).c_str());
+        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc).c_str());
         postprocess_label = "p_label_mode_height";
       }
       postprocess = false;

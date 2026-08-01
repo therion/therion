@@ -14,7 +14,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt -qq update
-        sudo apt install -y texlive-binaries texlive-metapost libproj-dev libshp-dev libwxgtk3.2-dev libvtk9-dev survex imagemagick ghostscript ninja-build gettext libfmt-dev catch2
+        sudo apt install -y texlive-binaries texlive-metapost libproj-dev libshp-dev libwxgtk3.2-dev libvtk9-dev survex imagemagick libmagick++-dev ghostscript ninja-build gettext libfmt-dev catch2
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
     - name: Autobuild

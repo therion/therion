@@ -35,6 +35,9 @@
 #include "thparse.h"
 #include "therion.h"
 #include "img.h"
+
+#include <fmt/format.h>
+
 #include <string.h>
 #include <string>
 #include <map>
@@ -221,13 +224,13 @@ void thimport::set_file_name(char * fnm)
   this->fname = this->db->strstore(impf_path_str.c_str());
 
   const auto ext = impf_path.extension().string();
-  for (const auto& [str, type] : {std::tuple{".3d", TT_IMPORT_FMT_3D}, 
-                                  std::tuple{".plt", TT_IMPORT_FMT_PLT}, 
-                                  std::tuple{".xyz", TT_IMPORT_FMT_XYZ}}) {
-    if (icase_equals(ext, str)) {
-      this->format = type;
-      return;
-    }
+  static const std::map<std::string, int, icase_less> extensions{
+    {".3d", TT_IMPORT_FMT_3D},
+    {".plt", TT_IMPORT_FMT_PLT},
+    {".xyz", TT_IMPORT_FMT_XYZ}};
+  if (auto it = extensions.find(ext); it != extensions.end())
+  {
+    this->format = it->second;
   }
 }
 
@@ -274,7 +277,7 @@ const char * thimport::station_name(const char * sn, const char separator, struc
     return sn;
     
   
-  static thbuffer bx, prevsurvey;
+  static std::string bx, prevsurvey;
   static thmbuffer psurv, csurv;
   static long active_survey;
   static thsurvey * prevpsurvey;
@@ -517,7 +520,7 @@ void thimport::import_file_img()
   size_t filterl = 0;
   if (this->filter != NULL)
     filterl = strlen(this->filter);
-  thbuffer n1, n2;
+  std::string n1, n2;
   std::string xb, yb, zb;
   std::string orig_name, new_name;  
   img* pimg = img_open(this->fname);

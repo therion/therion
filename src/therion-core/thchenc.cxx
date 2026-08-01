@@ -32,8 +32,9 @@
 #include "thexception.h"
 #include "thparse.h"
 
+#include <fmt/format.h>
 
-void thencode(thbuffer * dest, const char * src, int srcenc)
+void thencode(std::string * dest, const char * src, int srcenc)
 {
   // check if source is not UTF-8
   if (srcenc == TT_UTF_8) {
@@ -45,7 +46,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
   // check buffer size
-  dest->guarantee(srcln + srcln + srcln + srcln + srcln + srcln);
+  dest->resize(srcln + srcln + srcln + srcln + srcln + srcln);
   dstp = (unsigned char *) dest->c_str();
   srcp = (unsigned char *) src;
   
@@ -94,7 +95,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
 }
 
  
-void thdecode(thbuffer * dest, int destenc, const char * src)
+void thdecode(std::string * dest, int destenc, const char * src)
 {
   // chack if source is not UTF-8
   if (destenc == TT_UTF_8) {
@@ -104,7 +105,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
   
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
-  dest->guarantee(srcln);  // check buffer size
+  dest->resize(srcln);  // check buffer size
   dstp = (unsigned char*) dest->c_str();
   srcp = (unsigned char*) src;
   char32_t sch = 0;    

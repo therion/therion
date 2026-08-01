@@ -52,3 +52,28 @@ bool thdefinitely_less_than(double a, double b, double epsilon)
 {
     return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
 }
+
+double thnanpow2(double number)
+{
+    return (thisnan(number) ? 0.0 : number) * (thisnan(number) ? 0.0 : number);
+}
+
+double thdxyz2length(double dx, double dy, double dz)
+{
+    return sqrt(thnanpow2(dx) + thnanpow2(dy) + thnanpow2(dz));
+}
+
+double thdxyz2b(double dx, double dy)
+{
+    return 270 - (atan2(dy,dx) / THPI * 180.0 + 180);
+}
+
+double thdxyz2bearing(double dx, double dy)
+{
+    return thdxyz2b(dx,dy) < 0.0 ? thdxyz2b(dx,dy) + 360.0 : thdxyz2b(dx,dy);
+}
+
+double thdxyz2clino(double dx, double dy, double dz)
+{
+    return atan2(dz,sqrt(thnanpow2(dx) + thnanpow2(dy))) / THPI * 180.0;
+}

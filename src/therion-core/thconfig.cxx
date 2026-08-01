@@ -127,7 +127,6 @@ thconfig::thconfig()
   this->install_path.assign("");
   this->install_tex = false;
   this->install_tcltk = false;
-  this->install_im = false;
   this->lang = THLANG_UNKNOWN;
 
   this->auto_join = true;
@@ -160,9 +159,9 @@ thconfig::thconfig()
   this->m_decl_out_of_geomag_range = false;
 
 #ifdef THWIN32
-  thbuffer * tmpbf = &(this->bf1);
+  std::string * tmpbf = &(this->bf1);
   // set search path according to Windows registers
-  tmpbf->guarantee(1024);
+  tmpbf->resize(1024);
   DWORD type = 0, length = 1024;
   HKEY key;
   bool loaded_ok = true;
@@ -187,8 +186,6 @@ thconfig::thconfig()
         this->install_tex = true;
       if (RegQueryValueEx(key,"TclTk",NULL,&type,(BYTE *)tmpbf->data(),&length) == ERROR_SUCCESS)
         this->install_tcltk = true;
-      if (RegQueryValueEx(key,"ImageMagick",NULL,&type,(BYTE *)tmpbf->data(),&length) == ERROR_SUCCESS)
-        this->install_im = true;
     }
   	RegCloseKey(key);
   }

@@ -29,7 +29,7 @@
 #ifndef thchenc_h
 #define thchenc_h
 
-#include "thbuffer.h"
+#include <string>
 
 
 /**
@@ -40,7 +40,7 @@
  *  @param srcenc Source encoding.
  */
  
-void thencode(thbuffer * dest, const char * src, int srcenc);
+void thencode(std::string * dest, const char * src, int srcenc);
 
 
 /**
@@ -51,7 +51,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc);
  *  @param src Source string.
  */
  
-void thdecode(thbuffer * dest, int destenc, const char * src);
+void thdecode(std::string * dest, int destenc, const char * src);
 
 
 /**

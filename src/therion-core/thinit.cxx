@@ -41,6 +41,9 @@
 #include "thparse.h"
 #include "thchencdata.h"
 #include "icase.h"
+
+#include <fmt/format.h>
+
 #include <filesystem>
 
 #ifdef THWIN32
@@ -108,8 +111,6 @@ enum {
   TTIC_ENCODING_SQL,
   TTIC_PATH_CAVERN,
 //  TTIC_PATH_3DTOPOS,
-  TTIC_PATH_CONVERT,
-  TTIC_PATH_IDENTIFY,
   TTIC_PATH_MPOST,
   TTIC_OPT_MPOST,
   TTIC_PATH_PDFTEX,
@@ -139,14 +140,12 @@ enum {
  
 static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
-  {"convert-path", TTIC_PATH_CONVERT},
   {"cs-def", TTIC_CS_DEF},
   {"cs-trans", TTIC_CS_TRANS},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
 //  {"path_3dtopos", TTIC_PATH_3DTOPOS},
-  {"identify-path", TTIC_PATH_IDENTIFY},
   {"language", TTIC_LANG},
   {"loop-closure", TTIC_LOOPC},
   {"mpost-options", TTIC_OPT_MPOST},
@@ -186,7 +185,7 @@ static const thstok thtt_loopc[] = {
 
 
 #ifdef THWIN32
-void thinit__make_short_path(thbuffer * bf) {
+void thinit__make_short_path(std::string * bf) {
   if (bf->empty())
     return;
   DWORD short_buf_size = GetShortPathName(bf->c_str(), nullptr, 0);
@@ -241,7 +240,7 @@ int thinit::get_lang() {
 
 void thinit::check_font_path(const char * fname, int index) {
 
-  static thbuffer pfull, pshort, tmpb;
+  static std::string pfull, pshort, tmpb;
 
   pshort.assign("");
   pfull.assign("");
@@ -280,7 +279,7 @@ void thinit::check_font_path(const char * fname, int index) {
   }
 
   // checkne ci TTF
-  if ((l > 3) && icase_equals(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
+  if ((l > 3) && icase_equal{}(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
 
   font_src[index] = pfull.c_str();
   font_dst[index] = pshort.c_str();
@@ -307,9 +306,9 @@ void thinit::load()
 
 #ifdef THWIN32
   // set cavern path according to Windows registers
-  this->path_cavern.guarantee(1024);
+  this->path_cavern.resize(1024);
   thmbuffer mbf;
-  thbuffer bf;
+  std::string bf;
   DWORD type(0), length = 1024;
   HKEY key;
   bool loaded_ok = true;
@@ -345,7 +344,7 @@ void thinit::load()
 
 	// try running survex
 	if (this->loopc == THINIT_LOOPC_UNKNOWN) {
-	  thbuffer svxcom;
+	  std::string svxcom;
 	  svxcom = "\"";
 	  svxcom += thini.get_path_cavern();
 	  svxcom += "\" --version";  
@@ -375,21 +374,7 @@ void thinit::load()
     this->path_otftotfm = "otftotfm";
 #ifdef THWIN32
   }
-#endif  
-
-#ifdef THWIN32
-  if (thcfg.install_im) {
-    this->path_convert = thcfg.install_path.c_str();
-    this->path_convert += "\\bin\\convert.exe";
-    this->path_identify = thcfg.install_path.c_str();
-    this->path_identify += "\\bin\\identify.exe";
-  } else {
-#endif  
-    this->path_convert = "convert";
-    this->path_identify = "identify";
-#ifdef THWIN32
-  }
-#endif  
+#endif
 
   set_proj_lib_path(false);  // don't use env in windows therion executable
   thcs_add_default_transformations();
@@ -420,8 +405,6 @@ void thinit::load()
       switch (argid) {      
         case TTIC_ENCODING_DEFAULT:
         case TTIC_PATH_CAVERN:
-        case TTIC_PATH_CONVERT:
-        case TTIC_PATH_IDENTIFY:
         case TTIC_LOOPC:
         case TTIC_TMP_PATH:
         case TTIC_LANG:
@@ -485,18 +468,6 @@ void thinit::load()
           if (strlen(args[1]) < 1)
             throw thexception("invalid path");
           this->path_cavern.assign(args[1]);
-          break;
-          
-        case TTIC_PATH_CONVERT:
-          if (strlen(args[1]) < 1)
-            throw thexception("invalid path");
-          this->path_convert.assign(args[1]);
-          break;
-          
-        case TTIC_PATH_IDENTIFY:
-          if (strlen(args[1]) < 1)
-            throw thexception("invalid path");
-          this->path_identify.assign(args[1]);
           break;
 
         case TTIC_TMP_PATH:
@@ -622,8 +593,6 @@ void thinit::load()
 
 #ifdef THWIN32
   thinit__make_short_path(&this->path_cavern);
-  thinit__make_short_path(&this->path_convert);
-  thinit__make_short_path(&this->path_identify);
   thinit__make_short_path(&this->path_mpost);
   thinit__make_short_path(&this->path_pdftex);
 #endif
@@ -684,7 +653,7 @@ void thinit::load()
       fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       fclose(ff);
 
-      thbuffer com;
+      std::string com;
       const auto tmp_handle = thtmp.switch_to_tmpdir();
       int retcode;
 
@@ -720,18 +689,6 @@ void thinit::load()
 const char * thinit::get_path_cavern()
 {
   return this->path_cavern.c_str();
-}
-
-
-const char * thinit::get_path_convert()
-{
-  return this->path_convert.c_str();
-}
-
-
-const char * thinit::get_path_identify()
-{
-  return this->path_identify.c_str();
 }
 
 //const char * thinit::get_path_3dtopos()

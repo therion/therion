@@ -1151,11 +1151,11 @@ int thlayout::get_context()
 void thlayout::self_print_library(std::ostream& out) {
 
   fmt::print(out, "\toname = \"{}\";\n", this->get_name());
-  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
   // decode title
   thdecode_c(&(this->db->buff_enc), this->get_title());
   fmt::print(out, "\toname = \"{}\";\n", this->db->buff_enc.c_str());
-  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
+  fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
 
 
   fmt::print(out, "\tplayout->def_scale = {};\n", this->def_scale);
@@ -1434,7 +1434,7 @@ void thlayout::self_print_library(std::ostream& out) {
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS)
           fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
         else
-          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
+          fmt::print(out, "\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),buffer_to_ptr(oname),TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
@@ -1717,7 +1717,6 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
 
 void thlayout::export_mpost(FILE * o) {
 
-  bool anyline = false;
   const char * last_path = "";
   for (auto ln = lines.begin(); ln != lines.end(); ++ln) {
       if (ln->code == TT_LAYOUT_CODE_METAPOST) {
@@ -1725,15 +1724,10 @@ void thlayout::export_mpost(FILE * o) {
           last_path = ln->path;
           fprintf(o, "includeprefix := \"%s\";\n", fix_path_slashes(last_path).c_str());
         }
-        anyline = true;
         thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.c_str());
       }
   }
-  
-  if (!anyline) {
-  }
-
 }
 
 
@@ -1772,7 +1766,7 @@ static bool is_copy_src(thlayoutln const &ll) {
 void thlayout::process_copy() {
   // ak je locknuty -> tak warning a koniec
   if (this->lock) {
-    thwarning(fmt::format("{} -- recursive layout copying", this->throw_source()))
+    thwarning(fmt::format("{} -- recursive layout copying", this->throw_source()));
     return;
   }
   this->lock = true;
@@ -1785,7 +1779,7 @@ void thlayout::process_copy() {
     // najdeme si layout podla mena
     thlayout * srcl = this->db->get_layout(csp->line);
     if (srcl == NULL) {
-      thwarning(fmt::format("{} -- source layout not found -- {}", this->throw_source(), csp->line))
+      thwarning(fmt::format("{} -- source layout not found -- {}", this->throw_source(), csp->line));
     } else {
       // ak ma este nevyriesene zavislosti
       srcl->process_copy();

@@ -28,6 +28,9 @@
 
 #include "thlogfile.h"
 #include "therion.h"
+
+#include <fmt/format.h>
+
 #include <string.h>
 
 const char * logfilemode = "w";

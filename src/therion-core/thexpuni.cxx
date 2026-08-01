@@ -49,6 +49,7 @@
 #include "thparse.h"
 #include "therion.h"
 
+#include <fmt/format.h>
 
 static const char * DXFpre = 
 "  0\nSECTION\n  2\nHEADER\n  9\n$ACADVER\n  1\nAC1014\n  9\n$ACADMAINTVER\n"
@@ -419,7 +420,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
   if (maps == NULL) {
     thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
-      this->src.name, this->src.line, this->projstr))
+      this->src.name, this->src.line, this->projstr));
     return;
   }
 
@@ -427,7 +428,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   const char * fnm = this->get_output("cave.kml");
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -537,7 +538,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
           if (cmi->type == TT_MAPITEM_NORMAL) {
             scrap = dynamic_cast<thscrap*>(cmi->object);
             xu.parse_scrap(scrap);
-            if (xu.m_part_list.size() > 0) {
+            if (!xu.m_part_list.empty()) {
               fprintf(out,"<Polygon>\n");
               first_outer = true;
               std::list<thexpuni_part>::iterator it;
@@ -558,7 +559,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
                     ip->m_x, ip->m_y, scrap->z, x, y, z);
                   fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, 0.0);
                 }
-                if (it->m_point_list.size() > 0) {
+                if (!it->m_point_list.empty()) {
                 	ip = it->m_point_list.begin();
                     thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
                       ip->m_x, ip->m_y, scrap->z, x, y, z);
@@ -612,7 +613,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
 
   if (maps == NULL) {
     thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
-      this->src.name, this->src.line, this->projstr))
+      this->src.name, this->src.line, this->projstr));
     return;
   }
 
@@ -620,7 +621,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
   const char * fnm = this->get_output("cave.bbox");
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -706,7 +707,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 
   if (maps == NULL) {
     thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
-      this->src.name, this->src.line, this->projstr))
+      this->src.name, this->src.line, this->projstr));
     return;
   }
 
@@ -714,7 +715,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
   const char * fnm = this->get_output("cave.dxf");
   out = fopen(fnm, "w");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(fmt::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -745,7 +746,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
           if (cmi->type == TT_MAPITEM_NORMAL) {
             scrap = dynamic_cast<thscrap*>(cmi->object);
             xu.parse_scrap(scrap);
-            if (xu.m_part_list.size() > 0) {
+            if (!xu.m_part_list.empty()) {
               double x(0.0), y(0.0), z(0.0), px(0.0), py(0.0);
               bool inside;
               std::list<thexpuni_part>::iterator it;

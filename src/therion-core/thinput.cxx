@@ -32,6 +32,8 @@
 #include "thversion.h"
 #include "thparse.h"
 
+#include <fmt/format.h>
+
 #include <algorithm>
 #include <array>
 #include <cstdio>
@@ -85,7 +87,7 @@ class ifile {
   public:
   
   std::ifstream sh;   ///< file stream.
-  thbuffer name,  ///< Input file name buffer.
+  std::string name,  ///< Input file name buffer.
     path;  ///< Input file path buffer.
   unsigned long lnumber;  /// Position at the file.
   int encoding;  /// Current file encoding.
@@ -129,7 +131,7 @@ bool ifile::is_equal(ifile* f)
   try {
     return fs::equivalent(name.c_str(), f->name.c_str());
   } catch(const std::exception& e) {
-    thwarning(fmt::format("unable to compare files -- {}", e.what()))
+    thwarning(fmt::format("unable to compare files -- {}", e.what()));
     return false;
   }
 }
@@ -140,9 +142,9 @@ thinput::thinput()
   this->cmd_sensitivity = true;
   this->input_sensitivity = true;
   this->scan_search_path = false;
-  this->first_ptr = std::unique_ptr<ifile>(new ifile(nullptr));
+  this->first_ptr = std::make_unique<ifile>(nullptr);
   this->last_ptr = this->first_ptr.get();
-  this->lnbuffer = std::unique_ptr<char[]>(new char [thinput::max_line_size]);
+  this->lnbuffer = std::make_unique<char[]>(thinput::max_line_size);
   this->pifo = false;
   this->pifoid = nullptr;
   this->pifoproc = nullptr;
@@ -247,7 +249,7 @@ void thinput::open_file(const char * fname)
   while (ifptr->sh.is_open() && (ifptr->next_ptr != nullptr))
     ifptr = ifptr->next_ptr.get();
   if (ifptr->sh.is_open() && (ifptr->next_ptr == nullptr)) {
-    ifptr->next_ptr = std::unique_ptr<ifile>(new ifile(ifptr));
+    ifptr->next_ptr = std::make_unique<ifile>(ifptr);
     ifptr = ifptr->next_ptr.get();
   }
   
@@ -465,14 +467,14 @@ char * thinput::read_line()
         continue;
         
       // interpret commands
-      switch (thmatch_token(this->cmdbf.c_str(), thtt_input)) {
+      switch (thmatch_token(this->cmdbf, thtt_input)) {
       
         case TT_INPUT:
           if (this->input_sensitivity) {
             if (this->tmpmb.get_size() != 1)
               therror(fmt::format("{} [{}] -- one input file name expected -- {}", \
                 this->get_cif_name(), this->get_cif_line_number(), \
-                this->valuebf.c_str()))
+                this->valuebf.c_str()));
             else
               this->open_file(*(this->tmpmb.get_buffer()));
           }
@@ -555,7 +557,7 @@ const char * thinput::get_cif_name()
 
 const char * thinput::get_cif_path()
 {
-  static thbuffer cifpath;
+  static std::string cifpath;
   thsplit_fpath(&cifpath, this->last_ptr->name.c_str());
   return cifpath.c_str();
 }
@@ -604,11 +606,11 @@ int thinput::get_cif_encoding()
   return this->last_ptr->encoding;
 }
 
-void thinput::print_if_opened(void (* pifop)(char *), bool * printed) {
+void thinput::print_if_opened(std::function<void(char*)> pifop, bool * printed) {
   this->pifo = true;
   if (printed != nullptr)
     this->pifoid = printed;
-  this->pifoproc = pifop;
+  this->pifoproc = std::move(pifop);
 }
 
 

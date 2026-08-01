@@ -31,6 +31,9 @@
 #include "therion.h"
 #include "thchenc.h"
 #include "thparse.h"
+
+#include <fmt/format.h>
+
 #include <cctype>
 #include <cmath>
 #include <cstring>
@@ -391,7 +394,7 @@ void thattr::export_dbf(const char * fname, int encoding)
   thattr_obj_list::iterator oi;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  thbuffer enc;
+  std::string enc;
 
   this->analyze_fields();
   h = DBFCreate(fname);
@@ -417,7 +420,7 @@ void thattr::export_dbf(const char * fname, int encoding)
     }
     cf->m_xdbf_field = DBFAddField(h, cf->m_xdbf_name.c_str(), ftype, cf->m_xdbf_width, cf->m_xdbf_decimals); 
     if (cf->m_xdbf_field == -1) {
-      thwarning(fmt::format("error writing to {}", fname))
+      thwarning(fmt::format("error writing to {}", fname));
       goto EXPORT_DBF_EXIT;
     }
   }
@@ -475,7 +478,7 @@ void thattr::export_mp_object_begin(FILE * f, long user_id)
   thattr_field * cf;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  thbuffer enc;
+  std::string enc;
 
   std::string news;
 
@@ -527,7 +530,6 @@ void thattr::export_txt(const char * fname, int /*encoding*/) // TODO unused par
   thattr_obj_list::iterator oi;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  thbuffer enc;
 
   this->analyze_fields();
 
@@ -579,7 +581,6 @@ void thattr::export_kml(const char * fname, const char * name_field, const char 
   thattr_obj_list::iterator oi, oinext;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  thbuffer enc;
 
   this->analyze_fields();
   thattr_field * lat = get_field("Latitude", false), 
@@ -663,7 +664,6 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
   thattr_obj_list::iterator oi, oinext;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  thbuffer enc;
   const char * alstr;
 
   this->analyze_fields();
@@ -723,8 +723,8 @@ void thattr::export_html(const char * fname, const char * title, int /*encoding*
   // Insert objects and write fields.
   const char * value;
   bool header_value;
-  thbuffer valb;
-  valb.guarantee(128);
+  std::string valb;
+  valb.resize(128);
   std::string value_plus;
   for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
     fprintf(f,"<tr id=\"%s\">", oi->m_tree_node_id);

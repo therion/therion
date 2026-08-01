@@ -41,6 +41,11 @@
 #include "thdb2dmi.h"
 #include "thdatabase.h"
 #include "thparse.h"
+#include "thsurvey.h"
+#include "therion.h"
+
+#include <fmt/format.h>
+
 #include <vector>
 #include <algorithm>
 #include <string.h>
@@ -278,7 +283,7 @@ struct thmapstat_copyright_data {
   }
 };
 
-void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, bool show_count, thlayout * layout, thbuffer & c){
+void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, bool show_count, thlayout * layout, std::string & c){
     fprintf(f, "\\%s={", team_name);
     std::vector<thmapstat_person_data> pd;
     for (auto pi = team_map.begin(); pi != team_map.end(); pi++) {
@@ -290,7 +295,7 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
 			ditem.crit = pi->second.crit;
 		pd.push_back(ditem);
     }
-    if ((pd.size() > 0) && (max_items != 0)) {
+    if (!pd.empty() && (max_items != 0)) {
     	std::sort(pd.begin(), pd.end());
     	unsigned long maxcnt(pd.size());
     	if (max_items > 0)
@@ -325,7 +330,7 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
 }
 
 
-void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * /*layout*/, thbuffer & c){ // TODO unused parameter layout
+void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * /*layout*/, std::string & c){ // TODO unused parameter layout
     fprintf(f, "\\%s={", team_name);
     std::vector<thmapstat_copyright_data> pd;
     for (auto pi = copy_map.begin(); pi != copy_map.end(); pi++) {
@@ -338,7 +343,7 @@ void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const cha
 			ditem.crit = pi->second.crit;
 		pd.push_back(ditem);
     }
-    if ((pd.size() > 0) && (max_items != 0)) {
+    if (!pd.empty() && (max_items != 0)) {
         fprintf(f, "%s", utf2tex(teamstr).c_str());
     	std::sort(pd.begin(), pd.end());
     	unsigned long maxcnt(pd.size());
@@ -423,7 +428,7 @@ void thmapstat::get_min_max_alt(double & min, double & max) {
 
 void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata) {
 
-  thbuffer b,c;
+  std::string b,c;
   unsigned long cnt;
   thmapstat_personmap::iterator pi;
   thmapstat_copyrightmap::iterator ci;
@@ -434,8 +439,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   bool show_count;
   show_count = false;
   double clen, z_top, z_bot;
-  c.guarantee(256);
-  b.guarantee(256);
+  c.resize(256);
+  b.resize(256);
 
   if (!thcfg.reproducible_output)
     fprintf(f,"\\thversion={%s}\n",utf2tex(THVERSION).c_str());
@@ -480,7 +485,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavelengthtitle={%s}\n",utf2tex(thT("title cave length",layout->lang)).c_str());
-    fprintf(f,"\\cavelength={%s}\n",utf2tex(b.c_str()).c_str());
+    fprintf(f,"\\cavelength={%s}\n",utf2tex(b).c_str());
     ldata->cavelength = thutf82xhtml(b.c_str());
     ldata->cavelengthtitle = thT("title cave length",layout->lang);
   }
@@ -496,17 +501,17 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)).c_str());
-    fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.c_str()).c_str());
+    fprintf(f,"\\cavedepth={%s}\n",utf2tex(b).c_str());
     ldata->cavedepth = thutf82xhtml(b.c_str());
     ldata->cavedepthtitle = thT("title cave depth",layout->lang);
 	b = layout->units.format_length(z_top);
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\cavemaxz={%s}\n",utf2tex(b.c_str()).c_str());
+    fprintf(f,"\\cavemaxz={%s}\n",utf2tex(b).c_str());
 	b = layout->units.format_length(z_bot);
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\caveminz={%s}\n",utf2tex(b.c_str()).c_str());
+    fprintf(f,"\\caveminz={%s}\n",utf2tex(b).c_str());
 
   }
   

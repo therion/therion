@@ -54,6 +54,8 @@
 #include <algorithm>
 #include <numbers>
 
+#include <fmt/format.h>
+
 static void print_double(const double dbl)
 {
 	if (thisnan(dbl))
@@ -3598,7 +3600,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   }
 #endif  
 
-  thbuffer com;
+  std::string com;
   // working directory will be the tmpdir until this scope ends
   const auto tmp_handle = thtmp.switch_to_tmpdir();
   int retcode;
@@ -3624,7 +3626,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   if (!af)
     throw thexception("can't open file data.1");
   double n[6] = {};
-  com.guarantee(256);
+  com.resize(256);
   std::unique_ptr<thline> cln;
   char * buff = com.data();
   ti = todo.begin();

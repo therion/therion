@@ -7,9 +7,9 @@
 #include <cstdint>
 #include <vector>
 
-typedef char * lxFileBuff;
+using lxFileBuff = char*;
 
-#define lxFileSizeT uint32_t
+using lxFileSizeT = uint32_t;
 
 #define lxassert(expr) if (!(expr)) std::exit(1);
 

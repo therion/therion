@@ -44,6 +44,7 @@
 #include "therion.h"
 #include <filesystem>
 
+#include <fmt/format.h>
 
 thexptable::thexptable() {
   this->format = TT_EXPTABLE_FMT_UNKNOWN;
@@ -403,7 +404,7 @@ void thexptable::process_db(class thdatabase * dbp)
   try {
     title = std::filesystem::path(this->outpt).filename().string();
   } catch(const std::exception& e) {
-    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()))
+    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()));
   }
 
   switch (this->format) {

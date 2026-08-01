@@ -33,7 +33,6 @@
 #include "thtfpwf.h"
 #include "thperson.h"
 #include "thdata.h"
-#include "thbuffer.h"
 #include <map>
 #include <memory>
 
@@ -109,7 +108,7 @@ class thsurvey : public thdataobject {
   friend class thdb1d;
   
   const char * full_name;  ///< Full survey name.
-  thbuffer reverse_full_name;  ///< Reverse full name - for sorting.
+  std::string reverse_full_name;  ///< Reverse full name - for sorting.
   
   thdataobject * foptr,  ///< First object in survey.
     * loptr;  ///< Last object in survey.

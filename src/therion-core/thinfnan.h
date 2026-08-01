@@ -26,8 +26,7 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef thinfnan_h
-#define thinfnan_h
+#pragma once
 
 #include <cmath>
 #include <cfloat>
@@ -94,14 +93,10 @@ bool thessentially_equal(double a, double b, double epsilon);
 bool thdefinitely_greater_than(double a, double b, double epsilon);
 bool thdefinitely_less_than(double a, double b, double epsilon);
 
+inline constexpr double THPI = 3.1415926535898;
 
-// infnan.h
-#endif
-
-#define THPI 3.1415926535898
-#define thnanpow2(cislo) ((thisnan(cislo) ? 0.0 : cislo) * (thisnan(cislo) ? 0.0 : cislo))
-#define thdxyz2length(dx,dy,dz) (sqrt(thnanpow2(dx) + thnanpow2(dy) + thnanpow2(dz)))
-#define thdxyz2b(dx,dy,dz) (270 - (atan2(dy,dx) / THPI * 180.0 + 180))
-#define thdxyz2bearing(dx,dy,dz) (thdxyz2b(dx,dy,dz) < 0.0 ? thdxyz2b(dx,dy,dz) + 360.0 : thdxyz2b(dx,dy,dz))
-#define thdxyz2clino(dx,dy,dz) (atan2(dz,sqrt(thnanpow2(dx) + thnanpow2(dy))) / THPI * 180.0)
-
+double thnanpow2(double number);
+double thdxyz2length(double dx, double dy, double dz);
+double thdxyz2b(double dx, double dy);
+double thdxyz2bearing(double dx, double dy);
+double thdxyz2clino(double dx, double dy, double dz);

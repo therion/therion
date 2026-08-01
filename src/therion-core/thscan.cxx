@@ -42,6 +42,8 @@
 
 #include "stl_reader.h"
 
+#include <fmt/format.h>
+
 #include <algorithm>
 #include <cmath>
 #include <filesystem>

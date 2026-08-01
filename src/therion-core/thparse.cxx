@@ -43,20 +43,22 @@
 #include <algorithm>
 #include "icase.h"
 
+#include <Magick++/Image.h>
+
+#include <fmt/format.h>
+
 thmbuffer thparse_mbuff;
 
-template <typename Equality, typename Ordering>
-int binary_search_token(std::string_view token, std::span<const thstok> tab, Equality equality, Ordering ordering)
+template <typename Comparator>
+int binary_search_token(std::string_view token, std::span<const thstok> tab, Comparator cmp)
 {
   if (tab.empty())
     throw thexception(fmt::format("empty lookup table when searching for token '{}'", token));
 
-  // comparator between thstok and string_view
-  auto compare_thstok = [&ordering](const thstok& a, std::string_view b){ return ordering(a.s, b); };
   // binary search, we leave out the last item
-  auto it = std::lower_bound(tab.begin(), std::prev(tab.end()), token, compare_thstok);
-  // if bound was found we also need to compare for equality
-  if (it != std::prev(tab.end()) && equality(token, it->s))
+  auto it = std::ranges::lower_bound(tab.begin(), std::prev(tab.end()), token, cmp, &thstok::s);
+  // if bound was found we also need to use comparator to determine equality
+  if (it != std::prev(tab.end()) && !cmp(token, it->s))
     return it->tok;
   // last item contains default value
   return tab.back().tok;
@@ -64,13 +66,13 @@ int binary_search_token(std::string_view token, std::span<const thstok> tab, Equ
 
 int thmatch_token(std::string_view token, std::span<const thstok> tab)
 {
-  return binary_search_token(token, tab, std::equal_to<std::string_view>(), std::less<std::string_view>());
+  return binary_search_token(token, tab, std::less<>{});
 }
 
 
 int thcasematch_token(std::string_view token, std::span<const thstok> tab)
 {
-  return binary_search_token(token, tab, icase_equals, icase_less_than);
+  return binary_search_token(token, tab, icase_less{});
 }
 
 
@@ -86,7 +88,7 @@ const char * thmatch_tstring(int token, const thstok *tab, int tab_size)
 }
 
 
-void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src)
+void thsplit_word(std::string * dword, std::string * drest, const char * src)
 {
   long srcl = strlen(src),
     idx = 0,
@@ -366,7 +368,7 @@ void thsplit_args(thmbuffer * dest, const char * src)
 }
 
 
-void thsplit_fpath(thbuffer * dest, const char * src)
+void thsplit_fpath(std::string * dest, const char * src)
 {
   long len = strlen(src);
   const char * s = src + len++;
@@ -544,13 +546,13 @@ void thparse_double_dms(int & sv, double & dv, const char * src)
   }
 }
 
-void thdecode_c(thbuffer * dest, const char * src)
+void thdecode_c(std::string * dest, const char * src)
 {
 
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
   unsigned num;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -595,12 +597,12 @@ void thdecode_c(thbuffer * dest, const char * src)
 }
 
 
-void thdecode_tcl(thbuffer * dest, const char * src)
+void thdecode_tcl(std::string * dest, const char * src)
 {
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
   unsigned num;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -631,11 +633,11 @@ void thdecode_tcl(thbuffer * dest, const char * src)
 
 
 
-void thdecode_mp(thbuffer * dest, const char * src)
+void thdecode_mp(std::string * dest, const char * src)
 {
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -670,13 +672,13 @@ void thdecode_mp(thbuffer * dest, const char * src)
 
 
 
-void thdecode_tex(thbuffer * dest, const char * src)
+void thdecode_tex(std::string * dest, const char * src)
 {
 
   size_t srcln = strlen(src), srcx = 0;
   unsigned char * srcp, * dstp;
 //  unsigned num;
-  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  dest->resize(srcln * 8 + 1);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   while (srcx < srcln) {
@@ -714,10 +716,10 @@ void thdecode_tex(thbuffer * dest, const char * src)
 }
 
 
-void thdecode_utf2tex(thbuffer * dest, const char * src)
+void thdecode_utf2tex(std::string * dest, const char * src)
 {
 
-  static thbuffer tmpb;
+  static std::string tmpb;
   tmpb = src;
   size_t srcln = strlen(src), srcx = 0, tmpl;
   unsigned char * srcp, * dstp, * wsrcp, *tmpp;
@@ -799,7 +801,7 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
 
 
 
-void thdecode_sql(thbuffer * dest, const char * src)
+void thdecode_sql(std::string * dest, const char * src)
 {
 
   size_t srcln, srcx = 0;
@@ -809,7 +811,7 @@ void thdecode_sql(thbuffer * dest, const char * src)
     *dest = "NULL";
     return;
   }
-  dest->guarantee(srcln * 8 + 3);  // check buffer size
+  dest->resize(srcln * 8 + 3);  // check buffer size
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
   *dstp = '\'';
@@ -838,7 +840,7 @@ void thdecode_sql(thbuffer * dest, const char * src)
 
 
 
-void thdecode_arg(thbuffer * dest, const char * src)
+void thdecode_arg(std::string * dest, const char * src)
 {
 
   size_t srcln = strlen(src), srcx;
@@ -865,7 +867,7 @@ void thdecode_arg(thbuffer * dest, const char * src)
   }
   
   // zaciatocna uvodzovka
-  dest->guarantee(srcln * 8 + 3);  // check buffer size
+  dest->resize(srcln * 8 + 3);  // check buffer size
   srcx = 0;
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->c_str();
@@ -939,106 +941,46 @@ void thparse_altitude(const char * src, double & altv, double & fixv)
 
 void thparse_image(const char * fname, double & width, double & height, double & dpi, int & type)
 {
-
   type = TT_IMG_TYPE_UNKNOWN;
-
-  FILE * pictf = fopen(fname, "rb");
-#define picths 2048
-  size_t phsize;
-  double xdpi, ydpi;
-  unsigned char picth [picths], * scan;
-  size_t sx;
   width = 0.0;
   height = 0.0;
   dpi = 300.0;
-  if (pictf != NULL) {
-    phsize = fread(&(picth[0]), 1, picths, pictf);
-    fclose(pictf);
-    // najde si format a vytiahne informacie
-    if ((picth[0] == 0xFF) && (picth[1] == 0xD8) &&
-        (picth[2] == 0xFF) && (picth[3] == 0xE0)) {
-      // JPEG
-      type = TT_IMG_TYPE_JPEG;  
+
+  try {
+    const Magick::Image image(fname);
+    const auto format = image.magick();
+
+    if (format == "JPEG")
+      type = TT_IMG_TYPE_JPEG;
+    else if (format == "PNG")
+      type = TT_IMG_TYPE_PNG;
+    else
+      throw thexception(fmt::format("file format not supported -- {}", fname));
+
+    width = image.columns();
+    height = image.rows();
+
+    double xdpi = image.xResolution();
+    double ydpi = image.yResolution();
+    if (xdpi != ydpi)
+      throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
+
+    if (image.resolutionUnits() == Magick::PixelsPerCentimeterResolution) {
+      xdpi = std::round(xdpi * 2.54);
+      ydpi = std::round(ydpi * 2.54);
+    } else if (image.resolutionUnits() == Magick::PixelsPerInchResolution) {
+      xdpi = std::round(xdpi);
+      ydpi = std::round(ydpi);
+    } else {
       xdpi = 300.0;
       ydpi = 300.0;
-      switch (picth[13]) {
-        case 1:
-          xdpi = std::round(double(picth[14] * 256.0 + picth[15]));
-          ydpi = std::round(double(picth[16] * 256.0 + picth[17]));
-          break;
-        case 2:
-          xdpi = std::round(double(picth[14] * 256 + picth[15]) * 2.54);
-          ydpi = std::round(double(picth[16] * 256 + picth[17]) * 2.54);
-          break;
-      }
-      if (xdpi != ydpi) {
-        throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
-      }
-      dpi = xdpi;
-      if (dpi < 1.0) {
-        dpi = 300.0;
-      }      
-      //for(sx = 0, scan = &(picth[0]); sx < (phsize - 10); sx++, scan++) {
-      //  if ((scan[0] == 0xFF) && ((scan[1] == 0xC0) || (scan[1] == 0xC1))) {
-      //    height = thround(double(scan[5]) * 256.0 + double(scan[6]));
-      //    width = thround(double(scan[7]) * 256.0 + double(scan[8]));
-      //  }
-      //}
-      sx = 0;
-      int marker;
-      size_t len;
-      pictf = fopen(fname, "rb");      
-      thassert(fread(&(picth[0]), 1, 2, pictf) == 2);
-      height = -1.0;
-      width = -1.0;
-      while(getc(pictf) == 255) {
-        marker = getc(pictf);
-        len = 256 * (size_t) getc(pictf) + (size_t) getc(pictf);
-        if ((marker == 0xC0) || (marker == 0xC1)) {
-          getc(pictf);
-          height = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
-          width = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
-          break;
-        } 
-        fseek(pictf, len - 2, SEEK_CUR);
-      }
-      fclose(pictf);
-      if ((height < 0.0) || (width < 0.0))
-        throw thexception(fmt::format("unable to determine image size -- {}", fname));
-    } else if (
-      (picth[0] == 0x89) && (picth[1] == 0x50) &&
-      (picth[2] == 0x4E) && (picth[3] == 0x47) &&
-      (picth[4] == 0x0D) && (picth[5] == 0x0A) &&
-      (picth[6] == 0x1A) && (picth[7] == 0x0A)) {
-      // PNG
-      type = TT_IMG_TYPE_PNG;  
-      // najde pHYs za nim 4(x), 4(y), 1(units) = 01-meters, 00-unspec
-      for(sx = 0, scan = &(picth[0]); sx < (phsize - 12); sx++, scan++) {
-        if (strncmp((char *) scan,"pHYs",4) == 0) {
-          xdpi = double(scan[4] * 0x1000000 + scan[5] * 0x10000 + scan[6] * 0x100 + scan[7]);
-          ydpi = double(scan[8] * 0x1000000 + scan[9] * 0x10000 + scan[10] * 0x100 + scan[11]);
-          if (xdpi != ydpi) {
-            throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
-          }
-          switch (scan[12]) {
-            case 1:
-              xdpi = std::round(xdpi * 0.0254);
-              break;
-            default:
-              xdpi = 300.0;
-              break;
-          }
-          dpi = xdpi;
-          break;
-        }
-      }      
-      width = std::round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
-      height = std::round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
-    } else {
-      throw thexception(fmt::format("file format not supported -- {}", fname));
     }
-  } else {
-    throw thexception(fmt::format("file not found -- {}", fname));
+
+    if (xdpi >= 1.0)
+      dpi = xdpi;
+  }
+  catch (const Magick::Exception& e) {
+    throw thexception(fmt::format("unable to read image {}", fname), e);
   }
 
 #ifdef THDEBUG
@@ -1114,14 +1056,14 @@ void thset_grid(
 
 const char * thutf82xhtml(const char * src)
 {
-  static thbuffer tmp;
+  static std::string tmp;
   if (src == NULL)
     return "";
 
   size_t sx, dx, sl = strlen(src);
   bool inspec;
   char * res;
-  tmp.guarantee(sl);
+  tmp.resize(sl);
   res = tmp.data();
 
   inspec = false;
@@ -1201,7 +1143,7 @@ void thparse_length(int & sv, double & dv, const char * src)
   size_t strl, cx;
   strl = strlen(src);
   thtflength lt;
-  static thbuffer plb;
+  static std::string plb;
   char * srcb;
   
   plb.assign(src);  
@@ -1269,4 +1211,3 @@ std::string ths2txt(std::string original, int lang, int /*encoding*/)
   // TODO: encoding conversion & al.
   return select_lang(original, thlang_getid(lang));
 }
-

@@ -31,7 +31,6 @@
 
 #include <list>
 
-#include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thinput.h"
 #include "thexporter.h"
@@ -69,7 +68,7 @@ class thconfig {
 
   public:
 
-  thbuffer fname,  ///< Configuration file name.
+  std::string fname,  ///< Configuration file name.
     search_path,  ///< Lib files search path.
     init_path,  ///< Initialization path.
     install_path,  ///< Installation path.
@@ -83,7 +82,6 @@ class thconfig {
     generate_xthcfg,  ///< Generate xtherion log file.
     install_tcltk, ///< Whether tcltk is installed with therion.
     install_tex, ///< Whether TeX is installed with therion.
-    install_im, ///< Whether ImageMagick is installed with therion.
     auto_join,  ///< Whether scraps in one file should be automatically joined
     use_maps,  ///< Whether to use map structure for output
     use_maps_offset,  ///< Whether to use map's offset

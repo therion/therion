@@ -38,6 +38,7 @@
 #include "therion.h"
 #include <stdio.h>
 
+#include <fmt/format.h>
 
 thexporter::thexporter()
 {
