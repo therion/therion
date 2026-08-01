@@ -1244,6 +1244,9 @@ void lxGLCanvas::RenderScrapWalls() {
   bool altitudeColors = (!this->setup->cam_anaglyph) &&
     (this->setup->m_colormd != lxSETUP_COLORMD_DEFAULT) &&
     this->setup->m_colormd_app_walls;
+  double innerWallColoring = this->setup->m_inner_walls_coloring;
+  if (innerWallColoring < 0.0) innerWallColoring = 0.0;
+  if (innerWallColoring > 1.0) innerWallColoring = 1.0;
   bool backFace;
 
 #define draw3vert(N) \
@@ -1253,9 +1256,9 @@ void lxGLCanvas::RenderScrapWalls() {
   if (altitudeColors) { \
   this->data->luTable->GetColor(ptc[2], nmvv); \
   if (backFace) { \
-  clr[0] = 0.8 + 0.2 * nmvv[0]; \
-  clr[1] = 0.8 + 0.2 * nmvv[1]; \
-  clr[2] = 0.8 + 0.2 * nmvv[2]; \
+  clr[0] = 1.0 - innerWallColoring + innerWallColoring * nmvv[0]; \
+  clr[1] = 1.0 - innerWallColoring + innerWallColoring * nmvv[1]; \
+  clr[2] = 1.0 - innerWallColoring + innerWallColoring * nmvv[2]; \
   } else { \
   clr[0] = nmvv[0]; clr[1] = nmvv[1]; clr[2] = nmvv[2]; \
   } \
@@ -1271,7 +1274,7 @@ void lxGLCanvas::RenderScrapWalls() {
       continue;
     glCullFace(backFace ? GL_FRONT : GL_BACK);
     if (!altitudeColors) {
-      clr[0] = backFace ? 1.0 : 0.8;
+      clr[0] = backFace ? 1.0 : 0.61;
       clr[1] = 1.0;
       clr[2] = 1.0;
       glColor4fv(clr);

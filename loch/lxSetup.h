@@ -49,7 +49,7 @@ struct lxSetup {
   bool m_walls_transparency, m_render_outer_walls, m_render_inner_walls;
   bool m_colormd_app_centerline,
     m_colormd_app_walls;
-  double m_srf_opacity, m_walls_opacity;
+  double m_srf_opacity, m_walls_opacity, m_inner_walls_coloring;
 
   std::set<std::string> m_survey_selection;
   
