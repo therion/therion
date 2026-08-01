@@ -121,6 +121,7 @@ jobs:
             mingw-w64-${{ matrix.config.arch }}-fmt
             mingw-w64-${{ matrix.config.arch }}-catch
             mingw-w64-${{ matrix.config.arch }}-imagemagick
+            mingw-w64-${{ matrix.config.arch }}-nlohmann-json
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Set up the batteries
