@@ -78,6 +78,7 @@ lxSetup::lxSetup(lxData * dat)
 
   this->m_walls_transparency = false;
   this->m_walls_opacity = 0.5;
+  this->m_inner_walls_coloring = 0.39;
   this->m_render_outer_walls = true;
   this->m_render_inner_walls = true;
 
@@ -475,6 +476,7 @@ void lxSetup::SaveSceneToXMLNode(wxXmlNode * n)
   setXmlAttr(n, _T("scene-color-mode"), wxString::Format(_T("%d"), this->m_colormd));
   setXmlAttr(n, _T("scene-surface-opacity"), wxString::Format(_T("%.4f"), this->m_srf_opacity));
   setXmlAttr(n, _T("scene-walls-opacity"), wxString::Format(_T("%.4f"), this->m_walls_opacity));
+  setXmlAttr(n, _T("scene-walls-inner-coloring"), wxString::Format(_T("%.4f"), this->m_inner_walls_coloring));
 
   setlocale(LC_NUMERIC,prevlocale);
 }
@@ -516,6 +518,7 @@ void lxSetup::LoadSceneFromXMLNode(wxXmlNode * n)
   loadXmlLongAttr(n, _T("scene-color-mode"), &this->m_colormd);
   loadXmlDoubleAttr(n, _T("scene-surface-opacity"), &this->m_srf_opacity);
   loadXmlDoubleAttr(n, _T("scene-walls-opacity"), &this->m_walls_opacity);
+  loadXmlDoubleAttr(n, _T("scene-walls-inner-coloring"), &this->m_inner_walls_coloring);
 
   setlocale(LC_NUMERIC,prevlocale);
 }
