@@ -47,6 +47,7 @@
 #include "icons/rotation.xpm"
 #include "icons/lockrot.xpm"
 #include "icons/play.xpm"
+#include "icons/walk.xpm"
 #include "icons/fit.xpm"
 #include "icons/home.xpm"
 #include "icons/rendersetup.xpm"
@@ -118,6 +119,7 @@ BEGIN_EVENT_TABLE(lxFrame, wxFrame)
     EVT_MENU(LXMENU_CAMERA_PRESENTATION_EXPORT, lxFrame::OnAll)
     EVT_MENU(LXMENU_CAMERA_PRESENTATION_OPTIONS, lxFrame::OnAll)
     EVT_MENU(LXMENU_CAMERA_LOCKROT, lxFrame::OnAll)
+    EVT_MENU(LXMENU_CAMERA_WALKMODE, lxFrame::OnAll)
     EVT_MENU(LXMENU_PRESMARK, lxFrame::OnAll)
     EVT_MENU(LXMENU_CAMERA_ORIENT_HOME, lxFrame::OnMenuCameraOrient)
     EVT_MENU(LXMENU_CAMERA_ORIENT_PLAN, lxFrame::OnMenuCameraOrient)
@@ -253,6 +255,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_toolBar->AddTool(LXTB_PRESENTATION, _("Play animation"), wxBitmap(play_xpm), _("Play animation"), wxITEM_CHECK);
 		this->m_toolBar->AddTool(LXTB_PERSP, _("Ortho"), wxBitmap(orto_xpm), _("Orthogonal view"), wxITEM_CHECK);
 		this->m_toolBar->AddTool(LXTB_STEREO, _("Stereo"), wxBitmap(stereo_xpm), _("Stereo mode"), wxITEM_CHECK);
+    this->m_toolBar->AddTool(LXTB_WALKMODE, _("Walker mode"), wxBitmap(walk_xpm), _("Walker mode"), wxITEM_CHECK);
 		this->m_toolBar->AddSeparator();		
 		this->m_toolBar->AddTool(LXMENU_CAMERA_ORIENT_PLAN, _("Plan"), wxBitmap(plan_xpm),  _("Plan view"));
 		this->m_toolBar->AddTool(LXMENU_CAMERA_ORIENT_PROFILE, _("Profile"), wxBitmap(profile_xpm),  _("Profile view"));
@@ -327,6 +330,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_toolMenu->AppendSeparator();
     this->m_toolMenu->AppendCheckItem(LXMENU_CAMERA_PRESENTATION, _("Play animation"));
     this->m_toolMenu->Append(LXMENU_PRESMARK, _("Mark view"));
+    this->m_toolMenu->AppendCheckItem(LXMENU_CAMERA_WALKMODE, _("Walker mode"));
     this->m_toolMenu->AppendSeparator();
     this->m_toolMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("Camera"));
     this->m_toolMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("Scene"));
@@ -613,6 +617,11 @@ void lxFrame::OnAll(wxCommandEvent& event)
 		case LXMENU_CAMERA_LOCKROT:
 			this->ToggleRotLock();
 			break;
+
+    case LXTB_WALKMODE:
+    case LXMENU_CAMERA_WALKMODE:
+      this->ToggleWalkMode();
+      break;
 
     case LXTB_PRESENTATION:
     case LXMENU_CAMERA_PRESENTATION:
@@ -945,6 +954,10 @@ void lxFrame::UpdateM2TB() {
   // stereo
   this->m_toolBar->ToggleTool(LXTB_STEREO, this->setup->cam_anaglyph); 
 
+  // walking
+  this->m_toolBar->ToggleTool(LXTB_WALKMODE, this->canvas->m_sCameraWalkMode);
+  this->m_toolMenu->Check(LXMENU_CAMERA_WALKMODE, this->canvas->m_sCameraWalkMode);
+
   // dialogs
   this->m_toolBar->ToggleTool(LXTB_VIEWSTP, this->m_viewpointSetupDlgOn); 
   this->m_toolMenu->Check(LXMENU_VIEW_VIEWPOINTSTP, this->m_viewpointSetupDlgOn); 
@@ -1121,6 +1134,11 @@ void lxFrame::TogglePresentationAnimation() {
 void lxFrame::ToggleRotLock() {
 	this->canvas->m_sCameraLockRotation = !this->canvas->m_sCameraLockRotation;
 	this->UpdateM2TB();
+}
+
+void lxFrame::ToggleWalkMode() {
+  this->canvas->m_sCameraWalkMode = !this->canvas->m_sCameraWalkMode;
+  this->UpdateM2TB();
 }
 
 

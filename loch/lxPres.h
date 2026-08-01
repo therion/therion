@@ -59,10 +59,14 @@ private:
   wxString GetSceneDuration(wxXmlNode * n);
   wxString GetSceneRotations(wxXmlNode * n);
   wxString GetSceneRotationDuration(wxXmlNode * n);
+  bool GetSceneWalkerMode(wxXmlNode * n);
+  bool GetSceneTransitionView(wxXmlNode * n);
   bool GetLoopAnimation();
   bool GetSceneChanges();
+  bool GetTransparencySorting();
   void SetLoopAnimation(bool value);
   void SetSceneChanges(bool value);
+  void SetTransparencySorting(bool value);
   void ApplySceneChanges(wxXmlNode * n);
   void EditSelected();
 

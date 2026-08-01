@@ -516,11 +516,11 @@ void lxRenderFile::Render() {
     if (this->m_pData->m_scaleMode == LXRENDER_FIT_SCREEN) {
 
       this->m_glc->TRCBeginTile();
-      this->m_glc->m_sInit = true;
+      this->m_glc->m_sInit = this->m_glc->m_sTransparencySorting;
       this->m_glc->m_isO = false;
       this->m_glc->RenderScreen();
       this->m_glc->m_isO = true;
-      this->m_glc->m_sInit = true;
+      this->m_glc->m_sInit = this->m_glc->m_sTransparencySorting;
 
     } else {
 
@@ -997,5 +997,4 @@ void lxRenderFile::RenderPDFFooter()
 
   fclose(this->m_fileTMP);
 }
-
 

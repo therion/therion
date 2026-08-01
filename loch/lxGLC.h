@@ -44,6 +44,8 @@ enum {
   LXGLCML_ZOOM,
   LXGLCML_ROTATE,
   LXGLCML_TILT,
+  LXGLCML_WALK,
+  LXGLCML_LOOK,
   LXGLCML_PANX,
   LXGLCML_PANY,
   LXGLCML_PANX2Y,
@@ -84,6 +86,7 @@ class lxGLCanvas: public wxGLCanvas {
     double m_indRes = 0.0, m_indLWidth = 0.0;
     bool m_sInit, m_sInitReset;
     bool m_sMoveSingle = false, m_isO;
+    bool m_sTransparencySorting = true;
 
     // fonty
     FT_Face m_ftFace1 = {}, m_ftFace2 = {}, m_ftFace3 = {};
@@ -96,7 +99,7 @@ class lxGLCanvas: public wxGLCanvas {
     GLdouble m_camera_projection[16] = {};
     GLint m_camera_viewport[4] = {};
 
-		bool m_sCameraAutoRotate, m_sCameraLockRotation;
+		bool m_sCameraAutoRotate, m_sCameraLockRotation, m_sCameraWalkMode;
     wxStopWatch m_sCameraAutoRotateSWatch;
     long m_sCameraAutoRotateCounter = 0;
     double m_sCameraAutoRotateAngle, m_sCameraStartAutoRotateAngle = 0.0;
@@ -135,6 +138,8 @@ class lxGLCanvas: public wxGLCanvas {
     double GetPresentationSceneDuration(wxXmlNode * n);
     long GetPresentationSceneRotations(wxXmlNode * n);
     double GetPresentationSceneRotationDuration(wxXmlNode * n);
+    bool GetPresentationSceneWalkerMode(wxXmlNode * n);
+    bool GetPresentationSceneTransitionView(wxXmlNode * n);
      
     void InitializeS();
     void ForceRefresh(bool updateTB = true);

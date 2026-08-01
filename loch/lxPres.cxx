@@ -162,6 +162,7 @@ bool lxPresentDlg::SavePresentation(bool saveas)
   if (!saveas) {
     this->SetLoopAnimation(this->GetLoopAnimation());
     this->SetSceneChanges(this->GetSceneChanges());
+    this->SetTransparencySorting(this->GetTransparencySorting());
     this->m_mainFrame->m_pres->Save(this->m_fileName);
     this->m_changed = false;
   }
@@ -220,6 +221,7 @@ void lxPresentDlg::ResetPresentation(bool save) {
   r = new wxXmlNode(wxXML_ELEMENT_NODE, _T("LochPresentation"));
   r->AddAttribute(_T("loop-animation"), _T("true"));
   r->AddAttribute(_T("scene-changes"), _T("false"));
+  r->AddAttribute(_T("transparency-sorting"), _T("false"));
   this->m_mainFrame->m_pres->SetRoot(r);
   this->m_changed = false;
   this->m_posLBox->DeleteAllItems();
@@ -338,6 +340,24 @@ wxString lxPresentDlg::GetSceneRotationDuration(wxXmlNode * n) {
   return duration;
 }
 
+bool lxPresentDlg::GetSceneWalkerMode(wxXmlNode * n) {
+  wxString value;
+
+  if (n != NULL)
+    value = n->GetAttribute(_T("walker-mode"), _T("false"));
+
+  return (value == _T("true")) || (value == _T("1"));
+}
+
+bool lxPresentDlg::GetSceneTransitionView(wxXmlNode * n) {
+  wxString value;
+
+  if (n != NULL)
+    value = n->GetAttribute(_T("transition-view"), _T("false"));
+
+  return (value == _T("true")) || (value == _T("1"));
+}
+
 bool lxPresentDlg::GetLoopAnimation() {
   wxXmlNode * r = this->m_mainFrame->m_pres->GetRoot();
   wxString value;
@@ -357,6 +377,17 @@ bool lxPresentDlg::GetSceneChanges() {
     return false;
 
   value = r->GetAttribute(_T("scene-changes"), _T("false"));
+  return (value == _T("true")) || (value == _T("1"));
+}
+
+bool lxPresentDlg::GetTransparencySorting() {
+  wxXmlNode * r = this->m_mainFrame->m_pres->GetRoot();
+  wxString value;
+
+  if (r == NULL)
+    return false;
+
+  value = r->GetAttribute(_T("transparency-sorting"), _T("false"));
   return (value == _T("true")) || (value == _T("1"));
 }
 
@@ -380,6 +411,16 @@ void lxPresentDlg::SetSceneChanges(bool value) {
   r->AddAttribute(_T("scene-changes"), value ? _T("true") : _T("false"));
 }
 
+void lxPresentDlg::SetTransparencySorting(bool value) {
+  wxXmlNode * r = this->m_mainFrame->m_pres->GetRoot();
+
+  if (r == NULL)
+    return;
+
+  r->DeleteAttribute(_T("transparency-sorting"));
+  r->AddAttribute(_T("transparency-sorting"), value ? _T("true") : _T("false"));
+}
+
 void lxPresentDlg::ApplySceneChanges(wxXmlNode * n) {
   if (!this->GetSceneChanges())
     return;
@@ -393,12 +434,15 @@ void lxPresentDlg::EditOptions() {
   wxBoxSizer * dialogSizer = new wxBoxSizer(wxVERTICAL);
   wxCheckBox * loopCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Loop animation"));
   wxCheckBox * sceneCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Scene changes"));
+  wxCheckBox * transparencySortingCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Transparency sorting"));
 
   loopCheckBox->SetValue(this->GetLoopAnimation());
   sceneCheckBox->SetValue(this->GetSceneChanges());
+  transparencySortingCheckBox->SetValue(this->GetTransparencySorting());
 
   dialogSizer->Add(loopCheckBox, 0, wxALL, lxBORDER);
   dialogSizer->Add(sceneCheckBox, 0, wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
+  dialogSizer->Add(transparencySortingCheckBox, 0, wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
   dialogSizer->Add(dlg.CreateSeparatedButtonSizer(wxOK | wxCANCEL), 0, wxALL | wxEXPAND, lxBORDER);
   dlg.SetSizer(dialogSizer);
   dialogSizer->SetSizeHints(&dlg);
@@ -408,6 +452,7 @@ void lxPresentDlg::EditOptions() {
 
   this->SetLoopAnimation(loopCheckBox->GetValue());
   this->SetSceneChanges(sceneCheckBox->GetValue());
+  this->SetTransparencySorting(transparencySortingCheckBox->GetValue());
   this->m_changed = true;
 }
 
@@ -427,6 +472,8 @@ void lxPresentDlg::MarkCurrentView() {
   p->AddAttribute(_T("duration"), _T("3"));
   p->AddAttribute(_T("rotations"), _T("0"));
   p->AddAttribute(_T("rotation-duration"), _T("15"));
+  p->AddAttribute(_T("walker-mode"), this->m_mainFrame->canvas->m_sCameraWalkMode ? _T("true") : _T("false"));
+  p->AddAttribute(_T("transition-view"), _T("false"));
   sel = this->GetSelection();
   if (sel < 0) {
     r->AddChild(p);
@@ -474,6 +521,10 @@ void lxPresentDlg::EditSelected() {
   wxTextCtrl * durationTextCtrl = new wxTextCtrl(&dlg, wxID_ANY, this->GetSceneDuration(n));
   wxTextCtrl * rotationsTextCtrl = new wxTextCtrl(&dlg, wxID_ANY, this->GetSceneRotations(n));
   wxTextCtrl * rotationDurationTextCtrl = new wxTextCtrl(&dlg, wxID_ANY, this->GetSceneRotationDuration(n));
+  wxCheckBox * walkerModeCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Walker mode"));
+  walkerModeCheckBox->SetValue(this->GetSceneWalkerMode(n));
+  wxCheckBox * transitionViewCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Transition view"));
+  transitionViewCheckBox->SetValue(this->GetSceneTransitionView(n));
 
   fieldSizer->Add(new wxStaticText(&dlg, wxID_ANY, _("Name")), 0, wxALIGN_CENTER_VERTICAL);
   fieldSizer->Add(nameTextCtrl, 1, wxEXPAND);
@@ -486,6 +537,8 @@ void lxPresentDlg::EditSelected() {
   fieldSizer->AddGrowableCol(1);
 
   dialogSizer->Add(fieldSizer, 1, wxALL | wxEXPAND, lxBORDER);
+  dialogSizer->Add(walkerModeCheckBox, 0, wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
+  dialogSizer->Add(transitionViewCheckBox, 0, wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
   dialogSizer->Add(dlg.CreateSeparatedButtonSizer(wxOK | wxCANCEL), 0, wxALL | wxEXPAND, lxBORDER);
   dlg.SetSizer(dialogSizer);
   dialogSizer->SetSizeHints(&dlg);
@@ -519,6 +572,10 @@ void lxPresentDlg::EditSelected() {
   n->AddAttribute(_T("rotations"), rotations);
   n->DeleteAttribute(_T("rotation-duration"));
   n->AddAttribute(_T("rotation-duration"), rotationDuration);
+  n->DeleteAttribute(_T("walker-mode"));
+  n->AddAttribute(_T("walker-mode"), walkerModeCheckBox->GetValue() ? _T("true") : _T("false"));
+  n->DeleteAttribute(_T("transition-view"));
+  n->AddAttribute(_T("transition-view"), transitionViewCheckBox->GetValue() ? _T("true") : _T("false"));
 
   this->UpdateList();
   this->SelectScene(sel);
@@ -548,8 +605,11 @@ void lxPresentDlg::ExportPresentation() {
   bool exportMp4;
   bool loopAnimation = this->GetLoopAnimation();
   bool sceneChanges = this->GetSceneChanges();
+  bool transparencySorting = this->GetTransparencySorting();
+  bool savedTransparencySorting;
   long sceneCountForExport;
   long lastAppliedScene = -1;
+  bool displayListReady = false;
   wxString folderPath, targetPath, scriptPath;
   wxXmlNode savedSetup(wxXML_ELEMENT_NODE, _T("Scene"));
 
@@ -628,6 +688,8 @@ void lxPresentDlg::ExportPresentation() {
 
   this->m_mainFrame->canvas->m_sCameraAutoRotate = false;
   this->m_mainFrame->canvas->StopCameraPresentationAnimation();
+  savedTransparencySorting = this->m_mainFrame->canvas->m_sTransparencySorting;
+  this->m_mainFrame->canvas->m_sTransparencySorting = transparencySorting;
   this->m_mainFrame->setup->SaveToXMLNode(&savedSetup);
   this->m_mainFrame->setup->SaveSceneToXMLNode(&savedSetup);
 
@@ -643,9 +705,15 @@ void lxPresentDlg::ExportPresentation() {
     lastAppliedScene = index;
     this->m_mainFrame->canvas->UpdateRenderContents();
     this->m_mainFrame->canvas->UpdateRenderList();
+    displayListReady = true;
   };
 
   auto renderFrame = [&]() -> bool {
+    if (!transparencySorting && !displayListReady) {
+      this->m_mainFrame->canvas->UpdateRenderContents();
+      this->m_mainFrame->canvas->UpdateRenderList();
+      displayListReady = true;
+    }
     wxFileName framePath(folderPath, wxString::Format(_T("%06ld.png"), frame));
     tmpRD->m_imgFileName = framePath.GetFullPath();
     tmpRD->Render(this, this->m_mainFrame->canvas);
@@ -712,8 +780,11 @@ void lxPresentDlg::ExportPresentation() {
     int lastTransitionFrame = (loopAnimation && (i == count - 1)) ? transitionFrames - 1 : transitionFrames;
     for (int j = 1; keepGoing && (j <= lastTransitionFrame); j++) {
       double t = double(j) / double(transitionFrames);
-      t = t * t * (3.0 - 2.0 * t);
-      this->m_mainFrame->setup->LoadFromXMLNode(from, to, t);
+      t = lxSetup::AnimationTransitionProgress(
+        t,
+        this->GetSceneTransitionView(from),
+        this->GetSceneTransitionView(to));
+      this->m_mainFrame->setup->LoadFromXMLNode(from, to, t, this->GetSceneWalkerMode(to));
       if (j == transitionFrames)
         applyScene((i + 1) % count);
       else
@@ -724,6 +795,7 @@ void lxPresentDlg::ExportPresentation() {
 
   this->m_mainFrame->setup->LoadFromXMLNode(&savedSetup);
   this->m_mainFrame->setup->LoadSceneFromXMLNode(&savedSetup);
+  this->m_mainFrame->canvas->m_sTransparencySorting = savedTransparencySorting;
   this->m_mainFrame->canvas->UpdateRenderContents();
   this->m_mainFrame->canvas->UpdateRenderList();
   this->m_mainFrame->canvas->ForceRefresh();

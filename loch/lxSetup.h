@@ -65,10 +65,15 @@ struct lxSetup {
   
   void StartCameraMovement();
   void ZoomCamera(double zoom);
+  void WalkCamera(double zoom, double rot, double tilt = 0.0);
+  void WalkZoomCamera(double zoom);
   void PanCamera(double panx, double pany);
   void TiltCamera(double tilt);
+  void WalkTiltCamera(double tilt);
   void RotateCamera(double rot);
+  void WalkRotateCamera(double rot);
 	void RotateCameraF(double rot);
+  static double AnimationTransitionProgress(double t, bool transitionFrom, bool transitionTo);
   void SetLens(double lens);
   void UpdatePos();
 
@@ -77,7 +82,7 @@ struct lxSetup {
   void ClearSurveySelection();
   
   void SaveToXMLNode(wxXmlNode * n);
-  void LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn = NULL, double t = 0.0);
+  void LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn = NULL, double t = 0.0, bool interpolateCameraPosition = false);
   void SaveSceneToXMLNode(wxXmlNode * n);
   void LoadSceneFromXMLNode(wxXmlNode * n);
 
