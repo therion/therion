@@ -1170,10 +1170,12 @@ void lxGLCanvas::RenderScrapWalls() {
   bool useTransparency;
   useTransparency = false;
   if (this->setup->m_walls_transparency && (clr[3] < 1.0)) {
-    lxVec viewDir;
-    viewDir = this->setup->cam_center - this->setup->cam_pos;
-    viewDir.Normalize();
-    this->data->allWallsSorted->SetVector(viewDir.x, viewDir.y, viewDir.z);
+    if (this->m_sTransparencySorting) {
+      lxVec viewDir;
+      viewDir = this->setup->cam_center - this->setup->cam_pos;
+      viewDir.Normalize();
+      this->data->allWallsSorted->SetVector(viewDir.x, viewDir.y, viewDir.z);
+    }
     glDepthMask(GL_FALSE);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -1203,7 +1205,12 @@ void lxGLCanvas::RenderScrapWalls() {
 
   vtkPolyData * pdt;
   if (useTransparency) {
-    pdt = this->data->allWallsSorted->GetOutput();
+    if (this->m_sTransparencySorting) {
+      this->data->allWallsSorted->Update();
+      pdt = this->data->allWallsSorted->GetOutput();
+    } else {
+      pdt = this->data->allWallsTriangle->GetOutput();
+    }
   } else {
     pdt = this->data->allWallsStripped->GetOutput();
   }
@@ -1259,12 +1266,14 @@ void lxGLCanvas::RenderSurface() {
   glShadeModel(GL_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glColor4f(1.0,1.0,1.0,this->setup->m_srf_opacity);
-  if (this->setup->m_srf_transparency && (clr[3] < 1.0)) {  
-
-    lxVec viewDir;
-    viewDir = this->setup->cam_center - this->setup->cam_pos;
-    viewDir.Normalize();
-    this->data->surfaceSorted->SetVector(viewDir.x, viewDir.y, viewDir.z);
+  bool useTransparency = this->setup->m_srf_transparency && (clr[3] < 1.0);
+  if (useTransparency) {
+    if (this->m_sTransparencySorting) {
+      lxVec viewDir;
+      viewDir = this->setup->cam_center - this->setup->cam_pos;
+      viewDir.Normalize();
+      this->data->surfaceSorted->SetVector(viewDir.x, viewDir.y, viewDir.z);
+    }
 
     glDepthMask(GL_FALSE);
     glEnable(GL_DEPTH_TEST);
@@ -1301,9 +1310,13 @@ void lxGLCanvas::RenderSurface() {
   vtkIdType nPts;
   double * nmv, * ptc;
 
-  this->data->surfaceSorted->Update();
-
-  vtkPolyData * pdt = this->data->surfaceSorted->GetOutput();
+  vtkPolyData * pdt;
+  if (useTransparency && this->m_sTransparencySorting) {
+    this->data->surfaceSorted->Update();
+    pdt = this->data->surfaceSorted->GetOutput();
+  } else {
+    pdt = this->data->surfaceTriangle->GetOutput();
+  }
   vtkCellArray * tgs = pdt->GetPolys();
   vtkDataArray * nms = pdt->GetPointData()->GetNormals();
   tgs->InitTraversal();

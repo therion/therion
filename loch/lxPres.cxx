@@ -162,6 +162,7 @@ bool lxPresentDlg::SavePresentation(bool saveas)
   if (!saveas) {
     this->SetLoopAnimation(this->GetLoopAnimation());
     this->SetSceneChanges(this->GetSceneChanges());
+    this->SetTransparencySorting(this->GetTransparencySorting());
     this->m_mainFrame->m_pres->Save(this->m_fileName);
     this->m_changed = false;
   }
@@ -220,6 +221,7 @@ void lxPresentDlg::ResetPresentation(bool save) {
   r = new wxXmlNode(wxXML_ELEMENT_NODE, _T("LochPresentation"));
   r->AddAttribute(_T("loop-animation"), _T("true"));
   r->AddAttribute(_T("scene-changes"), _T("false"));
+  r->AddAttribute(_T("transparency-sorting"), _T("false"));
   this->m_mainFrame->m_pres->SetRoot(r);
   this->m_changed = false;
   this->m_posLBox->DeleteAllItems();
@@ -378,6 +380,17 @@ bool lxPresentDlg::GetSceneChanges() {
   return (value == _T("true")) || (value == _T("1"));
 }
 
+bool lxPresentDlg::GetTransparencySorting() {
+  wxXmlNode * r = this->m_mainFrame->m_pres->GetRoot();
+  wxString value;
+
+  if (r == NULL)
+    return false;
+
+  value = r->GetAttribute(_T("transparency-sorting"), _T("false"));
+  return (value == _T("true")) || (value == _T("1"));
+}
+
 void lxPresentDlg::SetLoopAnimation(bool value) {
   wxXmlNode * r = this->m_mainFrame->m_pres->GetRoot();
 
@@ -398,6 +411,16 @@ void lxPresentDlg::SetSceneChanges(bool value) {
   r->AddAttribute(_T("scene-changes"), value ? _T("true") : _T("false"));
 }
 
+void lxPresentDlg::SetTransparencySorting(bool value) {
+  wxXmlNode * r = this->m_mainFrame->m_pres->GetRoot();
+
+  if (r == NULL)
+    return;
+
+  r->DeleteAttribute(_T("transparency-sorting"));
+  r->AddAttribute(_T("transparency-sorting"), value ? _T("true") : _T("false"));
+}
+
 void lxPresentDlg::ApplySceneChanges(wxXmlNode * n) {
   if (!this->GetSceneChanges())
     return;
@@ -411,12 +434,15 @@ void lxPresentDlg::EditOptions() {
   wxBoxSizer * dialogSizer = new wxBoxSizer(wxVERTICAL);
   wxCheckBox * loopCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Loop animation"));
   wxCheckBox * sceneCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Scene changes"));
+  wxCheckBox * transparencySortingCheckBox = new wxCheckBox(&dlg, wxID_ANY, _("Transparency sorting"));
 
   loopCheckBox->SetValue(this->GetLoopAnimation());
   sceneCheckBox->SetValue(this->GetSceneChanges());
+  transparencySortingCheckBox->SetValue(this->GetTransparencySorting());
 
   dialogSizer->Add(loopCheckBox, 0, wxALL, lxBORDER);
   dialogSizer->Add(sceneCheckBox, 0, wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
+  dialogSizer->Add(transparencySortingCheckBox, 0, wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
   dialogSizer->Add(dlg.CreateSeparatedButtonSizer(wxOK | wxCANCEL), 0, wxALL | wxEXPAND, lxBORDER);
   dlg.SetSizer(dialogSizer);
   dialogSizer->SetSizeHints(&dlg);
@@ -426,6 +452,7 @@ void lxPresentDlg::EditOptions() {
 
   this->SetLoopAnimation(loopCheckBox->GetValue());
   this->SetSceneChanges(sceneCheckBox->GetValue());
+  this->SetTransparencySorting(transparencySortingCheckBox->GetValue());
   this->m_changed = true;
 }
 
@@ -578,8 +605,11 @@ void lxPresentDlg::ExportPresentation() {
   bool exportMp4;
   bool loopAnimation = this->GetLoopAnimation();
   bool sceneChanges = this->GetSceneChanges();
+  bool transparencySorting = this->GetTransparencySorting();
+  bool savedTransparencySorting;
   long sceneCountForExport;
   long lastAppliedScene = -1;
+  bool displayListReady = false;
   wxString folderPath, targetPath, scriptPath;
   wxXmlNode savedSetup(wxXML_ELEMENT_NODE, _T("Scene"));
 
@@ -658,6 +688,8 @@ void lxPresentDlg::ExportPresentation() {
 
   this->m_mainFrame->canvas->m_sCameraAutoRotate = false;
   this->m_mainFrame->canvas->StopCameraPresentationAnimation();
+  savedTransparencySorting = this->m_mainFrame->canvas->m_sTransparencySorting;
+  this->m_mainFrame->canvas->m_sTransparencySorting = transparencySorting;
   this->m_mainFrame->setup->SaveToXMLNode(&savedSetup);
   this->m_mainFrame->setup->SaveSceneToXMLNode(&savedSetup);
 
@@ -673,9 +705,15 @@ void lxPresentDlg::ExportPresentation() {
     lastAppliedScene = index;
     this->m_mainFrame->canvas->UpdateRenderContents();
     this->m_mainFrame->canvas->UpdateRenderList();
+    displayListReady = true;
   };
 
   auto renderFrame = [&]() -> bool {
+    if (!transparencySorting && !displayListReady) {
+      this->m_mainFrame->canvas->UpdateRenderContents();
+      this->m_mainFrame->canvas->UpdateRenderList();
+      displayListReady = true;
+    }
     wxFileName framePath(folderPath, wxString::Format(_T("%06ld.png"), frame));
     tmpRD->m_imgFileName = framePath.GetFullPath();
     tmpRD->Render(this, this->m_mainFrame->canvas);
@@ -757,6 +795,7 @@ void lxPresentDlg::ExportPresentation() {
 
   this->m_mainFrame->setup->LoadFromXMLNode(&savedSetup);
   this->m_mainFrame->setup->LoadSceneFromXMLNode(&savedSetup);
+  this->m_mainFrame->canvas->m_sTransparencySorting = savedTransparencySorting;
   this->m_mainFrame->canvas->UpdateRenderContents();
   this->m_mainFrame->canvas->UpdateRenderList();
   this->m_mainFrame->canvas->ForceRefresh();

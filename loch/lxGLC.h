@@ -86,6 +86,7 @@ class lxGLCanvas: public wxGLCanvas {
     double m_indRes = 0.0, m_indLWidth = 0.0;
     bool m_sInit, m_sInitReset;
     bool m_sMoveSingle = false, m_isO;
+    bool m_sTransparencySorting = true;
 
     // fonty
     FT_Face m_ftFace1 = {}, m_ftFace2 = {}, m_ftFace3 = {};
