@@ -1217,37 +1217,60 @@ void lxGLCanvas::RenderScrapWalls() {
   vtkCellArray * tgs = pdt->GetPolys();
   vtkCellArray * tss = pdt->GetStrips();
   vtkDataArray * nms = pdt->GetPointData()->GetNormals();
+  bool altitudeColors = (!this->setup->cam_anaglyph) &&
+    (this->setup->m_colormd != lxSETUP_COLORMD_DEFAULT) &&
+    this->setup->m_colormd_app_walls;
+  bool backFace;
 
 #define draw3vert(N) \
   ptc = pdt->GetPoint(cPts[N]); \
   nmv = nms->GetTuple(cPts[N]); \
   glNormal3f(nmv[0],nmv[1],nmv[2]); \
-  if ((!this->setup->cam_anaglyph) && (this->setup->m_colormd != lxSETUP_COLORMD_DEFAULT) && (this->setup->m_colormd_app_walls)) { \
+  if (altitudeColors) { \
   this->data->luTable->GetColor(ptc[2], nmvv); \
+  if (backFace) { \
+  clr[0] = 0.61 + 0.39 * nmvv[0]; \
+  clr[1] = 0.61 + 0.39 * nmvv[1]; \
+  clr[2] = 0.61 + 0.39 * nmvv[2]; \
+  } else { \
   clr[0] = nmvv[0]; clr[1] = nmvv[1]; clr[2] = nmvv[2]; \
+  } \
   glColor4fv(clr); \
   } \
   glVertex3f(lxShiftVecX3(ptc, this->shift));
 
-  tgs->InitTraversal();
-  glBegin(GL_TRIANGLES);
-  while (tgs->GetNextCell(nPts, cPts) != 0) {
-    if (nPts == 3) {      
-      draw3vert(0);
-      draw3vert(1);
-      draw3vert(2);
+  glEnable(GL_CULL_FACE);
+  for (int face = 0; face < 2; face++) {
+    backFace = face == 1;
+    glCullFace(backFace ? GL_FRONT : GL_BACK);
+    if (!altitudeColors) {
+      clr[0] = backFace ? 1.0 : 0.61;
+      clr[1] = 1.0;
+      clr[2] = 1.0;
+      glColor4fv(clr);
     }
-  }
-  glEnd();
 
-  tss->InitTraversal();
-  while (tss->GetNextCell(nPts, cPts) != 0) {
-    glBegin(GL_TRIANGLE_STRIP);
-    for(xP = 0; xP < nPts; xP++) {
-      draw3vert(xP);
+    tgs->InitTraversal();
+    glBegin(GL_TRIANGLES);
+    while (tgs->GetNextCell(nPts, cPts) != 0) {
+      if (nPts == 3) {
+        draw3vert(0);
+        draw3vert(1);
+        draw3vert(2);
+      }
     }
     glEnd();
+
+    tss->InitTraversal();
+    while (tss->GetNextCell(nPts, cPts) != 0) {
+      glBegin(GL_TRIANGLE_STRIP);
+      for(xP = 0; xP < nPts; xP++) {
+        draw3vert(xP);
+      }
+      glEnd();
+    }
   }
+  glDisable(GL_CULL_FACE);
 
   glDisable(GL_COLOR_MATERIAL);
 
