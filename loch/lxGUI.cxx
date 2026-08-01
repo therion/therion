@@ -1075,6 +1075,8 @@ lxFrameFastToggle(ColorsApplyCenterline, m_colormd_app_centerline)
 lxFrameFastToggle(ColorsApplyWalls, m_colormd_app_walls)
 
 lxFrameToggle(WallsTransparency, m_walls_transparency)
+lxFrameFastToggle(RenderOuterWalls, m_render_outer_walls)
+lxFrameFastToggle(RenderInnerWalls, m_render_inner_walls)
 
 lxFrameToggle(SurfaceLighting, m_srf_lighting)
 lxFrameToggle(SurfaceTransparency, m_srf_transparency)

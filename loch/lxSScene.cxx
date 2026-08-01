@@ -28,6 +28,8 @@ enum {
   lxSS_SRF_LIGHTING,
   lxSS_WALLS_TRANSPARENCY,
   lxSS_WALLS_OPACITY,
+  lxSS_WALLS_RENDER_OUTER,
+  lxSS_WALLS_RENDER_INNER,
   lxSS_COLORMD_ALTITUDE,
   lxSS_COLORMD_DEFAULT,
   lxSS_COLORAPP_CENTERLINE,
@@ -60,6 +62,8 @@ BEGIN_EVENT_TABLE(lxModelSetupDlg, wxMiniFrame)
   EVT_CHECKBOX(lxSS_VIS_GRID, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_VIS_INDICATORS, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_WALLS_TRANSPARENCY, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_WALLS_RENDER_OUTER, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_WALLS_RENDER_INNER, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_SRF_TRANSPARENCY, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_SRF_TEXTURE, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_SRF_LIGHTING, lxModelSetupDlg::OnCommand)
@@ -106,6 +110,14 @@ void lxModelSetupDlg::OnCommand(wxCommandEvent& event)
 
     case lxSS_WALLS_TRANSPARENCY:
       this->m_mainFrame->ToggleWallsTransparency();
+      break;
+
+    case lxSS_WALLS_RENDER_OUTER:
+      this->m_mainFrame->ToggleRenderOuterWalls();
+      break;
+
+    case lxSS_WALLS_RENDER_INNER:
+      this->m_mainFrame->ToggleRenderInnerWalls();
       break;
 
     case lxSS_VIS_CENTERLINE:
@@ -369,6 +381,8 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 
 	lxBoxSizer = this->m_controlSizer_Walls = new wxBoxSizer(wxVERTICAL);
 
+  ADDCB(lxSS_WALLS_RENDER_OUTER, _("Render outer walls"))
+  ADDCB(lxSS_WALLS_RENDER_INNER, _("Render inner walls"))
   ADDCB(lxSS_WALLS_TRANSPARENCY, _("Transparency"))
   lxBoxSizer->Add(
 		new wxSlider(lxPanel, lxSS_WALLS_OPACITY, 50, 0, 100, wxDefaultPosition, wxDefaultSize),
@@ -548,9 +562,10 @@ void lxModelSetupDlg::LoadSetup()
   lxFSlider(lxSS_SRF_OPACITY)->SetValue(100 - int(stp->m_srf_opacity * 100.0));
 
   lxFCheckBox(lxSS_WALLS_TRANSPARENCY)->SetValue(stp->m_walls_transparency);
+  lxFCheckBox(lxSS_WALLS_RENDER_OUTER)->SetValue(stp->m_render_outer_walls);
+  lxFCheckBox(lxSS_WALLS_RENDER_INNER)->SetValue(stp->m_render_inner_walls);
   lxFSlider(lxSS_WALLS_OPACITY)->SetValue(100 - int(stp->m_walls_opacity * 100.0));
 
 }
-
 
 

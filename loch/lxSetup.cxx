@@ -78,6 +78,8 @@ lxSetup::lxSetup(lxData * dat)
 
   this->m_walls_transparency = false;
   this->m_walls_opacity = 0.5;
+  this->m_render_outer_walls = true;
+  this->m_render_inner_walls = true;
 
   this->UpdateData();
   this->SetLens(50.0);
@@ -466,6 +468,8 @@ void lxSetup::SaveSceneToXMLNode(wxXmlNode * n)
   setXmlBoolAttr(n, _T("scene-surface-texture"), this->m_srf_texture);
   setXmlBoolAttr(n, _T("scene-surface-lighting"), this->m_srf_lighting);
   setXmlBoolAttr(n, _T("scene-walls-transparency"), this->m_walls_transparency);
+  setXmlBoolAttr(n, _T("scene-walls-render-outer"), this->m_render_outer_walls);
+  setXmlBoolAttr(n, _T("scene-walls-render-inner"), this->m_render_inner_walls);
   setXmlBoolAttr(n, _T("scene-color-apply-centerline"), this->m_colormd_app_centerline);
   setXmlBoolAttr(n, _T("scene-color-apply-walls"), this->m_colormd_app_walls);
   setXmlAttr(n, _T("scene-color-mode"), wxString::Format(_T("%d"), this->m_colormd));
@@ -505,6 +509,8 @@ void lxSetup::LoadSceneFromXMLNode(wxXmlNode * n)
   loadXmlBoolAttr(n, _T("scene-surface-texture"), &this->m_srf_texture);
   loadXmlBoolAttr(n, _T("scene-surface-lighting"), &this->m_srf_lighting);
   loadXmlBoolAttr(n, _T("scene-walls-transparency"), &this->m_walls_transparency);
+  loadXmlBoolAttr(n, _T("scene-walls-render-outer"), &this->m_render_outer_walls);
+  loadXmlBoolAttr(n, _T("scene-walls-render-inner"), &this->m_render_inner_walls);
   loadXmlBoolAttr(n, _T("scene-color-apply-centerline"), &this->m_colormd_app_centerline);
   loadXmlBoolAttr(n, _T("scene-color-apply-walls"), &this->m_colormd_app_walls);
   loadXmlLongAttr(n, _T("scene-color-mode"), &this->m_colormd);
