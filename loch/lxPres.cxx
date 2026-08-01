@@ -607,6 +607,7 @@ void lxPresentDlg::ExportPresentation() {
   bool sceneChanges = this->GetSceneChanges();
   bool transparencySorting = this->GetTransparencySorting();
   bool savedTransparencySorting;
+  bool savedWalkerMode;
   long sceneCountForExport;
   long lastAppliedScene = -1;
   bool displayListReady = false;
@@ -689,6 +690,7 @@ void lxPresentDlg::ExportPresentation() {
   this->m_mainFrame->canvas->m_sCameraAutoRotate = false;
   this->m_mainFrame->canvas->StopCameraPresentationAnimation();
   savedTransparencySorting = this->m_mainFrame->canvas->m_sTransparencySorting;
+  savedWalkerMode = this->m_mainFrame->canvas->m_sCameraWalkMode;
   this->m_mainFrame->canvas->m_sTransparencySorting = transparencySorting;
   this->m_mainFrame->setup->SaveToXMLNode(&savedSetup);
   this->m_mainFrame->setup->SaveSceneToXMLNode(&savedSetup);
@@ -724,6 +726,7 @@ void lxPresentDlg::ExportPresentation() {
 
   if (count == 1) {
     this->m_mainFrame->setup->LoadFromXMLNode(this->GetScene(0));
+    this->m_mainFrame->canvas->m_sCameraWalkMode = this->GetSceneWalkerMode(this->GetScene(0));
     applyScene(0);
   }
   bool keepGoing = true;
@@ -743,6 +746,7 @@ void lxPresentDlg::ExportPresentation() {
 
   if (!rotationFallback) {
     this->m_mainFrame->setup->LoadFromXMLNode(this->GetScene(0));
+    this->m_mainFrame->canvas->m_sCameraWalkMode = this->GetSceneWalkerMode(this->GetScene(0));
     applyScene(0);
     keepGoing = renderFrame();
   }
@@ -764,6 +768,7 @@ void lxPresentDlg::ExportPresentation() {
       double t = double(j) / double(rotationFrames);
       t = t * t * (3.0 - 2.0 * t);
       this->m_mainFrame->setup->LoadFromXMLNode(from);
+      this->m_mainFrame->canvas->m_sCameraWalkMode = this->GetSceneWalkerMode(from);
       applyScene(i);
       this->m_mainFrame->setup->cam_dir += 360.0 * double(rotations) * t;
       while (this->m_mainFrame->setup->cam_dir >= 360.0)
@@ -784,6 +789,7 @@ void lxPresentDlg::ExportPresentation() {
         t,
         this->GetSceneTransitionView(from),
         this->GetSceneTransitionView(to));
+      this->m_mainFrame->canvas->m_sCameraWalkMode = this->GetSceneWalkerMode(to);
       this->m_mainFrame->setup->LoadFromXMLNode(from, to, t, this->GetSceneWalkerMode(to));
       if (j == transitionFrames)
         applyScene((i + 1) % count);
@@ -796,6 +802,7 @@ void lxPresentDlg::ExportPresentation() {
   this->m_mainFrame->setup->LoadFromXMLNode(&savedSetup);
   this->m_mainFrame->setup->LoadSceneFromXMLNode(&savedSetup);
   this->m_mainFrame->canvas->m_sTransparencySorting = savedTransparencySorting;
+  this->m_mainFrame->canvas->m_sCameraWalkMode = savedWalkerMode;
   this->m_mainFrame->canvas->UpdateRenderContents();
   this->m_mainFrame->canvas->UpdateRenderList();
   this->m_mainFrame->canvas->ForceRefresh();
@@ -849,6 +856,7 @@ void lxPresentDlg::OnListItemSelected(wxListEvent& event)
 
   if (n != NULL) {
     this->m_mainFrame->setup->LoadFromXMLNode(n);
+    this->m_mainFrame->canvas->m_sCameraWalkMode = this->GetSceneWalkerMode(n);
     if (this->GetSceneChanges())
       this->ApplySceneChanges(n);
     else

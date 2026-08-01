@@ -614,23 +614,44 @@ bool lxGLCanvas::GetPresentationSceneTransitionView(wxXmlNode * n) {
   return (value == _T("true")) || (value == _T("1"));
 }
 
+void lxGLCanvas::SetPresentationWalkerMode(wxXmlNode * n) {
+  bool walkerMode = this->GetPresentationSceneWalkerMode(n);
+
+  if (this->m_sCameraWalkMode == walkerMode)
+    return;
+
+  this->m_sCameraWalkMode = walkerMode;
+  if (this->frame != NULL)
+    this->frame->UpdateM2TB();
+}
+
 bool lxGLCanvas::StartCameraPresentationAnimation() {
-  long count;
+  long count, selected = 0;
 
   this->m_sCameraAutoRotate = false;
   this->m_sCameraPresentationAnimate = true;
   this->m_sCameraPresentationCounter = 0;
-  this->m_sCameraPresentationFrom = 0;
-  this->m_sCameraPresentationTo = 1;
   this->m_sCameraPresentationAppliedScene = -1;
   this->m_sCameraPresentationSWatch.Start();
   this->m_sCameraPresentationStartTime = 0;
   count = this->GetPresentationSceneCount();
-  if (count > 0)
-    this->SelectPresentationScene(0);
-  if (count == 1) {
-    this->setup->LoadFromXMLNode(this->GetPresentationScene(0));
-    this->ApplyPresentationScene(0);
+  if ((count > 0) && (this->frame != NULL) && (this->frame->m_presentationDlg != NULL))
+    selected = this->frame->m_presentationDlg->GetSelection();
+  if ((selected < 0) || (selected >= count))
+    selected = 0;
+  this->m_sCameraPresentationFrom = selected;
+  this->m_sCameraPresentationTo = (selected + 1) % (count > 0 ? count : 1);
+  if (count > 0) {
+    this->SelectPresentationScene(selected);
+    wxXmlNode * scene = this->GetPresentationScene(selected);
+    this->setup->LoadFromXMLNode(scene);
+    this->SetPresentationWalkerMode(scene);
+    this->ApplyPresentationScene(selected);
+  }
+  if ((count > 1) && !this->GetPresentationLoopAnimation() && (selected == count - 1)) {
+    this->StopCameraPresentationAnimation();
+    this->ForceRefresh();
+    return false;
   }
   this->setup->StartCameraMovement();
   this->m_sCameraPresentationStartDir = this->setup->cam_dir;
@@ -677,6 +698,7 @@ bool lxGLCanvas::CameraPresentationAnimate() {
     if (elapsed < stepDuration)
       break;
     this->setup->LoadFromXMLNode(to);
+    this->SetPresentationWalkerMode(to);
     this->ApplyPresentationScene(this->m_sCameraPresentationTo);
     this->SelectPresentationScene(this->m_sCameraPresentationTo);
     if (!loopAnimation && (this->m_sCameraPresentationTo == count - 1)) {
@@ -709,6 +731,7 @@ bool lxGLCanvas::CameraPresentationAnimate() {
     elapsed = 0;
   if (elapsed < rotationDuration) {
     this->setup->LoadFromXMLNode(from);
+    this->SetPresentationWalkerMode(from);
     this->ApplyPresentationScene(this->m_sCameraPresentationFrom);
     t = rotationDuration == 0 ? 1.0 : double(elapsed) / double(rotationDuration);
     if (t > 1.0)
@@ -719,6 +742,7 @@ bool lxGLCanvas::CameraPresentationAnimate() {
       this->setup->cam_dir -= 360.0;
     this->setup->UpdatePos();
   } else {
+    this->SetPresentationWalkerMode(to);
     this->ApplyPresentationScene(this->m_sCameraPresentationFrom);
     t = double(elapsed - rotationDuration) / double(transitionDuration);
     if (t > 1.0)
@@ -964,8 +988,8 @@ void lxGLCanvas::OnMouseMove(wxMouseEvent& event)
       if (this->m_sCameraLockRotation)
         ff = 0.0;
       else
-        ff = double(event.GetX() - this->mx) / 2.0;
-      this->setup->WalkCamera(1.0, ff, double(event.GetY() - this->my) / 2.0);
+        ff = double(this->mx - event.GetX()) / 4.0;
+      this->setup->WalkCamera(1.0, ff, double(this->my - event.GetY()) / 4.0);
       this->ForceRefresh();
       break;
   }
@@ -1229,9 +1253,9 @@ void lxGLCanvas::RenderScrapWalls() {
   if (altitudeColors) { \
   this->data->luTable->GetColor(ptc[2], nmvv); \
   if (backFace) { \
-  clr[0] = 0.61 + 0.39 * nmvv[0]; \
-  clr[1] = 0.61 + 0.39 * nmvv[1]; \
-  clr[2] = 0.61 + 0.39 * nmvv[2]; \
+  clr[0] = 0.8 + 0.2 * nmvv[0]; \
+  clr[1] = 0.8 + 0.2 * nmvv[1]; \
+  clr[2] = 0.8 + 0.2 * nmvv[2]; \
   } else { \
   clr[0] = nmvv[0]; clr[1] = nmvv[1]; clr[2] = nmvv[2]; \
   } \
@@ -1244,7 +1268,7 @@ void lxGLCanvas::RenderScrapWalls() {
     backFace = face == 1;
     glCullFace(backFace ? GL_FRONT : GL_BACK);
     if (!altitudeColors) {
-      clr[0] = backFace ? 1.0 : 0.61;
+      clr[0] = backFace ? 1.0 : 0.8;
       clr[1] = 1.0;
       clr[2] = 1.0;
       glColor4fv(clr);
