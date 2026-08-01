@@ -49,11 +49,11 @@ public:
   void UpdateControls();
   void MarkCurrentView();
   void SelectScene(long index);
+  long GetSelection();
   void ExportPresentation();
   void EditOptions();
 
 private:
-  long GetSelection();
   wxXmlNode * GetScene(long index);
   wxString GetSceneLabel(wxXmlNode * n, long index);
   wxString GetSceneDuration(wxXmlNode * n);

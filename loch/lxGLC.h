@@ -140,6 +140,7 @@ class lxGLCanvas: public wxGLCanvas {
     double GetPresentationSceneRotationDuration(wxXmlNode * n);
     bool GetPresentationSceneWalkerMode(wxXmlNode * n);
     bool GetPresentationSceneTransitionView(wxXmlNode * n);
+    void SetPresentationWalkerMode(wxXmlNode * n);
      
     void InitializeS();
     void ForceRefresh(bool updateTB = true);
