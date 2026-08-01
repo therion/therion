@@ -83,7 +83,7 @@ END_EVENT_TABLE()
 int wx_gl_window_attribs[] = {
 	WX_GL_RGBA,
 	WX_GL_DOUBLEBUFFER,
-	WX_GL_DEPTH_SIZE, 16,
+	WX_GL_DEPTH_SIZE, 24,
 	0 };
 
 
@@ -1113,7 +1113,7 @@ void lxGLCanvas::SetCamera() {
   if (maxclip < minclip) maxclip = minclip + 1.0;
   if (minclip < (maxclip / 100.0)) minclip = maxclip / 100.0;
   if (this->m_sCameraWalkMode)
-    minclip = 0.001;
+    minclip = 0.1;
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -1265,7 +1265,10 @@ void lxGLCanvas::RenderScrapWalls() {
 
   glEnable(GL_CULL_FACE);
   for (int face = 0; face < 2; face++) {
-    backFace = face == 1;
+    backFace = face == 0;
+    if ((backFace && !this->setup->m_render_inner_walls) ||
+      (!backFace && !this->setup->m_render_outer_walls))
+      continue;
     glCullFace(backFace ? GL_FRONT : GL_BACK);
     if (!altitudeColors) {
       clr[0] = backFace ? 1.0 : 0.8;

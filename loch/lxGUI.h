@@ -248,6 +248,8 @@ class lxFrame: public wxFrame
     void ToggleSurfaceLighting();
 
     void ToggleWallsTransparency();
+    void ToggleRenderOuterWalls();
+    void ToggleRenderInnerWalls();
 
     void SetupUpdate();
     void SetupApply();
