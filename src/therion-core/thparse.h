@@ -302,7 +302,14 @@ void thdecode_tcl(std::string * dest, const char * src);
  
 void thdecode_tex(std::string * dest, const char * src);
 void thdecode_utf2tex(std::string * dest, const char * src);
-void thdecode_sql(std::string * dest, const char * src);
+
+/**
+ * @brief Escape special characters for SQL.
+ * @param src Input string for escaping.
+ * @return New string with escaped special SQL characters.
+ */
+std::string thdecode_sql(std::string_view src);
+
 void thdecode_mp(std::string * dest, const char * src);
 
 
