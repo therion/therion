@@ -125,8 +125,8 @@ if (BUILD_THERION)
     install(TARGETS therion RUNTIME COMPONENT th-runtime)
     install(FILES therion.ini TYPE SYSCONF RENAME therion.ini.new COMPONENT th-runtime)
     install(CODE
-        "if (NOT EXISTS ${TH_PATH_INI}/therion.ini)
-            file(INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/therion.ini DESTINATION ${TH_PATH_INI})
+        "if (NOT EXISTS \"${TH_PATH_INI}/therion.ini\")
+            file(INSTALL \"${CMAKE_CURRENT_SOURCE_DIR}/therion.ini\" DESTINATION \"${TH_PATH_INI}\")
         endif()"
         COMPONENT th-runtime)
 
