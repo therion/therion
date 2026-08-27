@@ -110,3 +110,11 @@ TEST_CASE("thencode")
     CHECK(thencode("äbc", TT_UTF_8) == "\xC3\xA4" "bc");
     CHECK(thencode("\xE4" "bc", TT_ISO8859_1) == "\xC3\xA4" "bc");
 }
+
+TEST_CASE("thdecode_sql")
+{
+    CHECK(thdecode_sql("") == "NULL");
+    CHECK(thdecode_sql("SELECT Lorem FROM Ipsum;") == "'SELECT Lorem FROM Ipsum;'");
+    CHECK(thdecode_sql("Let's test quotes.") == "'Let''s test quotes.'");
+    CHECK(thdecode_sql("'''''") == "''''''''''''");
+}
