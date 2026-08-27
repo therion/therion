@@ -929,6 +929,10 @@ void thparse_image(const char * fname, double & width, double & height, double &
   height = 0.0;
   dpi = 300.0;
 
+  if (!fname || !*fname) {
+    throw thexception("image file name is empty");
+  }
+
   try {
     const Magick::Image image(fname);
     const auto format = image.magick();
