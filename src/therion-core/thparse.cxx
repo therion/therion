@@ -801,41 +801,24 @@ void thdecode_utf2tex(std::string * dest, const char * src)
 
 
 
-void thdecode_sql(std::string * dest, const char * src)
+std::string thdecode_sql(std::string_view src)
 {
+  if (src.empty())
+    return "NULL";
 
-  size_t srcln, srcx = 0;
-  unsigned char * srcp, * dstp;
-//  unsigned num;
-  if ((src == NULL) || ((srcln = strlen(src)) == 0)) {
-    *dest = "NULL";
-    return;
+  std::string result;
+  result.reserve(src.length() + 2);
+  result += "'";
+  for (const char c : src)
+  {
+    if (c == '\'')
+      result += "''";
+    else
+      result += c;
   }
-  dest->resize(srcln * 8 + 3);  // check buffer size
-  srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->c_str();
-  *dstp = '\'';
-  dstp++;
-  while (srcx < srcln) {
-    switch (*srcp) {
-      case '\'':
-        *dstp = '\'';
-        dstp++;
-        *dstp = *srcp;  
-        break;      
-      default:
-        *dstp = *srcp;  
-        break;
-    }
-    srcx++;
-    srcp++;
-    dstp++;
-  }
-  // end destination string with 0
-  *dstp = '\'';
-  dstp++;
-  *dstp = 0;
-  
+  result += "'";
+
+  return result;
 }
 
 

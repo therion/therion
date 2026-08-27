@@ -96,3 +96,11 @@ TEST_CASE("sanitize_xml_id", "[string]")
     CHECK(sanitize_xml_id("@a/b") == "_a_b");
     CHECK(sanitize_xml_id("!@#$%^&*()[X]") == "___________X_");
 }
+
+TEST_CASE("thdecode_sql")
+{
+    CHECK(thdecode_sql("") == "NULL");
+    CHECK(thdecode_sql("SELECT Lorem FROM Ipsum;") == "'SELECT Lorem FROM Ipsum;'");
+    CHECK(thdecode_sql("Let's test quotes.") == "'Let''s test quotes.'");
+    CHECK(thdecode_sql("'''''") == "''''''''''''");
+}
