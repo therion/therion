@@ -36,26 +36,27 @@
 
 void thencode(std::string * dest, const char * src, int srcenc)
 {
+  *dest = thencode(src, srcenc);
+}
+
+std::string thencode(std::string_view src, int srcenc)
+{
   // check if source is not UTF-8
   if (srcenc == TT_UTF_8) {
-    thdecode(dest,TT_ASCII,src);
-    dest->assign(src);
-    return;
+    return std::string(src);
   }
   
-  size_t srcln = strlen(src), srcx = 0;
-  unsigned char * srcp, * dstp;
-  // check buffer size
-  dest->resize(srcln + srcln + srcln + srcln + srcln + srcln);
-  dstp = (unsigned char *) dest->c_str();
-  srcp = (unsigned char *) src;
+  size_t srcln = src.size(), srcx = 0;
+  std::string dest;
+  dest.reserve(src.size() * 2);
+  // explicitly unsigned char iterator to guarantee correct less-than comparison
+  auto srcp = reinterpret_cast<const unsigned char *>(src.data());
   
   while (srcx < srcln) {
   
     // check if encoding isn't needed
     if (*srcp < thchenc_facc) {
-      *dstp = *srcp;
-      dstp++;
+      dest.push_back(*srcp);
     }
     // we have to encode
     else {
@@ -64,20 +65,15 @@ void thencode(std::string * dest, const char * src, int srcenc)
 
       // two byte UTF-8 character
       if (dch < 0X800) {
-        *dstp = 192 + (dch / 64);
-        dstp++;
-        *dstp = 128 + (dch % 64);
-        dstp++;
+        dest.push_back(192 + (dch / 64));
+        dest.push_back(128 + (dch % 64));
       }
 
       // three byte UTF-8 character
       else if (dch < 0X10000) {
-        *dstp = 224 + (dch / 4096);
-        dstp++;
-        *dstp = 128 + ((dch % 4096) / 64);
-        dstp++;
-        *dstp = 128 + (dch % 64);
-        dstp++;
+        dest.push_back(224 + (dch / 4096));
+        dest.push_back(128 + ((dch % 4096) / 64));
+        dest.push_back(128 + (dch % 64));
       } 
       
       // longer chars not supported
@@ -89,32 +85,35 @@ void thencode(std::string * dest, const char * src, int srcenc)
     srcp++;
   }
   
-  // end destination string with 0
-  *dstp = 0;
-  
+  return dest;
 }
 
  
 void thdecode(std::string * dest, int destenc, const char * src)
 {
-  // chack if source is not UTF-8
+  *dest = thdecode(destenc, src);
+}
+
+std::string thdecode(int destenc, std::string_view src)
+{
+  // check if source is not UTF-8
   if (destenc == TT_UTF_8) {
-    dest->assign(src);
-    return;
+    return std::string(src);
   }
   
-  size_t srcln = strlen(src), srcx = 0;
-  unsigned char * srcp, * dstp;
-  dest->resize(srcln);  // check buffer size
-  dstp = (unsigned char*) dest->c_str();
-  srcp = (unsigned char*) src;
+  size_t srcln = src.size(), srcx = 0;
+  std::string dest;
+  dest.reserve(src.size());
+  // explicitly unsigned char iterator to avoid sign extension when converting to char32_t and
+  // to guarantee correct less-than comparison
+  auto srcp = reinterpret_cast<const unsigned char *>(src.data());
   char32_t sch = 0;    
   
   while (srcx < srcln) {
   
     // check if decoding isn't needed
     if (*srcp < thchenc_facc)
-      *dstp = *srcp;
+      dest.push_back(*srcp);
     // we have to decode
     else {
       // one byte character
@@ -150,7 +149,7 @@ void thdecode(std::string * dest, int destenc, const char * src)
         
       // now we have whchar_t value of UTF-8 character in sch
       if (sch < thchenc_fucc)
-        *dstp = (char) sch;
+        dest.push_back(sch);
       else {
       
         // let's binsearch it's position in the table
@@ -169,20 +168,17 @@ void thdecode(std::string * dest, int destenc, const char * src)
         }
 
         if (ix == -1)
-          *dstp = thdecode_undef;
+          dest.push_back(thdecode_undef);
         else
-          *dstp = thdecode_tbl[ix][destenc];
+          dest.push_back(thdecode_tbl[ix][destenc]);
       }  
     }  // end of decoding
     
     srcx++;
     srcp++;
-    dstp++;
   }
 
-  // end destination string with 0
-  *dstp = 0;
-  
+  return dest;
 }
 
 

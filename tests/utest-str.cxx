@@ -5,6 +5,8 @@
 #include <catch2/catch.hpp>
 #endif
 #include "icase.h"
+#include "thchenc.h"
+#include "thchencdata.h"
 #include "thparse.h"
 #include "thcsdata.h"
 #include "thsvg.h"
@@ -95,6 +97,18 @@ TEST_CASE("sanitize_xml_id", "[string]")
     CHECK(sanitize_xml_id(":a1_:") == ":a1_:");
     CHECK(sanitize_xml_id("@a/b") == "_a_b");
     CHECK(sanitize_xml_id("!@#$%^&*()[X]") == "___________X_");
+}
+
+TEST_CASE("thdecode")
+{
+    CHECK(thdecode(TT_UTF_8, "äbc") == "\xC3\xA4" "bc");
+    CHECK(thdecode(TT_ISO8859_1, "äbc") == "\xE4" "bc");
+}
+
+TEST_CASE("thencode")
+{
+    CHECK(thencode("äbc", TT_UTF_8) == "\xC3\xA4" "bc");
+    CHECK(thencode("\xE4" "bc", TT_ISO8859_1) == "\xC3\xA4" "bc");
 }
 
 TEST_CASE("thdecode_sql")
