@@ -8,6 +8,9 @@ loch:
  * added presentation animation mode and export
  * added walker mode
 
+infrastructure and compiler:
+ * fixed installation when the source or destination path contains spaces
+
 --------------------------------------------------------------------------------
 
 Therion 6.4.0 (2026-05-07):
