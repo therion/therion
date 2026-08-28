@@ -1272,6 +1272,11 @@ void thdb1d::process_survey_stat() {
     // ak nie skusi ci je surface
     else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
       lit->data->stat_slength += lit->leg->total_length;
+    // artificial passages leave the cave length and their length is, for now,
+    // not accumulated anywhere; the flag itself is still exported per shot.
+    // Add a stat_artlength accumulator here when a use for the figure shows up
+    else if ((lit->leg->flags & TT_LEGFLAG_ARTIFICIAL) != 0) {
+    }
     // inak prida do length
     else {
       lit->data->stat_length += lit->leg->total_length;
@@ -1303,6 +1308,10 @@ void thdb1d::process_survey_stat() {
       // ak nie skusi ci je surface
       else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
         ss->stat.length_surface += lit->leg->total_length;
+      // same here: the length is dropped, not the flag. Add a length_artificial
+      // accumulator alongside the others when the figure is wanted
+      else if ((lit->leg->flags & TT_LEGFLAG_ARTIFICIAL) != 0) {
+      }
       // inak prida do length
       else {
         if ((lit->leg->flags & TT_LEGFLAG_APPROXIMATE) != 0)
