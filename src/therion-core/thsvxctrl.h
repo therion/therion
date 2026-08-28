@@ -39,6 +39,21 @@ typedef std::map < unsigned long, thobjectsrc * > thsvxctrl_src_maptype;  ///< S
 
 
 /**
+ * Does a change of leg flags require a new *flags line in the .svx file?
+ *
+ * Only the flags Survex understands are written, so a flag it knows nothing
+ * about -- approximate, artificial -- must not break the block.
+ */
+
+constexpr bool thsvx_flags_changed(int lhs, int rhs) noexcept
+{
+  constexpr int known =
+    TT_LEGFLAG_SURFACE | TT_LEGFLAG_DUPLICATE | TT_LEGFLAG_SPLAY;
+  return (lhs & known) != (rhs & known);
+}
+
+
+/**
  * Survex controller.
  */
  
