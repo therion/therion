@@ -1,0 +1,70 @@
+# Shot flag `artificial', issue 571.
+#
+# Artificial passages are excluded from the cave length. The flag is reported
+# per shot in SHOT_FLAG as `art', but no artificial length is accumulated
+# anywhere: a shot carrying only this flag simply leaves the statistics.
+#
+# Combined with another exclusive flag, `artificial' must change nothing: the
+# shot stays in the bucket it already belonged to.
+#
+# database.sql covers the per-centreline accounting, surveys.txt the per-survey
+# one -- these are two separate cascades in thdb1d.
+
+survey artificial
+
+  centreline
+    data normal from to length compass clino
+
+    # counted in LENGTH
+    1 2 10 0 0
+
+    # artificial alone: excluded from LENGTH, counted nowhere
+    flags artificial
+    2 3 10 0 0
+
+    # counted in LENGTH again
+    flags not artificial
+    3 4 10 0 0
+
+    # artificial and duplicate: stays in DUPLICATE_LENGTH, as before the flag
+    flags artificial duplicate
+    4 5 10 0 0
+
+    # artificial and surface: stays in SURFACE_LENGTH
+    flags not duplicate surface
+    5 6 10 0 0
+
+    # artificial and splay: stays a splay, counted with the splays
+    flags not surface splay
+    6 7 10 0 0
+
+    # artificial state survives into a group and is restored after it
+    flags not artificial not splay
+    group
+      flags artificial
+      7 8 10 0 0
+    endgroup
+    8 9 10 0 0
+
+  endcentreline
+
+  # interleaved data build legs through a different path. The flag must behave
+  # there exactly like the flags that came before it: replacing `artificial'
+  # with `surface' below moves srf onto the same shot, so this pins consistency
+  # with the existing flags rather than an opinion about which shot is right.
+  centreline
+    data normal station newline length compass clino
+
+    9
+    10 0 0
+    10
+    flags artificial
+    10 0 0
+    11
+    flags not artificial
+    10 0 0
+    12
+
+  endcentreline
+
+endsurvey

@@ -1,0 +1,6 @@
+encoding utf-8
+
+source data.th
+
+export database -o database.sql
+export survey-list -o surveys.txt

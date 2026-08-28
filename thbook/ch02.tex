@@ -482,8 +482,15 @@ the command may be used anywhere.
   * |flags <shot flags>| = set flags for following shots. The supported
     flags are: |surface| (for surface measurements), |duplicate| (for
     duplicated surveys), |splay| (for short side legs that are hidden
-    in maps and models by default). These are excluded from length
-    calculations.
+    in maps and models by default) and \NEW{6.4.1}|artificial| (for
+    man-made passages, such as dug or blasted connections). These are
+    excluded from length calculations.
+
+    |artificial| shots are drawn and modelled like any other shot, and
+    they take part in loop closure. Only the length statistics ignore
+    them. A shot that already carries |surface|, |duplicate| or |splay|
+    keeps being counted with that flag; adding |artificial| to it changes
+    nothing.
 
     All shots having one of the stations named either `|.|' or `|-|' are
     |splay| shots by default (see also |data| command).

@@ -261,6 +261,7 @@ enum {
   TT_DATALFLAG_DUPLICATE,
   TT_DATALFLAG_APPROXIMATE,
   TT_DATALFLAG_SPLAY,
+  TT_DATALFLAG_ARTIFICIAL,
   TT_DATALFLAG_NOT,  
 };
 
@@ -305,6 +306,7 @@ enum {
   TT_LEGFLAG_DUPLICATE = 2,
   TT_LEGFLAG_APPROXIMATE = 4,
   TT_LEGFLAG_SPLAY = 8,
+  TT_LEGFLAG_ARTIFICIAL = 16,
 };
 
 
@@ -315,6 +317,7 @@ enum {
 static const thstok thtt_datalflag[] = {
   {"approx", TT_DATALFLAG_APPROXIMATE},
   {"approximate", TT_DATALFLAG_APPROXIMATE},
+  {"artificial", TT_DATALFLAG_ARTIFICIAL},
   {"duplicate", TT_DATALFLAG_DUPLICATE},
   {"not", TT_DATALFLAG_NOT},
   {"splay", TT_DATALFLAG_SPLAY},

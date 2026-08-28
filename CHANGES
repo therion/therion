@@ -1,5 +1,9 @@
 Therion 6.4.1 (in progress):
 
+therion:
+ * new `artificial' shot flag for man-made passages, excluded from length
+   calculations and exported as `art' in the SHOT_FLAG database table
+
 Windows installer:
  * use TeXLive 2026 binaries instead of dated W32TeX distribution
  * include LuaTeX as an alternative to pdfTeX

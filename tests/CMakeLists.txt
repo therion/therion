@@ -18,6 +18,7 @@ add_executable(utest
     utest-thobjectid.cxx
     utest-thobjectsrc.cxx
     utest-thscrapen.cxx
+    utest-thsvxctrl.cxx
     utest-thscraplo.cxx
 )
 target_link_libraries(utest PUBLIC therion-core catch2-interface)

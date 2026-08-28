@@ -372,6 +372,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
                   fprintf(sqlf,"insert into SHOT_FLAG values(%ld, 'apx');\n", shotx);
                 if ((lei->flags & TT_LEGFLAG_SPLAY) != TT_LEGFLAG_NONE)
                   fprintf(sqlf,"insert into SHOT_FLAG values(%ld, 'spl');\n", shotx);
+                if ((lei->flags & TT_LEGFLAG_ARTIFICIAL) != TT_LEGFLAG_NONE)
+                  fprintf(sqlf,"insert into SHOT_FLAG values(%ld, 'art');\n", shotx);
               }
             }
           }

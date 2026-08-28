@@ -2567,6 +2567,13 @@ void thdata::set_data_flags(int nargs, char ** args)
           this->d_flags |= TT_LEGFLAG_DUPLICATE;
         notb = false;
         break;
+      case TT_DATALFLAG_ARTIFICIAL:
+        if (notb)
+          this->d_flags &= ~TT_LEGFLAG_ARTIFICIAL;
+        else
+          this->d_flags |= TT_LEGFLAG_ARTIFICIAL;
+        notb = false;
+        break;
       default:
         throw thexception(fmt::format("unknown leg flag -- {}", args[fid]));
     }

@@ -223,7 +223,7 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
     }
   }
   
-  if (legp->flags != this->pdl.flags) {
+  if (thsvx_flags_changed(legp->flags, this->pdl.flags)) {
     fprintf(this->svxf,"*flags");
     if ((legp->flags & TT_LEGFLAG_DUPLICATE) == TT_LEGFLAG_NONE) fprintf(this->svxf," not");
     fprintf(this->svxf," duplicate");
