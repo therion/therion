@@ -218,6 +218,7 @@ thcmd_option_desc thdata::get_cmd_option_desc(const char * opts)
       case TT_DATA_CALIBRATE:
       case TT_DATA_INFER:
       case TT_DATA_STATION:
+      case TT_DATA_SHOTATTR:
       case TT_DATA_EQUATE:
       case TT_DATA_DATA:
       case TT_DATA_DECLINATION:
@@ -263,6 +264,12 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       if ((indataline & THOP_INLINE) == 0)
         throw thexception("not a command line option -- flags");
       this->cgroup->set_data_flags(cod.nargs, args);
+      break;
+
+    case TT_DATA_SHOTATTR:
+      if ((indataline & THOP_INLINE) == 0)
+        throw thexception("not a command line option -- shotattr");
+      this->cgroup->set_shot_attr(cod.nargs, args, argenc);
       break;
 
     case TT_DATA_EXTEND:
@@ -1668,6 +1675,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->data_type = this->d_type;
     this->cd_leg->s_mark = this->d_mark;
     this->cd_leg->flags = this->d_flags;
+    this->cd_leg->attr = this->d_shot_attr;
     this->cd_leg->extend = (unsigned int) this->d_extend;
     this->cd_leg->extend_ratio = this->d_extend_ratio;
     this->d_extend &= (TT_EXTENDFLAG_DIRECTION | TT_EXTENDFLAG_IGNORE | TT_EXTENDFLAG_HIDE);
@@ -2574,6 +2582,52 @@ void thdata::set_data_flags(int nargs, char ** args)
 }
 
   
+void thdata::set_shot_attr(int nargs, char ** args, int argenc)
+{
+  // Mirrors the `attr' station flag: the same validation rules, the same way of
+  // telling an empty value from a removal. The state applies to the shots that
+  // follow, like `flags'.
+  int ai = 0;
+  bool notflag = false;
+
+  if (thmatch_token(args[ai], thtt_datalflag) == TT_DATALFLAG_NOT) {
+    notflag = true;
+    ai++;
+    if (ai == nargs)
+      throw thexception("missing shot attribute name");
+  }
+
+  if (strlen(args[ai]) == 0)
+    throw thexception("empty attribute name not allowed");
+  if (args[ai][0] == '_')
+    throw thexception(fmt::format("attribute name starting with '_' not allowed -- {}", args[ai]));
+  if (!th_is_attr_name(args[ai]))
+    throw thexception(fmt::format("invalid characters in attribute name -- {}", args[ai]));
+
+  std::string attrname = args[ai];
+
+  if (notflag) {
+    if ((ai + 1) != nargs)
+      throw thexception("too many arguments -- shotattr not <name>");
+    this->d_shot_attr.erase(attrname);
+    return;
+  }
+
+  ai++;
+  if (ai == nargs)
+    throw thexception("missing shot attribute value");
+  if ((ai + 1) != nargs)
+    throw thexception("too many arguments -- shotattr <name> <value>");
+
+  if (strlen(args[ai]) > 0) {
+    thencode(&(this->db->buff_enc), args[ai], argenc);
+    this->d_shot_attr[attrname] = this->db->strstore(this->db->buff_enc.c_str());
+  } else {
+    this->d_shot_attr.erase(attrname);
+  }
+}
+
+
 void thdata::set_data_extend(int nargs, char ** args)
 {
   int cextend, exn;
@@ -2850,6 +2904,7 @@ void thdata::start_group() {
   tmp->d_nitems = this->cgroup->d_nitems;
   tmp->d_mark = this->cgroup->d_mark;
   tmp->d_flags = this->cgroup->d_flags;
+  tmp->d_shot_attr = this->cgroup->d_shot_attr;
   tmp->d_extend = this->cgroup->d_extend & 
     (TT_EXTENDFLAG_DIRECTION | TT_EXTENDFLAG_IGNORE | TT_EXTENDFLAG_HIDE);
   tmp->d_last_equate = this->cgroup->d_last_equate;
