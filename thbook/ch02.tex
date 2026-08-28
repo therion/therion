@@ -494,6 +494,28 @@ the command may be used anywhere.
     to be resurveyed.
 
     Also ``|not|'' is allowed before a flag.
+  * \NEW{6.4.1}|shotattr <name> <value>| = set a user defined attribute for
+    following shots, in the same way |flags| sets flags. Attribute names follow
+    the rules of the |attr| station flag: they may not start with an underscore,
+    which is reserved for system attributes.
+
+    |shotattr not <name>| removes the attribute from the current state, and so
+    does an empty value. Note that |shotattr <name> false| does {\it not}
+    remove it: it stores the value |false|, which is not the same thing as
+    recording nothing about that shot.
+
+    The name |not| is reserved, since it is what removes an attribute.
+
+    Attributes are exported to the |SHOT_ATTRIBUTE| table of the database and to
+    the shots3D shapefile. Field names in DBF files are limited to ten
+    characters, so use attribute names of ten characters or fewer: longer names
+    may produce two distinct DBF columns carrying the same header, even when
+    their first ten characters differ. The database export is not affected.
+
+    Shapefile columns also get their type inferred from the values, so an
+    attribute whose values all look numeric becomes a numeric column and
+    |"0012"| is written as |12|. Prefix such values with a letter if the exact
+    text matters in the shapefile; the database export keeps them verbatim.
   * |station <station> <comment> [<flags>]| = set the station comment
     and its flags. If |""| is specified as a comment, it is ignored.
 

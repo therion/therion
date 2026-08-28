@@ -58,7 +58,9 @@ create table SHOT (ID integer, FROM_ID integer, TO_ID integer,
   CENTRELINE_ID integer, LENGTH real, BEARING real, GRADIENT real,
   ADJ_LENGTH real, ADJ_BEARING real, ADJ_GRADIENT real,
   ERR_LENGTH real, ERR_BEARING real, ERR_GRADIENT real);
-create table SHOT_FLAG (SHOT_ID integer, FLAG char(3));|
+create table SHOT_FLAG (SHOT_ID integer, FLAG char(3));
+create table SHOT_ATTRIBUTE (SHOT_ID integer,
+  NAME varchar(?), VALUE varchar(?));|
 
 which is followed by a mass of SQL insert commands. This file may be loaded
 into any SQL database (after some database-dependent initialization, which may
@@ -80,6 +82,10 @@ or surface shots; in |STATION_FLAG| table |ent|, |con|, |fix|,
 |spr|, |sin|, |dol|, |dig|, |air|, |ove|, |arc| for stations
 with entrance, continuation, fixed, spring, sink, doline, dig, air-draught,
 overhang or arch attributes, respectively.
+
+\NEW{6.4.1}User defined shot attributes set with the |shotattr| command are
+exported to the |SHOT_ATTRIBUTE| table, one row per attribute, so a shot may
+have any number of them.
 
 Examples of simple queries follow:
 
