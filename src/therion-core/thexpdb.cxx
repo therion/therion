@@ -164,7 +164,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   double adx, ady, adz;
   unsigned survey_name = 1, survey_full_name = 1, centreline_title = 1,
     survey_title = 1, person_name = 1, person_surname = 1, // station_type = 4,
-    station_name = 4; //station_comment = 4,
+    station_name = 4, //station_comment = 4,
+    shot_attr_name = 1, shot_attr_value = 1;
 
 
   // survey
@@ -242,6 +243,10 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
         
       fprintf(sqlf,"create table SHOT_FLAG "
         "(SHOT_ID integer, FLAG char(3));\n");
+
+      fprintf(sqlf,"create table SHOT_ATTRIBUTE "
+        "(SHOT_ID integer, NAME varchar(%d), VALUE varchar(%d));\n",
+        shot_attr_name, shot_attr_value);
               
 	  fprintf(sqlf,"create table MAPS "
         "(ID integer, SURVEY_ID integer, NAME varchar(%d), TITLE varchar(%d), PROJID integer, LENGTH real, DEPTH real);\n",
@@ -372,6 +377,18 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
                   fprintf(sqlf,"insert into SHOT_FLAG values(%ld, 'apx');\n", shotx);
                 if ((lei->flags & TT_LEGFLAG_SPLAY) != TT_LEGFLAG_NONE)
                   fprintf(sqlf,"insert into SHOT_FLAG values(%ld, 'spl');\n", shotx);
+                for (const auto & [name, value] : lei->attr) {
+                  const auto encoded_name = encodestr(name.c_str());
+                  const auto encoded_value = encodestr(value);
+                  fprintf(sqlf,"insert into SHOT_ATTRIBUTE values(%ld, %s, %s);\n",
+                    shotx, encoded_name.c_str(), encoded_value.c_str());
+                }
+              } else {
+                // first pass: measure the varchar widths, like the other tables
+                for (const auto & [name, value] : lei->attr) {
+                  check_strlen(shot_attr_name, encodestr(name.c_str()));
+                  check_strlen(shot_attr_value, encodestr(value));
+                }
               }
             }
           }
