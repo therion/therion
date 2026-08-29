@@ -664,6 +664,10 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
     xs.m_fshots3D.m_attributes.insert_attribute("_DUPLICATE", long(((lg->leg->flags & TT_LEGFLAG_DUPLICATE) != 0) ? 1 : 0));
     xs.m_fshots3D.m_attributes.insert_attribute("_APPROXIMATE", long(((lg->leg->flags & TT_LEGFLAG_APPROXIMATE) != 0) ? 1 : 0));
     xs.m_fshots3D.m_attributes.insert_attribute("_SPLAY", long(((lg->leg->flags & TT_LEGFLAG_SPLAY) != 0) ? 1 : 0));
+    // user defined shot attributes; DBF truncates field names to ten
+    // characters, so two long names sharing a prefix will collide
+    for (const auto & [name, value] : lg->leg->attr)
+      xs.m_fshots3D.m_attributes.insert_attribute(name.c_str(), value);
   }
 
 

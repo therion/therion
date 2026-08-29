@@ -49,6 +49,7 @@ void thdataleg::clear()
   this->psurvey = NULL;
   this->s_mark = TT_DATAMARK_UNKNOWN;
   this->flags = TT_LEGFLAG_NONE;
+  this->attr.clear();
   this->gridcs = TTCS_LOCAL;
   
   this->station.clear();

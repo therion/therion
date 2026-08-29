@@ -1,5 +1,9 @@
 Therion 6.4.1 (in progress):
 
+therion:
+ * new `shotattr' command setting user defined attributes on survey shots,
+   exported to the SHOT_ATTRIBUTE database table and to the shots3D shapefile
+
 Windows installer:
  * use TeXLive 2026 binaries instead of dated W32TeX distribution
  * include LuaTeX as an alternative to pdfTeX
