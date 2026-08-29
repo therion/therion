@@ -257,7 +257,7 @@ void thsplit_args_postp_quotes(char * buf)
     idx = 0;
   while (idx < bl) {
     if (*buf == '"') {
-      strcpy(buf, buf+1);
+      memmove(buf, buf + 1, strlen(buf));
       bl--;
     }
     buf++;
