@@ -474,7 +474,9 @@ the command may be used anywhere.
     following formula:
     $measured\ value = (read\ value - zero\ error) \times scale$.
     The supported quantities are the same as sd.
-  * |break| = can be used with interleaved data to separate two traverses
+  * |break| = can be used with interleaved data to separate two traverses.
+    It also prevents consecutive shots between the same stations from
+    being averaged as repeat measurements
   * |mark [<station list>] <type>| =
     set the type of named stations. |<type>| is one of: fixed,
     painted and temporary (default). If there is no station list,
@@ -533,6 +535,12 @@ the command may be used anywhere.
     For interleaved data both newline and direction keywords
     are supported. If backward and forward compass or clino
     reading are given, the average of them is computed.
+
+    If consecutive data lines specify the same from and to stations,
+    they are treated as repeat measurements of a single leg and are
+    automatically averaged.
+    Only consecutive lines are averaged; use |break| to prevent
+    averaging between groups of data.
 
 \NEW{5.3}    If one of the shot stations is named either `|.|' or `|-|', the shot has
     |splay| attribute set. {\it Dot} should be used for shots ending on
