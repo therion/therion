@@ -3156,7 +3156,10 @@ proc xth_me_cmds_set_colors {} {
 	  }   
 	}
 	$xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
-	$xth(me,can) itemconfigure lnln$id -fill $col
+	$xth(me,can) itemconfigure lnln$id -fill $col -state normal
+	# Keep the first point's dummy canvas segment hidden. Closed lines
+	# store the closing segment at a final point duplicating the first.
+	$xth(me,can) itemconfigure ln$id.[lindex $xth(me,cmds,$id,xplist) 0] -state hidden
 	if {$xth(me,hinactives) && ($col == $dcol)} {
 	  $xth(me,can) itemconfigure ln$id -state hidden  
 	}
