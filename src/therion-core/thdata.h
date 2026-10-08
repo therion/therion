@@ -70,6 +70,7 @@ enum {
   TT_DATA_WALLS = 2023,
   TT_DATA_EXTEND = 2024,
   TT_DATA_GRID_ANGLE = 2025,
+  TT_DATA_SHOTATTR = 2026,
 };
 
 
@@ -98,6 +99,7 @@ static const thstok thtt_data_opt[] = {
   {"mark", TT_DATA_MARK},
   {"sd", TT_DATA_SD},
 //  {"shape", TT_DATA_SHAPE},
+  {"shotattr", TT_DATA_SHOTATTR},
   {"station", TT_DATA_STATION},
   {"team", TT_DATA_TEAM},
   {"units", TT_DATA_UNITS},
@@ -173,6 +175,8 @@ class thdata : public thdataobject {
     d_flags,  ///< Leg flags.
     d_last_equate,  ///< Last data equate.
     d_extend;  ///< Extend flags.
+
+  thdata_attr_map d_shot_attr;  ///< Current user defined shot attributes.
     
   double d_vtresh, ///< Vertical threshold.
    d_extend_ratio; ///< Extend ratio.
@@ -211,6 +215,7 @@ class thdata : public thdataobject {
   void clear_last_equate_warning();  ///< Clear warning for new station created by last equate command.
 
   void set_data_flags(int nargs, char ** args);  ///< Set data leg flags.
+  void set_shot_attr(int nargs, char ** args, int argenc);  ///< Set user defined shot attributes.
 
   void set_data_extend(int nargs, char ** args);  ///< Set default extend
   
