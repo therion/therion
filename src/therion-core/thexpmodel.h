@@ -32,6 +32,7 @@
 
 #include "thexport.h"
 #include "thsurvey.h"
+#include <string>
 
 
 /**
@@ -117,6 +118,7 @@ enum {
   TT_EXPMODEL_FMT_DXF,  ///< dxf
   TT_EXPMODEL_FMT_SHP,  ///< esri shapefile
   TT_EXPMODEL_FMT_KML,  ///< google earth format
+  TT_EXPMODEL_FMT_GLTF,  ///< glTF 2.0 binary (.glb)
 };
 
 
@@ -130,6 +132,8 @@ static const thstok thtt_expmodel_fmt[] = {
   {"compass", TT_EXPMODEL_FMT_COMPASS},
   {"dxf", TT_EXPMODEL_FMT_DXF},
   {"esri", TT_EXPMODEL_FMT_SHP},
+  {"glb", TT_EXPMODEL_FMT_GLTF},
+  {"gltf", TT_EXPMODEL_FMT_GLTF},
   {"kml", TT_EXPMODEL_FMT_KML},
   {"loch", TT_EXPMODEL_FMT_LOCH},
   {"shapefile", TT_EXPMODEL_FMT_SHP},
@@ -201,6 +205,10 @@ class thexpmodel : public thexport {
   void export_shp_file(class thdatabase * dbp);  ///< Export shp file.
 
   void export_kml_file(class thdatabase * dbp);  ///< Export kml file.
+
+  std::string get_gltf_data(class thdatabase * dbp);  ///< Return model as glTF 2.0 binary data.
+
+  void export_gltf_file(class thdatabase * dbp);  ///< Export glTF 2.0 binary file.
 
   void export_kml_survey_file(FILE * out, thsurvey * surv);  ///< Helper function to export part of the survey tree
 

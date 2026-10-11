@@ -728,7 +728,11 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
   * |format/fmt <format>| = set model output format. Currently the following
     output formats are supported: |loch| (native format; default),
     |compass| (plt file), |survex| (3d file), |dxf|,
-    |esri| (3d shapefiles), |vrml|, |3dmf| and |kml| (Google Earth).
+    |esri| (3d shapefiles), |vrml|, |3dmf|, |kml| (Google Earth) and
+    \NEW{6.4.1}|gltf|\[glTF 2.0 binary file (.glb). It may be opened in
+    Blender and most 3D programs and shown in web pages using libraries
+    such as three.js. Coordinates are shifted to the centre of the model;
+    the shift and station names are stored in the scene extras.]
   * |enable <walls/[cave/surface-]centerline/splay-shots/surface/all>| and
   * |disable <walls/[cave/surface-]centerline/splay-shots/surface/all>| =
      \hfil\break
@@ -794,7 +798,7 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
 \bgroup
 \leavevmode\kern1em\vbox{\advance\hsize-1em\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
-model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr
+model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml, \NEW{6.4.1}gltf\cr
 map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml, \NEW{5.3}bbox\cr
 atlas & pdf\cr
 database & sql, \NEW{5.4}csv\cr
