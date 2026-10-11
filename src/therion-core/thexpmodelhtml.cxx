@@ -132,7 +132,8 @@ const char * thhtml_body = R"THHTML(</head>
 <div class="row">View
 <button data-view="plan">Plan</button><button data-view="N">Looking N</button><button data-view="E">Looking E</button>
 <button data-view="S">Looking S</button><button data-view="W">Looking W</button><button data-view="3d">3D</button></div>
-<div class="help">Drag: rotate &middot; Right drag or Shift drag: pan &middot; Wheel: zoom</div>
+<div class="help">Drag: rotate &middot; Right drag or Shift drag: pan &middot; Wheel: zoom<br>
+The view is kept in the page address: reloading keeps it, and the address can be shared.</div>
 </div>
 </div>
 )THHTML";
@@ -205,15 +206,17 @@ var groups = {}, order = [];
 });
 
 // group switches
-var gdiv = document.getElementById('groups');
+var gdiv = document.getElementById('groups'), switches = {};
 order.forEach(function (g) {
   var on = !(g === 'walls-splays' && groups['walls-maps']);
   groups[g].forEach(function (o) { o.visible = on; });
   var l = document.createElement('label'), cb = document.createElement('input');
   cb.type = 'checkbox'; cb.checked = on;
+  switches[g] = cb;
   cb.addEventListener('change', function () {
     groups[g].forEach(function (o) { o.visible = cb.checked; });
     render();
+    saveView();
   });
   l.appendChild(cb);
   l.appendChild(document.createTextNode(' ' + (groupNames[g] || g)));
@@ -231,6 +234,7 @@ camera.updateProjectionMatrix();
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.screenSpacePanning = true;
 controls.addEventListener('change', render);
+controls.addEventListener('end', function () { saveView(); });
 function setView(v) {
   var d = radius / Math.tan(camera.fov * Math.PI / 360) * 1.1, c = centre.clone();
   c.y *= root.scale.y;
@@ -241,6 +245,7 @@ function setView(v) {
   controls.target.copy(c);
   controls.update();
   render();
+  saveView();
 }
 document.querySelectorAll('[data-view]').forEach(function (b) {
   b.addEventListener('click', function () { setView(b.getAttribute('data-view')); });
@@ -253,6 +258,7 @@ document.getElementById('vscale').addEventListener('change', function (e) {
   controls.target.y = ty;
   controls.update();
   render();
+  saveView();
 });
 document.getElementById('toggle').addEventListener('click', function () {
   document.getElementById('panel').classList.toggle('closed');
@@ -267,7 +273,7 @@ stations.forEach(function (s) { surveys[s[0].substring(s[0].indexOf('@'))] = tru
 if (Object.keys(surveys).length === 1)
   stations.forEach(function (s) { s[0] = s[0].substring(0, s[0].indexOf('@')); });
 stations.forEach(function (s) { s[0] = s[0].replace(/@$/, ''); });
-showStations.addEventListener('change', render);
+showStations.addEventListener('change', function () { render(); saveView(); });
 var tmp = new THREE.Vector3();
 function drawOverlay() {
   var w = lcanvas.clientWidth, h = lcanvas.clientHeight, r = window.devicePixelRatio;
@@ -315,8 +321,46 @@ function resize() {
   render();
 }
 window.addEventListener('resize', resize);
+// the view (camera, vertical scale, station names, switched on groups) is kept
+// in the page address, so reloading the page or sharing the address keeps it
+function saveView() {
+  var f = function (v) { return [v.x, v.y, v.z].map(function (x) { return x.toFixed(3); }).join(','); };
+  var h = 'c=' + f(camera.position) + '&t=' + f(controls.target) + '&s=' + root.scale.y +
+    '&n=' + (showStations.checked ? 1 : 0) + '&g=' + order.filter(function (g) {
+      return switches[g].checked; }).map(encodeURIComponent).join(',');
+  try { history.replaceState(null, '', '#' + h); } catch (e) { /* ignore */ }
+}
+function restoreView() {
+  var p = {};
+  location.hash.replace(/^#/, '').split('&').forEach(function (kv) {
+    var i = kv.indexOf('=');
+    if (i > 0) p[kv.substring(0, i)] = kv.substring(i + 1);
+  });
+  var num = function (v) { return (v || '').split(',').map(parseFloat); };
+  var c = num(p.c), t = num(p.t);
+  if (c.length !== 3 || t.length !== 3 || c.concat(t).some(isNaN)) return false;
+  if (p.g !== undefined) {
+    var on = p.g.split(',').map(decodeURIComponent);
+    order.forEach(function (g) {
+      switches[g].checked = on.indexOf(g) >= 0;
+      groups[g].forEach(function (o) { o.visible = switches[g].checked; });
+    });
+  }
+  var s = parseFloat(p.s), sel = document.getElementById('vscale');
+  if (!isNaN(s) && s > 0) {
+    root.scale.y = s;
+    for (var i = 0; i < sel.options.length; i++)
+      if (parseFloat(sel.options[i].value) === s) sel.selectedIndex = i;
+  }
+  showStations.checked = (p.n === '1');
+  camera.position.set(c[0], c[1], c[2]);
+  controls.target.set(t[0], t[1], t[2]);
+  controls.update();
+  render();
+  return true;
+}
 resize();
-setView('3d');
+if (!restoreView()) setView('3d');
 })();
 </script>
 )THHTML";
