@@ -46,6 +46,7 @@ enum {
   TT_EXPMODEL_OPT_DISABLE,  ///< Output option.
   TT_EXPMODEL_OPT_WALLSRC,  ///< Output option.
   TT_EXPMODEL_OPT_ENCODING,  ///< Output encoding.
+  TT_EXPMODEL_OPT_VIEWERSRC,  ///< HTML viewer source.
 };
 
 
@@ -60,6 +61,7 @@ static const thstok thtt_expmodel_opt[] = {
   {"-encoding", TT_EXPMODEL_OPT_ENCODING},
   {"-fmt", TT_EXPMODEL_OPT_FORMAT},
   {"-format", TT_EXPMODEL_OPT_FORMAT},
+  {"-viewer-source", TT_EXPMODEL_OPT_VIEWERSRC},
   {"-wall-source", TT_EXPMODEL_OPT_WALLSRC},
   {NULL, TT_EXPMODEL_OPT_UNKNOWN}
 };
@@ -119,6 +121,7 @@ enum {
   TT_EXPMODEL_FMT_SHP,  ///< esri shapefile
   TT_EXPMODEL_FMT_KML,  ///< google earth format
   TT_EXPMODEL_FMT_GLTF,  ///< glTF 2.0 binary (.glb)
+  TT_EXPMODEL_FMT_HTML,  ///< HTML page with 3D viewer
 };
 
 
@@ -134,6 +137,7 @@ static const thstok thtt_expmodel_fmt[] = {
   {"esri", TT_EXPMODEL_FMT_SHP},
   {"glb", TT_EXPMODEL_FMT_GLTF},
   {"gltf", TT_EXPMODEL_FMT_GLTF},
+  {"html", TT_EXPMODEL_FMT_HTML},
   {"kml", TT_EXPMODEL_FMT_KML},
   {"loch", TT_EXPMODEL_FMT_LOCH},
   {"shapefile", TT_EXPMODEL_FMT_SHP},
@@ -176,6 +180,28 @@ static const thstok thtt_expmodel_wallsrc[] = {
 
 
 /**
+ * HTML viewer library source.
+ */
+
+enum {
+  TT_VSRC_UNKNOWN = 0,
+  TT_VSRC_WEB,
+  TT_VSRC_EMBEDDED,
+};
+
+
+/**
+ * HTML viewer library source tokens.
+ */
+
+static const thstok thtt_expmodel_viewersrc[] = {
+  {"embedded", TT_VSRC_EMBEDDED},
+  {"web", TT_VSRC_WEB},
+  {NULL, TT_VSRC_UNKNOWN}
+};
+
+
+/**
  * Main export class.
  */
  
@@ -184,7 +210,8 @@ class thexpmodel : public thexport {
   public:
 
   unsigned items,
-    wallsrc;
+    wallsrc,
+    viewersrc;
 
   bool is_leg_exported(class thdb1dl * l); ///< Whether to export leg.
 
@@ -209,6 +236,8 @@ class thexpmodel : public thexport {
   std::string get_gltf_data(class thdatabase * dbp);  ///< Return model as glTF 2.0 binary data.
 
   void export_gltf_file(class thdatabase * dbp);  ///< Export glTF 2.0 binary file.
+
+  void export_html_file(class thdatabase * dbp);  ///< Export HTML page with 3D viewer.
 
   void export_kml_survey_file(FILE * out, thsurvey * surv);  ///< Helper function to export part of the survey tree
 

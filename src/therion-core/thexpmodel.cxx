@@ -60,6 +60,7 @@ thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
   this->wallsrc = TT_WSRC_ALL;
+  this->viewersrc = TT_VSRC_WEB;
   this->encoding = TT_UTF_8;
 }
 
@@ -120,6 +121,17 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
       argx++;
       break;
 
+    case TT_EXPMODEL_OPT_VIEWERSRC:
+      argx++;
+      if (argx >= nargs)
+        throw thexception(fmt::format("missing viewer source -- \"{}\"",args[optx]));
+      utmp = thmatch_token(args[argx], thtt_expmodel_viewersrc);
+      if (utmp == TT_VSRC_UNKNOWN)
+        throw thexception(fmt::format("unknown viewer source -- \"{}\"", args[argx]));
+      this->viewersrc = utmp;
+      argx++;
+      break;
+
     default:
       thexport::parse_options(argx, nargs, args);
       break;
@@ -168,6 +180,8 @@ void thexpmodel::process_db(class thdatabase * dbp)
     set_format_by_extension(".shp", TT_EXPMODEL_FMT_SHP);
     set_format_by_extension(".kml", TT_EXPMODEL_FMT_KML);
     set_format_by_extension(".glb", TT_EXPMODEL_FMT_GLTF);
+    set_format_by_extension(".html", TT_EXPMODEL_FMT_HTML);
+    set_format_by_extension(".htm", TT_EXPMODEL_FMT_HTML);
   }  
   switch (this->format) {
     case TT_EXPMODEL_FMT_LOCH:
@@ -199,6 +213,9 @@ void thexpmodel::process_db(class thdatabase * dbp)
       break;
     case TT_EXPMODEL_FMT_GLTF:
       this->export_gltf_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_HTML:
+      this->export_html_file(dbp);
       break;
   }
 }

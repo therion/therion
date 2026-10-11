@@ -728,11 +728,16 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
   * |format/fmt <format>| = set model output format. Currently the following
     output formats are supported: |loch| (native format; default),
     |compass| (plt file), |survex| (3d file), |dxf|,
-    |esri| (3d shapefiles), |vrml|, |3dmf|, |kml| (Google Earth) and
+    |esri| (3d shapefiles), |vrml|, |3dmf|, |kml| (Google Earth),
     \NEW{6.4.1}|gltf|\[glTF 2.0 binary file (.glb). It may be opened in
     Blender and most 3D programs and shown in web pages using libraries
     such as three.js. Coordinates are shifted to the centre of the model;
-    the shift and station names are stored in the scene extras.]
+    the shift and station names are stored in the scene extras.] and
+    \NEW{6.4.1}|html|\[Single web page with the model and a 3D viewer
+    (three.js), which can be opened directly in a web browser. Walls,
+    centreline and splay shots may be switched on and off, station names
+    shown, and the model viewed in plan, elevation or 3D, with optional
+    vertical exaggeration.]
   * |enable <walls/[cave/surface-]centerline/splay-shots/surface/all>| and
   * |disable <walls/[cave/surface-]centerline/splay-shots/surface/all>| =
      \hfil\break
@@ -740,6 +745,11 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
      is currently exported in |therion| format only.
   * |wall-source <maps/centerline/all/splays>| = set source data for passage
     wall modeling.
+  * \NEW{6.4.1}|viewer-source <web/embedded>| = for the |html| format, set
+    where the viewer library (three.js) comes from. With |web| (default)
+    it is loaded from the internet when the page is opened, which keeps the
+    file small. With |embedded| it is included in the file (about 0.6\,MB more),
+    so the page also works offline.
 
   {\it map/atlas:}\Nobreak
 
@@ -798,7 +808,7 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
 \bgroup
 \leavevmode\kern1em\vbox{\advance\hsize-1em\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
-model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml, \NEW{6.4.1}gltf\cr
+model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml, \NEW{6.4.1}gltf, html\cr
 map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml, \NEW{5.3}bbox\cr
 atlas & pdf\cr
 database & sql, \NEW{5.4}csv\cr

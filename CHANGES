@@ -4,6 +4,8 @@ therion:
  * new `artificial' shot flag for man-made passages, excluded from length
    calculations and exported as `art' in the SHOT_FLAG database table
  * new `gltf' model export format (glTF 2.0 binary, .glb)
+ * new `html' model export format: single web page with a 3D viewer
+   (three.js); new `-viewer-source web/embedded' model export option
 
 Windows installer:
  * use TeXLive 2026 binaries instead of dated W32TeX distribution
