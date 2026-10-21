@@ -35,6 +35,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <iosfwd>
 #include <stdexcept>
 #include <vector>
 
