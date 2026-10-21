@@ -631,43 +631,23 @@ void thdecode_tcl(std::string * dest, const char * src)
   *dstp = 0;
 }
 
-
-
-void thdecode_mp(std::string * dest, const char * src)
+std::string thdecode_mp(std::string_view src)
 {
-  size_t srcln = strlen(src), srcx = 0;
-  unsigned char * srcp, * dstp;
-  dest->resize(srcln * 8 + 1);  // check buffer size
-  srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->c_str();
-  while (srcx < srcln) {
-    if (*srcp < 32) {
-        *dstp = ' ';
+  std::string result;
+  result.reserve(src.length());
+
+  for (const char c : src)
+  {
+    if (static_cast<unsigned char>(c) < 32) {
+      result += ' ';
+    } else if (c == '"') {
+      result += "\"&dtto&\"";
     } else {
-      if (*srcp == '"') {
-        *dstp = '"';
-        dstp++;
-        *dstp = '&';
-        dstp++;
-        *dstp = 'd';
-        dstp++;
-        *dstp = 't';
-        dstp++;
-        *dstp = 't';
-        dstp++;
-        *dstp = 'o';
-        dstp++;
-        *dstp = '&';
-        dstp++;
-      }
-      *dstp = *srcp;  
+      result += c;
     }
-    srcx++;
-    srcp++;
-    dstp++;
   }
-  // end destination string with 0
-  *dstp = 0;
+
+  return result;
 }
 
 

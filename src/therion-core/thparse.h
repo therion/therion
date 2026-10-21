@@ -310,8 +310,12 @@ void thdecode_utf2tex(std::string * dest, const char * src);
  */
 std::string thdecode_sql(std::string_view src);
 
-void thdecode_mp(std::string * dest, const char * src);
-
+/**
+ * @brief Escape special characters for MetaPost.
+ * @param src Input string for escaping.
+ * @return New string with escaped special MetaPost characters.
+ */
+std::string thdecode_mp(std::string_view src);
 
 /**
  * Decode into argument string.
