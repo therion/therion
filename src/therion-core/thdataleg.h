@@ -397,6 +397,11 @@ static const thstok thtt_datasflag[] = {
 };
 
 
+/** User defined attributes, on a station or on a shot. */
+
+typedef std::map<std::string, const char *> thdata_attr_map;
+
+
 /**
  * Main survey leg class.
  */
@@ -411,6 +416,8 @@ class thdataleg {
   
   int data_type = {},  ///< leg data type
       flags = {};  ///< Leg flags.
+
+  thdata_attr_map attr;  ///< User defined shot attributes.
       
   unsigned int s_mark = {},  ///< Type of the station mark
     extend = {};  ///< Extend flags: normal, reverse, left, right, break
@@ -495,9 +502,6 @@ class thdatafix {
 };
 
 
-typedef std::map<std::string, const char *> thdatass_attr_map;
-
-
 /**
  * Station class.
  */
@@ -518,7 +522,7 @@ class thdatass {
   
   int flags;  ///< Station flags.
 
-  thdatass_attr_map attr;  ///< Station attributes.
+  thdata_attr_map attr;  ///< Station attributes.
   
   thdatass();  ///< Standard constructor.
   
