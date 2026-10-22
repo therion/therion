@@ -35,6 +35,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/src/therion-core/thexpdb.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thexpmap.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thexpmodel.cxx
+    ${CMAKE_SOURCE_DIR}/src/therion-core/thexpmodelhtml.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thexport.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thexporter.cxx
     ${CMAKE_SOURCE_DIR}/src/therion-core/thexpshp.cxx

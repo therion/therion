@@ -48,6 +48,11 @@
 #include "thparse.h"
 #include "therion.h"
 #include <filesystem>
+#include <cstdint>
+#include <list>
+#include <map>
+#include <string>
+#include <vector>
 
 #include <fmt/format.h>
 
@@ -55,6 +60,7 @@ thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
   this->wallsrc = TT_WSRC_ALL;
+  this->viewersrc = TT_VSRC_WEB;
   this->encoding = TT_UTF_8;
 }
 
@@ -115,6 +121,17 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
       argx++;
       break;
 
+    case TT_EXPMODEL_OPT_VIEWERSRC:
+      argx++;
+      if (argx >= nargs)
+        throw thexception(fmt::format("missing viewer source -- \"{}\"",args[optx]));
+      utmp = thmatch_token(args[argx], thtt_expmodel_viewersrc);
+      if (utmp == TT_VSRC_UNKNOWN)
+        throw thexception(fmt::format("unknown viewer source -- \"{}\"", args[argx]));
+      this->viewersrc = utmp;
+      argx++;
+      break;
+
     default:
       thexport::parse_options(argx, nargs, args);
       break;
@@ -162,6 +179,9 @@ void thexpmodel::process_db(class thdatabase * dbp)
     set_format_by_extension(".lox", TT_EXPMODEL_FMT_LOCH);
     set_format_by_extension(".shp", TT_EXPMODEL_FMT_SHP);
     set_format_by_extension(".kml", TT_EXPMODEL_FMT_KML);
+    set_format_by_extension(".glb", TT_EXPMODEL_FMT_GLTF);
+    set_format_by_extension(".html", TT_EXPMODEL_FMT_HTML);
+    set_format_by_extension(".htm", TT_EXPMODEL_FMT_HTML);
   }  
   switch (this->format) {
     case TT_EXPMODEL_FMT_LOCH:
@@ -190,6 +210,12 @@ void thexpmodel::process_db(class thdatabase * dbp)
       break;
     case TT_EXPMODEL_FMT_KML:
       this->export_kml_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_GLTF:
+      this->export_gltf_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_HTML:
+      this->export_html_file(dbp);
       break;
   }
 }
@@ -2139,4 +2165,275 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
       }
     } // switch
   } // for object list
+}
+
+
+// ---------------------------------------------------------------------------
+// glTF 2.0 binary export (.glb)
+//
+// glTF can be shown in web pages by viewers such as three.js or Babylon.js
+// and imported by Blender and most 3D tools. Coordinates are
+// shifted to the centre of the model (float32 precision) and converted from
+// therion (x east, y north, z up) to glTF (x east, y up, z south). The shift
+// is stored in the scene extras together with station names.
+
+namespace {
+
+struct thgltf_mesh {
+  std::string name, group;
+  float rgba[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+  int mode = 1;  // 1 = lines, 4 = triangles
+  std::vector<float> pos;
+  std::vector<uint32_t> idx;
+};
+
+std::string thgltf_escape(const std::string & s) {
+  std::string r;
+  for (char c : s) {
+    if ((c == '"') || (c == '\\')) {
+      r += '\\';
+      r += c;
+    } else if ((unsigned char) c < 0x20) {
+      r += ' ';
+    } else {
+      r += c;
+    }
+  }
+  return r;
+}
+
+// Converts therion 3D data into a glTF mesh (lines or triangles).
+bool thgltf_convert(thdb3ddata * d3d, thgltf_mesh & m, double sx, double sy, double sz) {
+  if ((d3d == NULL) || (d3d->firstvx == NULL)) return false;
+  thdb3dvx * vx;
+  thdb3dfc * fc;
+  thdb3dfx * fx, * fx1, * fx2, * fx3;
+  uint32_t base = (uint32_t) (m.pos.size() / 3);
+  for (vx = d3d->firstvx; vx != NULL; vx = vx->next) {
+    m.pos.push_back(float(vx->x - sx));
+    m.pos.push_back(float(vx->z - sz));
+    m.pos.push_back(float(sy - vx->y));
+  }
+  bool reverse;
+  for (fc = d3d->firstfc; fc != NULL; fc = fc->next) {
+    switch (fc->type) {
+      case THDB3DFC_LINE_STRIP:
+        if (m.mode != 1) break;
+        for (fx = fc->firstfx; (fx != NULL) && (fx->next != NULL); fx = fx->next) {
+          m.idx.push_back(base + (uint32_t) fx->vertex->id);
+          m.idx.push_back(base + (uint32_t) fx->next->vertex->id);
+        }
+        break;
+      case THDB3DFC_LINES:
+        if (m.mode != 1) break;
+        for (fx = fc->firstfx; (fx != NULL) && (fx->next != NULL); fx = fx->next->next) {
+          m.idx.push_back(base + (uint32_t) fx->vertex->id);
+          m.idx.push_back(base + (uint32_t) fx->next->vertex->id);
+        }
+        break;
+      case THDB3DFC_TRIANGLES:
+        if (m.mode != 4) break;
+        for (fx = fc->firstfx; (fx != NULL) && (fx->next != NULL) && (fx->next->next != NULL); fx = fx->next->next->next) {
+          m.idx.push_back(base + (uint32_t) fx->vertex->id);
+          m.idx.push_back(base + (uint32_t) fx->next->vertex->id);
+          m.idx.push_back(base + (uint32_t) fx->next->next->vertex->id);
+        }
+        break;
+      case THDB3DFC_TRIANGLE_STRIP:
+        if (m.mode != 4) break;
+        reverse = true;
+        fx = fc->firstfx;
+        if ((fx == NULL) || (fx->next == NULL)) break;
+        fx2 = fx; fx3 = fx->next; fx = fx3->next;
+        while (fx != NULL) {
+          fx1 = fx2; fx2 = fx3; fx3 = fx; fx = fx->next;
+          m.idx.push_back(base + (uint32_t) (reverse ? fx1 : fx2)->vertex->id);
+          m.idx.push_back(base + (uint32_t) (reverse ? fx2 : fx1)->vertex->id);
+          m.idx.push_back(base + (uint32_t) fx3->vertex->id);
+          reverse = !reverse;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return true;
+}
+
+}
+
+
+std::string thexpmodel::get_gltf_data(class thdatabase * dbp) {
+
+  thdb3ddata * pgn = dbp->db1d.get_3d(),
+    * surf_pgn = dbp->db1d.get_3d_surface(),
+    * splay_pgn = dbp->db1d.get_3d_splay();
+
+  // model centre
+  thdb3dlim lim;
+  lim.update(&(pgn->limits));
+  if (!lim.ok) lim.update(&(surf_pgn->limits));
+  double sx = (lim.minx + lim.maxx) / 2.0,
+    sy = (lim.miny + lim.maxy) / 2.0,
+    sz = (lim.minz + lim.maxz) / 2.0;
+
+  std::list<thgltf_mesh> meshes;
+  auto add = [&](thdb3ddata * d3d, const std::string & name, const std::string & group,
+                 int mode, float r, float g, float b, float a) {
+    thgltf_mesh m;
+    m.name = name;
+    m.group = group;
+    m.mode = mode;
+    m.rgba[0] = r; m.rgba[1] = g; m.rgba[2] = b; m.rgba[3] = a;
+    if (thgltf_convert(d3d, m, sx, sy, sz) && (m.idx.size() > 0))
+      meshes.push_back(std::move(m));
+  };
+
+  if ((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) != 0)
+    add(pgn, "centreline", "centreline", 1, 0.3f, 0.7f, 1.0f, 1.0f);
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) != 0)
+    add(surf_pgn, "surface centreline", "centreline", 1, 0.5f, 0.5f, 0.5f, 1.0f);
+  if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+    add(splay_pgn, "splays", "splays", 1, 0.6f, 0.6f, 0.6f, 1.0f);
+
+  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
+    if ((this->wallsrc & TT_WSRC_CENTERLINE) != 0)
+      add(dbp->db1d.get_3d_walls(), "LRUD walls", "walls-centreline", 4, 0.9f, 0.9f, 0.9f, 1.0f);
+    if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
+      thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+      if (!prjid.newprj) {
+        thdb.db2d.process_projection(prjid.prj);
+        for (thscrap * cs = prjid.prj->first_scrap; cs != NULL; cs = cs->proj_next_scrap) {
+          if (cs->fsptr->is_selected())
+            add(cs->get_3d_outline(), fmt::format("{}@{}", cs->name, cs->fsptr->full_name),
+                "walls-maps", 4, 0.85f, 0.75f, 0.6f, 1.0f);
+        }
+      }
+    }
+    if ((this->wallsrc & TT_WSRC_SPLAYS) != 0) {
+      for (size_t ii = 0; ii < dbp->db1d.station_vec.size(); ii++) {
+        thdb1ds * pst = &(dbp->db1d.station_vec[ii]);
+        if ((pst->uid != ii + 1) || (!pst->survey->is_selected())) continue;
+        add(pst->get_3d_outline(), fmt::format("{}@{}", pst->name, pst->survey->full_name),
+            "walls-splays", 4, 0.6f, 0.8f, 0.6f, 0.5f);
+      }
+    }
+  }
+
+  // binary buffer
+  std::string bin, json;
+  auto pad4 = [](std::string & s, char c) { while (s.size() % 4 != 0) s += c; };
+  std::string accessors, views, gmeshes, nodes, materials, children;
+  size_t nacc = 0, nmesh = 0;
+  std::map<std::string, size_t> matid;
+  bool firstmesh = true;
+  for (auto & m : meshes) {
+    // positions
+    float mn[3] = {1e30f, 1e30f, 1e30f}, mx[3] = {-1e30f, -1e30f, -1e30f};
+    for (size_t i = 0; i < m.pos.size(); i++) {
+      if (m.pos[i] < mn[i % 3]) mn[i % 3] = m.pos[i];
+      if (m.pos[i] > mx[i % 3]) mx[i % 3] = m.pos[i];
+    }
+    size_t off = bin.size();
+    bin.append(reinterpret_cast<const char *>(m.pos.data()), m.pos.size() * sizeof(float));
+    pad4(bin, '\0');
+    views += fmt::format("{}{{\"buffer\":0,\"byteOffset\":{},\"byteLength\":{},\"target\":34962}}",
+      nacc == 0 ? "" : ",", off, m.pos.size() * sizeof(float));
+    accessors += fmt::format("{}{{\"bufferView\":{},\"componentType\":5126,\"count\":{},\"type\":\"VEC3\","
+      "\"min\":[{},{},{}],\"max\":[{},{},{}]}}",
+      nacc == 0 ? "" : ",", nacc, m.pos.size() / 3, mn[0], mn[1], mn[2], mx[0], mx[1], mx[2]);
+    nacc++;
+    // indices
+    off = bin.size();
+    bin.append(reinterpret_cast<const char *>(m.idx.data()), m.idx.size() * sizeof(uint32_t));
+    views += fmt::format(",{{\"buffer\":0,\"byteOffset\":{},\"byteLength\":{},\"target\":34963}}",
+      off, m.idx.size() * sizeof(uint32_t));
+    accessors += fmt::format(",{{\"bufferView\":{},\"componentType\":5125,\"count\":{},\"type\":\"SCALAR\"}}",
+      nacc, m.idx.size());
+    nacc++;
+    // one material per group
+    auto mi = matid.find(m.group);
+    if (mi == matid.end()) {
+      mi = matid.insert({m.group, matid.size()}).first;
+      materials += fmt::format("{}{{\"name\":\"{}\",\"doubleSided\":true,{}\"pbrMetallicRoughness\":"
+        "{{\"baseColorFactor\":[{},{},{},{}],\"metallicFactor\":0.0,\"roughnessFactor\":0.9}}}}",
+        mi->second == 0 ? "" : ",", thgltf_escape(m.group), m.rgba[3] < 1.0f ? "\"alphaMode\":\"BLEND\"," : "",
+        m.rgba[0], m.rgba[1], m.rgba[2], m.rgba[3]);
+    }
+    gmeshes += fmt::format("{}{{\"name\":\"{}\",\"primitives\":[{{\"attributes\":{{\"POSITION\":{}}},"
+      "\"indices\":{},\"mode\":{},\"material\":{}}}]}}",
+      firstmesh ? "" : ",", thgltf_escape(m.name), nacc - 2, nacc - 1, m.mode, mi->second);
+    nodes += fmt::format("{}{{\"name\":\"{}\",\"mesh\":{},\"extras\":{{\"group\":\"{}\"}}}}",
+      firstmesh ? "" : ",", thgltf_escape(m.name), nmesh, thgltf_escape(m.group));
+    children += fmt::format("{}{}", firstmesh ? "" : ",", nmesh);
+    nmesh++;
+    firstmesh = false;
+  }
+
+  // station names (for labels in viewers)
+  std::string stations;
+  bool firstst = true;
+  for (size_t ii = 0; ii < dbp->db1d.station_vec.size(); ii++) {
+    thdb1ds * st = &(dbp->db1d.station_vec[ii]);
+    if ((st->uid != ii + 1) || st->is_temporary() || (!st->survey->is_selected())) continue;
+    stations += fmt::format("{}[\"{}@{}\",{:.3f},{:.3f},{:.3f}]", firstst ? "" : ",",
+      thgltf_escape(st->name), thgltf_escape(st->survey->full_name), st->x - sx, st->z - sz, sy - st->y);
+    firstst = false;
+  }
+
+  json = fmt::format("{{\"asset\":{{\"version\":\"2.0\",\"generator\":\"therion\"}},"
+    "\"scene\":0,\"scenes\":[{{\"nodes\":[{}],\"extras\":{{\"shift\":[{:.3f},{:.3f},{:.3f}],"
+    "\"axes\":\"x=east y=up z=south\",\"stations\":[{}]}}}}],"
+    "\"nodes\":[{}],\"meshes\":[{}],\"materials\":[{}],\"accessors\":[{}],\"bufferViews\":[{}],"
+    "\"buffers\":[{{\"byteLength\":{}}}]}}",
+    children, sx, sy, sz, stations, nodes, gmeshes, materials, accessors, views, bin.size());
+  if (nmesh == 0) {
+    // glTF requires non-empty arrays to be omitted
+    json = "{\"asset\":{\"version\":\"2.0\",\"generator\":\"therion\"}}";
+    bin.clear();
+  }
+  pad4(json, ' ');
+
+  // GLB container (little-endian)
+  std::string glb;
+  auto w32 = [&](uint32_t v) {
+    for (int k = 0; k < 4; k++) glb += char((v >> (8 * k)) & 0xff);
+  };
+  uint32_t total = 12 + 8 + (uint32_t) json.size() + (bin.empty() ? 0 : 8 + (uint32_t) bin.size());
+  w32(0x46546C67); w32(2); w32(total);
+  w32((uint32_t) json.size()); w32(0x4E4F534A);
+  glb += json;
+  if (!bin.empty()) {
+    w32((uint32_t) bin.size()); w32(0x004E4942);
+    glb += bin;
+  }
+  return glb;
+}
+
+
+void thexpmodel::export_gltf_file(class thdatabase * dbp) {
+  const char * fnm = this->get_output("cave.glb");
+  std::string glb = this->get_gltf_data(dbp);
+
+#ifdef THDEBUG
+  thprint(fmt::format("\n\nwriting {}\n", fnm));
+#else
+  thprint(fmt::format("writing {} ... ", fnm));
+  thtext_inline = true;
+#endif
+
+  FILE * f = fopen(fnm, "wb");
+  if (f == NULL) {
+    thwarning(fmt::format("can't open {} for output",fnm));
+    return;
+  }
+  this->register_output(fnm);
+  fwrite(glb.data(), 1, glb.size(), f);
+  fclose(f);
+
+#ifdef THDEBUG
+#else
+  thprint("done\n");
+  thtext_inline = false;
+#endif
 }
