@@ -143,8 +143,9 @@ thcmd_option_desc thdataobject::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_dataobject_opt);
   switch (id) {
-    case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
+      return thcmd_option_desc(id, 2, 1);
+    case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_STNS:
     case TT_DATAOBJECT_ATTR:
       return thcmd_option_desc(id, 2);

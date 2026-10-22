@@ -123,13 +123,14 @@ class thcmd_option_desc {
 
   
   int id, ///< Option identifier.
-      nargs; ///< Number of option arguments.
+      nargs, ///< Number of option arguments.
+      optargs; ///< Number of optional arguments that may follow on a command line.
   
   /**
    * Standard constructor.
    */
    
-  thcmd_option_desc() : id(TT_DATAOBJECT_UNKNOWN), nargs(1) {}
+  thcmd_option_desc() : id(TT_DATAOBJECT_UNKNOWN), nargs(1), optargs(0) {}
   
 
   /**
@@ -138,7 +139,7 @@ class thcmd_option_desc {
    * @param oid Option id.
    */
    
-  thcmd_option_desc(int oid) : id(oid), nargs(1) {}
+  thcmd_option_desc(int oid) : id(oid), nargs(1), optargs(0) {}
   
   
   /**
@@ -146,9 +147,10 @@ class thcmd_option_desc {
    *
    * @param oid Option id.
    * @param nas Number of arguments.
+   * @param opt Number of optional arguments.
    */
    
-  thcmd_option_desc(int oid, int nas) : id(oid), nargs(nas) {}
+  thcmd_option_desc(int oid, int nas, int opt = 0) : id(oid), nargs(nas), optargs(opt) {}
     
     
 };

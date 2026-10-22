@@ -59,4 +59,11 @@ TEST_CASE("copyright licence")
     {
         REQUIRE_THROWS_AS(set_copyright(*obj, {"2024", "CUCC Expo", "CC BY-SA", "extra"}), thexception);
     }
+    SECTION("command line option takes an optional licence")
+    {
+        auto cod = obj->get_cmd_option_desc("copyright");
+        REQUIRE(cod.id == TT_DATAOBJECT_COPYRIGHT);
+        REQUIRE(cod.nargs == 2);
+        REQUIRE(cod.optargs == 1);
+    }
 }
