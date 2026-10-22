@@ -927,6 +927,10 @@ void thexpmap::export_th2(class thdb2dprj * prj)
       for (auto & [copyright, date] : scrap->copyright_map) {
         fprintf(pltf, " -copyright %s ", date.get_str(TT_DATE_FMT_THERION));
         fprint_quoted_string(pltf, copyright.name);
+        if (strlen(copyright.licence) > 0) {
+          fprintf(pltf, " ");
+          fprint_quoted_string(pltf, copyright.licence);
+        }
       }
 
       if (const char * title; (title = scrap->get_title()) && title[0]) {
