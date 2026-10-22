@@ -82,9 +82,12 @@ bool operator < (const thdataobject_copyright & c1,
 {
   if (c1.rev < c2.rev)
     return true;
-  if ((c1.rev == c2.rev) && (strcmp(c1.name, c2.name) < 0))
-    return true;
-  return false;
+  if (c1.rev != c2.rev)
+    return false;
+  int cmp = strcmp(c1.name, c2.name);
+  if (cmp != 0)
+    return cmp < 0;
+  return strcmp(c1.licence, c2.licence) < 0;
 }
 
 
@@ -255,14 +258,19 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
       switch (this->get_class_id()) {
         case TT_DATA_CMD:
         case TT_SCRAP_CMD:
-          if (cod.nargs > 2)
+          if (cod.nargs > 3)
             throw thexception("too many option arguments -- copyright");
           this->dotmp_date.parse(args[0]);
           thencode(&(this->db->buff_enc), args[1], argenc);
-          this->dotmp_copyright = 
-            thdataobject_copyright(
-            this->db->strstore(this->db->buff_enc.c_str(), true), 
-            this->revision);
+          {
+            const char * cname = this->db->strstore(this->db->buff_enc.c_str(), true),
+              * clicence = "";
+            if (cod.nargs > 2) {
+              thencode(&(this->db->buff_enc), args[2], argenc);
+              clicence = this->db->strstore(this->db->buff_enc.c_str(), true);
+            }
+            this->dotmp_copyright = thdataobject_copyright(cname, clicence, this->revision);
+          }
           this->copyright_map[this->dotmp_copyright].join(this->dotmp_date);
           break;
         default:
@@ -354,12 +362,12 @@ void thdataobject::self_print_properties(FILE * outf)
   thdo_copyright_map_type::iterator cii;
   for (cii = this->copyright_map.begin();
         cii != this->copyright_map.end(); cii++) {
-    if (cii->first.rev == 0)
-      fprintf(outf,"\tcopyright: %s \"%s\"\n", cii->second.get_str(),
-          cii->first.name);
-    else
-      fprintf(outf,"\tcopyright: %s \"%s\" (rev. %ld)\n", cii->second.get_str(),
-          cii->first.name, cii->first.rev);
+    fprintf(outf,"\tcopyright: %s \"%s\"", cii->second.get_str(), cii->first.name);
+    if (strlen(cii->first.licence) > 0)
+      fprintf(outf," \"%s\"", cii->first.licence);
+    if (cii->first.rev != 0)
+      fprintf(outf," (rev. %ld)", cii->first.rev);
+    fprintf(outf,"\n");
   }
   
   fprintf(outf,"\tname: \"%s\" at \"%s\"", this->name,

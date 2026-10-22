@@ -205,20 +205,21 @@ class thdataobject_copyright {
   public:
 
   const char * name;  ///< Author's name
+  const char * licence;  ///< Licence, empty if not given.
   unsigned long rev;  ///< Object's revision.
   
   /**
    * Standard constructor.
    */
    
-  thdataobject_copyright() : name(""), rev(0) {}
+  thdataobject_copyright() : name(""), licence(""), rev(0) {}
    
   
   /**
    * Default constructor.
    */
    
-  thdataobject_copyright(const char * nn, unsigned long rv) : name(nn), rev(rv) {}
+  thdataobject_copyright(const char * nn, const char * ll, unsigned long rv) : name(nn), licence(ll), rev(rv) {}
   
   
 };
