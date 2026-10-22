@@ -2181,8 +2181,8 @@ namespace {
 
 struct thgltf_mesh {
   std::string name, group;
-  float rgba[4];
-  int mode;  // 1 = lines, 4 = triangles
+  float rgba[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+  int mode = 1;  // 1 = lines, 4 = triangles
   std::vector<float> pos;
   std::vector<uint32_t> idx;
 };
