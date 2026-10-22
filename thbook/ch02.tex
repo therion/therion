@@ -388,7 +388,9 @@ the command may be used anywhere.
 \options
   * |id <ext_keyword>| = id of the object
   * |author <date> <person>| = author of the data and its creation date
-  * |copyright <date> <string>| = copyright date and name
+  * |copyright <date> <string> [<licence>]| = copyright date and name.
+    \NEW{6.4.1}An optional licence may follow, for example |"CC BY-SA"|
+    or |GPLv2+|. It must be quoted if it contains spaces.
   * |title <string>| = description of the object
 \endoptions
 
@@ -745,7 +747,10 @@ the command may be used anywhere.
     all survey stations in the current scrap. Saves some typing.
 
   * |author <date> <person>| = author of the data and its creation date
-  * |copyright <date> <string>| = copyright date and name
+  * |copyright <date> <string> [<licence>]| = copyright date and name.
+    \NEW{6.4.1}An optional licence may follow, for example |"CC BY-SA"|
+    or |GPLv2+|. It must be quoted if it contains spaces and is shown in
+    brackets after the year in the map copyrights.
   * |title <string>| = description of the object
 \endoptions
 

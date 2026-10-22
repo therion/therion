@@ -2,6 +2,9 @@
 #include "thdata.h"
 #include "thchenc.h"
 #include "thexception.h"
+#include "thlayout.h"
+#include "thlegenddata.h"
+#include "thmapstat.h"
 
 #ifdef CATCH2_V3
 #include <catch2/catch_test_macros.hpp>
@@ -9,6 +12,7 @@
 #include <catch2/catch.hpp>
 #endif
 
+#include <cstdio>
 #include <cstring>
 
 namespace {
@@ -66,4 +70,21 @@ TEST_CASE("copyright licence")
         REQUIRE(cod.nargs == 2);
         REQUIRE(cod.optargs == 1);
     }
+}
+
+TEST_CASE("copyright licence in map copyrights")
+{
+    auto obj = thdb.create<thdata>(thobjectsrc("test.th", 1));
+    set_copyright(*obj, {"2024", "CUCC Expo", "CC BY-SA"});
+    set_copyright(*obj, {"2020", "Plain Name"});
+    auto layout = thdb.create<thlayout>(thobjectsrc("test.th", 1));
+
+    thmapstat stat;
+    stat.addobj(obj.get());
+    legenddata ldata;
+    FILE * f = tmpfile();
+    REQUIRE(f != nullptr);
+    stat.export_pdftex(f, layout.get(), &ldata);
+    fclose(f);
+    REQUIRE(ldata.copyrights == "(c) CUCC Expo 2024 (CC BY-SA), Plain Name 2020");
 }

@@ -1,0 +1,20 @@
+encoding utf-8
+##XTHERION## xth_me_area_adjust 2 -18 2 219
+
+
+scrap s1.cave -projection plan -scale [50 2.54 m] -copyright 2024 "CUCC Expo" "CC BY-SA" -title "With licence"
+
+  point 2.00 2.00 station -name 1
+
+  point 2.00 198.85 station -name 2
+
+endscrap
+
+scrap s2.cave -projection plan -scale [50 2.54 m] -copyright 2020 "Plain Name" -copyright 2022 "Wookey" "GPLv2+"
+
+  point 2.00 2.00 station -name 1
+
+  point 2.00 198.85 station -name 2
+
+endscrap
+
