@@ -212,6 +212,9 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
               throw thexception(fmt::format("not enough option arguments -- {} -- must be {}", *opts, optd.nargs));
             opts++;
             ait++;
+            // take optional arguments up to the next option
+            for (; (optd.optargs > 0) && (ait + optd.nargs < ant) && (opts[optd.nargs][0] != '-'); optd.optargs--)
+              optd.nargs++;
           }
  
           objptr->set(optd, opts, this->inp.get_cif_encoding(),

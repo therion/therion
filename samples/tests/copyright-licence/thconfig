@@ -1,0 +1,5 @@
+encoding utf-8
+
+source data.th
+
+export map -format th2 -o map.th2
