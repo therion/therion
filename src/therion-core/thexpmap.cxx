@@ -1272,7 +1272,6 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thdb2dxm * cmap = maps;
   thdb2dxs * cbm;
   thdb2dmi * cmi;
-  std::string encb;
   thscrap * cs;
 
   thini.copy_fonts();
@@ -2161,14 +2160,12 @@ if (ENC_NEW.NFSS==0) {
       std::string texb;
       texb.resize(128);
       thdecode(& texb,TT_ISO8859_2,(strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name));      
-      thdecode_tex(& encb, texb.c_str());
-      fprintf(plf,"\t\tN => '%s',\n",encb.c_str());
+      fprintf(plf,"\t\tN => '%s',\n", thdecode_tex(texb).c_str());
       LAYER_ITER->second.N = (strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name);
       LAYER_ITER->second.Nraw = cmap->map->name;
       if ((chtitle != NULL) && ((cmap->next_item == NULL) || (cmap->next_item->title))) {
         thdecode(& texb,TT_ISO8859_2,chtitle);      
-        thdecode_tex(& encb, texb.c_str());
-        fprintf(plf,"\t\tT => '%s',\n",encb.c_str());
+        fprintf(plf,"\t\tT => '%s',\n", thdecode_tex(texb).c_str());
         LAYER_ITER->second.T = chtitle;
         chtitle = NULL;
       }

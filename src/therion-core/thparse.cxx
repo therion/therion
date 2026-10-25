@@ -650,19 +650,14 @@ std::string thdecode_mp(std::string_view src)
   return result;
 }
 
-
-
-void thdecode_tex(std::string * dest, const char * src)
+std::string thdecode_tex(std::string_view src)
 {
+  std::string result;
+  result.reserve(src.length());
 
-  size_t srcln = strlen(src), srcx = 0;
-  unsigned char * srcp, * dstp;
-//  unsigned num;
-  dest->resize(srcln * 8 + 1);  // check buffer size
-  srcp = (unsigned char*) src;
-  dstp = (unsigned char*) dest->c_str();
-  while (srcx < srcln) {
-    switch (*srcp) {
+  for (const char c : src)
+  {
+    switch (c) {
       case '%':
       case '_':
       case '&':
@@ -678,23 +673,16 @@ void thdecode_tex(std::string * dest, const char * src)
       case '}':
       case '|':
       case '"':
-        *dstp = '\\';
-        dstp++;
-        *dstp = *srcp;  
+        result += '\\';
         break;      
       default:
-        *dstp = *srcp;  
         break;
     }
-    srcx++;
-    srcp++;
-    dstp++;
+    result += c;
   }
-  // end destination string with 0
-  *dstp = 0;
-  
-}
 
+  return result;
+}
 
 void thdecode_utf2tex(std::string * dest, const char * src)
 {
