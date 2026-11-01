@@ -72,8 +72,11 @@ jobs:
         run: |
           eval "$(/usr/libexec/path_helper)"
           sudo tlmgr update --self
-          sudo tlmgr install collection-langcyrillic
-          sudo tlmgr install collection-langczechslovak
+          sudo tlmgr install --no-execute-actions collection-langcyrillic collection-langczechslovak
+          sudo mktexlsr
+          sudo updmap-sys --enable Map=csfonts.map
+          sudo tlmgr generate language
+          sudo fmtutil-sys --all
           cmake --build build -t samples-verify-crc -- -j 4
           cmake --build build -t samples-verify-ref -- -j 4
       - uses: actions/upload-artifact@v6
