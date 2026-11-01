@@ -1,0 +1,100 @@
+# User defined shot attributes, issue 571.
+#
+# `shotattr' works like `flags': it sets state that applies to the shots that
+# follow, until it is changed or the centreline ends. Attributes are exported
+# one row per attribute in the SHOT_ATTRIBUTE table.
+#
+# Three things must be told apart:
+#   shotattr <name> <value>   sets the attribute
+#   shotattr <name> ""        removes it, like the station `attr' flag
+#   shotattr not <name>       removes it as well
+# A value of `false' is a value, not a removal: recording that a passage is
+# not fossil must stay different from not recording anything about it.
+
+survey shotattr
+
+  centreline
+    data normal from to length compass clino
+
+    # no attribute yet
+    1 2 10 0 0
+
+    shotattr fossil true
+    2 3 10 0 0
+
+    # two attributes at once; the export order follows the attribute name
+    shotattr phreatic "large gallery"
+    3 4 10 0 0
+
+    # `false' is stored, it does not remove the attribute
+    shotattr fossil false
+    4 5 10 0 0
+
+    # `not' removes it
+    shotattr not fossil
+    5 6 10 0 0
+
+    # an empty value removes it too
+    shotattr phreatic ""
+    6 7 10 0 0
+
+    # a value needing SQL escaping
+    shotattr comment "l'entree, dite ""la chatiere"""
+    7 8 10 0 0
+
+    # a group inherits the state it was entered with, and what the group sets
+    # is dropped again on endgroup. The parent attribute must be set *before*
+    # the group, otherwise the test only proves that nothing leaks out of it.
+    shotattr not comment
+    shotattr context outer
+    8 9 10 0 0
+    group
+      # inherited: context only
+      9 10 10 0 0
+      shotattr digging true
+      # inherited plus the group's own
+      10 11 10 0 0
+    endgroup
+    # restored: context again, digging gone
+    11 12 10 0 0
+
+  endcentreline
+
+  # Interleaved data build legs through a different path. The state is captured
+  # when the station line creates the leg, so `shotattr' written after station
+  # 13 lands on the 14--15 shot rather than on 13--14. That is exactly what
+  # `flags' does in interleaved data; the test pins the consistency, not an
+  # opinion about which shot ought to carry it.
+  centreline
+    data normal station newline length compass clino
+
+    12
+    10 0 0
+    13
+    shotattr fossil true
+    10 0 0
+    14
+    shotattr not fossil
+    10 0 0
+    15
+
+  endcentreline
+
+  # Two attribute names longer than ten characters, whose first ten characters
+  # differ. They stay distinct in SHOT_ATTRIBUTE but collide in the DBF, where
+  # both become `abcdefghi_': expdbf_field_name builds an eleven character
+  # disambiguated name and shapelib then writes only ten of them.
+  #
+  # shots3d.dbf.ref pins that behaviour on purpose. When expdbf_field_name is
+  # fixed -- a separate change, since it renames existing fields -- this
+  # reference has to be updated, which is how the fix will be noticed here.
+  centreline
+    data normal from to length compass clino
+
+    shotattr abcdefghiX12 left
+    shotattr abcdefghiY34 right
+    15 16 10 0 0
+
+  endcentreline
+
+endsurvey

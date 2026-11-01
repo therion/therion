@@ -7,6 +7,7 @@ create table STATION (ID integer, NAME varchar(4), SURVEY_ID integer, X real, Y 
 create table STATION_FLAG (STATION_ID integer, FLAG char(3));
 create table SHOT (ID integer, FROM_ID integer, TO_ID integer, CENTRELINE_ID integer, LENGTH real, BEARING real, GRADIENT real, ADJ_LENGTH real, ADJ_BEARING real, ADJ_GRADIENT real, ERR_LENGTH real, ERR_BEARING real, ERR_GRADIENT real);
 create table SHOT_FLAG (SHOT_ID integer, FLAG char(3));
+create table SHOT_ATTRIBUTE (SHOT_ID integer, NAME varchar(1), VALUE varchar(1));
 create table MAPS (ID integer, SURVEY_ID integer, NAME varchar(10), TITLE varchar(4), PROJID integer, LENGTH real, DEPTH real);
 create table SCRAPS (ID integer, SURVEY_ID integer, NAME varchar(10), PROJID integer, MAX_DISTORTION real, AVG_DISTORTION real);
 create table MAPITEMS (ID integer, TYPE integer, ITEMID integer);
