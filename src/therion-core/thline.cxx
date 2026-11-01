@@ -35,8 +35,8 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
-
+#include <cstring>
+#include <format>
 #include <numbers>
 
 thline::thline()
@@ -130,19 +130,19 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_LINE_OUTLINE:
       this->outline = thmatch_token(*args,thtt_line_outlines);
       if (this->outline == TT_LINE_OUTLINE_UNKNOWN)
-        throw thexception(fmt::format("unknown line outline -- {}",*args));
+        throw thexception(std::format("unknown line outline -- {}",*args));
       break;
 
     case TT_LINE_CLOSED:
       this->closed = thmatch_token(*args,thtt_onoffauto);
       if (this->closed == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid closure switch -- {}",*args));
+        throw thexception(std::format("invalid closure switch -- {}",*args));
       break;
 
     case TT_LINE_REVERSE:
       reversion = thmatch_token(*args,thtt_bool);
       if (reversion == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid reversion switch -- {}",*args));
+        throw thexception(std::format("invalid reversion switch -- {}",*args));
       this->reverse = (reversion == TT_TRUE);
       break;
 
@@ -186,7 +186,7 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_LINE_SMOOTH:
       csmooth = thmatch_token(*args,thtt_onoffauto);
       if (csmooth == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid smooth switch -- {}",*args));
+        throw thexception(std::format("invalid smooth switch -- {}",*args));
       if (this->last_point != NULL) {
         this->last_point->smooth = csmooth;
         this->last_point->smooth_orig = csmooth;
@@ -198,12 +198,12 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_LINE_ORIENT:
       if (this->last_point != NULL) {
         if (this->type != TT_LINE_TYPE_SLOPE)
-          throw thexception(fmt::format("orientation not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+          throw thexception(std::format("orientation not valid with type {}", thmatch_string(this->type,thtt_line_types)));
         thparse_double(sv,this->last_point->orient,*args);
         if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-          throw thexception(fmt::format("invalid number -- {}",*args));
+          throw thexception(std::format("invalid number -- {}",*args));
         if ((this->last_point->orient < 0.0) || (this->last_point->orient >= 360.0))
-          throw thexception(fmt::format("orientation out of range -- {}",*args));
+          throw thexception(std::format("orientation out of range -- {}",*args));
         this->last_point->tags |= TT_LINEPT_TAG_ORIENT;
       }
       else
@@ -223,11 +223,11 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_LINE_ANCHORS:
     case TT_LINE_REBELAYS:
       if (this->type != TT_LINE_TYPE_ROPE)
-        throw thexception(fmt::format("-anchors and -rebelays not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+        throw thexception(std::format("-anchors and -rebelays not valid with type {}", thmatch_string(this->type,thtt_line_types)));
       int flag, tagtype;
       flag = thmatch_token(*args,thtt_bool);
       if (flag == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("logical value expected -- {}",*args));
+        throw thexception(std::format("logical value expected -- {}",*args));
       tagtype = (cod.id == TT_LINE_ANCHORS) ? TT_LINE_TAG_ROPE_ANCHORS : TT_LINE_TAG_ROPE_REBELAYS;
       if (flag == TT_TRUE)
         this->tags |= tagtype;
@@ -277,7 +277,7 @@ void thline::parse_type(const char * ss)
   this->type = thmatch_token(ss,thtt_line_types);
   switch (this->type) {
     case TT_LINE_TYPE_UNKNOWN:
-      throw thexception(fmt::format("unknown line type -- {}",ss));
+      throw thexception(std::format("unknown line type -- {}",ss));
       break;
     case TT_LINE_TYPE_WALL:
       this->csubtype = TT_LINE_SUBTYPE_BEDROCK;
@@ -323,7 +323,7 @@ void thline::parse_subtype(const char * ss)
   }
   this->csubtype = thmatch_token(ss,thtt_line_subtypes);
   if (this->csubtype == TT_LINE_SUBTYPE_UNKNOWN)
-    throw thexception(fmt::format("invalid line subtype -- {}",ss));
+    throw thexception(std::format("invalid line subtype -- {}",ss));
 //  if ((this->last_point != NULL) && (prevcsubtype != TT_LINE_SUBTYPE_UNKNOWN)
 //       && (this->csubtype != prevcsubtype)) {
 //    this->throw_source();
@@ -388,7 +388,7 @@ void thline::insert_line_point(int nargs, char const * const * args, double * nu
 {
   // check number of parameters
   if ((nargs != 6) && (nargs != 2))
-    throw thexception(fmt::format("invalid number of coordinates -- {}", nargs));
+    throw thexception(std::format("invalid number of coordinates -- {}", nargs));
 
   double cp1x, cp1y, cp2x, cp2y, x, y;
   int pidx = 0, sv;
@@ -442,7 +442,7 @@ void thline::insert_line_point(int nargs, char const * const * args, double * nu
   }
 
   if (invnum)
-    throw thexception(fmt::format("invalid number -- {}",invs));
+    throw thexception(std::format("invalid number -- {}",invs));
 
   // let's insert point into database
   thdb2dlp * plp = this->db->db2d.insert_line_point();
@@ -493,7 +493,7 @@ void thline::insert_line_point(int nargs, char const * const * args, double * nu
 void thline::insert_point_mark(const char * ss)
 {
   if (!th_is_keyword(ss))
-    throw thexception(fmt::format("mark not a key word -- {}",ss));
+    throw thexception(std::format("mark not a key word -- {}",ss));
   if (this->last_point == NULL)
     throw thexception("no line point specified");
   this->last_point->mark = this->db->strstore(ss,true);
@@ -1212,10 +1212,10 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
 void thline::parse_border(const char * ss) {
   int bd;
   if (this->type != TT_LINE_TYPE_SLOPE)
-    throw thexception(fmt::format("-border not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+    throw thexception(std::format("-border not valid with type {}", thmatch_string(this->type,thtt_line_types)));
   bd = thmatch_token(ss,thtt_bool);
   if (bd == TT_UNKNOWN_BOOL)
-    throw thexception(fmt::format("logical value expected -- {}",ss));
+    throw thexception(std::format("logical value expected -- {}",ss));
   if (bd == TT_TRUE)
     this->tags |= TT_LINE_TAG_BORDER;
   else
@@ -1246,7 +1246,7 @@ static const thstok thtt_line_gradient[] = {
 void thline::parse_gradient(const char * ss) {
   int gd;
   if (this->type != TT_LINE_TYPE_CONTOUR)
-    throw thexception(fmt::format("-gradient not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+    throw thexception(std::format("-gradient not valid with type {}", thmatch_string(this->type,thtt_line_types)));
   gd = thmatch_token(ss,thtt_line_gradient);
   switch (gd) {
     case TT_LINE_GRADIENT_NONE:
@@ -1265,7 +1265,7 @@ void thline::parse_gradient(const char * ss) {
       this->last_point->tags |= TT_LINEPT_TAG_GRADIENT;
       break;
     default:
-      throw thexception(fmt::format("invalid gradient specification -- {}",ss));
+      throw thexception(std::format("invalid gradient specification -- {}",ss));
       break;
   }
 }
@@ -1274,7 +1274,7 @@ void thline::parse_gradient(const char * ss) {
 void thline::parse_direction(const char * ss) {
   int gd;
   if (this->type != TT_LINE_TYPE_SECTION)
-    throw thexception(fmt::format("-direction not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+    throw thexception(std::format("-direction not valid with type {}", thmatch_string(this->type,thtt_line_types)));
   gd = thmatch_token(ss,thtt_line_gradient);
   switch (gd) {
     case TT_LINE_GRADIENT_NONE:
@@ -1300,7 +1300,7 @@ void thline::parse_direction(const char * ss) {
       this->last_point->tags |= TT_LINEPT_TAG_DIRECTION;
       break;
     default:
-      throw thexception(fmt::format("invalid direction specification -- {}",ss));
+      throw thexception(std::format("invalid direction specification -- {}",ss));
       break;
   }
 }
@@ -1311,7 +1311,7 @@ void thline::parse_direction(const char * ss) {
 void thline::parse_head(const char * ss) {
   int gd;
   if (this->type != TT_LINE_TYPE_ARROW)
-    throw thexception(fmt::format("-direction not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+    throw thexception(std::format("-direction not valid with type {}", thmatch_string(this->type,thtt_line_types)));
   gd = thmatch_token(ss,thtt_line_gradient);
   this->tags &= ~(TT_LINE_TAG_HEAD_BEGIN | TT_LINE_TAG_HEAD_END);
   switch (gd) {
@@ -1327,7 +1327,7 @@ void thline::parse_head(const char * ss) {
       this->tags |= TT_LINE_TAG_HEAD_END | TT_LINE_TAG_HEAD_BEGIN;
       break;
     default:
-      throw thexception(fmt::format("invalid head specification -- {}",ss));
+      throw thexception(std::format("invalid head specification -- {}",ss));
       break;
   }
 }
@@ -1339,10 +1339,10 @@ void thline::parse_adjust(const char * ss) {
   else
     throw thexception("no line point specified");
   if (this->last_point->adjust == TT_LINE_ADJUST_UNKNOWN)
-    throw thexception(fmt::format("invalid adjust specification -- {}",ss));
+    throw thexception(std::format("invalid adjust specification -- {}",ss));
   if ((thdb.cscrapptr->proj->type == TT_2DPROJ_PLAN) &&
       (this->last_point->adjust != TT_LINE_ADJUST_NONE))
-    throw thexception(fmt::format("adjustment and projection not compatible -- {}",ss));
+    throw thexception(std::format("adjustment and projection not compatible -- {}",ss));
 }
 
 
@@ -1371,14 +1371,14 @@ void thline::parse_size(int w, const char * ss) {
       break;
   }
   if (!ok)
-    throw thexception(fmt::format("{} not valid with type {}", sizestr,
+    throw thexception(std::format("{} not valid with type {}", sizestr,
         thmatch_string(this->type,thtt_line_types)));
 
   thparse_double(sv,sz,ss);
   if (sv != TT_SV_NUMBER)
-    throw thexception(fmt::format("invalid number -- {}",ss));
+    throw thexception(std::format("invalid number -- {}",ss));
   if (sz < 0.0)
-    throw thexception(fmt::format("negative size -- {}",ss));
+    throw thexception(std::format("negative size -- {}",ss));
 
   switch (this->type) {
     case TT_LINE_TYPE_SLOPE:
@@ -1392,7 +1392,7 @@ void thline::parse_size(int w, const char * ss) {
 void thline::parse_altitude(const char * ss) {
 
   if (this->type != TT_LINE_TYPE_WALL)
-    throw thexception(fmt::format("-altitude not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+    throw thexception(std::format("-altitude not valid with type {}", thmatch_string(this->type,thtt_line_types)));
 
   if (this->last_point == NULL)
     throw thexception("no line point specified");
@@ -1404,7 +1404,7 @@ void thline::parse_altitude(const char * ss) {
 
 void thline::parse_text(const char * ss) {
   if (this->type != TT_LINE_TYPE_LABEL)
-    throw thexception(fmt::format("-text not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+    throw thexception(std::format("-text not valid with type {}", thmatch_string(this->type,thtt_line_types)));
   if (strlen(ss) > 0)
     this->text = this->db->strstore(ss);
 }
@@ -1450,7 +1450,7 @@ void thline::parse_height(const char * ss) {
 		  break;
     [[fallthrough]];
     default:
-      throw thexception(fmt::format("-height not valid with type {}", thmatch_string(this->type,thtt_line_types)));
+      throw thexception(std::format("-height not valid with type {}", thmatch_string(this->type,thtt_line_types)));
       break;
   }
 
@@ -1469,14 +1469,14 @@ void thline::parse_height(const char * ss) {
       ux = 1;
       break;
     default:
-      throw thexception(fmt::format("invalid distance -- {}",ss));
+      throw thexception(std::format("invalid distance -- {}",ss));
   }
   this->m_height = thnan;
   thparse_double(sv,dv,pars[0]);
   if (sv != TT_SV_NUMBER)
-    throw thexception(fmt::format("not a number -- {}", pars[0]));
+    throw thexception(std::format("not a number -- {}", pars[0]));
   if (dv <= 0.0)
-	throw thexception(fmt::format("nor a positivie number -- {}", pars[0]));
+	throw thexception(std::format("nor a positivie number -- {}", pars[0]));
   if (ux > 0) {
     lentf.parse_units(pars[ux]);
     dv = lentf.transform(dv);

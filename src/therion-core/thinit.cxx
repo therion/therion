@@ -42,9 +42,9 @@
 #include "thchencdata.h"
 #include "icase.h"
 
-#include <fmt/format.h>
-
+#include <cstring>
 #include <filesystem>
+#include <format>
 
 #ifdef THWIN32
 #include <windows.h>
@@ -168,9 +168,9 @@ static const thstok thtt_initcmd[] = {
 
 void thinit_print_open(char * s) {
 #ifdef THDEBUG
-    thprint(fmt::format("\ninitialization file: {}\nreading\n", s));
+    thprint(std::format("\ninitialization file: {}\nreading\n", s));
 #else
-    thprint(fmt::format("initialization file: {}\n", s));
+    thprint(std::format("initialization file: {}\n", s));
     thprint("reading ...");
     thtext_inline = true;
 #endif 
@@ -210,7 +210,7 @@ void thinit::copy_fonts() {
   thprint("copying_fonts ...\n");
 
   for(int index = 0; index < 5; index++) {
-    thprint(fmt::format("{}\n", font_dst[index]));
+    thprint(std::format("{}\n", font_dst[index]));
 #ifdef THDEBUG
     thprint("copying font\n");
 #endif
@@ -260,7 +260,7 @@ void thinit::check_font_path(const char * fname, int index) {
     }
   }
   
-  if (pshort.empty()) throw thexception(fmt::format("invalid font name -- {}", fname));
+  if (pshort.empty()) throw thexception(std::format("invalid font name -- {}", fname));
 
   if ( 
 #ifdef THWIN32
@@ -443,7 +443,7 @@ void thinit::load()
             throw thexception("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
           break;
         default:
-          throw thexception(fmt::format("invalid initialization command -- {}", args[0]));
+          throw thexception(std::format("invalid initialization command -- {}", args[0]));
       }
         
       switch(argid) {
@@ -477,7 +477,7 @@ void thinit::load()
         case TTIC_LANG:
           this->lang = thlang_parse(args[1]);
           if (this->lang == THLANG_UNKNOWN)
-            throw thexception(fmt::format("language not supported -- {}",args[1]));
+            throw thexception(std::format("language not supported -- {}",args[1]));
           break;
 
         case TTIC_UNITS:
@@ -487,21 +487,21 @@ void thinit::load()
         case TTIC_OTF2PFB:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            throw thexception(fmt::format("invalid otf2pfb switch -- {}", args[1]));
+            throw thexception(std::format("invalid otf2pfb switch -- {}", args[1]));
           ENC_NEW.t1_convert = (sv == TT_TRUE);
           break;
 
         case TTIC_TEX_REFS_REGISTERS:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            throw thexception(fmt::format("invalid tex-refs-registers switch -- {}", args[1]));
+            throw thexception(std::format("invalid tex-refs-registers switch -- {}", args[1]));
           tex_refs_registers = (sv == TT_TRUE);
           break;
 
         case TTIC_PROJ_MISSING_GRID:
           sv = thcs_parse_gridhandling(args[1]);
           if (sv == GRID_INVALID)
-            throw thexception(fmt::format("invalid proj-missing-grid switch -- {}", args[1]));
+            throw thexception(std::format("invalid proj-missing-grid switch -- {}", args[1]));
           thcs_cfg.proj_auto_grid = sv;
           break;
 
@@ -537,7 +537,7 @@ void thinit::load()
         case TTIC_TEX_FONTS:
           frec.id = get_enc_id(args[1]);
           if (frec.id < 0)
-            throw thexception(fmt::format("tex encoding not supported -- {}", args[1]));
+            throw thexception(std::format("tex encoding not supported -- {}", args[1]));
           frec.rm = args[2];
           frec.it = args[3];
           frec.bf = args[4];
@@ -561,24 +561,24 @@ void thinit::load()
         case TTIC_TEX_ENV:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            throw thexception(fmt::format("invalid tex-env switch -- {}", args[1]));
+            throw thexception(std::format("invalid tex-env switch -- {}", args[1]));
           this->tex_env = (sv == TT_TRUE);
           break;
           
         case TTIC_LOOPC:
           sv = thmatch_token(args[1], thtt_loopc);
           if (sv == THINIT_LOOPC_UNKNOWN)
-            throw thexception(fmt::format("invalid loop-closure switch -- {}", args[1]));
+            throw thexception(std::format("invalid loop-closure switch -- {}", args[1]));
           this->loopc = sv;
           break;
           
         default:
-          throw thexception(fmt::format("invalid initialization command -- {}", args[0]));
+          throw thexception(std::format("invalid initialization command -- {}", args[0]));
       }
     }
   }
   catch (const std::exception& e) {
-    throw thexception(fmt::format("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number()), e);
+    throw thexception(std::format("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number()), e);
   }
   if (started) {
 #ifdef THDEBUG
@@ -663,7 +663,7 @@ void thinit::load()
     //  com += " --interaction nonstopmode data.tex";
       com += " --no-mktex=tfm fonttest.tex";
       retcode = system(com.c_str());
-      thprint(fmt::format("checking optional fonts {} {} {} {} {} ...", J->rm, J->it, J->bf, J->ss, J->si));
+      thprint(std::format("checking optional fonts {} {} {} {} {} ...", J->rm, J->it, J->bf, J->ss, J->si));
       if (retcode != EXIT_SUCCESS) {
         thprint(" NOT INSTALLED\n");
       } else {
@@ -719,7 +719,7 @@ const char * thinit::get_path_otftotfm()
 void thinit::set_proj_lib_path([[maybe_unused]] bool use_env) {  // set PROJ library resources path; we need use_env for testing different versions of Proj
 #ifdef THWIN32
   if (!use_env || (std::getenv("PROJ_LIB") == nullptr && std::getenv("PROJ_DATA") == nullptr)) {
-    const auto path = fmt::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.c_str(), PROJ_VER);
+    const auto path = std::format("{:s}\\lib\\proj-{:d}", thcfg.install_path.c_str(), PROJ_VER);
     // Proj's method to get user-writable directory (filemanager.cpp)
     std::string local_path;
     const char *local_app_data = std::getenv("LOCALAPPDATA");

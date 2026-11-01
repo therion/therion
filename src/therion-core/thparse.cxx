@@ -45,7 +45,7 @@
 
 #include <Magick++/Image.h>
 
-#include <fmt/format.h>
+#include <format>
 
 thmbuffer thparse_mbuff;
 
@@ -53,7 +53,7 @@ template <typename Comparator>
 int binary_search_token(std::string_view token, std::span<const thstok> tab, Comparator cmp)
 {
   if (tab.empty())
-    throw thexception(fmt::format("empty lookup table when searching for token '{}'", token));
+    throw thexception(std::format("empty lookup table when searching for token '{}'", token));
 
   // binary search, we leave out the last item
   auto it = std::ranges::lower_bound(tab.begin(), std::prev(tab.end()), token, cmp, &thstok::s);
@@ -905,13 +905,13 @@ void thparse_altitude(const char * src, double & altv, double & fixv)
       ux = 1;
       break;
     default:
-      throw thexception(fmt::format("invalid altitude specification -- {}",src));
+      throw thexception(std::format("invalid altitude specification -- {}",src));
   }
 
   if (parsev) {
     thparse_double(sv,altv,pars[0]);
     if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-      throw thexception(fmt::format("invalid altitude value -- {}", pars[0]));
+      throw thexception(std::format("invalid altitude value -- {}", pars[0]));
     if (sv == TT_SV_NAN)
       altv = 0.0;
   }
@@ -942,7 +942,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
     else if (format == "PNG")
       type = TT_IMG_TYPE_PNG;
     else
-      throw thexception(fmt::format("file format not supported -- {}", fname));
+      throw thexception(std::format("file format not supported -- {}", fname));
 
     width = image.columns();
     height = image.rows();
@@ -950,7 +950,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
     double xdpi = image.xResolution();
     double ydpi = image.yResolution();
     if (xdpi != ydpi)
-      throw thexception(fmt::format("X and Y image resolution not equal -- {}", fname));
+      throw thexception(std::format("X and Y image resolution not equal -- {}", fname));
 
     if (image.resolutionUnits() == Magick::PixelsPerCentimeterResolution) {
       xdpi = std::round(xdpi * 2.54);
@@ -967,13 +967,13 @@ void thparse_image(const char * fname, double & width, double & height, double &
       dpi = xdpi;
   }
   catch (const Magick::Exception& e) {
-    throw thexception(fmt::format("unable to read image {}", fname), e);
+    throw thexception(std::format("unable to read image {}", fname), e);
   }
 
 #ifdef THDEBUG
-  thprint(fmt::format("\nIMAGE FILE:{}\n", fname));
-  thprint(fmt::format(  "       DPI:{:.0f}\n", dpi));
-  thprint(fmt::format(  "      SIZE:{:.0f} x {:.0f}\n\n", width, height));
+  thprint(std::format("\nIMAGE FILE:{}\n", fname));
+  thprint(std::format(  "       DPI:{:.0f}\n", dpi));
+  thprint(std::format(  "      SIZE:{:.0f} x {:.0f}\n\n", width, height));
 #endif
 }
 

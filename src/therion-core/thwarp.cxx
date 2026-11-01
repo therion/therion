@@ -36,9 +36,8 @@
 #include "thdatabase.h"
 #include "therion.h"
 
-#include <fmt/format.h>
-
 #include <cstring>
+#include <format>
 
 thwarp::~thwarp() {}
    
@@ -136,7 +135,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
   }
 
   if (thtext_inline) thprint("\n");
-  thprint(fmt::format("morphing {} ", fn));
+  thprint(std::format("morphing {} ", fn));
   thtext_inline = true;
 
   for (ii = stations.begin(); ii != stations.end(); ii++) {
@@ -173,7 +172,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     mpic_origin = thvec2(pmin.m_x, pmin.m_y);
     mw = long(pmax.m_x + 0.5) - long(pmin.m_x - 0.5);
     mh = long(pmax.m_y + 0.5) - long(pmin.m_y - 0.5);
-    thprint(fmt::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
+    thprint(std::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
 
 
     sketch->m_pic.rgba_load();
@@ -183,7 +182,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
         ptmp = T1.backward(T2.backward(mpic_origin + thvec2(double(x), double(y))));
         this->mpic.rgba_set_pixel(x, y, sketch->m_pic.rgba_interpolate_pixel(ptmp.m_x, ptmp.m_y));
         if ((counter++ % 20000) == 0)
-          thprint(fmt::format(" [{:.0f}%]", double(counter) / double(mw * mh) * 100.0));
+          thprint(std::format(" [{:.0f}%]", double(counter) / double(mw * mh) * 100.0));
       }
     }
   
@@ -211,7 +210,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     mpic_origin = thvec2(pmin.m_x, pmin.m_y);
     mw = long(pmax.m_x + 0.5) - long(pmin.m_x - 0.5);
     mh = long(pmax.m_y + 0.5) - long(pmin.m_y - 0.5);
-    thprint(fmt::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
+    thprint(std::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
     sketch->m_pic.rgba_load();
     this->mpic.rgba_init(mw, mh);
     for (x = 0; x < mw; x++) {
@@ -221,7 +220,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
         ptmp = T1.backward(T2.backward(start));
         this->mpic.rgba_set_pixel(x, y, sketch->m_pic.rgba_interpolate_pixel(ptmp.m_x, ptmp.m_y));
         if ((counter++ % 20000) == 0)
-          thprint(fmt::format(" [{:.0f}%]", double(counter) / double(mw * mh) * 100.0));
+          thprint(std::format(" [{:.0f}%]", double(counter) / double(mw * mh) * 100.0));
       }
     }
   } else if (method == 2) {
@@ -251,7 +250,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     mw = long(pmax.m_x + 0.5) - long(pmin.m_x - 0.5);
     mh = long(pmax.m_y + 0.5) - long(pmin.m_y - 0.5);
     if (mh > 0) ss.resize(mh);
-    thprint(fmt::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
+    thprint(std::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
     sketch->m_pic.rgba_load();
     start = T2.forward(T1.forward(thvec2(0.0, double(mh/2.0))));
     this->mpic.rgba_init(mw, mh);
@@ -262,7 +261,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
         ptmp = T1.backward(T2.backward(start));
         this->mpic.rgba_set_pixel(x, y, sketch->m_pic.rgba_interpolate_pixel(ptmp.m_x, ptmp.m_y));
         if ((counter++ % 20000) == 0)
-          thprint(fmt::format(" [{:.0f}%]", double(counter) / double(mw * mh) * 100.0));
+          thprint(std::format(" [{:.0f}%]", double(counter) / double(mw * mh) * 100.0));
       }
     }
 
@@ -312,7 +311,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     mw = long(pmax.m_x + 0.5) - long(pmin.m_x - 0.5);
     mh = long(pmax.m_y + 0.5) - long(pmin.m_y - 0.5);
     if (mh > 0) ss.resize(mh);
-    thprint(fmt::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
+    thprint(std::format("({:.1f} Mpix)", double(mw * mh) / 1000000.0));
     sketch->m_pic.rgba_load();
     start = T2.forward(T1.forward(thvec2(0.0, double(mh/2.0))));
     this->mpic.rgba_init(mw, mh);
@@ -365,7 +364,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
             }
           }
           if ((counter++ % 20000) == 0)
-            thprint(fmt::format(" [{:.0f}%]", double(counter) / double(sketch->m_pic.width * sketch->m_pic.height) * 100.0));
+            thprint(std::format(" [{:.0f}%]", double(counter) / double(sketch->m_pic.width * sketch->m_pic.height) * 100.0));
         }
       }
       for(ox = 0; ox < sketch->m_pic.width; ox++)

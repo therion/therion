@@ -45,7 +45,7 @@
   #include "thconfig.h"
 #endif
 
-#include <fmt/format.h>
+#include <format>
 
 std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
 std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
@@ -163,7 +163,7 @@ void th_init_proj(PJ * &P, std::string s) {
       therror("couldn't enable network access for Proj");
     }
     for (auto & f: grids) {
-      thprint(fmt::format("downloading the grid {} from {} into {}...\n", f, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+      thprint(std::format("downloading the grid {} from {} into {}...\n", f, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
                                                                 proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0)));
       if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
         proj_destroy(P);
@@ -233,7 +233,7 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
         for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
           proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j,
               &short_name, nullptr, nullptr, &url, nullptr, nullptr, nullptr);
-          std::string s_tmp = fmt::format("missing PROJ transformation grid '{}'; you can download it from {} and install it to a location where PROJ finds it", short_name, url);
+          std::string s_tmp = std::format("missing PROJ transformation grid '{}'; you can download it from {} and install it to a location where PROJ finds it", short_name, url);
           switch (thcs_cfg.proj_auto_grid) {
             case GRID_WARN:
               thwarning(s_tmp);
@@ -249,7 +249,7 @@ void th_init_proj_auto(PJ * &P, int si, int ti) {
                 proj_list_destroy(ops);
                 therror("couldn't enable network access for Proj");
               }
-              thprint(fmt::format("downloading the grid {} from {} into {}...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+              thprint(std::format("downloading the grid {} from {} into {}...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
                                                                         proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0)));
               if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
                 proj_destroy(P_tmp);
@@ -311,7 +311,7 @@ void thcs2cs(int si, int ti,
 
 // set CA bundle path
 #ifdef THWIN32
-  std::string ca_path = fmt::format("{}\\lib\\cacert.pem", thcfg.install_path.c_str());
+  std::string ca_path = std::format("{}\\lib\\cacert.pem", thcfg.install_path.c_str());
   proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
 #endif
 
@@ -478,7 +478,7 @@ void thcs_log_transf_used() {
   if (!precise_transf.empty()) {
     thlog("\n################# custom transformations used ##################\n");
     for (auto &j: precise_transf) {
-      thlog(fmt::format("  [{} → {}] definition: [{}]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second));
+      thlog(std::format("  [{} → {}] definition: [{}]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second));
     }
     thlog("############ end of custom transformations used ################\n");
   }

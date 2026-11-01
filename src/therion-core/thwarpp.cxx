@@ -34,7 +34,8 @@
 #include "thdatabase.h"
 #include "thdataleg.h"
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 thwarpp::~thwarpp() {}
 
@@ -86,7 +87,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
     }
   }
   if (thtext_inline) thprint("\n");
-  thprint(fmt::format("morphing {} ...", fn));
+  thprint(std::format("morphing {} ...", fn));
   thtext_inline = true;
 
   this->m_sketch->m_pic.rgba_load();
@@ -139,10 +140,10 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
 	if ((pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
 	  unsigned long fuid = thdb.db1d.station_vec[pointp->from_name.id - 1].uid;
 	  if ( ssm.find(fuid) == ssm.end() ) {
-	    thprint(fmt::format("warning: extra point from {} but no station\n",
+	    thprint(std::format("warning: extra point from {} but no station\n",
 	      pointp->from_name.name ));
 	  } else {
-            s  = fmt::format("{}_E_{}",fuid, ++n_extra);
+            s  = std::format("{}_E_{}",fuid, ++n_extra);
             s2 = std::to_string(fuid);
 	    thdb2dpt * pt = pointp->point;
 	    // assert( pt != NULL );

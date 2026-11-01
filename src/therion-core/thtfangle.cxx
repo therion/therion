@@ -31,8 +31,7 @@
 #include "thexception.h"
 #include "thinfnan.h"
 
-#include <fmt/format.h>
-
+#include <format>
 #include <math.h>
 
 thtfangle::thtfangle() : thtf(TT_TFU_DEG) {}
@@ -68,7 +67,7 @@ void thtfangle::parse_units(char * ustr)
 			}
       [[fallthrough]];
     case TT_TFU_UNKNOWN_ANGLE:
-      throw thexception(fmt::format("unknown angle unit -- {}", ustr));
+      throw thexception(std::format("unknown angle unit -- {}", ustr));
       break;
   }
   

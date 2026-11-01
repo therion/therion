@@ -41,7 +41,7 @@
 #include "thparse.h"
 #include "therion.h"
 
-#include <fmt/format.h>
+#include <format>
 
 thexpdb::thexpdb() {
   this->format = TT_EXPDB_FMT_UNKNOWN;
@@ -57,19 +57,19 @@ void thexpdb::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPDB_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expdb_fmt);
       if (this->format == TT_EXPDB_FMT_UNKNOWN)
-        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
     case TT_EXPDB_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
     default:
@@ -135,16 +135,16 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   ni = dbp->db1d.get_tree_size();
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
   FILE * sqlf;
   sqlf = fopen(fnm,"wb");
   if (sqlf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -438,16 +438,16 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
   const char * fnm = this->get_output("cave.csv");
 
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif
 
   FILE * out;
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output", fnm));
+    thwarning(std::format("can't open {} for output", fnm));
     return;
   }
   this->register_output(fnm);

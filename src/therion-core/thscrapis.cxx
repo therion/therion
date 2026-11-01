@@ -40,10 +40,9 @@
 
 #include <poly2tri/poly2tri.h>
 
-#include <fmt/format.h>
-
 #include <cmath>
 #include <cstring>
+#include <format>
 
 struct pt2d {
   double x, y;
@@ -961,7 +960,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
   thprint("------------------\n"); \
   olineln = oline; \
   while (olineln != NULL) { \
-  thprint(fmt::format("{} {:6.2f} {:6.2f}\n", olineln->visible ? "SHOW" : "HIDE", olineln->x, olineln->y)); \
+  thprint(std::format("{} {:6.2f} {:6.2f}\n", olineln->visible ? "SHOW" : "HIDE", olineln->x, olineln->y)); \
   olineln = olineln->next; \
   } \
   oline = oline->next_segment; \
@@ -1200,7 +1199,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     		errdot = "@";
     		errsurv = this->m_scrap->fsptr->full_name;
     	}
-    	thwarning(fmt::format("{}{}{} -- scrap 3D reconstruction failed", errscrap, errdot, errsurv));
+    	thwarning(std::format("{}{}{} -- scrap 3D reconstruction failed", errscrap, errdot, errsurv));
     	thtext_inline = false;
     	this->tri_num = 0;
     }
@@ -1239,11 +1238,11 @@ void thscrapis::outline_scan(class thscraplo * outln) {
           errsurv = this->m_scrap->fsptr->full_name;
         }
         if (mult_outer) {
-          thwarning(fmt::format("{}{}{} -- multiple scrap outer outlines not supported yet", errscrap, errdot, errsurv));
+          thwarning(std::format("{}{}{} -- multiple scrap outer outlines not supported yet", errscrap, errdot, errsurv));
           thtext_inline = false;
         }
         if ((this->tri_num > newnum) || duplpts) {
-          thwarning(fmt::format("{}{}{} -- invalid scrap outline", errscrap, errdot, errsurv));
+          thwarning(std::format("{}{}{} -- invalid scrap outline", errscrap, errdot, errsurv));
           thtext_inline = false;
         }
       }

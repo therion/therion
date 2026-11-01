@@ -30,7 +30,7 @@
 #include "thexception.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <format>
 
 thdb2dji::thdb2dji()
 {
@@ -74,7 +74,7 @@ void thdb2dji::parse_item(char * istr)
   if (npar == 2) {
     this->mark = thdb.strstore(pars[1]);
     if (!th_is_keyword(this->mark))
-      throw thexception(fmt::format("line mark not a keyword -- {}",istr));
+      throw thexception(std::format("line mark not a keyword -- {}",istr));
   }
   /*
   thdb.buff_enc.assign(pars[0]);

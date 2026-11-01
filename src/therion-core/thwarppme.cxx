@@ -29,6 +29,7 @@
  */
 #include <assert.h>
 #include <math.h>
+#include <format>
 
 #include "thinfnan.h"
 #include "thwarppme.h"
@@ -900,11 +901,11 @@ namespace therion
     template< >
     void item_pair<triangle>::print() const
     {
-        thprint(fmt::format("[{}] Triangle A {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+        thprint(std::format("[{}] Triangle A {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
           nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y ));
-        thprint(fmt::format("              B {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+        thprint(std::format("              B {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
           from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y ));
-        thprint(fmt::format("              C {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+        thprint(std::format("              C {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
           from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y ));
         print_ngbhs();
     }
@@ -1114,13 +1115,13 @@ namespace therion
     template< >
     void plaquette_pair::print() const
     {
-        thprint(fmt::format("[{}] Plaquette A {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+        thprint(std::format("[{}] Plaquette A {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
           nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y ));
-        thprint(fmt::format("              B {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+        thprint(std::format("              B {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
           from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y ));
-        thprint(fmt::format("              C {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+        thprint(std::format("              C {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
           from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y ));
-        thprint(fmt::format("              D {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
+        thprint(std::format("              D {:6.2f} {:6.2f} <-> {:6.2f} {:6.2f}\n",
           from.m_D.m_x, from.m_D.m_y, to.m_D.m_x, to.m_D.m_y ));
         print_ngbhs();
     }

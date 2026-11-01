@@ -42,11 +42,11 @@
 
 #include "stl_reader.h"
 
-#include <fmt/format.h>
-
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <filesystem>
+#include <format>
 #include <list>
 
 namespace fs = std::filesystem;
@@ -169,7 +169,7 @@ void thscan::parse_data_source_coords(char ** args) {
   for(size_t i = 0; i < this->datasrc_coords.size(); i++) {
 	this->datasrc_coords[i] = thmatch_token(args[i], thtt_scan_coords);
 	if (this->datasrc_coords[i] == TT_SCAN_COORDS_UNKNOWN)
-	  throw thexception(fmt::format("unknown scan coordinate -- {}", args[i]));
+	  throw thexception(std::format("unknown scan coordinate -- {}", args[i]));
 	switch(this->datasrc_coords[i]) {
 	  case TT_SCAN_COORDS_NX:
 	  case TT_SCAN_COORDS_X:
@@ -186,11 +186,11 @@ void thscan::parse_data_source_coords(char ** args) {
 	}
   }
   if (!hasx)
-	throw thexception(fmt::format("x coordinate not defined -- {} {} {}", args[0], args[1], args[2]));
+	throw thexception(std::format("x coordinate not defined -- {} {} {}", args[0], args[1], args[2]));
   if (!hasy)
-	throw thexception(fmt::format("y coordinate not defined -- {} {} {}", args[0], args[1], args[2]));
+	throw thexception(std::format("y coordinate not defined -- {} {} {}", args[0], args[1], args[2]));
   if (!hasz)
-	throw thexception(fmt::format("z coordinate not defined -- {} {} {}", args[0], args[1], args[2]));
+	throw thexception(std::format("z coordinate not defined -- {} {} {}", args[0], args[1], args[2]));
 }
 
 
@@ -343,7 +343,7 @@ void thscan::parse_calib(int nargs, char** args) {
   for(size_t i = 0; i < coords.size(); i++) {
 	thparse_double(sv, coords[i], args[i+1]);
 	if (sv != TT_SV_NUMBER)
-	  throw thexception(fmt::format("number expected -- {}", args[i+1]));
+	  throw thexception(std::format("number expected -- {}", args[i+1]));
   }
   it->x = coords[0];
   it->y = coords[1];
@@ -369,9 +369,9 @@ void thscan::check_stations()
 	  fix.station.id = thdb.db1d.get_station_id(fix.station, this->fsptr);
 	  if (fix.station.id == 0) {
 		if (fix.station.survey == nullptr)
-		  throw thexception(fmt::format("{} -- station doesn't exist -- {}", this->throw_source(), fix.station.name));
+		  throw thexception(std::format("{} -- station doesn't exist -- {}", this->throw_source(), fix.station.name));
 		else
-		  throw thexception(fmt::format("{} -- station doesn't exist -- {}@{}", this->throw_source(), fix.station.name, fix.station.survey));
+		  throw thexception(std::format("{} -- station doesn't exist -- {}@{}", this->throw_source(), fix.station.name, fix.station.survey));
 	  }
 	}
   }
@@ -410,7 +410,7 @@ thdb3ddata * thscan::get_3d() {
     }
   }
   catch (const std::exception& e) {
-	throw thexception(fmt::format("{} -- error reading {}", this->throw_source(), this->datasrc), e);
+	throw thexception(std::format("{} -- error reading {}", this->throw_source(), this->datasrc), e);
   }
 
   // TODO: inicializujeme transformaciu
