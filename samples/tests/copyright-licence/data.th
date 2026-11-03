@@ -1,0 +1,12 @@
+encoding utf-8
+
+survey cave
+  input data.th2
+  centreline
+    copyright 2024 "CUCC Expo" "CC BY-SA"
+    copyright 2021 Wookey GPLv2+
+    copyright 2020 "Plain Name"
+    data normal from to length compass clino
+    1 2 10 0 0
+  endcentreline
+endsurvey

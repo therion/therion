@@ -58,7 +58,10 @@ bool operator < (const thmapstat_data & c1,
 
 bool operator < (const thmapstat_copyright & c1, 
     const thmapstat_copyright & c2) {
-  return (strcmp(c1.str,c2.str) < 0);
+  int cmp = strcmp(c1.str, c2.str);
+  if (cmp != 0)
+    return cmp < 0;
+  return strcmp(c1.licence, c2.licence) < 0;
 }
 
 bool operator < (const thmapstat_dataptr & c1, 
@@ -186,6 +189,7 @@ void thmapstat::addobj(thdataobject * obj) {
   for (cii = obj->copyright_map.begin();
         cii != obj->copyright_map.end(); cii++) {
     tmpc.str = cii->first.name;
+    tmpc.licence = cii->first.licence;
     this->copyright[tmpc].crit += 1.0;
     this->copyright[tmpc].date.join(cii->second);
   }
@@ -276,10 +280,8 @@ struct thmapstat_copyright_data {
 	    return true;
 	  else if (crit < x.crit)
 	    return false;
-	  else if (strcmp(copy.str, x.copy.str) < 0)
-	    return true;
 	  else
-	    return false;
+	    return copy < x.copy;
   }
 };
 
@@ -357,6 +359,11 @@ void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const cha
 			b = pd[i].copy.str;
 			b += " ";
 			b += pd[i].data.date.get_str(TT_DATE_FMT_UTF8_Y);
+			if (strlen(pd[i].copy.licence) > 0) {
+			  b += " (";
+			  b += pd[i].copy.licence;
+			  b += ")";
+			}
 			if (show_lengths) {
 			  b += " (";
 			  std::snprintf(c.data(),127,"%.0f",pd[i].crit);

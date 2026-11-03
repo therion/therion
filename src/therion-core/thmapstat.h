@@ -61,6 +61,7 @@ class thmapstat_copyright {
       const thmapstat_copyright & c2);
   
   const char * str = {};  
+  const char * licence = "";  ///< Licence, empty if not given.
   
 };
 

@@ -9,6 +9,7 @@ add_executable(utest
     utest-main.cxx
     utest-proj.cxx
     utest-str.cxx
+    utest-thcopyright.cxx
     utest-thdatastation.cxx
     utest-thdb2dab.cxx
     utest-thdouble.cxx

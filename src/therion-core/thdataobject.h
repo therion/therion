@@ -123,13 +123,14 @@ class thcmd_option_desc {
 
   
   int id, ///< Option identifier.
-      nargs; ///< Number of option arguments.
+      nargs, ///< Number of option arguments.
+      optargs; ///< Number of optional arguments that may follow on a command line.
   
   /**
    * Standard constructor.
    */
    
-  thcmd_option_desc() : id(TT_DATAOBJECT_UNKNOWN), nargs(1) {}
+  thcmd_option_desc() : id(TT_DATAOBJECT_UNKNOWN), nargs(1), optargs(0) {}
   
 
   /**
@@ -138,7 +139,7 @@ class thcmd_option_desc {
    * @param oid Option id.
    */
    
-  thcmd_option_desc(int oid) : id(oid), nargs(1) {}
+  thcmd_option_desc(int oid) : id(oid), nargs(1), optargs(0) {}
   
   
   /**
@@ -146,9 +147,10 @@ class thcmd_option_desc {
    *
    * @param oid Option id.
    * @param nas Number of arguments.
+   * @param opt Number of optional arguments.
    */
    
-  thcmd_option_desc(int oid, int nas) : id(oid), nargs(nas) {}
+  thcmd_option_desc(int oid, int nas, int opt = 0) : id(oid), nargs(nas), optargs(opt) {}
     
     
 };
@@ -205,20 +207,21 @@ class thdataobject_copyright {
   public:
 
   const char * name;  ///< Author's name
+  const char * licence;  ///< Licence, empty if not given.
   unsigned long rev;  ///< Object's revision.
   
   /**
    * Standard constructor.
    */
    
-  thdataobject_copyright() : name(""), rev(0) {}
+  thdataobject_copyright() : name(""), licence(""), rev(0) {}
    
   
   /**
    * Default constructor.
    */
    
-  thdataobject_copyright(const char * nn, unsigned long rv) : name(nn), rev(rv) {}
+  thdataobject_copyright(const char * nn, const char * ll, unsigned long rv) : name(nn), licence(ll), rev(rv) {}
   
   
 };

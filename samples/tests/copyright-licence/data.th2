@@ -1,0 +1,11 @@
+encoding utf-8
+
+scrap s1 -projection plan -copyright 2024 "CUCC Expo" "CC BY-SA" -title "With licence"
+  point 0 0 station -name 1
+  point 0 100 station -name 2
+endscrap
+
+scrap s2 -projection plan -copyright 2022 Wookey GPLv2+ -copyright 2020 "Plain Name"
+  point 0 0 station -name 1
+  point 0 100 station -name 2
+endscrap

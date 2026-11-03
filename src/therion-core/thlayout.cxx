@@ -434,7 +434,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
   switch (cod.id) {
     case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
-      defcod.nargs = 2;
+      defcod.nargs = (cod.id == TT_DATAOBJECT_COPYRIGHT) ? 3 : 2;
       [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
