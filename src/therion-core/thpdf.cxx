@@ -41,7 +41,7 @@
 #include <cmath>
 #include <regex>
 #include <numbers>
-#include <fmt/format.h>
+#include <format>
 
 #include "thpdfdbg.h"
 #include "thconfig.h"
@@ -54,7 +54,7 @@
 #include "thcs.h"
 #include "thproj.h"
 
-#define IOerr(F) fmt::format("Can't open file {}!\n", (F))
+#define IOerr(F) std::format("Can't open file {}!\n", (F))
 
 
 
@@ -105,7 +105,7 @@ double HS,VS;
 //////////
 
 std::string black2pdf(double shade, fillstroke fs) {    // shade: 0 = white, 1 = black
-  if (shade < 0 || shade > 1) therror(fmt::format("shade {} out of range <0,1>",shade));
+  if (shade < 0 || shade > 1) therror(std::format("shade {} out of range <0,1>",shade));
   color c;
   if (LAYOUT.output_colormodel == colormodel::grey) c.set(1-shade);
   else if (LAYOUT.output_colormodel == colormodel::rgb) c.set(1-shade, 1-shade, 1-shade);
@@ -119,7 +119,7 @@ std::string tex_Nname(std::string s) {return("THN"+s);}
 std::string tex_BMPname(std::string s) {return("THBMP"+s);} // bitmap
 
 std::string xyz2str(int x, int y, int z) {
-  return fmt::format("{}.{}.{}",x,y,z);
+  return std::format("{}.{}.{}",x,y,z);
 }
 
 std::list<sheetrecord>::iterator find_sheet(int x, int y, int z) {
@@ -375,7 +375,7 @@ std::regex reg_s_lower(R"(^[a-z]+$)");
 std::regex reg_s_upper(R"(^[A-Z]+$)");
 
 std::string grid_name(std::string s, int offset) {
-  if (std::regex_match(s,reg_num)) return fmt::format("{:d}", atoi(s.c_str())+offset);
+  if (std::regex_match(s,reg_num)) return std::format("{:d}", atoi(s.c_str())+offset);
   else if (std::regex_match(s,reg_s_lower)) return grid_int2str(grid_str2int(s,'a')+offset,'a');
   else if (std::regex_match(s,reg_s_upper)) return grid_int2str(grid_str2int(s,'A')+offset,'A');
   else return "?";
@@ -472,7 +472,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
     if (mode == MAP)
       PAGEDEF << "\\setbox\\xxx=\\hbox to \\adjustedHS{%\n";
     else 
-      PAGEDEF << "\\setbox\\xxx=\\hbox to " << fmt::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
+      PAGEDEF << "\\setbox\\xxx=\\hbox to " << std::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
   }
 
 //  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << '\n';
@@ -513,7 +513,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
               xc = K->B1; yc = K->B2;
               xc -= HSHIFT; yc -= VSHIFT;
               PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
-                      fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+                      std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                       tex_get_ref(tex_Xname("B"+(K->name))) << "}%\n";
             }
           }
@@ -522,7 +522,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
               xc = K->I1; yc = K->I2;
               xc -= HSHIFT; yc -= VSHIFT;
               PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
-                      fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+                      std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                       tex_get_ref(tex_Xname("I"+(K->name))) << "}%\n";
             }
           }
@@ -535,7 +535,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
     if (mode==MAP)
       PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp\n";
     else 
-      PAGEDEF << "\\hfill}\\ht\\xxx=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+      PAGEDEF << "\\hfill}\\ht\\xxx=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
     PAGEDEF << "\\immediate\\pdfxform ";
     PAGEDEF << "attr{/OC \\the\\" << (up ? "ocU" : "ocD") << "\\space 0 R} ";
     if (icc_used())  PAGEDEF << "resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
@@ -566,7 +566,7 @@ void compose_page(std::list<sheetrecord>::iterator sheet_it, std::ofstream& PAGE
                   utf2texoctal(lay_it->second.N) << "}%\n";
   }
   //PAGE.precision(6);
-  PAGE << "\\setbox\\mapbox=\\hbox to " << fmt::format("{}",thdouble(HS,prec_matrix)) << "bp{%\n";
+  PAGE << "\\setbox\\mapbox=\\hbox to " << std::format("{}",thdouble(HS,prec_matrix)) << "bp{%\n";
   //PAGE.precision(2);
   PAGE << "\\rlap{\\pdfrefxform\\" << tex_Sname(u2str(sheet_it->id)) << 
           "}%\n";
@@ -576,17 +576,17 @@ void compose_page(std::list<sheetrecord>::iterator sheet_it, std::ofstream& PAGE
   double lhy = VS - 2*lw;
   double lhx = HS - 2*lw;
   if (sheet_it->jumpW) PAGE << "\\flatlink{0}{" << lw << "}{" << lw << 
-          "}{" << fmt::format("{}",thdouble(lhy,prec_xy)) << "}{" << u2str(sheet_it->jumpW) << "}%\n";
+          "}{" << std::format("{}",thdouble(lhy,prec_xy)) << "}{" << u2str(sheet_it->jumpW) << "}%\n";
   if (sheet_it->jumpE) PAGE << "\\flatlink{" << HS-lw << "}{" << lw <<
-          "}{" << lw << "}{" << fmt::format("{}",thdouble(lhy,prec_xy)) << "}{" << u2str(sheet_it->jumpE) << "}%\n";
-  if (sheet_it->jumpN) PAGE << "\\flatlink{" << lw << "}{" << fmt::format("{}",thdouble(VS-lw,prec_xy)) <<
-          "}{" << fmt::format("{}",thdouble(lhx,prec_xy)) << "}{" << lw << "}{" << u2str(sheet_it->jumpN)<< "}%\n";
-  if (sheet_it->jumpS) PAGE << "\\flatlink{" << lw << "}{0}{" << fmt::format("{}",thdouble(lhx,prec_xy)) <<
+          "}{" << lw << "}{" << std::format("{}",thdouble(lhy,prec_xy)) << "}{" << u2str(sheet_it->jumpE) << "}%\n";
+  if (sheet_it->jumpN) PAGE << "\\flatlink{" << lw << "}{" << std::format("{}",thdouble(VS-lw,prec_xy)) <<
+          "}{" << std::format("{}",thdouble(lhx,prec_xy)) << "}{" << lw << "}{" << u2str(sheet_it->jumpN)<< "}%\n";
+  if (sheet_it->jumpS) PAGE << "\\flatlink{" << lw << "}{0}{" << std::format("{}",thdouble(lhx,prec_xy)) <<
           "}{" << lw << "}{" << u2str(sheet_it->jumpS) << "}%\n";
   
 
   //PAGE.precision(6);
-  PAGE << "\\hfil}\\ht\\mapbox=" << fmt::format("{}",thdouble(VS,prec_matrix)) << "bp%\n";
+  PAGE << "\\hfil}\\ht\\mapbox=" << std::format("{}",thdouble(VS,prec_matrix)) << "bp%\n";
   //PAGE.precision(2);
 
   PAGE << "\\pagelabel={" << grid_name(LAYOUT.labely,-sheet_it->namey) << 
@@ -651,9 +651,9 @@ void compose_page(std::list<sheetrecord>::iterator sheet_it, std::ofstream& PAGE
         std::string tmp = xyz2str(sheet_it->layer,
                              sheet_it->namex+i,sheet_it->namey+j);
         if (SHEET_JMP.count(tmp) > 0) {
-          PAGE << "\\flatlink{" << fmt::format("{}",thdouble(HSN*(i+LAYOUT.nav_right)/nav_x,prec_xy)) <<
-            "}{" << fmt::format("{}",thdouble(VSN*(j+LAYOUT.nav_up)/nav_y,prec_xy)) << "}{" <<
-            fmt::format("{}",thdouble(HSN/nav_x,prec_xy)) << "}{" << fmt::format("{}",thdouble(VSN/nav_y,prec_xy)) << "}{" <<
+          PAGE << "\\flatlink{" << std::format("{}",thdouble(HSN*(i+LAYOUT.nav_right)/nav_x,prec_xy)) <<
+            "}{" << std::format("{}",thdouble(VSN*(j+LAYOUT.nav_up)/nav_y,prec_xy)) << "}{" <<
+            std::format("{}",thdouble(HSN/nav_x,prec_xy)) << "}{" << std::format("{}",thdouble(VSN/nav_y,prec_xy)) << "}{" <<
             u2str(SHEET_JMP.find(tmp)->second->id) << "}%\n";
         }
       }
@@ -670,7 +670,7 @@ void print_page_bg(std::ofstream& PAGEDEF) {
 
     // bg rectangle
     PAGEDEF << "\\PL{q " << LAYOUT.col_background.to_pdfliteral(fillstroke::fill) <<
-                     " 0 0 " << fmt::format("{}",thdouble(HS,prec_xy)) << " " << fmt::format("{}",thdouble(VS,prec_xy)) << " re f Q}%\n";
+                     " 0 0 " << std::format("{}",thdouble(HS,prec_xy)) << " " << std::format("{}",thdouble(VS,prec_xy)) << " re f Q}%\n";
   }
 }
 
@@ -711,7 +711,7 @@ void print_page_bg_scraps(int layer, std::ofstream& PAGEDEF,
         if (used_scraps.count(K->name) > 0 && K->I != "") {
           xc = K->I1; yc = K->I2;
           xc -= HSHIFT; yc -= VSHIFT;
-          PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+          PAGEDEF << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                   tex_get_ref(tex_Xname("I"+(K->name))) << "}%\n";
         }
       }
@@ -725,7 +725,7 @@ void print_surface_bitmaps (std::ofstream &PAGEDEF, double shiftx, double shifty
     if (mode == MAP)
       PAGEDEF << "\\setbox\\xxx=\\hbox to\\adjustedHS{%\n";
     else
-      PAGEDEF << "\\setbox\\xxx=\\hbox to" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
+      PAGEDEF << "\\setbox\\xxx=\\hbox to" << std::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
     PAGEDEF << "\\PL{/GS2 gs}%\n";
   }
   int i = 1;
@@ -738,9 +738,9 @@ void print_surface_bitmaps (std::ofstream &PAGEDEF, double shiftx, double shifty
       PAGEDEF << "\\bitmap{";
     }
     PAGEDEF << 
-          fmt::format("{}",thdouble(I->xx,prec_matrix)) << "}{" << fmt::format("{}",thdouble(I->yx,prec_matrix)) << "}{" <<
-          fmt::format("{}",thdouble(I->xy,prec_matrix)) << "}{" << fmt::format("{}",thdouble(I->yy,prec_matrix)) << "}{" <<
-          fmt::format("{}",thdouble(I->dx - shiftx,prec_matrix)) << "}{" << fmt::format("{}",thdouble(I->dy - shifty,prec_matrix)) <<
+          std::format("{}",thdouble(I->xx,prec_matrix)) << "}{" << std::format("{}",thdouble(I->yx,prec_matrix)) << "}{" <<
+          std::format("{}",thdouble(I->xy,prec_matrix)) << "}{" << std::format("{}",thdouble(I->yy,prec_matrix)) << "}{" <<
+          std::format("{}",thdouble(I->dx - shiftx,prec_matrix)) << "}{" << std::format("{}",thdouble(I->dy - shifty,prec_matrix)) <<
           "}{\\" << tex_BMPname(u2str(i)) << "}%\n";
     i++;
   };
@@ -749,7 +749,7 @@ void print_surface_bitmaps (std::ofstream &PAGEDEF, double shiftx, double shifty
     if (mode == MAP)
       PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp\n";
     else
-      PAGEDEF << "\\hfill}\\ht\\xxx="<< fmt::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+      PAGEDEF << "\\hfill}\\ht\\xxx="<< std::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
     PAGEDEF << "\\immediate\\pdfxform ";
     PAGEDEF << "attr{";
     if (LAYOUT.transparency) PAGEDEF << "/Group \\the\\attrid\\space 0 R ";
@@ -859,9 +859,9 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         out.x -= LLX;
         out.y -= LLY;
         PAGEDEF << "\\PL{q}";
-	PAGEDEF << "\\PL{" << fmt::format("{}",thdouble(cosr,prec_matrix)) << " " << fmt::format("{}",thdouble(sinr,prec_matrix)) << " "
-                           << fmt::format("{}",thdouble(-sinr,prec_matrix)) << " " << fmt::format("{}",thdouble(cosr,prec_matrix)) << " "
-                           << fmt::format("{}",thdouble(out.x,prec_matrix)) << " " << fmt::format("{}",thdouble(out.y,prec_matrix)) << " cm}";
+	PAGEDEF << "\\PL{" << std::format("{}",thdouble(cosr,prec_matrix)) << " " << std::format("{}",thdouble(sinr,prec_matrix)) << " "
+                           << std::format("{}",thdouble(-sinr,prec_matrix)) << " " << std::format("{}",thdouble(cosr,prec_matrix)) << " "
+                           << std::format("{}",thdouble(out.x,prec_matrix)) << " " << std::format("{}",thdouble(out.y,prec_matrix)) << " cm}";
 	PAGEDEF << "\\PB{0}{0}{" << tex_get_ref(tex_Wname("grid") + u2str(elem+1)) << "}";
         PAGEDEF << "\\PL{Q}%\n";
 
@@ -872,17 +872,17 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
           out.x -= LLX;
           out.y -= LLY;
           PAGEDEF << "\\PL{q}";
-          PAGEDEF << "\\PL{" << fmt::format("{}",thdouble(cosr,prec_matrix)) << " " << fmt::format("{}",thdouble(sinr,prec_matrix)) << " "
-                             << fmt::format("{}",thdouble(-sinr,prec_matrix)) << " " << fmt::format("{}",thdouble(cosr,prec_matrix)) << " "
-                             << fmt::format("{}",thdouble(out.x,prec_matrix)) << " " << fmt::format("{}",thdouble(out.y,prec_matrix)) << " cm}";
+          PAGEDEF << "\\PL{" << std::format("{}",thdouble(cosr,prec_matrix)) << " " << std::format("{}",thdouble(sinr,prec_matrix)) << " "
+                             << std::format("{}",thdouble(-sinr,prec_matrix)) << " " << std::format("{}",thdouble(cosr,prec_matrix)) << " "
+                             << std::format("{}",thdouble(out.x,prec_matrix)) << " " << std::format("{}",thdouble(out.y,prec_matrix)) << " cm}";
           tmpnumx = G_real_init_x+ii*LAYOUT.XS;
           tmpnumy = G_real_init_y+jj*LAYOUT.YS;
 	  PAGEDEF << "\\gridcoord{" << (row == 2 ? (col == 2 ? 1 : 3) : (col == 2 ? 7 : 9)) << 
 	      "}{\\gridfont (" << std::setprecision(0) <<
               (tmpnumx < 0 ? utf2tex("−"): "") /* unicode minus */ <<
-	      fmt::format("{}",thdouble(std::abs(tmpnumx),0)) << "," <<
+	      std::format("{}",thdouble(std::abs(tmpnumx),0)) << "," <<
               (tmpnumy < 0 ? utf2tex("−"): "") /* unicode minus */ <<
-              fmt::format("{}",thdouble(std::abs(tmpnumy),0)) << std::setprecision(2) << ")}%\n";
+              std::format("{}",thdouble(std::abs(tmpnumy),0)) << std::setprecision(2) << ")}%\n";
           PAGEDEF << "\\PL{Q}";
         }
 
@@ -900,25 +900,25 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
 	elem = col + 3*row;
         tmpnum = G_real_init_y+jj*LAYOUT.YS;
-	PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(i-LLX+LAYOUT.gridcell[elem].x,prec_xy)) << "}{" <<
-			      fmt::format("{}",thdouble(j-LLY+LAYOUT.gridcell[elem].y,prec_xy)) << "}{" <<
+	PAGEDEF << "\\PB{" << std::format("{}",thdouble(i-LLX+LAYOUT.gridcell[elem].x,prec_xy)) << "}{" <<
+			      std::format("{}",thdouble(j-LLY+LAYOUT.gridcell[elem].y,prec_xy)) << "}{" <<
 			      tex_get_ref(tex_Wname("grid") + u2str(elem+1)) << "}%\n";
 
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "\\PL{q}";
-          PAGEDEF << "\\PL{1 0 0 1 " << fmt::format("{}",thdouble(i-LLX,prec_xy)) << " " << fmt::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
+          PAGEDEF << "\\PL{1 0 0 1 " << std::format("{}",thdouble(i-LLX,prec_xy)) << " " << std::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
           PAGEDEF << "\\gridcoord{" << (row==2?3:9) << "}{\\gridfont " <<
               (tmpnum < 0 ? utf2tex("−"): "") /* unicode minus */ <<
-	      std::setprecision(0) << fmt::format("{}",thdouble(std::abs(tmpnum),0)) <<
+	      std::setprecision(0) << std::format("{}",thdouble(std::abs(tmpnum),0)) <<
 	      std::setprecision(2)<< "}";
           PAGEDEF << "\\PL{Q}%\n";
 	}
         if (col == 2 && LAYOUT.grid_coord_freq == 2) {
           PAGEDEF << "\\PL{q}";
-          PAGEDEF << "\\PL{1 0 0 1 " << fmt::format("{}",thdouble(i-LLX,prec_xy)) << " " << fmt::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
+          PAGEDEF << "\\PL{1 0 0 1 " << std::format("{}",thdouble(i-LLX,prec_xy)) << " " << std::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
           PAGEDEF << "\\gridcoord{" << (row==2?1:7) << "}{\\gridfont " <<
               (tmpnum < 0 ? utf2tex("−"): "") /* unicode minus */ <<
-	      std::setprecision(0) << fmt::format("{}",thdouble(std::abs(tmpnum),0)) <<
+	      std::setprecision(0) << std::format("{}",thdouble(std::abs(tmpnum),0)) <<
 	      std::setprecision(2)<< "}";
           PAGEDEF << "\\PL{Q}%\n";
         }
@@ -976,7 +976,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
     used_scraps = (*I).second;
 
     if (LAYOUT.transparency) {                 // transparency group beginning
-      PAGEDEF << "\\setbox\\xxx=\\hbox to " << fmt::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
+      PAGEDEF << "\\setbox\\xxx=\\hbox to " << std::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
       PAGEDEF << "\\PL{/GS1 gs}%\n";     // beginning of transparency
     }
 
@@ -984,7 +984,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->I != "") {
         xc = K->I1; yc = K->I2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+        PAGEDEF << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                 tex_get_ref(tex_Xname("I"+(K->name)+"COLORED")) << "}%\n";
       }
     }   // end of the colored background
@@ -997,9 +997,9 @@ void print_map(int layer, std::ofstream& PAGEDEF,
                                             I_sk != K->SKETCHLIST.end(); I_sk++) {
           PAGEDEF << "\\pdfximage{" << I_sk->filename << "}%\n";
           PAGEDEF << "\\bitmap{" <<
-              fmt::format("{}",thdouble(I_sk->xx,prec_matrix)) << "}{" << fmt::format("{}",thdouble(I_sk->yx,prec_matrix)) << "}{" <<
-              fmt::format("{}",thdouble(I_sk->xy,prec_matrix)) << "}{" << fmt::format("{}",thdouble(I_sk->yy,prec_matrix)) << "}{" <<
-              fmt::format("{}",thdouble(I_sk->dx - HSHIFT,prec_matrix)) << "}{" << fmt::format("{}",thdouble(I_sk->dy - VSHIFT,prec_matrix))  <<
+              std::format("{}",thdouble(I_sk->xx,prec_matrix)) << "}{" << std::format("{}",thdouble(I_sk->yx,prec_matrix)) << "}{" <<
+              std::format("{}",thdouble(I_sk->xy,prec_matrix)) << "}{" << std::format("{}",thdouble(I_sk->yy,prec_matrix)) << "}{" <<
+              std::format("{}",thdouble(I_sk->dx - HSHIFT,prec_matrix)) << "}{" << std::format("{}",thdouble(I_sk->dy - VSHIFT,prec_matrix))  <<
               "}{\\pdflastximage}%\n";
         };
       };
@@ -1011,7 +1011,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->G != "") {
         xc = K->G1; yc = K->G2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+        PAGEDEF << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                 tex_get_ref(tex_Xname("G"+(K->name))) << "}%\n";
       };
     }
@@ -1019,12 +1019,12 @@ void print_map(int layer, std::ofstream& PAGEDEF,
     if (LAYOUT.transparency) {
       PAGEDEF << "\\PL{/GS0 gs}%\n";      // end of default transparency
       if (LAYOUT.smooth_shading == shading_mode::quick) {
-        PAGEDEF << "\\setbox\\xxx=\\hbox to " << fmt::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";  // add another knockout group
+        PAGEDEF << "\\setbox\\xxx=\\hbox to " << std::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";  // add another knockout group
       }
     }
 
-    PAGEDEF << "\\PL{q 0 0 m " << fmt::format("{}",thdouble(HS,prec_xy)) << " 0 l " << fmt::format("{}",thdouble(HS,prec_xy)) << " " <<
-                                  fmt::format("{}",thdouble(VS,prec_xy)) << " l 0 " << fmt::format("{}",thdouble(VS,prec_xy)) << " l 0 0 l}";
+    PAGEDEF << "\\PL{q 0 0 m " << std::format("{}",thdouble(HS,prec_xy)) << " 0 l " << std::format("{}",thdouble(HS,prec_xy)) << " " <<
+                                  std::format("{}",thdouble(VS,prec_xy)) << " l 0 " << std::format("{}",thdouble(VS,prec_xy)) << " l 0 0 l}";
                                // beginning of the text clipping path definition
 
     for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
@@ -1037,8 +1037,8 @@ void print_map(int layer, std::ofstream& PAGEDEF,
           if ((buffer == "m") || (buffer == "l") || (buffer == "c")) {
             PAGEDEF << "\\PL{"; 
             for(unsigned i=0; i<thstack.size(); i=i+2) {
-              PAGEDEF << fmt::format("{}", thdouble(std::stod(thstack[i])-xc,prec_xy)) << " " <<
-                         fmt::format("{}", thdouble(std::stod(thstack[i+1])-yc,prec_xy)) << " ";
+              PAGEDEF << std::format("{}", thdouble(std::stod(thstack[i])-xc,prec_xy)) << " " <<
+                         std::format("{}", thdouble(std::stod(thstack[i+1])-yc,prec_xy)) << " ";
             }
             PAGEDEF << buffer << "}%\n";
             thstack.clear();
@@ -1058,7 +1058,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->F != "") {
         xc = K->F1; yc = K->F2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+        PAGEDEF << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                 tex_get_ref(tex_Xname(K->name)) << "}%\n";
       };
     }
@@ -1067,7 +1067,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->E != "") {
         xc = K->E1; yc = K->E2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+        PAGEDEF << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                 tex_get_ref(tex_Xname("E"+(K->name))) << "}%\n";
       };
     }
@@ -1078,13 +1078,13 @@ void print_map(int layer, std::ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->X != "") {
         xc = K->X1; yc = K->X2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+        PAGEDEF << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                 tex_get_ref(tex_Xname("X"+(K->name))) << "}%\n";
       };
     }
     if (LAYOUT.transparency) {
       if (LAYOUT.smooth_shading == shading_mode::quick) {
-        PAGEDEF << "\\hfill}\\ht\\xxx=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+        PAGEDEF << "\\hfill}\\ht\\xxx=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
         PAGEDEF << "\\immediate\\pdfxform ";
         PAGEDEF << "attr{/Group \\the\\attrid\\space 0 R} ";
         PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R";
@@ -1092,7 +1092,7 @@ void print_map(int layer, std::ofstream& PAGEDEF,
         PAGEDEF << "}";
         PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%\n";
       }
-      PAGEDEF << "\\hfill}\\ht\\xxx=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+      PAGEDEF << "\\hfill}\\ht\\xxx=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
       PAGEDEF << "\\immediate\\pdfxform ";
       // the external group can't be a knockout group in the quick mode
       if (LAYOUT.smooth_shading != shading_mode::quick) PAGEDEF << "attr{/Group \\the\\attrid\\space 0 R} ";
@@ -1123,10 +1123,10 @@ void print_navigator(std::ofstream& P, std::list<sheetrecord>::iterator sheet_it
   double VSN = LAYOUT.vsize / LAYOUT.nav_factor * nav_y;
   double xc = 0, yc = 0;
 
-  P << "%\n\\setbox\\xxx=\\hbox to " << fmt::format("{}",thdouble(HSN,prec_xy)) << "bp{%\n\\PL{q ";
+  P << "%\n\\setbox\\xxx=\\hbox to " << std::format("{}",thdouble(HSN,prec_xy)) << "bp{%\n\\PL{q ";
   //P.precision(6);
-  P << fmt::format("{}",thdouble(1/LAYOUT.nav_factor,prec_matrix)) << " 0 0 " <<
-       fmt::format("{}",thdouble(1/LAYOUT.nav_factor,prec_matrix)) << " 0 0 cm}%\n";
+  P << std::format("{}",thdouble(1/LAYOUT.nav_factor,prec_matrix)) << " 0 0 " <<
+       std::format("{}",thdouble(1/LAYOUT.nav_factor,prec_matrix)) << " 0 0 cm}%\n";
   //P.precision(2);
 
   std::map<int,layerrecord>::iterator lay_it = LAYERHASH.find(sheet_it->layer);
@@ -1155,7 +1155,7 @@ void print_navigator(std::ofstream& P, std::list<sheetrecord>::iterator sheet_it
                       LAYOUT.hoffset; 
                 yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                       LAYOUT.voffset; 
-                P << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+                P << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                         tex_get_ref(tex_Xname("I"+(K->name))) << "}%\n";
                 NAV_SCRAPS.insert(K->name);
               }
@@ -1185,7 +1185,7 @@ void print_navigator(std::ofstream& P, std::list<sheetrecord>::iterator sheet_it
                   LAYOUT.hoffset; 
             yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                   LAYOUT.voffset; 
-            P << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+            P << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                     tex_get_ref(tex_Xname("I"+(K->name))) << "}%\n";
             NAV_SCRAPS.insert(K->name);
           }
@@ -1216,7 +1216,7 @@ void print_navigator(std::ofstream& P, std::list<sheetrecord>::iterator sheet_it
                       LAYOUT.hoffset; 
                 yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                       LAYOUT.voffset; 
-                P << "\\PB{" << fmt::format("{}",thdouble(xc,prec_xy)) << "}{" << fmt::format("{}",thdouble(yc,prec_xy)) << "}{" <<
+                P << "\\PB{" << std::format("{}",thdouble(xc,prec_xy)) << "}{" << std::format("{}",thdouble(yc,prec_xy)) << "}{" <<
                         tex_get_ref(tex_Xname("B"+(K->name))) << "}%\n";
                 NAV_SCRAPS.insert(K->name);
               }
@@ -1229,18 +1229,18 @@ void print_navigator(std::ofstream& P, std::list<sheetrecord>::iterator sheet_it
 
   // navigator grid
   P << "\\PL{Q}" << "\\PL{q " << black2pdf(1, fillstroke::stroke) << " 0 0 " <<
-       fmt::format("{}",thdouble(HSN,prec_xy)) << " " << fmt::format("{}",thdouble(VSN,prec_xy)) << " re S 0.1 w}";
+       std::format("{}",thdouble(HSN,prec_xy)) << " " << std::format("{}",thdouble(VSN,prec_xy)) << " re S 0.1 w}";
   for (int i = 1; i < nav_x; i++)      
-    P << "\\PL{" << fmt::format("{}",thdouble(HSN*i/nav_x,prec_xy)) << " 0 m " << fmt::format("{}",thdouble(HSN*i/nav_x,prec_xy)) << " " <<
-         fmt::format("{}",thdouble(VSN,prec_xy)) << " l S}%\n";
+    P << "\\PL{" << std::format("{}",thdouble(HSN*i/nav_x,prec_xy)) << " 0 m " << std::format("{}",thdouble(HSN*i/nav_x,prec_xy)) << " " <<
+         std::format("{}",thdouble(VSN,prec_xy)) << " l S}%\n";
   for (int i = 1; i < nav_y; i++)
-    P << "\\PL{0 " << fmt::format("{}",thdouble(VSN*i/nav_y,prec_xy)) << " m " << fmt::format("{}",thdouble(HSN,prec_xy)) << " " <<
-         fmt::format("{}",thdouble(VSN*i/nav_y,prec_xy)) << " l S}%\n";
+    P << "\\PL{0 " << std::format("{}",thdouble(VSN*i/nav_y,prec_xy)) << " m " << std::format("{}",thdouble(HSN,prec_xy)) << " " <<
+         std::format("{}",thdouble(VSN*i/nav_y,prec_xy)) << " l S}%\n";
   P << "\\PL{0.4 w " <<
-    fmt::format("{}",thdouble(HSN*LAYOUT.nav_right/nav_x,prec_xy)) << " " << fmt::format("{}",thdouble(VSN*LAYOUT.nav_up/nav_y,prec_xy)) << " " <<
-    fmt::format("{}",thdouble(HSN/nav_x,prec_xy)) << " " << fmt::format("{}",thdouble(VSN/nav_y,prec_xy)) << " " << " re S Q}";
+    std::format("{}",thdouble(HSN*LAYOUT.nav_right/nav_x,prec_xy)) << " " << std::format("{}",thdouble(VSN*LAYOUT.nav_up/nav_y,prec_xy)) << " " <<
+    std::format("{}",thdouble(HSN/nav_x,prec_xy)) << " " << std::format("{}",thdouble(VSN/nav_y,prec_xy)) << " " << " re S Q}";
   // XObject definition
-  P << "\\hfill}\\ht\\xxx=" << fmt::format("{}",thdouble(VSN,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+  P << "\\hfill}\\ht\\xxx=" << std::format("{}",thdouble(VSN,prec_xy)) << "bp\\dp\\xxx=0bp\n";
   P << "\\immediate\\pdfxform";
   if (icc_used())  P << " resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
   P << "\\xxx\\newcount\\" <<
@@ -1257,14 +1257,14 @@ void print_margins(std::ofstream& PAGEDEF) {
     double j = LAYOUT.vsize + LAYOUT.overlap;
     PAGEDEF << "\\PL{" << black2pdf(1, fillstroke::stroke) << "}";
     PAGEDEF << "\\PL{0.5 w}";
-    PAGEDEF << "\\PL{0 " << fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << " m " << fmt::format("{}",thdouble(HS,prec_xy)) << " " <<
-                            fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << " l S}";
-    PAGEDEF << "\\PL{0 " << fmt::format("{}",thdouble(j,prec_xy)) << " m " << fmt::format("{}",thdouble(HS,prec_xy)) << " "
-                         << fmt::format("{}",thdouble(j,prec_xy)) << " l S}";
-    PAGEDEF << "\\PL{" << fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << " 0 m " << fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) <<
-               " " << fmt::format("{}",thdouble(VS,prec_xy)) << " l S}";
-    PAGEDEF << "\\PL{" << fmt::format("{}",thdouble(i,prec_xy)) << " 0 m " << fmt::format("{}",thdouble(i,prec_xy)) << " " <<
-                          fmt::format("{}",thdouble(VS,prec_xy)) << " l S}";
+    PAGEDEF << "\\PL{0 " << std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << " m " << std::format("{}",thdouble(HS,prec_xy)) << " " <<
+                            std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << " l S}";
+    PAGEDEF << "\\PL{0 " << std::format("{}",thdouble(j,prec_xy)) << " m " << std::format("{}",thdouble(HS,prec_xy)) << " "
+                         << std::format("{}",thdouble(j,prec_xy)) << " l S}";
+    PAGEDEF << "\\PL{" << std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << " 0 m " << std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) <<
+               " " << std::format("{}",thdouble(VS,prec_xy)) << " l S}";
+    PAGEDEF << "\\PL{" << std::format("{}",thdouble(i,prec_xy)) << " 0 m " << std::format("{}",thdouble(i,prec_xy)) << " " <<
+                          std::format("{}",thdouble(VS,prec_xy)) << " l S}";
   }
   PAGEDEF << "\\PL{Q}%\n";
 }
@@ -1276,7 +1276,7 @@ void icc_check_file(std::string fname, std::string type) {
   iccfile.seekg(16);
   iccfile.read(buffer,4);
   buffer[4] = '\0';
-  if (type != std::string(buffer)) therror(fmt::format("Invalid ICC profile type: expected {}, got {}", type, buffer));
+  if (type != std::string(buffer)) therror(std::format("Invalid ICC profile type: expected {}, got {}", type, buffer));
 }
 
 void build_pages() {
@@ -1343,7 +1343,7 @@ R"(\pdfcompresslevel=9%
            " /GS1 << /Type /ExtGState /ca \\the\\opacity\\space /BM /Normal >>\n" <<
            " /GS2 << /Type /ExtGState /ca \\the\\surfaceopacity\\space /BM /Normal >>\n";
     for (int i = 0; i <= 100; i+=LAYOUT.alpha_step)
-      PDFRES << fmt::format(" /GSa{:d} << /Type /ExtGState /ca {} /BM /Normal >>\n", i, thdouble(i/100.0, 2));
+      PDFRES << std::format(" /GSa{:d} << /Type /ExtGState /ca {} /BM /Normal >>\n", i, thdouble(i/100.0, 2));
     PDFRES << ">> }\n";
     PDFRES << "\\newcount\\resid\\resid=\\pdflastobj\n";
     PDFRES << "\\immediate\\pdfobj{ << /S /Transparency /K true >> }\n";
@@ -1355,7 +1355,7 @@ R"(\pdfcompresslevel=9%
            " /GS1 << /Type /ExtGState >>\n" <<
            " /GS2 << /Type /ExtGState >>\n";
     for (int i = 0; i <= 100; i+=LAYOUT.alpha_step)
-      PDFRES << fmt::format(" /GSa{:d} << /Type /ExtGState >>\n", i);
+      PDFRES << std::format(" /GSa{:d} << /Type /ExtGState >>\n", i);
     PDFRES << ">> }\n";
     PDFRES << "\\newcount\\resid\\resid=\\pdflastobj\n";
   }
@@ -1512,20 +1512,20 @@ R"(\pdfcompresslevel=9%
     if (HS>14000 || VS>14000) 
       therror("Map is too large for PDF format. Try smaller scale!");
     PAGEDEF << "\\eject\n";
-    PAGEDEF << "\\hsize=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp\n";
-    PAGEDEF << "\\vsize=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\n";
+    PAGEDEF << "\\hsize=" << std::format("{}",thdouble(HS,prec_xy)) << "bp\n";
+    PAGEDEF << "\\vsize=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\n";
     PAGEDEF << "\\pdfpagewidth=\\hsize\\advance\\pdfpagewidth by " <<
-                                             fmt::format("{}",thdouble(2*LAYOUT.overlap,prec_xy)) << "bp\n";
+                                             std::format("{}",thdouble(2*LAYOUT.overlap,prec_xy)) << "bp\n";
     PAGEDEF << "\\pdfpageheight=\\vsize\\advance\\pdfpageheight by " <<
-                                             fmt::format("{}",thdouble(2*LAYOUT.overlap,prec_xy)) << "bp\n";
+                                             std::format("{}",thdouble(2*LAYOUT.overlap,prec_xy)) << "bp\n";
     PAGEDEF << "\\hoffset=0cm\n";
     PAGEDEF << "\\voffset=0cm\n";
-    PAGEDEF << "\\pdfhorigin=" << fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
-    PAGEDEF << "\\pdfvorigin=" << fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
+    PAGEDEF << "\\pdfhorigin=" << std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
+    PAGEDEF << "\\pdfvorigin=" << std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
   }
   
   if (mode == ATLAS) {
-    PAGEDEF << "\\newdimen\\overlap\\overlap=" << fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
+    PAGEDEF << "\\newdimen\\overlap\\overlap=" << std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
     for (std::list<sheetrecord>::iterator I = SHEET.begin(); 
                                      I != SHEET.end(); I++) {
 
@@ -1534,12 +1534,12 @@ R"(\pdfcompresslevel=9%
 
 // cout << "*" << flush; 
 
-      PAGEDEF << "\\setbox\\xxx=\\hbox to "<< fmt::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
+      PAGEDEF << "\\setbox\\xxx=\\hbox to "<< std::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
 
       print_map(I->layer, PAGEDEF, I);
       print_margins(PAGEDEF);
 
-      PAGEDEF << "\\hfill}\\ht\\xxx=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+      PAGEDEF << "\\hfill}\\ht\\xxx=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
       PAGEDEF << "\\immediate\\pdfxform";
       if (icc_used())  PAGEDEF << " resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
       PAGEDEF << "\\xxx\\newcount\\" << tex_Sname(u2str(I->id)) <<
@@ -1554,8 +1554,8 @@ R"(\pdfcompresslevel=9%
     }
   }
   else {
-    PAGEDEF << "\\newdimen\\x \\x=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp\n";
-    PAGEDEF << "\\newdimen\\y \\y=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\n";
+    PAGEDEF << "\\newdimen\\x \\x=" << std::format("{}",thdouble(HS,prec_xy)) << "bp\n";
+    PAGEDEF << "\\newdimen\\y \\y=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\n";
     PAGEDEF << "\\setbox\\xxx=\\hbox to \\x{\\maplayout\\hfill}%\\dp\\xxx=0bp\n";
     PAGEDEF << "\\advance\\x by \\extraE\n";
     PAGEDEF << "\\advance\\x by \\extraW\n";
@@ -1576,7 +1576,7 @@ R"(\pdfcompresslevel=9%
     PAGEDEF << "\\advance\\pdfpageheight by \\extraN\n";
     PAGEDEF << "\\advance\\pdfpageheight by \\extraS\n";
 
-    PAGEDEF << "\\newdimen\\overlap\\overlap=" << fmt::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
+    PAGEDEF << "\\newdimen\\overlap\\overlap=" << std::format("{}",thdouble(LAYOUT.overlap,prec_xy)) << "bp\n";
 
     PAGEDEF << "\\dimtobp{\\the\\pdfpagewidth}\\edef\\xsize{\\tmpdef}%\n";
     PAGEDEF << "\\dimtobp{\\the\\pdfpageheight}\\edef\\ysize{\\tmpdef}%\n";
@@ -1597,13 +1597,13 @@ R"(\pdfcompresslevel=9%
     PAGEDEF << "\\dimtobp{\\framey}\\edef\\Framey{\\tmpdef}%\n";
 
 
-    PAGEDEF << "\\adjustedHS=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp" <<
+    PAGEDEF << "\\adjustedHS=" << std::format("{}",thdouble(HS,prec_xy)) << "bp" <<
       "\\advance\\adjustedHS by \\extraE" << 
       "\\advance\\adjustedHS by \\extraW" <<
       "\\advance\\adjustedHS by \\overlap" << 
       "\\advance\\adjustedHS by \\overlap" <<  '\n';
 
-    PAGEDEF << "\\adjustedVS=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp" <<
+    PAGEDEF << "\\adjustedVS=" << std::format("{}",thdouble(VS,prec_xy)) << "bp" <<
       "\\advance\\adjustedVS by \\extraN" << 
       "\\advance\\adjustedVS by \\extraS" << 
       "\\advance\\adjustedVS by \\overlap" << 
@@ -1615,13 +1615,13 @@ R"(\pdfcompresslevel=9%
       PAGEDEF << "\\dimtobp{\\adjustedHS}\\edef\\adjustedHSbp{\\tmpdef}\n";
       PAGEDEF << "\\dimtobp{\\adjustedVS}\\edef\\adjustedVSbp{\\tmpdef}\n";
       for (int i: ind) {
-        PAGEDEF << "\\calibrX{" << fmt::format("{}",thdouble(LAYOUT.calibration_local[i].x - MINX,10)) << "bp}\\tmpdimenX" << static_cast<char>('a'+i) << "=\\tmpdimen\n";
-        PAGEDEF << "\\calibrY{" << fmt::format("{}",thdouble(LAYOUT.calibration_local[i].y - MINY,10)) << "bp}\\tmpdimenY" << static_cast<char>('a'+i) << "=\\tmpdimen\n";
+        PAGEDEF << "\\calibrX{" << std::format("{}",thdouble(LAYOUT.calibration_local[i].x - MINX,10)) << "bp}\\tmpdimenX" << static_cast<char>('a'+i) << "=\\tmpdimen\n";
+        PAGEDEF << "\\calibrY{" << std::format("{}",thdouble(LAYOUT.calibration_local[i].y - MINY,10)) << "bp}\\tmpdimenY" << static_cast<char>('a'+i) << "=\\tmpdimen\n";
       }
       PAGEDEF << "\\edef\\tmppdfpageattr{/VP [<< /Type /Viewport /BBox [0 0 \\adjustedHSbp\\space \\adjustedVSbp] /Measure << /Type /Measure /Subtype /GEO /GPTS [\n";
       for (int i: ind) {
-        PAGEDEF << fmt::format("{}",thdouble(LAYOUT.calibration_latlong[i].y,10)) << " " <<
-                   fmt::format("{}",thdouble(LAYOUT.calibration_latlong[i].x,10)) << " ";
+        PAGEDEF << std::format("{}",thdouble(LAYOUT.calibration_latlong[i].y,10)) << " " <<
+                   std::format("{}",thdouble(LAYOUT.calibration_latlong[i].x,10)) << " ";
       }
       PAGEDEF << "] /LPTS [";
       for (int i: ind) {
@@ -1683,13 +1683,13 @@ R"(\pdfcompresslevel=9%
     for (std::map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
       if (I->second.Z == 0) {
-        PAGEDEF << "\\setbox\\xxx=\\hbox to " << fmt::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
+        PAGEDEF << "\\setbox\\xxx=\\hbox to " << std::format("{}",thdouble(HS,prec_xy)) << "bp{%\n";
                             // we need flush layer data using XObject 
                             // (the text clipping path may become too large)
 
         print_map((*I).first,PAGEDEF);
 
-        PAGEDEF << "\\hfill}\\ht\\xxx=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+        PAGEDEF << "\\hfill}\\ht\\xxx=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
         PAGEDEF << "\\immediate\\pdfxform ";
         if (LAYOUT.OCG) {
           PAGEDEF << "attr{/OC \\the\\oc" << u2str(I->first) << "\\space 0 R} ";
@@ -1705,27 +1705,27 @@ R"(\pdfcompresslevel=9%
 
     if (LAYOUT.map_grid) {
       PAGEDEF << "\\PL{q .4 w " << black2pdf(0.4, fillstroke::fillstroke) << " }%\n";
-      PAGEDEF << "\\PL{0 0 " << fmt::format("{}",thdouble(HS,prec_xy)) << " " << fmt::format("{}",thdouble(VS,prec_xy)) << " re S}%\n";
+      PAGEDEF << "\\PL{0 0 " << std::format("{}",thdouble(HS,prec_xy)) << " " << std::format("{}",thdouble(VS,prec_xy)) << " re S}%\n";
       for (double i=0; i <= HS; i += LAYOUT.hsize) {
-        PAGEDEF << "\\PL{" << fmt::format("{}",thdouble(i,prec_xy)) << " 0 m " << fmt::format("{}",thdouble(i,prec_xy)) << " " <<
-                   fmt::format("{}",thdouble(VS,prec_xy)) << " l S}%\n";
+        PAGEDEF << "\\PL{" << std::format("{}",thdouble(i,prec_xy)) << " 0 m " << std::format("{}",thdouble(i,prec_xy)) << " " <<
+                   std::format("{}",thdouble(VS,prec_xy)) << " l S}%\n";
 	if (i<HS) {
-          PAGEDEF << "\\PL{q 1 0 0 1 " << fmt::format("{}",thdouble(i+LAYOUT.hsize/2,prec_xy)) <<
+          PAGEDEF << "\\PL{q 1 0 0 1 " << std::format("{}",thdouble(i+LAYOUT.hsize/2,prec_xy)) <<
 	    " 0 cm}\\gridcoord{8}{\\size[24]" << grid_name(LAYOUT.labelx,round((MINX+i)/LAYOUT.hsize)) <<
 	    "}\\PL{Q}%\n";
-          PAGEDEF << "\\PL{q 1 0 0 1 " << fmt::format("{}",thdouble(i+LAYOUT.hsize/2,prec_xy)) << " " << fmt::format("{}",thdouble(VS,prec_xy)) <<
+          PAGEDEF << "\\PL{q 1 0 0 1 " << std::format("{}",thdouble(i+LAYOUT.hsize/2,prec_xy)) << " " << std::format("{}",thdouble(VS,prec_xy)) <<
 	    " cm}\\gridcoord{2}{\\size[24]" << grid_name(LAYOUT.labelx,round((MINX+i)/LAYOUT.hsize)) <<
 	    "}\\PL{Q}%\n";
 	}
       }
       for (double i=0; i <= VS; i += LAYOUT.vsize) {
-        PAGEDEF << "\\PL{0 " << fmt::format("{}",thdouble(i,prec_xy)) << " m " << fmt::format("{}",thdouble(HS,prec_xy)) << " " <<
-                   fmt::format("{}",thdouble(i,prec_xy)) << " l S}%\n";
+        PAGEDEF << "\\PL{0 " << std::format("{}",thdouble(i,prec_xy)) << " m " << std::format("{}",thdouble(HS,prec_xy)) << " " <<
+                   std::format("{}",thdouble(i,prec_xy)) << " l S}%\n";
 	if (i<VS) {
-          PAGEDEF << "\\PL{q 1 0 0 1 0 " << fmt::format("{}",thdouble(i+LAYOUT.vsize/2,prec_xy)) <<
+          PAGEDEF << "\\PL{q 1 0 0 1 0 " << std::format("{}",thdouble(i+LAYOUT.vsize/2,prec_xy)) <<
     	    " cm}\\gridcoord{6}{\\size[24]" << grid_name(LAYOUT.labely,round((MINY+VS-i)/LAYOUT.vsize)-1) <<
 	    "}\\PL{Q}%\n";
-          PAGEDEF << "\\PL{q 1 0 0 1 " << fmt::format("{}",thdouble(HS,prec_xy)) << " " << fmt::format("{}",thdouble(i+LAYOUT.vsize/2,prec_xy)) <<
+          PAGEDEF << "\\PL{q 1 0 0 1 " << std::format("{}",thdouble(HS,prec_xy)) << " " << std::format("{}",thdouble(i+LAYOUT.vsize/2,prec_xy)) <<
 	    " cm}\\gridcoord{4}{\\size[24]" << grid_name(LAYOUT.labely,round((MINY+VS-i)/LAYOUT.vsize)-1) <<
 	    "}\\PL{Q}%\n";
 	}
@@ -1736,7 +1736,7 @@ R"(\pdfcompresslevel=9%
 ////    PAGEDEF << "\\maplayout\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp\n";
 ////    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%\n";
 
-    PAGEDEF << "\\hfill}\\ht\\xxx=" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
+    PAGEDEF << "\\hfill}\\ht\\xxx=" << std::format("{}",thdouble(VS,prec_xy)) << "bp\\dp\\xxx=0bp\n";
 //    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%\n";
     PAGEDEF << "\\box\\xxx%\n";
     
@@ -1771,7 +1771,7 @@ R"(\pdfcompresslevel=9%
 int thpdf(int m) {
   mode = m;
 
-  thprint(fmt::format("making {} ... ", (mode == ATLAS) ? "atlas" : "map"));
+  thprint(std::format("making {} ... ", (mode == ATLAS) ? "atlas" : "map"));
 
   SHEET.clear();
   SHEET_JMP.clear();

@@ -35,8 +35,8 @@
 
 #include <Magick++/Image.h>
 
-#include <fmt/format.h>
-
+#include <cstring>
+#include <format>
 #include <filesystem>
 #include <algorithm>
 
@@ -91,7 +91,7 @@ void thpic::init(const char * pfname, const char * incfnm)
   }
   catch (const Magick::Exception& e)
   {
-    thwarning(fmt::format("unable to read {} -- {}", this->fname, e.what()));
+    thwarning(std::format("unable to read {} -- {}", this->fname, e.what()));
     this->height = -1;
     this->width = -1;
   }
@@ -112,7 +112,7 @@ void thpic::rgba_load()
   }
   catch (const Magick::Exception& e)
   {
-    thwarning(fmt::format("unable to load {} -- {}", this->fname, e.what()));
+    thwarning(std::format("unable to load {} -- {}", this->fname, e.what()));
     this->rgba_free();
   }
 }
@@ -142,7 +142,7 @@ void thpic::rgba_save(const int colors)
     return;
   }
 
-  const auto fileName = fmt::format("pic{:04d}.png", thpic_convert_number++);
+  const auto fileName = std::format("pic{:04d}.png", thpic_convert_number++);
   const std::string tmpFile = thtmp.get_file_name(fileName.c_str());
   try
   {
@@ -159,7 +159,7 @@ void thpic::rgba_save(const int colors)
   }
   catch (const Magick::Exception& e)
   {
-    thwarning(fmt::format("unable to create {} -- {}", tmpFile, e.what()));
+    thwarning(std::format("unable to create {} -- {}", tmpFile, e.what()));
   }
 }
 

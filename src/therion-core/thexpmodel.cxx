@@ -49,7 +49,8 @@
 #include "therion.h"
 #include <filesystem>
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
@@ -71,20 +72,20 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expmodel_fmt);
       if (this->format == TT_EXPMODEL_FMT_UNKNOWN)
-        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
 
     case TT_EXPMODEL_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
 
@@ -92,10 +93,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_DISABLE:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing model entity -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing model entity -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmodel_items);
       if (utmp == TT_EXPMODEL_ITEM_UNKNOWN)
-        throw thexception(fmt::format("unknown model entity -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown model entity -- \"{}\"", args[argx]));
       if (optid == TT_EXPMODEL_OPT_ENABLE) {
         this->items |= utmp;
       } else {
@@ -107,10 +108,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_WALLSRC:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing wall source -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing wall source -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmodel_wallsrc);
       if (utmp == TT_WSRC_UNKNOWN)
-        throw thexception(fmt::format("unknown wall source -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown wall source -- \"{}\"", args[argx]));
       this->wallsrc = utmp;
       argx++;
       break;
@@ -208,9 +209,9 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.3d");
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -222,7 +223,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   try {
     fnmb = std::filesystem::path(this->outpt).filename().string();
   } catch(const std::exception& e) {
-    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()));
+    thwarning(std::format("unable to obtain output file name -- {}", e.what()));
   }
   if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
     pimg = img_open_write_cs(fnm, fnmb.c_str(), thcs_get_params(thcfg.outcs).c_str(), 1);
@@ -230,7 +231,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
     pimg = img_open_write(fnm, fnmb.c_str(), 1);
      
   if (!pimg) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   //this->register_output(fnm);
@@ -384,9 +385,9 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.plt");
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -397,7 +398,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -492,9 +493,9 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.thm");
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -503,7 +504,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   pltf = fopen(fnm,"w");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm))
+    thwarning(std::format("can't open {} for output",fnm))
     return;
   }
 
@@ -660,9 +661,9 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
 #endif
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -671,7 +672,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -750,7 +751,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
               "Shape {\nappearance Appearance {\n" \
               "\tmaterial Material {\n\t\tdiffuseColor 0.3 1.0 0.1\n\t\ttransparency 0.5\n\t}\n");
             if (has_texture) {
-              const auto tifn = fmt::format("{}.img{}.{}", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
+              const auto tifn = std::format("{}.img{}.{}", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
               auto texf = thopen_file(tifn, "wb");
               auto xf = thopen_file(srfc->pict_name, "rb");
               if (texf != NULL) {
@@ -909,9 +910,9 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   const char * fnm = this->get_output("cave.3dmf");
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -920,7 +921,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -1113,9 +1114,9 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   const char * fnm = this->get_output("cave.dxf");
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -1124,7 +1125,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   pltf = fopen(fnm,"w");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -1459,9 +1460,9 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   thdb_object_list_type::iterator obi;
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ...", fnm));
+  thprint(std::format("writing {} ...", fnm));
   thtext_inline = true;
 #endif
 
@@ -1924,7 +1925,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   expf.ExportLOX(fnm);
 
   if (expf.m_error.size() > 0) {
-    thwarning(fmt::format("error writing {}",fnm));
+    thwarning(std::format("error writing {}",fnm));
     return;
   }
   this->register_output(fnm);
@@ -1949,15 +1950,15 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   const char * fnm = this->get_output("cave.kml");
   out = fopen(fnm, "wb");
   if (out == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
 
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 

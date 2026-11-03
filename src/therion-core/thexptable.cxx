@@ -43,8 +43,8 @@
 #include "thparse.h"
 #include "therion.h"
 #include <filesystem>
-
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 thexptable::thexptable() {
   this->format = TT_EXPTABLE_FMT_UNKNOWN;
@@ -65,59 +65,59 @@ void thexptable::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPTABLE_OPT_ATTRIBUTES:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing attributes switch -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing attributes switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid attributes switch -- \"{}\"", args[argx]));
+        throw thexception(std::format("invalid attributes switch -- \"{}\"", args[argx]));
       this->expattr = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_LOCATION:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing location switch -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing location switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid location switch -- \"{}\"", args[argx]));
+        throw thexception(std::format("invalid location switch -- \"{}\"", args[argx]));
       this->exploc = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_FILTER:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing filter switch -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing filter switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid filter switch -- \"{}\"", args[argx]));
+        throw thexception(std::format("invalid filter switch -- \"{}\"", args[argx]));
       this->filter = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_SURVEYS:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing surveys switch -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing surveys switch -- \"{}\"",args[optx]));
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid surveys switch -- \"{}\"", args[argx]));
+        throw thexception(std::format("invalid surveys switch -- \"{}\"", args[argx]));
       this->surveys = (sv == TT_TRUE);
       argx++;
       break;    
     case TT_EXPTABLE_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_exptable_fmt);
       if (this->format == TT_EXPTABLE_FMT_UNKNOWN)
-        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       break;
     case TT_EXPTABLE_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
     default:
@@ -266,9 +266,9 @@ void thexptable::process_db(class thdatabase * dbp)
   this->register_output(fname);
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fname));
+  thprint(std::format("\n\nwriting {}\n", fname));
 #else
-  thprint(fmt::format("writing {} ... ", fname));
+  thprint(std::format("writing {} ... ", fname));
   thtext_inline = true;
 #endif 
 
@@ -404,7 +404,7 @@ void thexptable::process_db(class thdatabase * dbp)
   try {
     title = std::filesystem::path(this->outpt).filename().string();
   } catch(const std::exception& e) {
-    thwarning(fmt::format("unable to obtain output file name -- {}", e.what()));
+    thwarning(std::format("unable to obtain output file name -- {}", e.what()));
   }
 
   switch (this->format) {

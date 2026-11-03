@@ -30,7 +30,7 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <format>
 
 thjoin::thjoin()
 {
@@ -104,13 +104,13 @@ void thjoin::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_JOIN_SMOOTH:
       this->smooth = thmatch_token(*args, thtt_bool);
       if (this->smooth == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid switch -- {}",*args));
+        throw thexception(std::format("invalid switch -- {}",*args));
       break;
     
     case TT_JOIN_COUNT:
       thparse_double(sv,dv,*args);
       if ((sv != TT_SV_NUMBER) || (dv <= 1.0) || (dv != double(int(dv))))
-        throw thexception(fmt::format("invalid join count -- {}",*args));
+        throw thexception(std::format("invalid join count -- {}",*args));
       this->count = int(dv);
       break;
       

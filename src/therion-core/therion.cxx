@@ -38,6 +38,8 @@
 
 #include <fmt/format.h>
 
+#include <format>
+
 int therion_exit_state = 2;
 
 bool thverbose_mode = true;
@@ -49,9 +51,9 @@ char * thexecute_cmd = NULL;
 void therror(std::string_view message, [[maybe_unused]] const std::source_location loc)
 {
 #ifdef THDEBUG
-  thprint2err(fmt::format("{}{} ({}:{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, thexecute_cmd, loc.file_name(), loc.line()));
+  thprint2err(std::format("{}{} ({}:{}): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, thexecute_cmd, loc.file_name(), loc.line()));
 #else
-  thprint2err(fmt::format("{}{}: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
+  thprint2err(std::format("{}{}: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
 #endif
   thprint2err(message);
   thprint2err("\n");
@@ -63,9 +65,9 @@ void therror(std::string_view message, [[maybe_unused]] const std::source_locati
 void thwarning(std::string_view message, [[maybe_unused]] const std::source_location loc)
 {
 #ifdef THDEBUG
-  thprint2err(fmt::format("{}{} ({}:{}): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, loc.file_name(), loc.line()));
+  thprint2err(std::format("{}{} ({}:{}): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, loc.file_name(), loc.line()));
 #else
-  thprint2err(fmt::format("{}{}: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
+  thprint2err(std::format("{}{}: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd));
 #endif
   thprint2err(message);
   thprint2err("\n");
@@ -102,11 +104,11 @@ void thprint2err(std::string_view msg) noexcept
 }
 
 void thprint_environment() {
-  thprint(fmt::format("\n\nINIT={}\n",thcfg.get_initialization_path()));
-  thprint(fmt::format("SOURCE={}\n\n",thcfg.get_search_path()));
-  thprint(fmt::format("CAVERN={}\n",thini.get_path_cavern()));
-  thprint(fmt::format("METAPOST={}\n",thini.get_path_mpost()));
-  thprint(fmt::format("PDFTEX={}\n",thini.get_path_pdftex()));
+  thprint(std::format("\n\nINIT={}\n",thcfg.get_initialization_path()));
+  thprint(std::format("SOURCE={}\n\n",thcfg.get_search_path()));
+  thprint(std::format("CAVERN={}\n",thini.get_path_cavern()));
+  thprint(std::format("METAPOST={}\n",thini.get_path_mpost()));
+  thprint(std::format("PDFTEX={}\n",thini.get_path_pdftex()));
 }
 
 
@@ -126,7 +128,7 @@ void thprint_xtherion() {
       }
     }
     if (!already_exported) {
-      thprint(fmt::format("\t{}\n",thtt_point_types[i].s));
+      thprint(std::format("\t{}\n",thtt_point_types[i].s));
     }
   }
   thprint("}\n\nset xth(line_types) {\n");
@@ -139,7 +141,7 @@ void thprint_xtherion() {
       }
     }
     if (!already_exported) {
-      thprint(fmt::format("\t{}\n",thtt_line_types[i].s));
+      thprint(std::format("\t{}\n",thtt_line_types[i].s));
     }
   }
   thprint("}\n\nset xth(area_types) {\n");
@@ -152,7 +154,7 @@ void thprint_xtherion() {
       }
     }
     if (!already_exported) {
-      thprint(fmt::format("\t{}\n",thtt_area_types[i].s));
+      thprint(std::format("\t{}\n",thtt_area_types[i].s));
     }
   }
   thprint("}\n");
@@ -180,7 +182,7 @@ void thprint_xtherion() {
     }      
     x = &(x[1]);
   }
-  thprint(fmt::format("\n{}", tss));
+  thprint(std::format("\n{}", tss));
 }
 
 
@@ -207,7 +209,7 @@ void thexit(int exit_code)
 void thassert(const bool cond, const std::source_location loc)
 {
   if (!cond) {
-    thprint2err(fmt::format("{}{} ({}:{}): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, loc.file_name(), loc.line()));
+    thprint2err(std::format("{}{} ({}:{}): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, loc.file_name(), loc.line()));
     std::exit(EXIT_FAILURE);
   }
 }

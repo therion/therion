@@ -47,8 +47,8 @@
 #include "thlog.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
-
+#include <cstring>
+#include <format>
 #include <fstream>
 
 thsymbolset::thsymbolset()
@@ -68,9 +68,9 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
   thlog(on_title);
   std::ifstream lf(logfpath);
   if (!(lf.is_open())) {{
-    thwarning(fmt::format("can't open {} file for input", logfpath));
+    thwarning(std::format("can't open {} file for input", logfpath));
     }
-    thlog(fmt::format("can't open {} file for input",logfpath));
+    thlog(std::format("can't open {} file for input",logfpath));
     thlog(off_title);
     return;
   }
@@ -87,7 +87,7 @@ void thsymbolset_log_log_file(const char * logfpath, const char * on_title, cons
     }
     if (!skip_this) {
       if (!skip_next) {
-        thlog(fmt::format("{}{}", (peoln ? "\n" : ""), lnbuff));
+        thlog(std::format("{}{}", (peoln ? "\n" : ""), lnbuff));
         peoln = true;
       } else {
         skip_next = false;
@@ -1020,7 +1020,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     LEGENDITEM->idfig = (unsigned) sfig; \
     LEGENDITEM->idsym = (unsigned) mid; \
     LEGENDITEM->idnum = (unsigned) symn; \
-    LEGENDITEM->fname = fmt::format("data.{}",sfig); \
+    LEGENDITEM->fname = std::format("data.{}",sfig); \
     LEGENDITEM->name = thlegend_u2string(unsigned(symn++)); \
     LEGENDITEM->descr = txt; \
     sfig++;
@@ -1781,7 +1781,7 @@ void export_all_symbols()
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      throw thexception(fmt::format("metapost exit code -- {}", retcode));
+      throw thexception(std::format("metapost exit code -- {}", retcode));
     }
 
     thconvert_eps();
@@ -1813,7 +1813,7 @@ void export_all_symbols()
           if (thsymsets_count[iset] > 0) {
             fx = thsymsets_figure[sx][iset];
             if (fx > 0) {
-              fname = fmt::format("{}/data.{}", thtmp.get_dir_name(),fx);
+              fname = std::format("{}/data.{}", thtmp.get_dir_name(),fx);
               parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
               hf << "<td>\n";
          	    svgpict.print_svg(hf);
@@ -1824,7 +1824,7 @@ void export_all_symbols()
           }
         }
       } else {
-        fname = fmt::format("{}/data.{}", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
+        fname = std::format("{}/data.{}", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
         parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
         hf << "<td bgcolor=\"#cccccc\" colspan=\"" << thsymsets_size << "\">";
         svgpict.print_svg(hf);

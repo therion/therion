@@ -1,6 +1,7 @@
 #pragma once
 
-#include <fmt/format.h>
+#include <cstdint>
+#include <format>
 
 /**
  * @brief Wrapper type for fixed formatting of floating point numbers.
@@ -15,7 +16,7 @@ struct thdouble
 };
 
 /**
- * @brief User-defined literal fot thdouble.
+ * @brief User-defined literal for thdouble.
  * @param value value intended for printing
  * @return thdouble with precision set to 2
  */
@@ -25,17 +26,17 @@ constexpr thdouble operator""_thd(long double value)
 }
 
 /**
- * @brief Extension for {fmt} for printing thdouble.
+ * @brief Extension for std::format for printing thdouble.
  * Will print floating point numbers in fixed format
  * and without trailing zeros.
  */
 template <>
-struct fmt::formatter<thdouble>: formatter<std::string> {
+struct std::formatter<thdouble>: formatter<std::string> {
     template <typename FormatContext>
     auto format(const thdouble& p, FormatContext& ctx) const {
         // fixed formatting with given precision
         // and (perhaps more) stable cross-platform rounding in the border cases using two-passes
-        auto num = fmt::format("{:.{}f}", std::stod(fmt::format("{:.{}f}", p.value, p.precision+1)), p.precision);
+        auto num = std::format("{:.{}f}", std::stod(std::format("{:.{}f}", p.value, p.precision+1)), p.precision);
         // remove redundant zeros
         const auto dot = num.find('.');
         auto result_len = num.length();
@@ -48,8 +49,6 @@ struct fmt::formatter<thdouble>: formatter<std::string> {
             }
         }
         num.resize(result_len);
-        // Remove const for compatibility with fmtlib < 9.0.0
-        return const_cast<formatter<thdouble> *>(this)
-            ->formatter<std::string>::format(num, ctx);
+        return formatter<std::string>::format(num, ctx);
     }
 };

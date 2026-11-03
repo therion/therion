@@ -33,7 +33,8 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 tharea::tharea()
 {
@@ -128,7 +129,7 @@ void tharea::parse_type(char * tstr)
 {
   this->type = thmatch_token(tstr, thtt_area_types);
   if (this->type == TT_AREA_TYPE_UNKNOWN)
-    throw thexception(fmt::format("unknown area type -- {}", tstr));
+    throw thexception(std::format("unknown area type -- {}", tstr));
   if (this->type == TT_AREA_TYPE_DIMENSIONS)
     throw thexception("area dimensions is not supported as ordinary type");
 }

@@ -32,12 +32,12 @@
 #include "thversion.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
-
 #include <algorithm>
 #include <array>
 #include <cstdio>
+#include <cstring>
 #include <filesystem>
+#include <format>
 #include <fstream>
 
 namespace fs = std::filesystem;
@@ -74,7 +74,7 @@ static auto parse_version(const char * const version, bool strict = false) {
   std::sscanf(version, "%u%n.%u%n.%u%n", &parts[0], &pos, &parts[1], &pos,
               &parts[2], &pos);
   if (strict && version[pos] != '\0') {
-    throw thexception(fmt::format("Failed to parse version '{}'", version));
+    throw thexception(std::format("Failed to parse version '{}'", version));
   }
   return parts;
 }
@@ -131,7 +131,7 @@ bool ifile::is_equal(ifile* f)
   try {
     return fs::equivalent(name.c_str(), f->name.c_str());
   } catch(const std::exception& e) {
-    thwarning(fmt::format("unable to compare files -- {}", e.what()));
+    thwarning(std::format("unable to compare files -- {}", e.what()));
     return false;
   }
 }
@@ -317,7 +317,7 @@ void thinput::open_file(const char * fname)
   
   if (!ifptr->sh.is_open()) {
     if ((srcfile != nullptr) || (this->report_missing)) {
-      throw thexception(fmt::format("can't open file for input -- {}", fname));
+      throw thexception(std::format("can't open file for input -- {}", fname));
     }
   }
   else {
@@ -333,12 +333,12 @@ void thinput::open_file(const char * fname)
     }
 #ifdef THWIN32
     if (n_rec == THMAXFREC) {
-      therror(fmt::format("{} [{}] -- too many file inclusions -- probably input recursion -- {}", \
+      therror(std::format("{} [{}] -- too many file inclusions -- probably input recursion -- {}", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #else
     if (is_rec) {
-      therror(fmt::format("{} [{}] -- recursive file inclusion -- {}", \
+      therror(std::format("{} [{}] -- recursive file inclusion -- {}", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #endif
@@ -354,7 +354,7 @@ void thinput::open_file(const char * fname)
         this->pifoproc = nullptr;
       }
 #ifdef THDEBUG
-      thprint(fmt::format("open file -- {}\n", this->last_ptr->name.c_str()));
+      thprint(std::format("open file -- {}\n", this->last_ptr->name.c_str()));
 #endif
     }
   }
@@ -366,7 +366,7 @@ void thinput::close_file()
 {
   if (this->last_ptr->sh.is_open()) {
 #ifdef THDEBUG
-    thprint(fmt::format("close file -- {}\n", this->last_ptr->name.c_str()));
+    thprint(std::format("close file -- {}\n", this->last_ptr->name.c_str()));
 #endif
     this->last_ptr->close();
     if (this->last_ptr->prev_ptr != nullptr) {
@@ -420,7 +420,7 @@ char * thinput::read_line()
     // Check, if reading was OK.
     
     if (this->last_ptr->sh.fail() && (!(this->last_ptr->sh.eof()))) {
-      therror(fmt::format("{} [{}] -- line too long", \
+      therror(std::format("{} [{}] -- line too long", \
         this->get_cif_name(), this->get_cif_line_number()));
     }
     
@@ -472,7 +472,7 @@ char * thinput::read_line()
         case TT_INPUT:
           if (this->input_sensitivity) {
             if (this->tmpmb.get_size() != 1)
-              therror(fmt::format("{} [{}] -- one input file name expected -- {}", \
+              therror(std::format("{} [{}] -- one input file name expected -- {}", \
                 this->get_cif_name(), this->get_cif_line_number(), \
                 this->valuebf.c_str()));
             else
@@ -482,13 +482,13 @@ char * thinput::read_line()
           
         case TT_ENCODING:
           if (this->tmpmb.get_size() != 1)
-            therror(fmt::format("{} [{}] -- encoding name expected -- {}", \
+            therror(std::format("{} [{}] -- encoding name expected -- {}", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.c_str()));
           this->last_ptr->encoding = \
             thmatch_token(*(this->tmpmb.get_buffer()), thtt_encoding);
           if (this->last_ptr->encoding == TT_UNKNOWN_ENCODING) {
-            therror(fmt::format("{} [{}] -- unknown encoding -- {}", \
+            therror(std::format("{} [{}] -- unknown encoding -- {}", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.c_str()));
             this->last_ptr->encoding = TT_UTF_8;
@@ -497,11 +497,11 @@ char * thinput::read_line()
           
         case TT_REQUIRE:
           if (auto nargs = this->tmpmb.get_size(); nargs != 1) {
-            throw thexception(fmt::format("expect exactly one argument for 'require', got {}", nargs));
+            throw thexception(std::format("expect exactly one argument for 'require', got {}", nargs));
           }
           if (const char * version = *(this->tmpmb.get_buffer());
               parse_version(version, true) > parse_version(THVERSION)) {
-            throw thexception(fmt::format("Need at least Therion {}, got {}", version, THVERSION));
+            throw thexception(std::format("Need at least Therion {}, got {}", version, THVERSION));
           }
           continue;
 

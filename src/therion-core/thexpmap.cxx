@@ -76,12 +76,15 @@
 
 #include <fmt/format.h>
 
+#include <cstring>
+#include <format>
+
 namespace fs = std::filesystem;
 
 static std::string convert_to_gif(const thpic& pic, const long resize = 0)
 {
   static int counter = 0;
-  const auto file_name = fmt::format("thexpmap_pic{}.gif", ++counter);
+  const auto file_name = std::format("thexpmap_pic{}.gif", ++counter);
   const std::string tmp_file_path = thtmp.get_file_name(file_name.c_str());
   try
   {
@@ -95,7 +98,7 @@ static std::string convert_to_gif(const thpic& pic, const long resize = 0)
   }
   catch (const Magick::Exception& e)
   {
-    thwarning(fmt::format("unable to create {} -- {}", tmp_file_path, e.what()));
+    thwarning(std::format("unable to create {} -- {}", tmp_file_path, e.what()));
     return "";
   }
 }
@@ -118,9 +121,9 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
   thlog(on_title);
   std::ifstream lf(logfpath);
   if (!(lf.is_open())) {{
-    thwarning(fmt::format("can't open {} file for input", logfpath));
+    thwarning(std::format("can't open {} file for input", logfpath));
     }
-    thlog(fmt::format("can't open {} file for input",logfpath));
+    thlog(std::format("can't open {} file for input",logfpath));
     thlog(off_title);
     return;
   }
@@ -137,7 +140,7 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
     }
     if (!skip_this) {
       if (!skip_next) {
-        thlog(fmt::format("{}{}", (peoln ? "\n" : ""), lnbuff));
+        thlog(std::format("{}{}", (peoln ? "\n" : ""), lnbuff));
         peoln = true;
       } else {
         skip_next = false;
@@ -172,11 +175,11 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMAP_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing format -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing format -- \"{}\"",args[optx]));
       this->format = thmatch_token(args[argx], thtt_expmap_fmt);
       fmt = args[argx];
       if (this->format == TT_EXPMAP_FMT_UNKNOWN)
-        throw thexception(fmt::format("unknown format -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown format -- \"{}\"", args[argx]));
       argx++;
       supform = false;
       switch (this->export_mode) {
@@ -203,28 +206,28 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
           break;
       }
       if (!supform)
-        throw thexception(fmt::format("format not supported -- {}",fmt));
+        throw thexception(std::format("format not supported -- {}",fmt));
       break;
     case TT_EXPMAP_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing encoding -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing encoding -- \"{}\"",args[optx]));
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        throw thexception(fmt::format("unknown encoding -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown encoding -- \"{}\"", args[argx]));
       argx++;
       break;
     case TT_EXPMAP_OPT_PROJECTION:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing projection specification -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing projection specification -- \"{}\"",args[optx]));
       this->projstr = thdb.strstore(args[argx],true);
       argx++;
       break;
     case TT_EXPMAP_OPT_LAYOUT:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing layout -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing layout -- \"{}\"",args[optx]));
       this->layout->set(thcmd_option_desc(TT_LAYOUT_COPY), &(args[argx]), this->cfgptr->cfg_file.get_cif_encoding(), 0); // = thdb.strstore(args[argx],true);
       this->layoutopts += " -layout ";
       thencode(&(this->cfgptr->bf1), args[argx], this->cfgptr->cfg_file.get_cif_encoding());
@@ -237,10 +240,10 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMAP_OPT_DISABLE:
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing map entity -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing map entity -- \"{}\"",args[optx]));
       utmp = thmatch_token(args[argx], thtt_expmap_items);
       if (utmp == TT_EXPMAP_ITEM_UNKNOWN)
-        throw thexception(fmt::format("unknown map entity -- \"{}\"", args[argx]));
+        throw thexception(std::format("unknown map entity -- \"{}\"", args[argx]));
       if (optid == TT_EXPMAP_OPT_ENABLE) {
         this->items |= utmp;
       } else {
@@ -270,10 +273,10 @@ void thexpmap::parse_layout_option(int & argx, int nargs, char ** args) {
   thcmd_option_desc o = this->layout->get_cmd_option_desc(opts);
   
   if (o.id == TT_DATAOBJECT_UNKNOWN)
-    throw thexception(fmt::format("unknown layout option -- -{}", opts));
+    throw thexception(std::format("unknown layout option -- -{}", opts));
     
   if (argx + o.nargs >= nargs)
-    throw thexception(fmt::format("not enough layout option arguments -- -{}", opts));
+    throw thexception(std::format("not enough layout option arguments -- -{}", opts));
   
   argx++;  
   
@@ -419,9 +422,9 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
 
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
       
@@ -433,7 +436,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   pltf = fopen(fnm,"wb");
      
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -631,8 +634,8 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
               }
             }
             if (thtext_inline) thprint("\n");
-            thprint(fmt::format("converting {} ", fn));
-            thprint(fmt::format("({:.1f} Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0));
+            thprint(std::format("converting {} ", fn));
+            thprint(std::format("({:.1f} Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0));
             thtext_inline = true;
 
             if (fabs(ns - 1.0) < 1e-8) {
@@ -795,16 +798,16 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif 
 
   FILE * pltf;
   pltf = fopen(fnm,"wb");
   if (pltf == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
@@ -884,8 +887,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               }
             }
             if (thtext_inline) thprint("\n");
-            thprint(fmt::format("converting {} ", fn));
-            thprint(fmt::format("({:.1f} Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0));
+            thprint(std::format("converting {} ", fn));
+            thprint(std::format("({:.1f} Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0));
             thtext_inline = true;
 
             if (fabs(ns - 1.0) < 1e-8) {
@@ -899,7 +902,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 #ifdef THDEBUG
               thprint("copying results\n");
 #endif
-              const fs::path new_file = fmt::format("{}.{:03}.gif", fnm, sknum++);
+              const fs::path new_file = std::format("{}.{:03}.gif", fnm, sknum++);
               fs::remove(new_file); // workaround for MinGW bug, can't overwrite files
               fs::copy(srcgif, new_file, fs::copy_options::overwrite_existing);
               fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s 0 {}\n", nx, ny, new_file.filename().string().c_str());
@@ -1220,7 +1223,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   // spusti mp - thpdf - pdftex
 
   if (maps == NULL) {
-    thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
+    thwarning(std::format("{} [{}] -- no selected projection data -- {}",
       this->src.name, this->src.line, this->projstr));
     return;
   }
@@ -1278,9 +1281,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thini.copy_fonts();
 
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ...\n", fnm));
+  thprint(std::format("writing {} ...\n", fnm));
 //  thtext_inline = true;
 #endif 
   
@@ -1743,7 +1746,7 @@ if (ENC_NEW.NFSS==0) {
                   // pred orezanim
                   if (exps.F > 0) {
                     fprintf(plf,"\t\t F => \"data.%ld\",\n",exps.F);
-                    SCRAPITEM->F = fmt::format("data.{}",exps.F);
+                    SCRAPITEM->F = std::format("data.{}",exps.F);
                   }
 //                  else
 //                    fprintf(plf,"\t\t F => \"data.0\",\n");
@@ -1751,11 +1754,11 @@ if (ENC_NEW.NFSS==0) {
                   // orezavacia cesta a outlines
                   if (exps.B > 0) {
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    SCRAPITEM->B = fmt::format("data.{}",exps.B);
+                    SCRAPITEM->B = std::format("data.{}",exps.B);
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    SCRAPITEM->I = fmt::format("data.{}bg",exps.B);
+                    SCRAPITEM->I = std::format("data.{}bg",exps.B);
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    SCRAPITEM->C = fmt::format("data.{}clip",exps.B);
+                    SCRAPITEM->C = std::format("data.{}clip",exps.B);
                   }
 //                  else {
 //                    fprintf(plf,"\t\t B => \"data.0\",\n");
@@ -1766,16 +1769,16 @@ if (ENC_NEW.NFSS==0) {
                   // po orezani
                   if (exps.E > 0) {
                     fprintf(plf,"\t\t E => \"data.%ld\",\n",exps.E);
-                    SCRAPITEM->E = fmt::format("data.{}",exps.E);
+                    SCRAPITEM->E = std::format("data.{}",exps.E);
                   }
 //                  else
 //                    fprintf(plf,"\t\t E => \"data.0\",\n");
     
                   if (exps.X > 0) {
                     fprintf(plf,"\t\t X => \"data.%ld\",\n",exps.X);
-                    SCRAPITEM->X = fmt::format("data.{}",exps.X);
+                    SCRAPITEM->X = std::format("data.{}",exps.X);
                     fprintf(plf,"\t\t P => \"data.%ldbbox\",\n",exps.X);
-                    SCRAPITEM->P = fmt::format("data.{}bbox",exps.X);
+                    SCRAPITEM->P = std::format("data.{}bbox",exps.X);
                   }
 
                   if (export_outlines_only) {
@@ -1809,11 +1812,11 @@ if (ENC_NEW.NFSS==0) {
                     active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    SCRAPITEM->B = fmt::format("data.{}",exps.B);
+                    SCRAPITEM->B = std::format("data.{}",exps.B);
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    SCRAPITEM->I = fmt::format("data.{}bg",exps.B);
+                    SCRAPITEM->I = std::format("data.{}bg",exps.B);
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    SCRAPITEM->C = fmt::format("data.{}clip",exps.B);
+                    SCRAPITEM->C = std::format("data.{}clip",exps.B);
                     //fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     //fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
                     //fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
@@ -1862,10 +1865,10 @@ if (ENC_NEW.NFSS==0) {
   	  break;
   }
 
-  LAYOUT.northarrow = fmt::format("data.{}",sfig);
+  LAYOUT.northarrow = std::format("data.{}",sfig);
   fprintf(mpf,"beginfig(%d);\ns_northarrow(%g);\nendfig;\n",sfig++,this->layout->rotate + rotate_plus);
 
-  LAYOUT.scalebar = fmt::format("data.{}",sfig);
+  LAYOUT.scalebar = std::format("data.{}",sfig);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()).c_str());
 
@@ -1878,7 +1881,7 @@ if (ENC_NEW.NFSS==0) {
     switch (this->layout->color_crit) {
       case TT_LAYOUT_CCRIT_ALTITUDE:
       case TT_LAYOUT_CCRIT_DEPTH:
-    	  LAYOUT.altitudebar = fmt::format("data.{}",sfig);
+    	  LAYOUT.altitudebar = std::format("data.{}",sfig);
     	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
     	  for(const auto& ti : this->layout->m_lookup->m_table) {
     		  sv_max = ti.m_valueDbl;
@@ -2091,7 +2094,7 @@ if (ENC_NEW.NFSS==0) {
   if (this->layout->grid != TT_LAYOUT_GRID_OFF) {
 
 #define expgridscrap(varname,Xpos,Ypos) \
-    LAYOUT.varname = fmt::format("data.{}",sfig); \
+    LAYOUT.varname = std::format("data.{}",sfig); \
     fprintf(mpf,"beginfig(%d);\n%s(%d, %d, %.5f, %.5f);\nendfig;\n", \
     sfig++, grid_macro, Xpos, Ypos, ghs, gvs);
     
@@ -2392,7 +2395,7 @@ if (ENC_NEW.NFSS==0) {
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      throw thexception(fmt::format("metapost exit code -- {}", retcode));
+      throw thexception(std::format("metapost exit code -- {}", retcode));
     }
   }
 
@@ -2429,7 +2432,7 @@ if (ENC_NEW.NFSS==0) {
       "######################## pdftex log file #########################\n",
       "##################### end of pdftex log file #####################\n",false);
       if (retcode != EXIT_SUCCESS) {
-        throw thexception(fmt::format("pdftex exit code -- {}", retcode));
+        throw thexception(std::format("pdftex exit code -- {}", retcode));
       }
 
       // Let's copy results and log-file to working directory
@@ -2522,10 +2525,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 			  fprintf(out->file, "warningcheck := 0;\n");
 				if (max > 32767.0) {
 				  minscale = (1.0 / out->layout->scale) * (max / 32767.0);
-					throw thexception(fmt::format("scale too large -- maximal scale for this configuration is 1 : {:.0f}", minscale + 1));
+					throw thexception(std::format("scale too large -- maximal scale for this configuration is 1 : {:.0f}", minscale + 1));
 				}
 			} else {
-				throw thexception(fmt::format("scrap {}@{} defined at {} [{}] is too large to process in metapost in this scale -- maximal scale for this scrap is 1 : {:.0f}", 
+				throw thexception(std::format("scrap {}@{} defined at {} [{}] is too large to process in metapost in this scale -- maximal scale for this scrap is 1 : {:.0f}", 
 					scrap->name, 
 					scrap->fsptr->full_name, 
 					scrap->source.name, 
@@ -2941,7 +2944,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
-          dbg_stnms.push_back(fmt::format("p_label.urt(btex \\thstationname {} etex, ({:.2f}, {:.2f}), 0.0, p_label_mode_debugstation);",
+          dbg_stnms.push_back(std::format("p_label.urt(btex \\thstationname {} etex, ({:.2f}, {:.2f}), 0.0, p_label_mode_debugstation);",
             utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
             thxmmxst(out, slp->stx, slp->sty)));
         }
@@ -3020,7 +3023,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 }
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
                       out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
-                      dbg_stnms.push_back(fmt::format("p_label.urt(btex \\thstationname {} etex, ({:.2f}, {:.2f}), 0.0, p_label_mode_debugstation);",
+                      dbg_stnms.push_back(std::format("p_label.urt(btex \\thstationname {} etex, ({:.2f}, {:.2f}), 0.0, p_label_mode_debugstation);",
                       utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                       thxmmxst(out, ptp->point->xt, ptp->point->yt)));
                 }
@@ -3356,7 +3359,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 {
 
   if (maps == NULL) {
-    thwarning(fmt::format("{} [{}] -- no selected projection data -- {}",
+    thwarning(std::format("{} [{}] -- no selected projection data -- {}",
       this->src.name, this->src.line, this->projstr));
     return;
   }
@@ -3367,15 +3370,15 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
   img_output_version = 4;
   pimg = img_open_write(fnm, "cave", 1);
   if (pimg == NULL) {
-    thwarning(fmt::format("can't open {} for output",fnm));
+    thwarning(std::format("can't open {} for output",fnm));
     return;
   }
   this->register_output(fnm);
   
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nwriting {}\n", fnm));
+  thprint(std::format("\n\nwriting {}\n", fnm));
 #else
-  thprint(fmt::format("writing {} ... ", fnm));
+  thprint(std::format("writing {} ... ", fnm));
   thtext_inline = true;
 #endif     
 
@@ -3578,7 +3581,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     lkp = this->db->get_lookup(ccfname);
     if (lkp == NULL) {
       if (strlen(ccidx) > 0) {
-        thwarning(fmt::format("missing lookup -- {}", this->layout->color_crit_fname));
+        thwarning(std::format("missing lookup -- {}", this->layout->color_crit_fname));
       }
       unique_lkp = this->db->create<thlookup>(this->src);
       lkp = unique_lkp.get();
