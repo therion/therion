@@ -69,7 +69,7 @@ if input(banner) == 'yes':
   if subprocess.check_output('git status -s', shell=True):
     err('there are uncommitted changes on your drive')
   # add a signed tag and push
-  subprocess.check_call('git tag -s -a v%s -m "%s"' % (ver,msg), shell=True)
+  subprocess.check_call(["git", "tag", "-s", "-a", f"v{ver}", "-m", msg])
   subprocess.check_call('git push origin v%s' % ver, shell=True)
   # create a release and upload the signature
   rel_data = {'tag_name': 'v%s' % ver,

@@ -1,19 +1,42 @@
-Therion 6.4.1 (in progress):
+Therion 6.4.1 (2026-11-03):
 
 therion:
  * new `artificial' shot flag for man-made passages, excluded from length
-   calculations and exported as `art' in the SHOT_FLAG database table
+   calculations and exported as `art' in the SHOT_FLAG database table [#791]
+ * bugs fixed:
+   - scientific notation in s_altitudebar parameters (metapost error -2)
+
+xtherion:
+ * xtherion inactive scraps hiding bugfix
+
+loch:
+ * added presentation animation mode and export
+ * added walker animation mode
 
 Windows installer:
  * use TeXLive 2026 binaries instead of dated W32TeX distribution
  * include LuaTeX as an alternative to pdfTeX
-
-loch:
- * added presentation animation mode and export
- * added walker mode
+ * updated CA root certificates used by Proj
 
 infrastructure and compiler:
- * fixed installation when the source or destination path contains spaces
+ * translation checker added [#755]
+ * character mappings updated
+ * fixed installation when the source or destination path contains spaces [#790]
+ * code improvements: refactored thchencdata [#756]; refactored macro thassert
+   into a function [#759]; fixed compatibility with fmt 12.2.0 [#760]; refactored
+   macros in therion.h [#763] and thinfnan.h [#769]; removed macros from thexpdb
+   [#781]; thbuffer replaced by std::string [#764,#767,#768]; refactor case
+   insensitive comparators [#765, #771]; refactor thdecode_sql() [#782];
+   refactor and fix thdecode and thencode [#786]; various C++ improvements [#770]
+ * code clenup: removed class generator cclass.pl [#757] and other obsolete
+   scripts
+ * new dependency: Magick++ library [#766,#773,#784,#793]
+ * drop Proj < 8.0.0 compatibility
+ * drop Vtk < 9 compatibility
+ * updated poly2tri [#797]
+ * GitHub Actions:
+   - use Ubuntu 26.04 [#758]
+   - fix TeX installation on macOS [#801]
 
 --------------------------------------------------------------------------------
 
