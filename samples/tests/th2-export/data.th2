@@ -1,0 +1,88 @@
+encoding utf-8
+scrap s1 -projection plan -scale [0 0 100 0 0 0 10 0 m] -attr sa "scrap attr" -attr sn 42
+  point 0 0 station -name 0
+  point 0 100 station -name 1
+  point 100 100 station -name 2
+  point 10 10 label -text "hello" -visibility off -attr note "a b" -attr num 1.5 -context point station-name
+  point 20 20 continuation -name 1 -text "go" -explored 5
+  point 30 30 extra -from 1 -dist 3
+  point 40 40 passage-height -value [+2? -1?]
+  point 50 50 altitude -value [fix 123]
+  point 70 70 section -scrap s2
+  point 60 60 water-flow:paleo -place top -orientation 45
+  line wall -id w1 -attr lattr x -visibility off
+    0 0
+    20 30 40 50 60 60
+    smooth off
+    subtype sand
+    mark m1
+    100 0
+    subtype bedrock
+    altitude [fix 200]
+    0 0
+  endline
+  line slope -border on -place top
+    10 10
+    size 20
+    orientation 90
+    50 10
+    l-size 30
+  endline
+  line contour -gradient none
+    0 10
+    10 10
+  endline
+  line contour
+    0 20
+    10 20
+    gradient point
+    20 20
+  endline
+  line section -direction both
+    0 30
+    10 30
+  endline
+  line section
+    0 40
+    10 40
+    direction point
+    20 40
+  endline
+  line arrow -head both
+    0 50
+    10 50
+  endline
+  line arrow
+    0 55
+    10 55
+  endline
+  line rope -anchors off -rebelays off
+    0 60
+    10 60
+  endline
+  line pit -height 5
+    0 70
+    10 70
+  endline
+  line chimney -place default -clip off
+    0 80
+    10 80
+  endline
+  line label -text "lbl" -scale l
+    0 90
+    10 90
+  endline
+  line border -id b1 -close on
+    60 60
+    80 60
+    80 80
+    60 60
+  endline
+  area water -place top -clip on -visibility off -attr aa 7 -context area sump
+    b1
+  endarea
+endscrap
+scrap s2 -projection plan -scale [0 0 100 0 0 0 10 0 m]
+  point 100 100 station -name 2
+  point 200 100 label -text x
+endscrap

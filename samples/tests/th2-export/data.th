@@ -1,0 +1,10 @@
+encoding utf-8
+survey cave
+  centreline
+    data normal from to length compass clino
+    0 1 10 0 0
+    1 2 10 90 0
+    fix 0 0 0 100
+  endcentreline
+  input data.th2
+endsurvey

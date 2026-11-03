@@ -3,6 +3,11 @@ Therion 6.4.1 (in progress):
 therion:
  * new `artificial' shot flag for man-made passages, excluded from length
    calculations and exported as `art' in the SHOT_FLAG database table
+ * th2 map export: added -visibility, -place, -context and -attr options,
+   line options (-head, -border, -gradient, -height, -anchors, -rebelays)
+   and line point options (mark, adjust, orientation, size, gradient,
+   direction); fixed invalid -direction on non-section lines and references
+   to area border lines and section scraps
 
 Windows installer:
  * use TeXLive 2026 binaries instead of dated W32TeX distribution

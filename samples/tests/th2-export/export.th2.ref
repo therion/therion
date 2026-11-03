@@ -1,0 +1,121 @@
+encoding utf-8
+##XTHERION## xth_me_area_adjust -37 -18 435 219
+
+
+scrap s1.cave -projection plan -scale [50 2.54 m] -attr sa "scrap attr" -attr sn 42
+
+  point 2.00 2.00 station -name 0
+
+  point 2.00 198.85 station -name 1
+
+  point 198.85 198.85 station -name 2
+
+  point 20.49 21.70 label -text "hello" -context point station-name -visibility off -attr note "a b" -attr num 1.5
+
+  point 36.62 41.67 continuation -name 1 -text "go" -explored 5
+
+  point 50.67 62.96 extra -from 1 -dist 3
+
+  point 64.80 87.82 passage-height -value [+2? -1?]
+
+  point 85.51 115.34 altitude -value [fix 123]
+
+  point 137.89 150.18 section -scrap s2.cave
+
+  point 113.03 136.05 water-flow:paleo -orientation 45.0 -place top
+
+  line wall -id w1.cave -visibility off -attr lattr "x"
+    2.00 2.00
+    34.26 61.50 63.81 110.83 113.03 136.05
+    smooth off
+    subtype sand
+    mark m1
+    198.85 2.00
+    subtype bedrock
+    altitude [fix 200]
+    2.00 2.00
+  endline
+
+  line slope -border on -place top
+    20.49 21.70
+    orientation 90.0
+    size 2
+    94.98 26.35
+    size 3
+  endline
+
+  line contour -gradient none
+    2.00 21.69
+    20.49 21.70
+  endline
+
+  line contour
+    2.00 41.37
+    19.30 41.39
+    gradient point
+    36.62 41.67
+  endline
+
+  line section -direction both
+    2.00 61.06
+    18.11 61.09
+  endline
+
+  line section
+    2.00 80.74
+    16.92 80.79
+    direction point
+    31.94 81.44
+  endline
+
+  line arrow -head both
+    2.00 100.43
+    15.73 100.51
+  endline
+
+  line arrow
+    2.00 110.27
+    15.14 110.39
+  endline
+
+  line rope -anchors off -rebelays off
+    2.00 120.11
+    14.55 120.28
+  endline
+
+  line pit -height 5
+    2.00 139.80
+    13.44 140.19
+  endline
+
+  line chimney -clip off -place default
+    2.00 159.48
+    12.70 160.74
+  endline
+
+  line label -text "lbl" -scale l
+    2.00 179.17
+    16.32 184.53
+  endline
+
+  line border -close on -id b1.cave
+    113.03 136.05
+    156.11 129.09
+    159.18 164.23
+    113.03 136.05
+  endline
+
+  area water -clip on -place top -context area sump -visibility off -attr aa 7
+    b1.cave
+  endarea
+
+endscrap
+
+scrap s2.cave -projection plan -scale [50 2.54 m]
+
+  point 198.85 198.85 station -name 2
+
+  point 395.70 198.85 label -text "x"
+
+endscrap
+
