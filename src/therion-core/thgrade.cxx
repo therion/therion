@@ -33,6 +33,16 @@
 #include <fmt/ostream.h>
 
 /**
+ * Update double value (with check for special values).
+ */
+static void thupdate_double(double& ov, const double uv)
+{
+  if (!thisnan(uv)) {
+    ov = uv;
+  }
+}
+
+/**
  * Print number in nan format.
  */
 static std::string thprintinfnan(const double number)

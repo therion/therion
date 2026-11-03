@@ -196,13 +196,6 @@ void thparse_length(int & sv, double & dv, const char * src);
 void thparse_double_dms(int & sv, double & dv, const char * src); 
 
 /**
- * Update double value (with check for special values).
- */
- 
-#define thupdate_double(ov, uv) if (!(thisnan(uv))) ov = uv
-
-
-/**
  * Split given string into first word and the rest.
  */
  
