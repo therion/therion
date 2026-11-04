@@ -118,3 +118,13 @@ TEST_CASE("thdecode_sql")
     CHECK(thdecode_sql("Let's test quotes.") == "'Let''s test quotes.'");
     CHECK(thdecode_sql("'''''") == "''''''''''''");
 }
+
+TEST_CASE("thdecode_mp")
+{
+    CHECK(thdecode_mp("") == "");
+    CHECK(thdecode_mp("plain text") == "plain text");
+    CHECK(thdecode_mp("a\tb\nc") == "a b c");
+    CHECK(thdecode_mp("say \"hello\"") == "say \"&dtto&\"hello\"&dtto&\"");
+    CHECK(thdecode_mp("caf\xC3\xA9") == "caf\xC3\xA9");
+    CHECK(thdecode_mp("caf\xC3\xA9\t\"x\"\nend") == "caf\xC3\xA9 \"&dtto&\"x\"&dtto&\" end");
+}
