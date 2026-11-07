@@ -31,6 +31,7 @@
 
 #include <fmt/format.h>
 
+#include <format>
 #include <string.h>
 
 const char * logfilemode = "w";
@@ -70,7 +71,7 @@ void thlogfile::open_file()
   }
   
   if (should_warn)
-    thwarning(fmt::format("can't open log file for output -- {}",this->get_file_name()));
+    thwarning(std::format("can't open log file for output -- {}",this->get_file_name()));
 }
 
 

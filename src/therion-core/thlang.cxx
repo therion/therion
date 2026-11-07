@@ -33,8 +33,8 @@
 #include "thexception.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
-
+#include <cstring>
+#include <format>
 #include <map>
 
 
@@ -102,7 +102,7 @@ void thlang_set_translation(char * lang, char * text, char * translation) {
   int lang_id;
   lang_id = thlang_parse(lang);
   if (lang_id == THLANG_UNKNOWN)
-    throw thexception(fmt::format("unknown language -- {}", lang));
+    throw thexception(std::format("unknown language -- {}", lang));
   int text_id;
   text_id = thmatch_token(text, thtt_texts);
   if (text_id == -1) {
@@ -112,7 +112,7 @@ void thlang_set_translation(char * lang, char * text, char * translation) {
       (strncmp(text,"area u:",7) == 0)) {
         ulang_map[thlang_str(lang_id, thdb.strstore(text, true))] = thdb.strstore(translation);
     } else
-      throw thexception(fmt::format("unknown text -- {}", text));
+      throw thexception(std::format("unknown text -- {}", text));
   } else { 
     thlang_translations[text_id][lang_id] = thdb.strstore(translation);
   }

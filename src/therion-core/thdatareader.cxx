@@ -32,7 +32,8 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 unsigned long thdatareader_get_opos(bool inlineid, bool cfgid)
 {
@@ -123,7 +124,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
           thsplit_args(&this->mbf1, this->bf2.c_str());
           if (this->mbf1.get_size() < optd.nargs)
-            throw thexception(fmt::format("not enough option arguments -- {} -- must be {}",
+            throw thexception(std::format("not enough option arguments -- {} -- must be {}",
               this->bf1.c_str(), optd.nargs));
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
@@ -162,7 +163,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           unique_objptr = dbptr->create(this->inp.get_cmd(), osrc);
           objptr = unique_objptr.get();
           if (objptr == NULL)
-            throw thexception(fmt::format("unknown command -- {}", this->inp.get_cmd()));
+            throw thexception(std::format("unknown command -- {}", this->inp.get_cmd()));
           else
             dbptr->check_context(objptr);
             
@@ -179,13 +180,13 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           // let's find an object
           objptr = dbptr->revise(*opts, dbptr->get_current_survey(), osrc);
           if (objptr == NULL)
-            throw thexception(fmt::format("object does not exist -- {}", *opts));
+            throw thexception(std::format("object does not exist -- {}", *opts));
           ai = 1;
           opts++;
         }
         else {
           if (ant < objptr->get_cmd_nargs())
-            throw thexception(fmt::format("not enough command arguments -- must be {}",
+            throw thexception(std::format("not enough command arguments -- must be {}",
               objptr->get_cmd_nargs()));
           optd.nargs = 1;
 
@@ -209,7 +210,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           }
           else {
             if ((ait + optd.nargs) >= ant)
-              throw thexception(fmt::format("not enough option arguments -- {} -- must be {}", *opts, optd.nargs));
+              throw thexception(std::format("not enough option arguments -- {} -- must be {}", *opts, optd.nargs));
             opts++;
             ait++;
           }
@@ -243,7 +244,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
   }
 // put everything into try block and throw exception, if error
   catch (const std::exception& e) {
-    throw thexception(fmt::format("{} [{}]", this->inp.get_cif_name(), this->inp.get_cif_line_number()), e);
+    throw thexception(std::format("{} [{}]", this->inp.get_cif_name(), this->inp.get_cif_line_number()), e);
   }
 
   dbptr->end_insert();  

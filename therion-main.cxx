@@ -41,9 +41,8 @@
 
 #include <Magick++/Functions.h>
 
-#include <fmt/format.h>
-
 #include <filesystem>
+#include <format>
 #include <fstream>
 
 extern const thstok thtt_texts [];
@@ -90,7 +89,7 @@ int main(int argc, char * argv[]) {
     if (const auto exe_dir = std::filesystem::path(argv[0]).parent_path();
         std::filesystem::exists(exe_dir / "jpeg.dll") && std::filesystem::exists(exe_dir / "jpeg.la"))
     {
-      putenv(fmt::format("MAGICK_CODER_MODULE_PATH={}", exe_dir.string()).c_str());
+      putenv(std::format("MAGICK_CODER_MODULE_PATH={}", exe_dir.string()).c_str());
     }
 #endif
     Magick::InitializeMagick(*argv);
@@ -102,9 +101,9 @@ int main(int argc, char * argv[]) {
     // print some help messages and exit if demanded
     if (thcmdln.get_version_disp_state())
     {
-      thprint(fmt::format(thversion_format, thversion_text));
+      thprint(std::format(thversion_format, thversion_text));
       thprint("\n");
-      thprint(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(),
+      thprint(std::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(),
                                                          thcs_get_proj_version_headers()));
       thexit(EXIT_SUCCESS);
     }
@@ -138,11 +137,11 @@ int main(int argc, char * argv[]) {
     }
     
     // print version information
-    thprint(fmt::format(thversion_format, thversion_text));
+    thprint(std::format(thversion_format, thversion_text));
     thprint("\n");
-    thlog(fmt::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
+    thlog(std::format("  - using Proj {}, compiled against {}\n", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     if (thcs_get_proj_version() != thcs_get_proj_version_headers())
-      thwarning(fmt::format("Proj version mismatch: using {}, compiled against {}", thcs_get_proj_version(), thcs_get_proj_version_headers()));
+      thwarning(std::format("Proj version mismatch: using {}, compiled against {}", thcs_get_proj_version(), thcs_get_proj_version_headers()));
     
     // load initialization file
     thini.load();
@@ -183,7 +182,7 @@ int main(int argc, char * argv[]) {
     for(srcit = sources->begin(); srcit != sources->end(); srcit++) {
 
 #ifdef THDEBUG
-      thprint(fmt::format("\nreading input -- {}\n", srcit->fname));
+      thprint(std::format("\nreading input -- {}\n", srcit->fname));
 #endif 
 
       thdbreader.read(srcit->fname, srcit->startln, srcit->endln, 
@@ -249,7 +248,7 @@ int main(int argc, char * argv[]) {
 #endif   
 
     // write the CPU time
-    thprint(fmt::format("compilation time: {:.0f} sec\n", difftime(time(NULL), tmUserStart)));
+    thprint(std::format("compilation time: {:.0f} sec\n", difftime(time(NULL), tmUserStart)));
 #ifdef THDEBUG
     thprint("\n");
 #endif   

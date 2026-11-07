@@ -34,7 +34,8 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 thsurvey::thsurvey()
 {
@@ -154,7 +155,7 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           break;
 
         default:
-          throw thexception(fmt::format("invalid -namespace switch -- {}", *args));
+          throw thexception(std::format("invalid -namespace switch -- {}", *args));
 
       }
       break;
@@ -179,7 +180,7 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        throw thexception(fmt::format("invalid keyword -- {}", *args));
+        throw thexception(std::format("invalid keyword -- {}", *args));
       break;
       
     default:
@@ -238,7 +239,7 @@ void thsurvey::parse_declination(char * str)
 
   // ak 1 4 6 ... error
   if ((nargs == 1) || (((nargs % 2) == 0) && (nargs > 3)))
-    throw thexception(fmt::format("invalid declination specification -- \"{}\"",str));
+    throw thexception(std::format("invalid declination specification -- \"{}\"",str));
 
   // ak 0 tak resetuje a nastavi na 0
   if (nargs == 0) {
@@ -254,7 +255,7 @@ void thsurvey::parse_declination(char * str)
   if (nargs == 1) {
     thparse_double(nid, decl, args[0]);
     if (nid != TT_SV_NUMBER)
-      throw thexception(fmt::format("invalid declination -- {}", args[0]));
+      throw thexception(std::format("invalid declination -- {}", args[0]));
     decl = du.transform(decl);
     data2[0] = 0.0;
     data2[1] = decl;
@@ -274,7 +275,7 @@ void thsurvey::parse_declination(char * str)
     if (typedt == TT_SV_NAN) {
       thparse_double(nid, decl, args[2 * idx + 1]);
       if (nid != TT_SV_NUMBER) {
-        throw thexception(fmt::format("invalid declination -- {}", args[2 * idx + 1]));
+        throw thexception(std::format("invalid declination -- {}", args[2 * idx + 1]));
       }
       this->decuds = decl;
     }
@@ -290,7 +291,7 @@ void thsurvey::parse_declination(char * str)
       // parse declination
       thparse_double(nid, decl, args[2 * idx + 1]);
       if (nid != TT_SV_NUMBER) {
-        throw thexception(fmt::format("invalid declination -- {}", args[2 * idx + 1]));
+        throw thexception(std::format("invalid declination -- {}", args[2 * idx + 1]));
       }
       all_data[2 * dateidx + 1] = du.transform(decl);
       dateidx++;

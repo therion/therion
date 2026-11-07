@@ -44,8 +44,7 @@
 #include "thsurvey.h"
 #include "therion.h"
 
-#include <fmt/format.h>
-
+#include <format>
 #include <vector>
 #include <algorithm>
 #include <string.h>
@@ -102,7 +101,7 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
   thprint("\nBEFORE:\n");
   for(ii = this->data.begin(); ii != this->data.end(); ii++) {
     sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
-    thprint(fmt::format("   {} (+ {:.0f} = {:.0f}) [{}]\n",ii->first.ptr->id,
+    thprint(std::format("   {} (+ {:.0f} = {:.0f}) [{}]\n",ii->first.ptr->id,
       ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, 
       sumsum, ii->first.ptr->fsptr->full_name));
   }
@@ -117,7 +116,7 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
 
 #ifdef THDEBUG
   sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
-    thprint(fmt::format(" + {} (+ {:.0f} = {:.0f}) [{}]\n",ii->first.ptr->id,
+    thprint(std::format(" + {} (+ {:.0f} = {:.0f}) [{}]\n",ii->first.ptr->id,
       ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, 
       sumsum, ii->first.ptr->fsptr->full_name));
 #endif  

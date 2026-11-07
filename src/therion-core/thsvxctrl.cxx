@@ -42,8 +42,8 @@
 #include "thparse.h"
 #include "img.h"
 
-#include <fmt/format.h>
-
+#include <cstring>
+#include <format>
 #include <math.h>
 #include <string>
 #include <fstream>
@@ -318,7 +318,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   const char * svxfn = thtmp.get_file_name("data.svx");
   this->svxf = fopen(svxfn,"w");
   if (svxf == NULL)
-    throw thexception(fmt::format("can't open survex file for output -- {}", svxfn));
+    throw thexception(std::format("can't open survex file for output -- {}", svxfn));
 
   this->meridian_convergence = thcfg.get_outcs_convergence();
   this->lastleggridmccs = TTCS_LOCAL;
@@ -412,7 +412,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   this->transcript_log_file(dbp, thtmp.get_file_name("data.log"));
 
   if (retcode != EXIT_SUCCESS)
-    throw thexception(fmt::format("cavern exit code -- {}", retcode));
+    throw thexception(std::format("cavern exit code -- {}", retcode));
   else
     this->load_err_file(dbp, thtmp.get_file_name("data.err"));
 
@@ -586,7 +586,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   while (!(clf.eof())) {
     lnum++;
     std::getline(clf, lnbuff);
-    thlog(fmt::format("{:2}> {}\n",lnum,lnbuff));
+    thlog(std::format("{:2}> {}\n",lnum,lnbuff));
     // let's scan the line
     chch = lnbuff.c_str();
     nchs = strlen(chch);
@@ -654,7 +654,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
                   fonline = true;
                   tsbuff.append("\n");
                 }
-                numbuff = fmt::format("{:2d}> input:{} -- {} [{}]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
+                numbuff = std::format("{:2d}> input:{} -- {} [{}]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
                 tsbuff.append(numbuff.c_str());
               }
               break;
@@ -662,14 +662,14 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               csn--;
               if ((csn >= 0) && (csn < long(lsid))) {
                 if (fonline) {
-                  numbuff = fmt::format("{:2d}> ",lnum);
+                  numbuff = std::format("{:2d}> ",lnum);
                   tsbuff.append(numbuff.c_str());
                   fonline = false;
                 }
                 else {
                   tsbuff.append(" -- ");
                 }
-                numbuff = fmt::format("{} : ",(csn+1));
+                numbuff = std::format("{} : ",(csn+1));
                 stp = & (dbp->db1d.station_vec[(unsigned int)csn]);
                 tsbuff.append(numbuff.c_str());
                 tsbuff.append(stp->name);
@@ -694,7 +694,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
 
   }
   clf.close();
-  thlog(fmt::format("######################### transcription ########################\n{}",tsbuff.c_str()));
+  thlog(std::format("######################### transcription ########################\n{}",tsbuff.c_str()));
   thlog("#################### end of cavern log file ####################\n");
 }
 

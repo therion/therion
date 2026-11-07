@@ -39,8 +39,6 @@
 #include <cfloat>
 #include <cmath>
 #include <numbers>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -141,7 +139,7 @@ void base64_encode(const char * fname, std::ofstream & fout) {
   unsigned char out_buffer[4];
 
   std::ifstream fin(fname, std::ios::binary);
-  if (!fin) therror(fmt::format("Can't read file {}!\n", fname));
+  if (!fin) therror(std::format("Can't read file {}!\n", fname));
 
   do {
       for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';
@@ -560,10 +558,10 @@ void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   for (auto &g: GRADIENTS) {
     if (!g.second.used_in_map) continue;
     if (g.second.type == gradient_lin) {
-      fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
+      F << std::format("<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
                  g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
     } else {
-      fmt::print(F, "<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
+      F << std::format("<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
                  g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
                                          thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
     }

@@ -31,7 +31,8 @@
 #include "thepsparse.h"
 #include "thparse.h"
 #include <cmath>
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 
 bool thlayout_color::is_defined() {
@@ -110,11 +111,11 @@ void thlayout_color::encode_to_str(int output_model, std::string & str) {
 std::string thlayout_color::print_to_str(int output_model) {
 	this->fill_missing_color_models();
 	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0)
-		return fmt::format("({:.5f},{:.5f},{:.5f},{:.5f})", this->C, this->M, this->Y, this->K);
+		return std::format("({:.5f},{:.5f},{:.5f},{:.5f})", this->C, this->M, this->Y, this->K);
 	else if ((output_model & TT_LAYOUTCLRMODEL_GRAY) > 0)
-		return fmt::format("({:.5f})", this->W);
+		return std::format("({:.5f})", this->W);
 	else
-		return fmt::format("({:.5f},{:.5f},{:.5f})", this->R, this->G, this->B);
+		return std::format("({:.5f},{:.5f},{:.5f})", this->R, this->G, this->B);
 }
 
 void thlayout_color::RGBtoGRAYSCALE() {
@@ -155,7 +156,7 @@ void thlayout_color::CMYKtoRGB() {
   	this->B = (1.0 - this->Y) * (1.0 - this->K);
 }
 
-#define invalid_color_spec throw thexception(fmt::format("invalid color specification -- {}", str));
+#define invalid_color_spec throw thexception(std::format("invalid color specification -- {}", str));
 
 double clrhex2num(char * str, char p) {
 	char src[3];

@@ -53,6 +53,8 @@
 
 #include <fmt/format.h>
 
+#include <format>
+
 
 enum {
   TT_UNKNOWN_CFG, 
@@ -393,9 +395,9 @@ const char * thconfig::get_initialization_path() const
 
 void thconfig_pifo(char * s) {
 #ifdef THDEBUG
-  thprint(fmt::format("\nconfiguration file: {}\nreading\n",s));
+  thprint(std::format("\nconfiguration file: {}\nreading\n",s));
 #else
-  thprint(fmt::format("configuration file: {}\n",s));
+  thprint(std::format("configuration file: {}\n",s));
   thprint("reading ...");
   thtext_inline = true;
 #endif 
@@ -468,7 +470,7 @@ void thconfig::load()
               throw thexception("single scrap-sort switch expected");
             sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
             if (sv == TT_UNKNOWN_BOOL)
-              throw thexception(fmt::format("invalid scrap-sort switch -- {}", valuemb.get_buffer()[0]));
+              throw thexception(std::format("invalid scrap-sort switch -- {}", valuemb.get_buffer()[0]));
             this->scrap_sort = (sv == TT_TRUE);
             break;
             
@@ -477,7 +479,7 @@ void thconfig::load()
               throw thexception("single sketch-warp switch expected");
             sv = thmatch_token(valuemb.get_buffer()[0],thtt_sketchwarp);
             if (sv == THSKETCH_WARP_UNKNOWN)
-              throw thexception(fmt::format("invalid sketch-warp switch -- {}", valuemb.get_buffer()[0]));
+              throw thexception(std::format("invalid sketch-warp switch -- {}", valuemb.get_buffer()[0]));
             this->sketch_warp = sv;
             break;
 
@@ -488,11 +490,11 @@ void thconfig::load()
               double dum;
               thparse_double(sv, dum, valuemb.get_buffer()[0]);
               if (sv != TT_SV_NUMBER)
-                throw thexception(fmt::format("number expected -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("number expected -- {}", valuemb.get_buffer()[0]));
               int dumi;
               dumi = int(dum);
               if ((dumi < 2) || (dumi > 65536))
-                throw thexception(fmt::format("number out of range -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("number out of range -- {}", valuemb.get_buffer()[0]));
               this->sketch_colors = dumi;
             }
             break;
@@ -501,18 +503,18 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               thparse_double(sv, this->tmp3dSMP, valuemb.get_buffer()[0]);
               if ((sv != TT_SV_NUMBER) || (this->tmp3dSMP <= 0.0))
-                throw thexception(fmt::format("invalid number -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("invalid number -- {}", valuemb.get_buffer()[0]));
               this->tmp3dWALLSMP = this->tmp3dSMP;
             }
             if (valuemb.get_size() > 1) {
               thparse_double(sv, this->tmp3dWALLSMP, valuemb.get_buffer()[1]);
               if ((sv != TT_SV_NUMBER) || (this->tmp3dWALLSMP <= 0.0))
-                throw thexception(fmt::format("invalid number -- {}", valuemb.get_buffer()[1]));
+                throw thexception(std::format("invalid number -- {}", valuemb.get_buffer()[1]));
             }
             if (valuemb.get_size() > 2) {
               thparse_double(sv, this->tmp3dMAXDIMD, valuemb.get_buffer()[2]);
               if ((sv != TT_SV_NUMBER) || (this->tmp3dMAXDIMD <= 0.0))
-                throw thexception(fmt::format("invalid number -- {}", valuemb.get_buffer()[2]));
+                throw thexception(std::format("invalid number -- {}", valuemb.get_buffer()[2]));
             }
             break;
 
@@ -520,7 +522,7 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
               if (sv == TT_UNKNOWN_BOOL)
-                throw thexception(fmt::format("invalid auto-join switch -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("invalid auto-join switch -- {}", valuemb.get_buffer()[0]));
               this->auto_join = (sv == TT_TRUE);
             } else {
               throw thexception("missing auto-join switch");
@@ -531,7 +533,7 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
               if (sv == TT_UNKNOWN_BOOL)
-                throw thexception(fmt::format("invalid maps switch -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("invalid maps switch -- {}", valuemb.get_buffer()[0]));
               this->use_maps = (sv == TT_TRUE);
             } else {
               throw thexception("missing maps switch");
@@ -542,7 +544,7 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
               if (sv == TT_UNKNOWN_BOOL)
-                throw thexception(fmt::format("invalid maps switch -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("invalid maps switch -- {}", valuemb.get_buffer()[0]));
               this->use_maps_offset = (sv == TT_TRUE);
             } else {
               throw thexception("missing maps-offset switch");
@@ -553,7 +555,7 @@ void thconfig::load()
             if (valuemb.get_size() > 0) {
               sv = thmatch_token(valuemb.get_buffer()[0], thtt_cfg_log);
               if (sv == TT_LOG_UNKNOWN)
-                throw thexception(fmt::format("invalid log switch -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("invalid log switch -- {}", valuemb.get_buffer()[0]));
               switch (sv) {
                 case TT_LOG_ALL:
                     this->log_extend = true;
@@ -580,7 +582,7 @@ void thconfig::load()
               throw thexception("language specification requires single parameter");
             sv = thlang_parse(valuemb.get_buffer()[0]);
             if (sv == THLANG_UNKNOWN)
-              throw thexception(fmt::format("language not supported -- {}",valuemb.get_buffer()[0]));
+              throw thexception(std::format("language not supported -- {}",valuemb.get_buffer()[0]));
             this->lang = sv;
             break;
 
@@ -602,9 +604,9 @@ void thconfig::load()
             if (valuemb.get_size() == 1) {
               sv = thcs_parse(valuemb.get_buffer()[0]);
               if (sv == TTCS_UNKNOWN)
-                throw thexception(fmt::format("unknown coordinate system -- {}", valuemb.get_buffer()[0]));
+                throw thexception(std::format("unknown coordinate system -- {}", valuemb.get_buffer()[0]));
               if (!thcs_get_data(sv)->output)
-                throw thexception(fmt::format("{} coordinate system not supported for output", valuemb.get_buffer()[0]));
+                throw thexception(std::format("{} coordinate system not supported for output", valuemb.get_buffer()[0]));
               this->outcs = sv;
               this->outcs_def.name = this->get_db()->strstore(this->cfg_file.get_cif_name(), true);
               this->outcs_def.line = this->cfg_file.get_cif_line_number();
@@ -632,7 +634,7 @@ void thconfig::load()
                 break;
 
               default:
-                throw thexception(fmt::format("unknown configuration command -- {}", this->cfg_file.get_cmd()));
+                throw thexception(std::format("unknown configuration command -- {}", this->cfg_file.get_cmd()));
                 
 	          }
         }
@@ -643,7 +645,7 @@ void thconfig::load()
       }
     }
     catch (const std::exception& e) {
-      throw thexception(fmt::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
+      throw thexception(std::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
     }
   }
   
@@ -686,7 +688,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
 
     auto objptr = dbptr->create(this->cfg_file.get_cmd(), osrc);
     if (objptr == NULL)
-      throw thexception(fmt::format("unknown command -- {}", this->cfg_file.get_cmd()));
+      throw thexception(std::format("unknown command -- {}", this->cfg_file.get_cmd()));
 
     if (objptr->get_class_id() == TT_LAYOUT_CMD) {
       dynamic_cast<thlayout*>(objptr.get())->m_pconfig = this;
@@ -701,7 +703,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     ant = valmb->get_size();
     opts = valmb->get_buffer();
     if (ant < objptr->get_cmd_nargs())
-      throw thexception(fmt::format("not enough command arguments -- must be {}",
+      throw thexception(std::format("not enough command arguments -- must be {}",
         objptr->get_cmd_nargs()));
     optd.nargs = 1;
 
@@ -722,7 +724,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
       }
       else {
         if ((ait + optd.nargs) >= ant)
-          throw thexception(fmt::format("not enough option arguments -- {} -- must be {}", *opts, optd.nargs));
+          throw thexception(std::format("not enough option arguments -- {} -- must be {}", *opts, optd.nargs));
         opts++;
         ait++;
       }
@@ -743,7 +745,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
       while (inside_cmd) {
       
         if ((ln = this->cfg_file.read_line()) == NULL)
-          throw thexception(fmt::format("{} [{}] -- {} is missing",this->cfg_file.get_cif_name(),
+          throw thexception(std::format("{} [{}] -- {} is missing",this->cfg_file.get_cif_name(),
             this->cfg_file.get_cif_line_number(),endlnopt));
                       
         thencode(&this->bf1, ln, this->cfg_file.get_cif_encoding());  
@@ -764,7 +766,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
           thsplit_args(&this->mbf1, this->bf2.c_str());
           if (this->mbf1.get_size() < optd.nargs)
-            throw thexception(fmt::format("not enough option arguments -- {} -- must be {}",
+            throw thexception(std::format("not enough option arguments -- {} -- must be {}",
               this->bf1.c_str(), optd.nargs));
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
@@ -790,7 +792,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     
   // put everything into try block and throw exception, if error
   catch (const std::exception& e) {
-    throw thexception(fmt::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
+    throw thexception(std::format("{} [{}]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()), e);
   }
 }
 
@@ -800,7 +802,7 @@ void thconfig::save()
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_GENERATE)) {
   
 #ifdef THDEBUG
-    thprint(fmt::format("\nwriting configuration file -- {}\n", this->fname.c_str()));
+    thprint(std::format("\nwriting configuration file -- {}\n", this->fname.c_str()));
 #else
     thprint("writing configuration file ... ");
     thtext_inline = true;
@@ -810,7 +812,7 @@ void thconfig::save()
     FILE * cf;
     cf = fopen(this->fname.c_str(),"w");
     if (cf == NULL) {
-      thwarning(fmt::format("can't open configuration file for output -- {}", this->fname.c_str()));
+      thwarning(std::format("can't open configuration file for output -- {}", this->fname.c_str()));
       return;
     }
   
@@ -902,7 +904,7 @@ void thconfig::xth_save()
     FILE * cf;
     cf = fopen(".xtherion.dat","w");
     if (cf == NULL) {
-      thwarning(fmt::format("can't open xtherion file for output -- {}.xth", this->fname.c_str()));
+      thwarning(std::format("can't open xtherion file for output -- {}.xth", this->fname.c_str()));
       return;
     }
   
@@ -962,10 +964,10 @@ bool thconfig::get_outcs_mag_decl(double year, double & decl, thobjectsrc src)
   if (year < 1900.0)
     throw thexception("automatic declination calculation before 1900 not supported, please specify declination explicitly");
   if (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)))
-    throw thexception(fmt::format("automatic declination calculation after {} not supported, please specify declination explicitly", thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)));
+    throw thexception(std::format("automatic declination calculation after {} not supported, please specify declination explicitly", thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)));
   } catch (const std::exception& e) {
 	if (src.is_valid())
-		throw thexception(fmt::format("{} [{}]", src.name, src.line), e);
+		throw thexception(std::format("{} [{}]", src.name, src.line), e);
 	else
 		throw e;
   }
@@ -996,8 +998,8 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
   double x, y, z, dec;
   bool firstdec = true;
   if (this->get_outcs_center(x, y, z)) {
-    thlog(fmt::format("output coordinate system: {}\n", thcs_get_name(this->outcs)));
-    thlog(fmt::format("meridian convergence (deg): {:.4}\n", this->get_outcs_convergence()));
+    thlog(std::format("output coordinate system: {}\n", thcs_get_name(this->outcs)));
+    thlog(std::format("meridian convergence (deg): {:.4}\n", this->get_outcs_convergence()));
     if (!thisnan(decsyear)) {
       long min = long(decsyear), max = long(deceyear + 1.0), yyy;
       for(yyy = min; yyy <= max; yyy++) {
@@ -1006,7 +1008,7 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
           firstdec = false;
         }
         if (this->get_outcs_mag_decl(double(yyy), dec)) {
-          thlog(fmt::format("  {:4}.1.1  {:.4}\n", yyy, dec));
+          thlog(std::format("  {:4}.1.1  {:.4}\n", yyy, dec));
         }
       }
     }

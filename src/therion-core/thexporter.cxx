@@ -38,7 +38,8 @@
 #include "therion.h"
 #include <stdio.h>
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 thexporter::thexporter()
 {
@@ -94,7 +95,7 @@ void thexporter::parse_export(int nargs, char ** args) {
       xp->export_mode = expmode;
       break;
     default:
-      throw thexception(fmt::format("unsupported export type -- {}", args[0]));
+      throw thexception(std::format("unsupported export type -- {}", args[0]));
   }
   
   xp->src.name = thdb.strstore(thcfg.get_cfg_file()->get_cif_name(),true);
@@ -171,7 +172,7 @@ void thexporter::export_db(class thdatabase * dp)
 		  cok = (*ii)->check_crc();
 		  ok = ok && cok;
 		  for(auto fi = (*ii)->output_files.begin(); fi != (*ii)->output_files.end(); fi++) {
-			  thprint(fmt::format("{} ... {}\n", fi->fnm, fi->res));
+			  thprint(std::format("{} ... {}\n", fi->fnm, fi->res));
 		  }
 
 	  }

@@ -43,8 +43,7 @@
 #include "thparse.h"
 #include "therion.h"
 
-#include <fmt/format.h>
-
+#include <format>
 #include <numbers>
 
 #define EXPORT3D_INVISIBLE true
@@ -205,13 +204,13 @@ void thscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     case TT_SCRAP_3D:
       this->d3 = thmatch_token(*args, thtt_onoffauto);
       if (this->d3 == TT_UNKNOWN_BOOL)
-        throw thexception(fmt::format("invalid -3d switch -- {}", *args));
+        throw thexception(std::format("invalid -3d switch -- {}", *args));
       break;
     
     case TT_SCRAP_FLIP:
       this->flip = thmatch_token(*args, thtt_scrap_flips);
       if (this->flip == TT_SCRAP_FLIP_UNKNOWN)
-        throw thexception(fmt::format("invalid -flip switch -- {}", *args));
+        throw thexception(std::format("invalid -flip switch -- {}", *args));
       break;
 
     case TT_SCRAP_SKETCH:
@@ -242,7 +241,7 @@ void thscrap::parse_scale(char * ss)
   int npar = this->db->db2d.mbf.get_size();
   char ** pars = this->db->db2d.mbf.get_buffer();
   if ((npar < 1) || ((npar > 3) && (npar != 8) && (npar != 9)))
-    throw thexception(fmt::format("invalid number of scale arguments -- {}",npar));
+    throw thexception(std::format("invalid number of scale arguments -- {}",npar));
   double n1 = 1.0, n2 = 1.0;
   bool p9 = false;
   int sv, ux = 0, n2x = 0;
@@ -267,7 +266,7 @@ void thscrap::parse_scale(char * ss)
 #define parse_scalep9(var,parn) \
     thparse_double(sv,var,pars[parn]); \
     if (sv != TT_SV_NUMBER) \
-      throw thexception(fmt::format("real number required -- {}", pars[parn]));
+      throw thexception(std::format("real number required -- {}", pars[parn]));
   
   if (ux > 0) {
     lentf.parse_units(pars[ux]);
@@ -307,12 +306,12 @@ void thscrap::parse_scale(char * ss)
     // let's parse first number
     thparse_double(sv,n1,pars[0]);
     if ((sv != TT_SV_NUMBER) || (n1 <= 0.0))
-      throw thexception(fmt::format("real positive number required -- {}", pars[0]));
+      throw thexception(std::format("real positive number required -- {}", pars[0]));
     // let's parse second number
     if (n2x > 0) {
       thparse_double(sv,n2,pars[n2x]);
       if ((sv != TT_SV_NUMBER) || (n2 <= 0.0))
-        throw thexception(fmt::format("real positive number required -- {}", pars[0]));
+        throw thexception(std::format("real positive number required -- {}", pars[0]));
       n1 = n2 / n1;
       if (ux > 0)
         n1 = lentf.transform(n1);
@@ -366,7 +365,7 @@ thscraplo * thscrap::get_outline() {
   this->outline_parsed = true;
 
 #ifdef THDEBUG
-  thprint(fmt::format("\n\nscanning outline: scrap {}\n",this->name));
+  thprint(std::format("\n\nscanning outline: scrap {}\n",this->name));
 #endif
   
   th2ddataobject * obj = this->fs2doptr;
@@ -377,14 +376,14 @@ thscraplo * thscrap::get_outline() {
   while (obj != NULL) {
 #ifdef THDEBUG
     if (obj->get_class_id() == TT_LINE_CMD)
-      thprint(fmt::format("{} [{}]\n", obj->id, obj->name));
+      thprint(std::format("{} [{}]\n", obj->id, obj->name));
 #endif     
     if ((obj->get_class_id() == TT_LINE_CMD) &&
         (dynamic_cast<thline*>(obj)->first_point != NULL) &&
         ((dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_IN) ||
         (dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_OUT))) {
 #ifdef THDEBUG
-      thprint(fmt::format("inserting line - {} [{}]\n", obj->id, obj->name));
+      thprint(std::format("inserting line - {} [{}]\n", obj->id, obj->name));
 #endif     
       co = this->db->db2d.insert_scraplo();
       co->line = dynamic_cast<thline*>(obj);
@@ -443,8 +442,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreefirst = false;
             co2->lfreefirst = false;
 #ifdef THDEBUG
-            thprint(fmt::format("\tJOIN F-F: {:.2f},{:.2f}\n", co->line->first_point->point->x, co->line->first_point->point->y));
-            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
+            thprint(std::format("\tJOIN F-F: {:.2f},{:.2f}\n", co->line->first_point->point->x, co->line->first_point->point->y));
+            thprint(std::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
         if (co->lfreefirst && co2->lfreelast && 
@@ -453,8 +452,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreefirst = false;
             co2->lfreelast = false;
 #ifdef THDEBUG
-            thprint(fmt::format("\tJOIN F-L: {:.2f},{:.2f}\n", co->line->first_point->point->x, co->line->first_point->point->y));
-            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
+            thprint(std::format("\tJOIN F-L: {:.2f},{:.2f}\n", co->line->first_point->point->x, co->line->first_point->point->y));
+            thprint(std::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
         if (co->lfreelast && co2->lfreefirst && 
@@ -463,8 +462,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreelast = false;
             co2->lfreefirst = false;
 #ifdef THDEBUG
-            thprint(fmt::format("\tJOIN L-F: {:.2f},{:.2f}\n", co->line->last_point->point->x, co->line->last_point->point->y));
-            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
+            thprint(std::format("\tJOIN L-F: {:.2f},{:.2f}\n", co->line->last_point->point->x, co->line->last_point->point->y));
+            thprint(std::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
         if (co->lfreelast && co2->lfreelast && 
@@ -473,8 +472,8 @@ thscraplo * thscrap::get_outline() {
             co->lfreelast = false;
             co2->lfreelast = false;
 #ifdef THDEBUG
-            thprint(fmt::format("\tJOIN L-L: {:.2f},{:.2f}\n", co->line->last_point->point->x, co->line->last_point->point->y));
-            thprint(fmt::format("\t{} -- {}\n", co->line->id, co2->line->id));
+            thprint(std::format("\tJOIN L-L: {:.2f},{:.2f}\n", co->line->last_point->point->x, co->line->last_point->point->y));
+            thprint(std::format("\t{} -- {}\n", co->line->id, co2->line->id));
 #endif
         }
       }
@@ -493,7 +492,7 @@ thscraplo * thscrap::get_outline() {
       last_pt = co->line->last_point->point;
       co->mode = TT_OUTLINE_NORMAL;
 #ifdef THDEBUG
-      thprint(fmt::format("\tfirst line: {} [{}] - mode {}\n",co->line->id, co->line->name, co->line->outline));
+      thprint(std::format("\tfirst line: {} [{}] - mode {}\n",co->line->id, co->line->name, co->line->outline));
 #endif
       still_in_line = !(co->line->is_closed);
       co3 = co;
@@ -552,7 +551,7 @@ thscraplo * thscrap::get_outline() {
         else {
           co3last->next_line = co3;
 #ifdef THDEBUG
-          thprint(fmt::format("\tnext line: {} [{}] {}\n", co3->line->id, co3->line->name, (co3_normal ? "normal" : "reversed")));
+          thprint(std::format("\tnext line: {} [{}] {}\n", co3->line->id, co3->line->name, (co3_normal ? "normal" : "reversed")));
 #endif
           if (co3_normal) {
             co3->mode = TT_OUTLINE_NORMAL;
@@ -932,13 +931,13 @@ thscrapen * thscrap::get_ends() {
   thscrapen * res = NULL, * cres;
   thscraplo * lo = this->get_outline(), * lo2, * nextlo;
 #ifdef THDEBUG
-      thprint(fmt::format("\nscaning ends: {}\n", this->name));
+      thprint(std::format("\nscaning ends: {}\n", this->name));
 #endif
   while (lo != NULL) {
     if (lo->line->outline != TT_LINE_OUTLINE_NONE) {
       lo2 = lo;
 #ifdef THDEBUG
-      thprint(fmt::format("\toutline from: {} -- mode {}\n", lo->line->id, lo->line->outline));
+      thprint(std::format("\toutline from: {} -- mode {}\n", lo->line->id, lo->line->outline));
 #endif
       search_inv = true;
       cont = true;
@@ -1478,11 +1477,11 @@ void thscrap::parse_sketch(char ** args, int /*argenc*/) // TODO unused paramete
   // X
   thparse_double(sv,sk.m_x,args[1]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    throw thexception(fmt::format("invalid number -- {}", args[1]));
+    throw thexception(std::format("invalid number -- {}", args[1]));
   // Y
   thparse_double(sv,sk.m_y,args[2]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
-    throw thexception(fmt::format("invalid number -- {}", args[2]));
+    throw thexception(std::format("invalid number -- {}", args[2]));
   this->sketch_list.push_back(std::move(sk));
 }
 

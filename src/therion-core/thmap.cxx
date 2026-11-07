@@ -36,7 +36,7 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <format>
 
 thmap::thmap()
 {
@@ -203,22 +203,22 @@ void thmap::parse_item(int npar, char ** pars)
     nw = mapitmmb.get_size();
     ss = mapitmmb.get_buffer();
     if ((nw < 2) || (nw > 3))
-      throw thexception(fmt::format("invalid map shift specification -- {}", pars[1]));
+      throw thexception(std::format("invalid map shift specification -- {}", pars[1]));
 
     thtflength l;
     thparse_double(sv, citem->m_shift.m_x, ss[0]);
     if (sv != TT_SV_NUMBER)
-      throw thexception(fmt::format("not a number -- {}", ss[0]));
+      throw thexception(std::format("not a number -- {}", ss[0]));
     thparse_double(sv, citem->m_shift.m_y, ss[1]);
     if (sv != TT_SV_NUMBER)
-      throw thexception(fmt::format("not a number -- {}", ss[1]));
+      throw thexception(std::format("not a number -- {}", ss[1]));
     if (nw > 2)
       l.parse_units(ss[2]);
     citem->m_shift.m_x = l.transform(citem->m_shift.m_x);
     citem->m_shift.m_y = l.transform(citem->m_shift.m_y);
     citem->m_shift.m_preview = thmatch_token(pars[2],thtt_2dmi);
     if ((citem->m_shift.m_preview == TT_MAPITEM_UNKNOWN) || (citem->m_shift.m_preview == TT_MAPITEM_NORMAL))
-      throw thexception(fmt::format("unsupported preview type -- {}", pars[2]));
+      throw thexception(std::format("unsupported preview type -- {}", pars[2]));
   }
 }
 
@@ -234,7 +234,7 @@ void thmap::parse_preview(char ** pars)
     case TT_MAPITEM_BELOW:
       break;
     default:
-      throw thexception(fmt::format("unsupported preview type -- {}", *pars));
+      throw thexception(std::format("unsupported preview type -- {}", *pars));
   }
   thparse_objectname(citem->name,& this->db->buff_stations, pars[1]);
   if (this->last_item == NULL) {

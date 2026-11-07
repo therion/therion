@@ -56,6 +56,8 @@
 
 #include <fmt/ostream.h>
 
+#include <cstring>
+#include <format>
 
 const char * thlibrarydata_init_text =
 R"(/**
@@ -189,7 +191,7 @@ void thdatabase::check_context(class thdataobject * optr) {
         misscmd = "scrap";
         break;
     }
-    throw thexception(fmt::format("missing {} before {} command", misscmd, cmdname));
+    throw thexception(std::format("missing {} before {} command", misscmd, cmdname));
   }
 }
 
@@ -236,7 +238,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
     if (this->object_map.find(thobjectid(optr->name,csurvey_id)) !=
         this->object_map.end()) {
       optr_name = optr->get_name();  
-      throw thexception(fmt::format("duplicate object name -- {}", optr_name));
+      throw thexception(std::format("duplicate object name -- {}", optr_name));
     }
   }
   
@@ -248,7 +250,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       // let's check, if name of endsurvey is correct
       if (strlen(optr->name) > 0) {
         if (strcmp(optr->name, csurveyptr->name) != 0)
-          throw thexception(fmt::format("survey - endsurvey names don't match -- {} - {}",
+          throw thexception(std::format("survey - endsurvey names don't match -- {} - {}",
             csurveyptr->name, optr->name));
       }
 
@@ -275,7 +277,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       // let's check, if name of endsurvey is correct
       if (strlen(optr->name) > 0) {
         if (strcmp(optr->name, cscrapptr->name) != 0)
-          throw thexception(fmt::format("scrap - endscrap names don't match -- {} - {}",
+          throw thexception(std::format("scrap - endscrap names don't match -- {} - {}",
             cscrapptr->name, optr->name));
       }
       this->ccontext = THCTX_SURVEY;
@@ -382,7 +384,7 @@ thsurvey * thdatabase::get_survey(const char * sn, thsurvey * ps)
   if (xxx != NULL)
     return xxx;
   else
-    throw thexception(fmt::format("survey does not exist -- {}", sn));
+    throw thexception(std::format("survey does not exist -- {}", sn));
 }
 
 
@@ -565,7 +567,7 @@ void thdatabase::end_insert()
   if (this->csurveyptr->id != this->fsurveyptr->id) {
     thdb_revision_set_type::iterator ii = 
         this->revision_set.find(threvision(this->csurveyptr->id, 0));
-    therror(fmt::format("{} [{}] -- incomplete survey - endsurvey pair -- {}",
+    therror(std::format("{} [{}] -- incomplete survey - endsurvey pair -- {}",
       ii->srcf.name, ii->srcf.line, this->csurveyptr->full_name));
   }
 }
@@ -592,7 +594,7 @@ class thdataobject * thdatabase::revise(char * nn, class thsurvey * fathersptr,
     thsurveyname xxx = thsurveyname(sfullname);
     iii = this->survey_map.find(xxx);
     if (iii == this->survey_map.end())
-      throw thexception(fmt::format("unknown survey -- {}",nn));
+      throw thexception(std::format("unknown survey -- {}",nn));
     else {
       fsid = iii->second->id;
     }

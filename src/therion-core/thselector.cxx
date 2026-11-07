@@ -40,7 +40,7 @@
 #include "thparse.h"
 #include "therion.h"
 
-#include <fmt/format.h>
+#include <format>
 
 thselector::thselector() {
   this->number = 0;
@@ -104,7 +104,7 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
             itm.recursive = true;
             break;
           case TT_UNKNOWN_BOOL:
-            throw thexception(fmt::format("logical value expected -- {}", args[aid]));
+            throw thexception(std::format("logical value expected -- {}", args[aid]));
         }
         break;
 
@@ -121,9 +121,9 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
           break;
         }
         if ((sv != TT_SV_NUMBER) || (dum < 0))
-          throw thexception(fmt::format("invalid map level -- {}", *args));
+          throw thexception(std::format("invalid map level -- {}", *args));
         if (double(int(dum)) != dum)
-          throw thexception(fmt::format("invalid map level -- {}", *args));
+          throw thexception(std::format("invalid map level -- {}", *args));
         itm.map_level = long(dum);
         break;
 
@@ -135,14 +135,14 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
           break;
         }
         if ((sv != TT_SV_NUMBER) || (dum <= 0))
-          throw thexception(fmt::format("invalid chapter level -- {}", *args));
+          throw thexception(std::format("invalid chapter level -- {}", *args));
         if (double(int(dum)) != dum)
-          throw thexception(fmt::format("invalid chapter level -- {}", *args));
+          throw thexception(std::format("invalid chapter level -- {}", *args));
         itm.chapter_level = long(dum);
         break;
         
       default:
-        throw thexception(fmt::format("unknown option -- {}", args[aid]));
+        throw thexception(std::format("unknown option -- {}", args[aid]));
     }
   }
   
@@ -382,7 +382,7 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   while (prjli != db->db2d.prj_list.end()) {
 	  std::string projdir;
 		if ((prjli->type == TT_2DPROJ_ELEV) && (prjli->pp1 != 0.0)) {
-			projdir = fmt::format("\\[{:.1f}\\]", prjli->pp1);
+			projdir = std::format("\\[{:.1f}\\]", prjli->pp1);
 		}
     fprintf(cf,"xth_cp_map_tree_insert projection 0 p%d {} 0",prjli->id); 
     if (strlen(prjli->index) > 0)
@@ -486,7 +486,7 @@ void thselector::select_db(class thdatabase * db)
         nsrv = nms[1];
         break;
       default:
-        thwarning(fmt::format("{} [{}] -- invalid object specification", 
+        thwarning(std::format("{} [{}] -- invalid object specification", 
           ii->src_name, ii->src_ln));
         to_cont = false;
     }
@@ -508,7 +508,7 @@ void thselector::select_db(class thdatabase * db)
         objptr = NULL;
       }
       if (objptr == NULL) {
-        thwarning(fmt::format("{} [{}] -- object not found -- \"{}\"", 
+        thwarning(std::format("{} [{}] -- object not found -- \"{}\"", 
           ii->src_name, ii->src_ln, nobj));
         to_cont = false;
       }

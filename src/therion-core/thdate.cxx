@@ -28,8 +28,8 @@
 #include "thdate.h"
 #include "thexception.h"
 
-#include <fmt/format.h>
-
+#include <cstring>
+#include <format>
 #include <time.h>
 #include <locale.h>
 
@@ -113,7 +113,7 @@ void thdate::parse(const char * src)
           (ppos == 7) || (ppos == 8) || (ppos == 12))
         ppos++;
       else
-        throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
+        throw thexception(std::format("invalid date syntax -- \"{}\"", osrc));
       ssrc++;
       continue;
     }
@@ -123,7 +123,7 @@ void thdate::parse(const char * src)
           (ppos == 10) || (ppos == 11))
         ppos++;
       else
-        throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
+        throw thexception(std::format("invalid date syntax -- \"{}\"", osrc));
       ssrc++;
       continue;
     }
@@ -135,7 +135,7 @@ void thdate::parse(const char * src)
         if ((ppos >= 7) && (ppos <= 9))
           ppos = 10;
         else
-          throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
+          throw thexception(std::format("invalid date syntax -- \"{}\"", osrc));
       }
       ssrc++;
       continue;
@@ -145,7 +145,7 @@ void thdate::parse(const char * src)
       if ((ppos >= 0) && (ppos <= 6))
         ppos = 7;
       else
-        throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
+        throw thexception(std::format("invalid date syntax -- \"{}\"", osrc));
       ssrc++;
       continue;
     }
@@ -173,11 +173,11 @@ void thdate::parse(const char * src)
       continue;
     }
     else
-      throw thexception(fmt::format("invalid date syntax -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date syntax -- \"{}\"", osrc));
   }  // while
   
   if (dd[0] < 0)
-    throw thexception(fmt::format("invalid date year -- \"{}\"", osrc));
+    throw thexception(std::format("invalid date year -- \"{}\"", osrc));
   else
     this->syear = dd[0];
     
@@ -185,35 +185,35 @@ void thdate::parse(const char * src)
     if (dd[1] < 13)
       this->smonth = dd[1];
     else
-      throw thexception(fmt::format("invalid date month -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date month -- \"{}\"", osrc));
   }
   
   if (dd[2] > 0) {
     if ((dd[2] < 32) && (this->smonth > 0))
       this->sday = dd[2];
     else
-      throw thexception(fmt::format("invalid date day -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date day -- \"{}\"", osrc));
   }
 
   if (dd[3] >= 0) {
     if ((dd[3] < 24) && (this->sday > 0))
       this->shour = dd[3];
     else
-      throw thexception(fmt::format("invalid date hour -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date hour -- \"{}\"", osrc));
   }
 
   if (dd[4] >= 0) {
     if ((dd[4] < 60) && (this->shour >= 0))
       this->smin = dd[4];
     else
-      throw thexception(fmt::format("invalid date minute -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date minute -- \"{}\"", osrc));
   }
 
   if (dd[5] >= 0) {
     if ((dd[5] < 60) && (this->smin >= 0))
       this->ssec = (double) dd[5];
     else
-      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date second -- \"{}\"", osrc));
   }
   
   if (ss[0] > 0) {
@@ -223,49 +223,49 @@ void thdate::parse(const char * src)
       this->ssec += ss[0] / sm[0];
     }
     else
-      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date second -- \"{}\"", osrc));
   }
 
   if (dd[7] >= 0) {
     if (this->syear >= 0)
       this->eyear = dd[7];
     else
-      throw thexception(fmt::format("start date must be specified -- \"{}\"", osrc));
+      throw thexception(std::format("start date must be specified -- \"{}\"", osrc));
   }
     
   if (dd[8] > 0) {
     if ((dd[8] < 13) && (this->eyear >= 0))
       this->emonth = dd[8];
     else
-      throw thexception(fmt::format("invalid date month -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date month -- \"{}\"", osrc));
   }
   
   if (dd[9] > 0) {
     if ((dd[9] < 32) && (this->emonth > 0))
       this->eday = dd[9];
     else
-      throw thexception(fmt::format("invalid date day -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date day -- \"{}\"", osrc));
   }
 
   if (dd[10] >= 0) {
     if ((dd[10] < 24) && (this->eday > 0))
       this->ehour = dd[10];
     else
-      throw thexception(fmt::format("invalid date hour -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date hour -- \"{}\"", osrc));
   }
 
   if (dd[11] >= 0) {
     if ((dd[11] < 60) && (this->ehour >= 0))
       this->emin = dd[11];
     else
-      throw thexception(fmt::format("invalid date minute -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date minute -- \"{}\"", osrc));
   }
 
   if (dd[12] >= 0) {
     if ((dd[12] < 60) && (this->emin >= 0))
       this->esec = (double) dd[12];
     else
-      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date second -- \"{}\"", osrc));
   }
   
   if (ss[1] > 0) {
@@ -275,7 +275,7 @@ void thdate::parse(const char * src)
       this->esec += ss[1] / sm[1];
     }
     else
-      throw thexception(fmt::format("invalid date second -- \"{}\"", osrc));
+      throw thexception(std::format("invalid date second -- \"{}\"", osrc));
   }
   
 }  // parse

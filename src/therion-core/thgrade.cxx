@@ -32,6 +32,8 @@
 
 #include <fmt/ostream.h>
 
+#include <format>
+
 /**
  * Print number in nan format.
  */
@@ -44,7 +46,7 @@ static std::string thprintinfnan(const double number)
   else if (thisinf(number) == -1)
     return "-thinf";
   else
-    return fmt::format("{}", number);
+    return std::format("{}", number);
 }
 
 thgrade::thgrade()
