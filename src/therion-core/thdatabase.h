@@ -142,10 +142,10 @@ typedef std::set < thsurveyname > thdb_dictionary_type;  ///< Database dictionar
 typedef std::set < threvision > thdb_revision_set_type;  ///< Object revision set type.
 typedef std::map < thobjectid, class thdataobject * > thdb_object_map_type;  ///< Object map
 typedef std::map < thsurveyname, class thsurvey * > thdb_survey_map_type;   ///< Survey map  
-typedef std::map < thsurveyname, class thdataobject * > thdb_grade_map_type;   ///< Grade map  
-typedef thdb_grade_map_type thdb_layout_map_type;   ///< Layout map  
 typedef std::list < std::unique_ptr<thdataobject> > thdb_object_list_type;   ///< Object list
 
+template <typename T>
+using object_search_map = std::map<std::string, T*, std::less<>>;
   
 /**
  * Main database class.
@@ -189,9 +189,9 @@ class thdatabase {
   thobjectsrc csrc;  ///< Current source position.
   thdb_object_map_type object_map;  ///< Object search hash
   thdb_survey_map_type survey_map;   ///< Survey search hash
-  thdb_grade_map_type grade_map;   ///< Grade search hash
-  thdb_layout_map_type layout_map;   ///< Layout search hash
-  thdb_layout_map_type lookup_map;   ///< Lookup search hash
+  object_search_map<class thgrade> grade_map;   ///< Grade search
+  object_search_map<class thlayout> layout_map;   ///< Layout search
+  object_search_map<class thlookup> lookup_map;   ///< Lookup search
   thdb_object_list_type object_list;   ///< Object list
   
   
@@ -287,20 +287,20 @@ class thdatabase {
    * Retrieve survey grade from database.
    */
    
-  class thgrade * get_grade(char * gname);
+  class thgrade * get_grade(std::string_view gname);
 
 
   /**
    * Retrieve map layout from database.
    */
    
-  class thlayout * get_layout(const char * gname);
+  class thlayout * get_layout(std::string_view gname);
 
   /**
    * Retrieve lookup from database.
    */
    
-  class thlookup * get_lookup(const char * gname);
+  class thlookup * get_lookup(std::string_view gname);
   
   
   /**

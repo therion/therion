@@ -645,84 +645,66 @@ class thscrap * thdatabase::get_current_scrap()
 
 void thdatabase::insert_grade(std::unique_ptr<thdataobject> optr)
 {
-//  thdb_grade_map_type::iterator gi = 
-//    this->grade_map.find(thsurveyname(optr->get_name()));
-    
-//  if ((gi == this->grade_map.end()) || 
-//      (thcmdln.get_print_state() == THPS_LIB_SRC)) {
-    // insert grade
-    this->grade_map[thsurveyname(optr->get_name())] = optr.get();
+    auto* grade = dynamic_cast<thgrade*>(optr.get());
+    if (!grade) {
+        throw thexception("inserted object is not a grade");
+    }
+
+    this->grade_map[optr->get_name()] = grade;
     this->object_list.push_back(std::move(optr));
-//  }
-//  else
-//    ththrow("survey grade already exists -- {}",optr->get_name());
-  
 }
  
  
 void thdatabase::insert_layout(std::unique_ptr<thdataobject> optr)
 {
-//  thdb_layout_map_type::iterator gi = 
-//    this->layout_map.find(thsurveyname(optr->get_name()));
-    
-//  if ((gi == this->layout_map.end()) || 
-//      (thcmdln.get_print_state() == THPS_LIB_SRC)) {
-    // insert grade
-    this->layout_map[thsurveyname(optr->get_name())] = optr.get();
+    auto* layout = dynamic_cast<thlayout*>(optr.get());
+    if (!layout) {
+        throw thexception("inserted object is not a layout");
+    }
+
+    this->layout_map[optr->get_name()] = layout;
     this->object_list.push_back(std::move(optr));
-//  }
-//  else
-//    ththrow("map layout already exists -- {}",optr->get_name());
-  
 }
 
 void thdatabase::insert_lookup(std::unique_ptr<thdataobject> optr)
 {
-//  thdb_layout_map_type::iterator gi = 
-//    this->layout_map.find(thsurveyname(optr->get_name()));
-    
-//  if ((gi == this->layout_map.end()) || 
-//      (thcmdln.get_print_state() == THPS_LIB_SRC)) {
-    // insert grade
-    this->lookup_map[thsurveyname(optr->get_name())] = optr.get();
+    auto* lookup = dynamic_cast<thlookup*>(optr.get());
+    if (!lookup) {
+        throw thexception("inserted object is not a lookup");
+    }
+
+    this->lookup_map[optr->get_name()] = lookup;
     this->object_list.push_back(std::move(optr));
-//  }
-//  else
-//    ththrow("map layout already exists -- {}",optr->get_name());
-  
 }
  
  
-class thgrade * thdatabase::get_grade(char * gname)
+class thgrade * thdatabase::get_grade(std::string_view gname)
 {
-  thdb_grade_map_type::iterator gi = 
-    this->grade_map.find(gname);
-  if (gi == this->grade_map.end())
-    return NULL;
-  else
-    return dynamic_cast<thgrade*>(gi->second);
+  if (auto it = this->grade_map.find(gname); it != this->grade_map.end()) {
+    return it->second;
+  }
+
+  return nullptr;
 }
 
 
-class thlayout * thdatabase::get_layout(const char * gname)
+class thlayout * thdatabase::get_layout(std::string_view gname)
 {
-  thdb_layout_map_type::iterator gi = 
-    this->layout_map.find(gname);
-  if (gi == this->layout_map.end())
-    return NULL;
-  else
-    return dynamic_cast<thlayout*>(gi->second);
+  if (auto it = this->layout_map.find(gname); it != this->layout_map.end()) {
+    return it->second;
+  }
+
+  return nullptr;
 }
 
 
-class thlookup * thdatabase::get_lookup(const char * gname)
+class thlookup * thdatabase::get_lookup(std::string_view gname)
 {
-  thdb_layout_map_type::iterator gi = 
-    this->lookup_map.find(gname);
-  if (gi == this->lookup_map.end())
-    return NULL;
-  else
-    return dynamic_cast<thlookup*>(gi->second);
+  if (auto it = this->lookup_map.find(gname); it != this->lookup_map.end()) {
+    return it->second;
+  }
+
+  return nullptr;
 }
 
 
@@ -732,22 +714,18 @@ void thdatabase::self_print_library(std::ostream& out)
 
   // print survey grades
   fmt::print(out, "{}", thlibrarydata_grades_text);
-  thdb_grade_map_type::iterator gi = this->grade_map.begin();
-  while (gi != this->grade_map.end()) {
+  for (const auto& [name, grade]: this->grade_map) {
     fmt::print(out, "\n\tpgrade = thdb.create<thgrade>(thobjectsrc(\"therion\",0));\n");
-    dynamic_cast<thgrade*>(gi->second)->self_print_library(out);
-    gi++;
+    grade->self_print_library(out);
     fmt::print(out, "\tthdb.insert(std::move(pgrade));\n");
   }
   fmt::print(out, "}}\n\n");
 
   // print map layouts
   fmt::print(out, "{}", thlibrarydata_layouts_text);
-  thdb_layout_map_type::iterator li = this->layout_map.begin();
-  while (li != this->layout_map.end()) {
+  for (const auto& [name, layout]: this->layout_map) {
     fmt::print(out, "\n\tplayout = thdb.create<thlayout>(thobjectsrc(\"therion\",0));\n");
-    dynamic_cast<thlayout*>(li->second)->self_print_library(out);
-    li++;
+    layout->self_print_library(out);
     fmt::print(out, "\tthdb.insert(std::move(playout));\n");
   }
   fmt::print(out, "}}\n\n");
