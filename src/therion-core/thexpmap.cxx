@@ -772,6 +772,51 @@ static void fprint_scale_option(FILE * pltf, th2ddataobject * obj) {
   }
 }
 
+static void fprint_clip_option(FILE * pltf, th2ddataobject * obj) {
+  if (!(obj->tags & TT_2DOBJ_TAG_CLIP_AUTO)) {
+    if ((obj->tags & TT_2DOBJ_TAG_CLIP_ON)) {
+      fprintf(pltf, " -clip on");
+    } else {
+      fprintf(pltf, " -clip off");
+    }
+  }
+}
+
+// default_place is the place an object gets from its type, without -place option
+static void fprint_place_option(FILE * pltf, th2ddataobject * obj, int default_place) {
+  switch (obj->place) {
+    case TT_2DOBJ_PLACE_BOTTOM: fprintf(pltf, " -place bottom"); break;
+    case TT_2DOBJ_PLACE_TOP: fprintf(pltf, " -place top"); break;
+    case TT_2DOBJ_PLACE_DEFAULT:
+      if (default_place != TT_2DOBJ_PLACE_DEFAULT) fprintf(pltf, " -place default");
+      break;
+  }
+}
+
+static void fprint_attr_options(FILE * pltf, thdataobject * obj) {
+  thattr_obj * ao = thdb.attr.get_object(long(obj->id));
+  if (ao == NULL) return;
+  for (auto & [field_id, attr] : ao->m_attributes) {
+    fprintf(pltf, " -attr %s ", attr.m_field->m_name.c_str());
+    switch (attr.m_type) {
+      case THATTR_INTEGER: fprintf(pltf, "%ld", attr.m_val_long); break;
+      case THATTR_DOUBLE: fprintf(pltf, "%s", fmt::format("{}", attr.m_val_double).c_str()); break;
+      default: fprint_quoted_string(pltf, attr.m_val_string.c_str());
+    }
+  }
+}
+
+// options common to points, lines and areas
+static void fprint_2dobj_options(FILE * pltf, th2ddataobject * obj) {
+  if (obj->context_str != NULL) {
+    fprintf(pltf, " -context %s", obj->context_str);
+  }
+  if (!(obj->tags & TT_2DOBJ_TAG_VISIBILITY_ON)) {
+    fprintf(pltf, " -visibility off");
+  }
+  fprint_attr_options(pltf, obj);
+}
+
 void thexpmap::export_th2(class thdb2dprj * prj)
 {
   const char * fnm = this->get_output("cave.th2");  
@@ -939,6 +984,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
         case TT_TRUE: fprintf(pltf, " -walls on"); break;
       }
 
+      fprint_attr_options(pltf, scrap);
+
       fprintf(pltf,"\n\n");
     
       // export scrap objects
@@ -962,12 +1009,21 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               if (!pt->station_name.is_empty()) {
                 switch (pt->type) {
                   case TT_POINT_TYPE_STATION:
+                  case TT_POINT_TYPE_CONTINUATION:
                     fprintf(pltf, " -name %s", pt->station_name.print_name().c_str());
                     break;
                   case TT_POINT_TYPE_SECTION:
-                    fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
+                    // refer to the scrap by its exported id
+                    if (thscrap * xscrap = pt->get_scrap()) {
+                      fprintf(pltf, " -scrap %s%s%s", objname(xscrap));
+                    } else {
+                      fprintf(pltf, " -scrap %s", pt->station_name.print_name().c_str());
+                    }
                     break;
                 }
+              }
+              if ((pt->type == TT_POINT_TYPE_EXTRA) && !pt->from_name.is_empty()) {
+                fprintf(pltf, " -from %s", pt->from_name.print_name().c_str());
               }
               if (strlen(pt->name) > 0) {
                 fprintf(pltf," -id %s%s%s", objname(pt));
@@ -975,20 +1031,11 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               if (pt->align != TT_POINT_ALIGN_C) {
                 fprintf(pltf, " -align %s", thmatch_string(pt->align, thtt_point_aligns));
               }
-              if (!(pt->tags & TT_2DOBJ_TAG_CLIP_AUTO)) {
-                if ((pt->tags & TT_2DOBJ_TAG_CLIP_ON)) {
-                  fprintf(pltf, " -clip on");
-                } else {
-                  fprintf(pltf, " -clip off");
-                }
-              }
+              fprint_clip_option(pltf, pt);
               if (!isnan(pt->orient)) {
                 fprintf(pltf, " -orientation %.1f", pt->orient);
               }
-              switch (pt->place) {
-                case TT_2DOBJ_PLACE_BOTTOM: fprintf(pltf, " -place bottom"); break;
-                case TT_2DOBJ_PLACE_TOP: fprintf(pltf, " -place top"); break;
-              }
+              fprint_place_option(pltf, pt, TT_2DOBJ_PLACE_DEFAULT);
               fprint_scale_option(pltf, pt);
               if (const auto* text = pt->get_text()) {
                 switch (pt->type) {
@@ -1016,6 +1063,11 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                     fprintf(pltf, " -explored %g", xsize);
                   }
                   break;
+                case TT_POINT_TYPE_EXTRA:
+                  if (!isnan(xsize)) {
+                    fprintf(pltf, " -dist %g", xsize);
+                  }
+                  break;
                 case TT_POINT_TYPE_DIMENSIONS:
                   fprintf(pltf, " -value [%g %g]", xsize, pt->ysize);
                   break;
@@ -1023,7 +1075,9 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   if (isnan(xsize)) {
                     xsize = pt->ysize;
                   } else if (!isnan(pt->ysize)) {
-                    fprintf(pltf, " -value [+%g -%g]", xsize, pt->ysize);
+                    fprintf(pltf, " -value [+%g%s -%g%s]",
+                            xsize, (pt->tags & TT_POINT_TAG_HEIGHT_PQ) ? "?" : "",
+                            pt->ysize, (pt->tags & TT_POINT_TAG_HEIGHT_NQ) ? "?" : "");
                     break;
                   }
                   [[fallthrough]];
@@ -1043,9 +1097,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   break;
               }
 
-              if (!(pt->tags & TT_2DOBJ_TAG_VISIBILITY_ON)) {
-                fprintf(pltf, " -visibility off");
-              }
+              fprint_2dobj_options(pltf, pt);
               fprintf(pltf,"\n\n");
             }
             break;
@@ -1056,6 +1108,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               fprintf(pltf,"  line %s", typestr);
               int lsubtype = TT_LINE_SUBTYPE_UNKNOWN;
               int loutline = TT_LINE_OUTLINE_NONE;
+              int lplace = TT_2DOBJ_PLACE_DEFAULT;
               switch (ln->type) {
                 case TT_LINE_TYPE_WALL:
                   lsubtype = TT_LINE_SUBTYPE_BEDROCK;  
@@ -1070,17 +1123,10 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                 case TT_LINE_TYPE_SURVEY:
                   lsubtype = TT_LINE_SUBTYPE_CAVE;  
                   break;
-                case TT_LINE_TYPE_ARROW:
-                  //this->tags |= TT_LINE_TAG_HEAD_END;
-                  break;
                 case TT_LINE_TYPE_CHIMNEY:
-                  //this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
-                  break;
                 case TT_LINE_TYPE_CEILING_STEP:
-                  //this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
-                  break;
                 case TT_LINE_TYPE_CEILING_MEANDER:
-                  //this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
+                  lplace = TT_2DOBJ_PLACE_DEFAULT_TOP;
                   break;
               }
               if (ln->type == TT_LINE_TYPE_U) fprintf(pltf, ":%s", ln->m_subtype_str);
@@ -1095,13 +1141,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   lsubtype = ln->first_point->subtype;
                 }
               }
-              if (!(ln->tags & TT_2DOBJ_TAG_CLIP_AUTO)) {
-                if ((ln->tags & TT_2DOBJ_TAG_CLIP_ON)) {
-                  fprintf(pltf, " -clip on");
-                } else {
-                  fprintf(pltf, " -clip off");
-                }
-              }
+              fprint_clip_option(pltf, ln);
               if (ln->closed != TT_AUTO) {
                 if (ln->closed == TT_TRUE) {
                   fprintf(pltf," -close on");
@@ -1110,16 +1150,52 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                 }
               }
 
-              if ((ln->tags & TT_LINE_TAG_DIRECTION_BEGIN)) {
-                if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
-                  fprintf(pltf, " -direction both");
-                } else {
-                  fprintf(pltf, " -direction begin");
-                }
-              } else if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
-                fprintf(pltf, " -direction end");
-              } else if ((ln->tags & TT_LINE_TAG_DIRECTION_POINT)) {
-                fprintf(pltf, " -direction point");
+              // line tags have type specific meaning
+              switch (ln->type) {
+                case TT_LINE_TYPE_SLOPE:
+                  if ((ln->tags & TT_LINE_TAG_BORDER)) {
+                    fprintf(pltf, " -border on");
+                  }
+                  break;
+                case TT_LINE_TYPE_CONTOUR:
+                  if ((ln->tags & TT_LINE_TAG_GRADIENT_NONE)) {
+                    fprintf(pltf, " -gradient none");
+                  } else if ((ln->tags & TT_LINE_TAG_GRADIENT_CENTER)) {
+                    fprintf(pltf, " -gradient center");
+                  }
+                  break;
+                case TT_LINE_TYPE_SECTION:
+                  if ((ln->tags & TT_LINE_TAG_DIRECTION_BEGIN)) {
+                    if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
+                      fprintf(pltf, " -direction both");
+                    } else {
+                      fprintf(pltf, " -direction begin");
+                    }
+                  } else if ((ln->tags & TT_LINE_TAG_DIRECTION_END)) {
+                    fprintf(pltf, " -direction end");
+                  }
+                  break;
+                case TT_LINE_TYPE_ARROW:
+                  switch (ln->tags & (TT_LINE_TAG_HEAD_BEGIN | TT_LINE_TAG_HEAD_END)) {
+                    case 0: fprintf(pltf, " -head none"); break;
+                    case TT_LINE_TAG_HEAD_BEGIN: fprintf(pltf, " -head begin"); break;
+                    case TT_LINE_TAG_HEAD_BEGIN | TT_LINE_TAG_HEAD_END: fprintf(pltf, " -head both"); break;
+                  }
+                  break;
+                case TT_LINE_TYPE_ROPE:
+                  if (!(ln->tags & TT_LINE_TAG_ROPE_ANCHORS)) {
+                    fprintf(pltf, " -anchors off");
+                  }
+                  if (!(ln->tags & TT_LINE_TAG_ROPE_REBELAYS)) {
+                    fprintf(pltf, " -rebelays off");
+                  }
+                  break;
+                case TT_LINE_TYPE_PIT:
+                case TT_LINE_TYPE_WALL:
+                  if (!thisnan(ln->m_height)) {
+                    fprintf(pltf, " -height %g", ln->m_height);
+                  }
+                  break;
               }
 
               if (ln->outline != loutline) {
@@ -1131,8 +1207,10 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               if (ln->text) {
                 fprintf(pltf, " -text ");
                 fprint_quoted_string(pltf, ln->text);
-                fprint_scale_option(pltf, ln);
               }
+              fprint_scale_option(pltf, ln);
+              fprint_place_option(pltf, ln, lplace);
+              fprint_2dobj_options(pltf, ln);
               fprintf(pltf,"\n");
               thdb2dlp * lpt = ln->first_point;
               while (lpt != NULL) {
@@ -1144,22 +1222,51 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   fprintf(pltf," %.2f %.2f", tf(lpt->cp2->xt, lpt->cp2->yt));
                 }
                 fprintf(pltf," %.2f %.2f\n", tf(lpt->point->xt, lpt->point->yt));
-                // change subtype
-                if (lpt->cp1 != NULL) {
-                  if (lpt->smooth_orig != TT_AUTO) {
-                    if (lpt->smooth_orig == TT_TRUE) {
-                      fprintf(pltf,"    smooth on\n");
-                    } else {
-                      fprintf(pltf,"    smooth off\n");
-                    }
+                // line point options
+                if (lpt->smooth_orig != TT_AUTO) {
+                  if (lpt->smooth_orig == TT_TRUE) {
+                    fprintf(pltf,"    smooth on\n");
+                  } else {
+                    fprintf(pltf,"    smooth off\n");
                   }
                 }
                 if (lpt->subtype != lsubtype) {
                   fprintf(pltf,"    subtype %s\n", thmatch_string(lpt->subtype, thtt_line_subtypes));
                   lsubtype = lpt->subtype;
                 }
-                if ((lpt->tags & TT_LINEPT_TAG_ALTITUDE) != 0) {
-                  fprintf(pltf,"    altitude [fix %g]\n", lpt->rsize);
+                if (lpt->mark != NULL) {
+                  fprintf(pltf,"    mark %s\n", lpt->mark);
+                }
+                if (lpt->adjust != TT_LINE_ADJUST_NONE) {
+                  fprintf(pltf,"    adjust %s\n", thmatch_string(lpt->adjust, thtt_line_adjusts));
+                }
+                // line point tags have type specific meaning
+                switch (ln->type) {
+                  case TT_LINE_TYPE_WALL:
+                    if ((lpt->tags & TT_LINEPT_TAG_ALTITUDE)) {
+                      fprintf(pltf,"    altitude [fix %g]\n", lpt->rsize);
+                    }
+                    break;
+                  case TT_LINE_TYPE_SLOPE:
+                    if ((lpt->tags & TT_LINEPT_TAG_ORIENT) && !thisnan(lpt->orient)) {
+                      fprintf(pltf,"    orientation %.1f\n", lpt->orient);
+                    }
+                    if ((lpt->tags & TT_LINEPT_TAG_SIZE)) {
+                      // size was converted to meters, which is also how it's read back
+                      // with the "-scale [<n> <length>]" scrap scale (no conversion)
+                      fprintf(pltf,"    size %g\n", lpt->lsize);
+                    }
+                    break;
+                  case TT_LINE_TYPE_CONTOUR:
+                    if ((lpt->tags & TT_LINEPT_TAG_GRADIENT) && (ln->tags & TT_LINE_TAG_GRADIENT_POINT)) {
+                      fprintf(pltf,"    gradient point\n");
+                    }
+                    break;
+                  case TT_LINE_TYPE_SECTION:
+                    if ((lpt->tags & TT_LINEPT_TAG_DIRECTION) && (ln->tags & TT_LINE_TAG_DIRECTION_POINT)) {
+                      fprintf(pltf,"    direction point\n");
+                    }
+                    break;
                 }
                 lpt = lpt->nextlp;
               }
@@ -1175,10 +1282,18 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               if (strlen(ar->name) > 0) {
                 fprintf(pltf," -id %s%s%s", objname(ar));
               }
+              fprint_clip_option(pltf, ar);
+              fprint_place_option(pltf, ar, TT_2DOBJ_PLACE_DEFAULT_BOTTOM);
+              fprint_2dobj_options(pltf, ar);
               fprintf(pltf,"\n");
 
               for (auto const * bln = ar->first_line; bln != nullptr; bln = bln->next_line) {
-                fprintf(pltf, "    %s\n", bln->name.name);
+                // refer to the line by its exported id
+                if (bln->line != NULL) {
+                  fprintf(pltf, "    %s%s%s\n", objname(bln->line));
+                } else {
+                  fprintf(pltf, "    %s\n", bln->name.name);
+                }
               }
 
               fprintf(pltf,"  endarea\n\n");

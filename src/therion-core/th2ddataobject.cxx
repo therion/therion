@@ -43,6 +43,7 @@ th2ddataobject::th2ddataobject()
   this->tags = TT_2DOBJ_TAG_CLIP_AUTO | TT_2DOBJ_TAG_VISIBILITY_ON;
   this->place = TT_2DOBJ_PLACE_DEFAULT;
   this->context = -1;
+  this->context_str = NULL;
   this->m_subtype_str = NULL;
 }
 
@@ -145,6 +146,7 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
          && (this->context != SYMX_LINE_WALL)
          && (this->context != SYMX_LINE_WATERFLOW))
         throw thexception(fmt::format("object context not allowed -- {} {}", args[0], args[1]));
+      this->context_str = this->db->strstore(fmt::format("{} {}", args[0], args[1]).c_str());
       break;
 
     default:

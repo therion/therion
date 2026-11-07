@@ -1,5 +1,11 @@
 Therion 6.4.2 (in progress):
 
+therion:
+ * th2 map export: added -visibility, -place, -context and -attr options,
+   line options (-head, -border, -gradient, -height, -anchors, -rebelays)
+   and line point options (mark, adjust, orientation, size, gradient,
+   direction); fixed invalid -direction on non-section lines and references
+   to area border lines and section scraps
 
 --------------------------------------------------------------------------------
 

@@ -152,6 +152,7 @@ class th2ddataobject : public thdataobject {
   double scale_numeric;  ///< 2D map object numeric exact scaling.
   unsigned tags;  ///< 2D map object tags.
   int place, context;
+  const char * context_str;  ///< Context as given in the source (class and symbol).
 
   /**
    * Standard constructor.

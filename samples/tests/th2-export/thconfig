@@ -1,0 +1,3 @@
+source data.th
+
+export map -proj plan -fmt th2 -o export.th2
