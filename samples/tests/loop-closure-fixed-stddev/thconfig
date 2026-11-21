@@ -1,0 +1,11 @@
+source
+  centreline
+    fix a 0 0 0 10 20 30
+    fix b 110 220 330 10 20 30
+
+    data cartesian from to dx dy dz
+    a b 100 200 300
+  endcentreline
+endsource
+
+export database -format sql -output database.sql
