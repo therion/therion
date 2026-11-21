@@ -2248,13 +2248,13 @@ void thdb1d::close_loops()
         dst_dz = li->to->z - li->from->z;
         if (!li->from->adjusted) {
           sum_sdx += li->from->sdx * li->from->sdx;
-          sum_sdx += li->from->sdy * li->from->sdy;
-          sum_sdx += li->from->sdz * li->from->sdz;
+          sum_sdy += li->from->sdy * li->from->sdy;
+          sum_sdz += li->from->sdz * li->from->sdz;
         }
         if (!li->to->adjusted) {
           sum_sdx += li->to->sdx * li->to->sdx;
-          sum_sdx += li->to->sdy * li->to->sdy;
-          sum_sdx += li->to->sdz * li->to->sdz;
+          sum_sdy += li->to->sdy * li->to->sdy;
+          sum_sdz += li->to->sdz * li->to->sdz;
         }
       } else {
         dst_dx = 0.0;
@@ -2335,20 +2335,20 @@ void thdb1d::close_loops()
         if (li->open) {
           if (!li->from->adjusted) {
             if (sum_sdx > 0.0)
-              li->from->x -= err_dx * li->from->sdx / sum_sdx;
+              li->from->x += err_dx * li->from->sdx * li->from->sdx / sum_sdx;
             if (sum_sdy > 0.0)
-              li->from->y -= err_dy * li->from->sdy / sum_sdy;
+              li->from->y += err_dy * li->from->sdy * li->from->sdy / sum_sdy;
             if (sum_sdz > 0.0)
-              li->from->z -= err_dz * li->from->sdz / sum_sdz;
+              li->from->z += err_dz * li->from->sdz * li->from->sdz / sum_sdz;
             li->from->adjusted = true;
           }
           if (!li->to->adjusted) {
             if (sum_sdx > 0.0)
-              li->to->x += err_dx * li->to->sdx / sum_sdx;
+              li->to->x -= err_dx * li->to->sdx * li->to->sdx / sum_sdx;
             if (sum_sdy > 0.0)
-              li->to->y += err_dy * li->to->sdy / sum_sdy;
+              li->to->y -= err_dy * li->to->sdy * li->to->sdy / sum_sdy;
             if (sum_sdz > 0.0)
-              li->to->z += err_dz * li->to->sdz / sum_sdz;
+              li->to->z -= err_dz * li->to->sdz * li->to->sdz / sum_sdz;
             li->to->adjusted = true;
           }
         }
