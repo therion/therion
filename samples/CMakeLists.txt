@@ -96,7 +96,7 @@ function(therion_add_sample_with_ref SAMPLE_NAME THCONFIG)
 
         add_custom_target(
             ${TARGET_NAME}
-            DEPENDS ${OUTFILE}
+            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${OUTFILE}
             COMMAND diff -ub ${OUTFILE} ${CMAKE_CURRENT_SOURCE_DIR}/${OUTFILE}.ref
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
