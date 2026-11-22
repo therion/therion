@@ -439,6 +439,9 @@ std::string * thexptable::get_tmp_string() {
 void thexptable::add_coordinates(double x, double y, double z, const char * xlabel, const char * ylabel, const char * zlabel)
 {
   double tx(thnan), ty(thnan), tz(thnan);
+  const thcsdata * csdata = (this->cs == TTCS_LOCAL) ? nullptr : thcs_get_data(this->cs);
+  const bool dms = (csdata != nullptr) && csdata->dms;
+  const bool swap = dms && csdata->swap;
   if (!(thisnan(x) || thisnan(y) || thisnan(z))) {
     if (thcfg.outcs == TTCS_LOCAL) {
       tx = x;
@@ -447,7 +450,7 @@ void thexptable::add_coordinates(double x, double y, double z, const char * xlab
     } else {
       thcs2cs(thcfg.outcs, this->cs,
         x, y, z, tx, ty, tz);
-      if (thcs_get_data(this->cs)->dms) {
+      if (dms) {
         tx = tx / THPI * 180.0;
         ty = ty / THPI * 180.0;
       }
@@ -456,8 +459,8 @@ void thexptable::add_coordinates(double x, double y, double z, const char * xlab
   if (xlabel != NULL) {
     if (strlen(xlabel) == 0) {
       xlabel = "X";
-      if (thcs_get_data(this->cs)->dms) {
-        if (thcs_get_data(this->cs)->swap)
+      if (dms) {
+        if (swap)
           xlabel = "Latitude";
         else
           xlabel = "Longitude";
@@ -467,7 +470,7 @@ void thexptable::add_coordinates(double x, double y, double z, const char * xlab
       this->m_table.insert_attribute(xlabel,  "");
     else {
       this->m_table.insert_attribute(xlabel,  tx);
-      if (thcs_get_data(this->cs)->dms)
+      if (dms)
         this->m_table.get_field(xlabel)->m_double_format = "%.8f";
       else
         this->m_table.get_field(xlabel)->m_double_format = "%.3f";
@@ -476,8 +479,8 @@ void thexptable::add_coordinates(double x, double y, double z, const char * xlab
   if (ylabel != NULL) {
     if (strlen(ylabel) == 0) {
       ylabel = "Y";
-      if (thcs_get_data(this->cs)->dms) {
-        if (thcs_get_data(this->cs)->swap)
+      if (dms) {
+        if (swap)
           ylabel = "Longitude";
         else
           ylabel = "Latitude";
@@ -487,7 +490,7 @@ void thexptable::add_coordinates(double x, double y, double z, const char * xlab
       this->m_table.insert_attribute(ylabel,  "");
     else {
       this->m_table.insert_attribute(ylabel,  ty);
-      if (thcs_get_data(this->cs)->dms)
+      if (dms)
         this->m_table.get_field(ylabel)->m_double_format = "%.8f";
       else
         this->m_table.get_field(ylabel)->m_double_format = "%.3f";
