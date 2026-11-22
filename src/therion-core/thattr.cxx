@@ -478,17 +478,13 @@ void thattr::export_mp_object_begin(FILE * f, long user_id)
   thattr_field * cf;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
-  std::string enc;
-
-  std::string news;
 
   for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
     cf = &(*fli);
     ai = o->m_attributes.find(cf->m_id);
     if (ai != o->m_attributes.end()) {
       ca = &(ai->second);
-      news = ca->m_val_string;
-      thdecode_mp(&enc, news.c_str());
+      const auto enc = thdecode_mp(ca->m_val_string);
       fprintf(f,"string %s;\n", cf->m_xmp_name.c_str());
       fprintf(f,"%s := \"%s\";\n", cf->m_xmp_name.c_str(), enc.c_str());
     }
