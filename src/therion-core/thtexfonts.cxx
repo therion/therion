@@ -38,7 +38,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cmath>
-#include <fmt/format.h>
+#include <format>
 
 #include "thtexfonts.h"
 #include "thtexenc.h"
@@ -101,7 +101,7 @@ void encodings_new::write_enc_files() {
 
   int fcount = get_enc_count();
   for (int j = 0; j < fcount; j++) {
-    fc = fmt::format("{:02d}", j);
+    fc = std::format("{:02d}", j);
     std::string fname_enc = std::string("th_enc")+fc+".enc";
     
     std::ofstream F(fname_enc.c_str());
@@ -135,7 +135,7 @@ void encodings_new::write_enc_files() {
 //        " -fkern --no-default-ligkern --name " + fname_tfm +
 //        type1 + " --warn-missing "+otf_file[i]+" > thotftfm.tmp").c_str()) > 0)
         type1 + otf_file[i]+" > thotftfm.tmp").c_str()) != 0)
-          therror(fmt::format("can't generate TFM file from {} (LCDF typetools not installed?)", otf_file[i]));
+          therror(std::format("can't generate TFM file from {} (LCDF typetools not installed?)", otf_file[i]));
       std::ifstream G ("thotftfm.tmp");
       if (!G) therror("could not read font mapping data\n");
       while (G) {
@@ -253,9 +253,9 @@ std::string utf2texoctal(std::string str) {
   unsigned char c;
   for (unistr::iterator I = s.begin(); I != s.end(); I++) {
     c = (*I) / 256;
-    t = t + "\\ne\\" + fmt::format("{:o}",c);
+    t = t + "\\ne\\" + std::format("{:o}",c);
     c = (*I) % 256;
-    t = t + "\\ne\\" + fmt::format("{:o}",c);
+    t = t + "\\ne\\" + std::format("{:o}",c);
   }
   return t;
 }
@@ -268,9 +268,9 @@ std::string utf2texhex(std::string str) {
   unsigned char c;
   for (unistr::iterator I = s.begin(); I != s.end(); I++) {
     c = (*I) / 256;
-    t += fmt::format("{:02x}",c);
+    t += std::format("{:02x}",c);
     c = (*I) % 256;
-    t += fmt::format("{:02x}",c);
+    t += std::format("{:02x}",c);
   }
   return t;
 }
@@ -448,7 +448,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
 //                 }
 //                 break;
         //// endlinks
-        case 0xD: setsize = fmt::format("\\size[{}]", (int) *(++I)); T << setsize; SELFONT; break;
+        case 0xD: setsize = std::format("\\size[{}]", (int) *(++I)); T << setsize; SELFONT; break;
         case 0xE:
           tmpint = (int) *(++I);
           switch (tmpint) {
@@ -458,7 +458,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
             case 104: setsize = "\\thlargesize "; break;
             case 105: setsize = "\\thhugesize "; break;
             // 1-100: size in percents
-            default: setsize = fmt::format("\\size[\\numexpr {}*\\basefontsize/10\\relax]", tmpint); break;
+            default: setsize = std::format("\\size[\\numexpr {}*\\basefontsize/10\\relax]", tmpint); break;
           }
           T << setsize;
           SELFONT;

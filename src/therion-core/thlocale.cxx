@@ -4,7 +4,7 @@
 #include "thlang.h"
 #include "thinit.h"
 
-#include <fmt/format.h>
+#include <format>
 
 #define LCBUFFNUM 10
 #define LCBUFFLEN 1024
@@ -40,7 +40,7 @@ void thlocale::parse_units(char * cc)
 {
 	this->units = thmatch_token(cc, thtt_locale_units);
 	if (this->units == TTLC_UNKNOWN)
-		throw thexception(fmt::format("unknown units -- {}", cc));
+		throw thexception(std::format("unknown units -- {}", cc));
 }
 	
 

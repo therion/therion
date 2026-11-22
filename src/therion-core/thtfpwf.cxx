@@ -30,9 +30,8 @@
 #include "thinfnan.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
-
 #include <algorithm>
+#include <format>
 
 
 void thtfpwf::set(size_t nv, double * pv)
@@ -64,16 +63,16 @@ void thtfpwf::parse(int nfact, char ** sfact)
     case 1:
       thparse_double(sv, this->b, *sfact);
       if (sv != TT_SV_NUMBER)
-        throw thexception(fmt::format("invalid number -- {}", *sfact));
+        throw thexception(std::format("invalid number -- {}", *sfact));
       this->a = 1.0;
       break;
     case 2:
       thparse_double(sv, this->b, sfact[0]);
       if (sv != TT_SV_NUMBER)
-        throw thexception(fmt::format("invalid number -- {}", sfact[0]));
+        throw thexception(std::format("invalid number -- {}", sfact[0]));
       thparse_double(sv, this->a, sfact[1]);
       if (sv != TT_SV_NUMBER)
-        throw thexception(fmt::format("invalid number -- {}", sfact[1]));
+        throw thexception(std::format("invalid number -- {}", sfact[1]));
       break;
     default:
       if ((nfact > 2) && ((nfact % 2) == 0)) {
@@ -82,7 +81,7 @@ void thtfpwf::parse(int nfact, char ** sfact)
         for(cidx = 0; cidx < nfact; cidx++) {
           thparse_double(spv,coefs[cidx],sfact[cidx]);
           if (spv == TT_SV_UNKNOWN)
-            throw thexception(fmt::format("invalid number -- {}", sfact[cidx]));
+            throw thexception(std::format("invalid number -- {}", sfact[cidx]));
         }
         this->set(nfact / 2, coefs.data());
       }
@@ -90,7 +89,7 @@ void thtfpwf::parse(int nfact, char ** sfact)
         throw thexception("invalid number of transformation constants");
   }
   if (this->a == 0.0)
-    throw thexception(fmt::format("invalid scale factor -- {}", this->a));
+    throw thexception(std::format("invalid scale factor -- {}", this->a));
 }
   
 double thtfpwf::evaluate(double value)

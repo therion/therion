@@ -29,10 +29,9 @@
 #include "therion.h"
 #include "thinit.h"
 
-#include <fmt/format.h>
-
 #include <cstdlib>
 #include <filesystem>
+#include <format>
 
 #ifdef THWIN32
 #include <windows.h>
@@ -50,7 +49,7 @@ thtmpdir::tmpdir_handle::tmpdir_handle(const std::string& tmp_dir)
     prev_dir = fs::current_path().string();
     fs::current_path(tmp_dir);
   } catch(const std::exception& e) {
-    thwarning(fmt::format("error switching to temporary directory -- {}", e.what()));
+    thwarning(std::format("error switching to temporary directory -- {}", e.what()));
   }
 }
 
@@ -67,7 +66,7 @@ void thtmpdir::tmpdir_handle::switch_from_tmpdir() noexcept
   try {
     fs::current_path(prev_dir);
   } catch(const std::exception& e) {
-    thwarning(fmt::format("error switching from temporary directory -- {}", e.what()));
+    thwarning(std::format("error switching from temporary directory -- {}", e.what()));
   }
 
   prev_dir.clear();
@@ -109,7 +108,7 @@ void thtmpdir::create() try
   } else if (this->debug) {
     dir_path = "thTMPDIR";
   } else {
-    dir_path = fs::temp_directory_path() / fmt::format("th{}", thgetpid());
+    dir_path = fs::temp_directory_path() / std::format("th{}", thgetpid());
   }
 #endif
 
@@ -123,7 +122,7 @@ void thtmpdir::create() try
 }
 catch (const std::exception& e)
 {
-  therror(fmt::format("can't create temporary directory -- {}", e.what()));
+  therror(std::format("can't create temporary directory -- {}", e.what()));
 }
 
 
@@ -133,12 +132,12 @@ void thtmpdir::remove() try
     return;
 
   if (!this->tmp_remove_script.empty()) {
-    const auto tmpfname = fmt::format("{} {}", this->tmp_remove_script, this->name);
+    const auto tmpfname = std::format("{} {}", this->tmp_remove_script, this->name);
     if (system(tmpfname.c_str()) != 0) {
-      thwarning(fmt::format("delete temporary directory error -- {} not successful", tmpfname));
+      thwarning(std::format("delete temporary directory error -- {} not successful", tmpfname));
     }
     if (fs::is_directory(this->name)) {
-      thwarning(fmt::format("error deleting temporary directory -- {}", this->name));
+      thwarning(std::format("error deleting temporary directory -- {}", this->name));
     } else {
       this->name = ".";
       this->tried = false;
@@ -152,7 +151,7 @@ void thtmpdir::remove() try
   this->tried = false;
   this->exist = false;
 } catch (const std::exception& e) {
-  thwarning(fmt::format("error deleting temporary directory -- {}", e.what()));
+  thwarning(std::format("error deleting temporary directory -- {}", e.what()));
 }
 
 

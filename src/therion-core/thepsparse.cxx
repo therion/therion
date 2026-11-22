@@ -39,8 +39,6 @@
 #include <cstring>
 #include <cstdio>
 #include <cmath>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -50,7 +48,7 @@
 #include "thdouble.h"
 #include "thexception.h"
 
-#define IOerr(F) fmt::format("Can't open file {}!\n", (F))
+#define IOerr(F) std::format("Can't open file {}!\n", (F))
 
 std::map<std::string,std::string> ALL_FONTS, ALL_PATTERNS;
 typedef std::set<unsigned char> FONTCHARS;
@@ -131,7 +129,7 @@ std::string color::to_svg() const {
     b = 1.0 - std::min(1.0, this->c + this->d);
   }
   else therror("undefined color used");
-  return fmt::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
+  return std::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
                                            int(255*g) % 256,
                                            int(255*b) % 256);
 }
@@ -140,27 +138,27 @@ std::string color::to_pdfliteral(fillstroke fs) const {
   std::ostringstream s;
   if (model == colormodel::grey) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
-      s << fmt::format("{}", thdouble(this->a,prec_col)) << " g";
+      s << std::format("{}", thdouble(this->a,prec_col)) << " g";
     if (fs == fillstroke::fillstroke)
       s << " ";
     if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
-      s << fmt::format("{}", thdouble(this->a,prec_col)) << " G";
+      s << std::format("{}", thdouble(this->a,prec_col)) << " G";
   }
   else if (model == colormodel::rgb) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
-      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) << " rg";
+      s << std::format("{}", thdouble(this->a,prec_col)) << " " << std::format("{}", thdouble(this->b,prec_col)) << " " << std::format("{}", thdouble(this->c,prec_col)) << " rg";
     if (fs == fillstroke::fillstroke)
       s << " ";
     if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
-      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) << " RG";
+      s << std::format("{}", thdouble(this->a,prec_col)) << " " << std::format("{}", thdouble(this->b,prec_col)) << " " << std::format("{}", thdouble(this->c,prec_col)) << " RG";
   }
   else if (model == colormodel::cmyk) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
-      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) <<  " " << fmt::format("{}", thdouble(this->d,prec_col)) << " k";
+      s << std::format("{}", thdouble(this->a,prec_col)) << " " << std::format("{}", thdouble(this->b,prec_col)) << " " << std::format("{}", thdouble(this->c,prec_col)) <<  " " << std::format("{}", thdouble(this->d,prec_col)) << " k";
     if (fs == fillstroke::fillstroke)
       s << " ";
     if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
-      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) <<  " " << fmt::format("{}", thdouble(this->d,prec_col)) << " K";
+      s << std::format("{}", thdouble(this->a,prec_col)) << " " << std::format("{}", thdouble(this->b,prec_col)) << " " << std::format("{}", thdouble(this->c,prec_col)) <<  " " << std::format("{}", thdouble(this->d,prec_col)) << " K";
   }
   return s.str();
 }
@@ -169,13 +167,13 @@ std::string color::to_pdfliteral(fillstroke fs) const {
 std::string color::to_elements() const {
   std::string s;
   if (model == colormodel::grey) {
-    s = fmt::format("{}", thdouble(a,prec_col));
+    s = std::format("{}", thdouble(a,prec_col));
   }
   else if (model == colormodel::rgb) {
-    s = fmt::format("{} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
+    s = std::format("{} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
   }
   else if (model == colormodel::cmyk) {
-    s = fmt::format("{} {} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
+    s = std::format("{} {} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
   }
   return s;
 }
@@ -183,13 +181,13 @@ std::string color::to_elements() const {
 std::string color::to_mpost(std::string varname) const {
   std::string s;
   if (model == colormodel::grey) {
-    s = fmt::format("{} := {};", varname, thdouble(a,prec_col));
+    s = std::format("{} := {};", varname, thdouble(a,prec_col));
   }
   else if (model == colormodel::rgb) {
-    s = fmt::format("rgbcolor {0}; {0} := ({1}, {2}, {3});", varname, thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
+    s = std::format("rgbcolor {0}; {0} := ({1}, {2}, {3});", varname, thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
   }
   else if (model == colormodel::cmyk) {
-    s = fmt::format("cmykcolor {0}; {0} := ({1}, {2}, {3}, {4});", varname, thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
+    s = std::format("cmykcolor {0}; {0} := ({1}, {2}, {3}, {4});", varname, thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
   }
   return s;
 }
@@ -226,7 +224,7 @@ std::string CGS::svg_color() {
 std::string str2pdfhex(std::string s) {
   std::string t;
   for (unsigned char c: s) {
-    t += fmt::format("{:02x}", c);
+    t += std::format("{:02x}", c);
   }
   return "<" + t + ">";
 }
@@ -264,12 +262,12 @@ void MP_text::print_svg(std::ofstream & F, CGS & gstate) {
 
 void MP_text::print_pdf(std::ofstream & F) const {
   F << PL("BT");
-  F << PL(fmt::format("/F\\pdffontname\\{:s}\\space {} Tf", tex_Fname(ALL_FONTS[font]), thdouble(size,prec_mp)));
-  F << PL(fmt::format("{} {} {} {} {} {} Tm", thdouble(xx,prec_mp), thdouble(xy,prec_mp), thdouble(yx,prec_mp), thdouble(yy,prec_mp), thdouble(x,prec_xy), thdouble(y,prec_xy)));
+  F << PL(std::format("/F\\pdffontname\\{:s}\\space {} Tf", tex_Fname(ALL_FONTS[font]), thdouble(size,prec_mp)));
+  F << PL(std::format("{} {} {} {} {} {} Tm", thdouble(xx,prec_mp), thdouble(xy,prec_mp), thdouble(yx,prec_mp), thdouble(yy,prec_mp), thdouble(x,prec_xy), thdouble(y,prec_xy)));
   if (LAYOUT.colored_text && col.is_defined()) {    // use the scrap color
     F << PL("0.1 w " + col.to_pdfliteral(fillstroke::fill) + " 2 Tr ");
   };
-  F << PL(fmt::format("{:s} Tj", str2pdfhex(text)));
+  F << PL(std::format("{:s} Tj", str2pdfhex(text)));
   F << PL("ET");
 }
 
@@ -414,18 +412,18 @@ void MP_path::print_pdf(std::ofstream & F) const {
   for (unsigned i=0; i < segments.size(); i++) {
     switch (segments[i].command) {
       case MP_moveto:
-        F << PL(fmt::format("{} {} m", thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy)));
+        F << PL(std::format("{} {} m", thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy)));
         last_x = segments[i].coord[0];
         last_y = segments[i].coord[1];
         break;
       case MP_lineto:
-        F << PL(fmt::format("{} {} l", thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy)));
+        F << PL(std::format("{} {} l", thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy)));
         break;
       case MP_rlineto:
-        F << PL(fmt::format("{} {} l", thdouble(segments[i].coord[0]+last_x,prec_xy), thdouble(segments[i].coord[1]+last_y,prec_xy)));
+        F << PL(std::format("{} {} l", thdouble(segments[i].coord[0]+last_x,prec_xy), thdouble(segments[i].coord[1]+last_y,prec_xy)));
         break;
       case MP_curveto:
-        F << PL(fmt::format("{} {} {} {} {} {} c",
+        F << PL(std::format("{} {} {} {} {} {} c",
                   thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy),
                   thdouble(segments[i].coord[2],prec_xy), thdouble(segments[i].coord[3],prec_xy),
                   thdouble(segments[i].coord[4],prec_xy), thdouble(segments[i].coord[5],prec_xy)));
@@ -578,29 +576,29 @@ void MP_setting::print_pdf (std::ofstream & F) const {
       F << PL(col.to_pdfliteral());
       break;
     case MP_pattern:
-      F << PL(fmt::format("{:s} /{:s} scn", col.to_pdfpatterncolor(), pattern));
+      F << PL(std::format("{:s} /{:s} scn", col.to_pdfpatterncolor(), pattern));
       break;
     case MP_gradient:
-      F << PL(fmt::format("/Pattern cs /{:s} scn", tex_Pname(pattern)));
+      F << PL(std::format("/Pattern cs /{:s} scn", tex_Pname(pattern)));
       break;
     case MP_linejoin:
-      F << PL(fmt::format("{:.0f} j", data));
+      F << PL(std::format("{:.0f} j", data));
       break;
     case MP_linecap:
-      F << PL(fmt::format("{:.0f} J", data));
+      F << PL(std::format("{:.0f} J", data));
       break;
     case MP_miterlimit:
-      F << PL(fmt::format("{} M", thdouble(data,prec_mp)));
+      F << PL(std::format("{} M", thdouble(data,prec_mp)));
       break;
     case MP_linewidth:
-      F << PL(fmt::format("{} w", thdouble(data,prec_mp)));
+      F << PL(std::format("{} w", thdouble(data,prec_mp)));
       break;
     case MP_dash:
       {
       std::string t;
       t = "[";
-      for (double d: dasharray) t += fmt::format("{} ", thdouble(d,prec_mp));
-      t+= fmt::format("] {} d", thdouble(dashoffset,prec_mp));
+      for (double d: dasharray) t += std::format("{} ", thdouble(d,prec_mp));
+      t+= std::format("] {} d", thdouble(dashoffset,prec_mp));
       F << PL(t);
       }
       break;
@@ -612,7 +610,7 @@ void MP_setting::print_pdf (std::ofstream & F) const {
         } else
           F << PL("/GS1 gs");                   // use the opacity from the layout inside the knockout group
       } else {
-        F << PL(fmt::format("/GSa{:.0f} gs", LAYOUT.alpha_step*round(100*alpha/LAYOUT.alpha_step)));
+        F << PL(std::format("/GSa{:.0f} gs", LAYOUT.alpha_step*round(100*alpha/LAYOUT.alpha_step)));
       }
       break;
   }
@@ -755,10 +753,10 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
   for (auto &g: GRADIENTS) {
     if (gradients.count(g.first) == 0) continue;
     if (g.second.type == gradient_lin) {
-      fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
+      F << std::format("<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
                  g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
     } else {
-      fmt::print(F, "<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
+      F << std::format("<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
                  g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
                                          thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
     }
@@ -795,12 +793,12 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) const {
   std::string font;
 
   if (mode > 0)
-    F << "%\n\\setbox\\xxx=\\hbox{\\vbox to" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp{\\vfill\n";
+    F << "%\n\\setbox\\xxx=\\hbox{\\vbox to" << std::format("{}",thdouble(VS,prec_xy)) << "bp{\\vfill\n";
 
   MP.print_pdf(F);
 
   if (mode > 0) {
-    F << "}}\\wd\\xxx=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp\n";
+    F << "}}\\wd\\xxx=" << std::format("{}",thdouble(HS,prec_xy)) << "bp\n";
     F << "\\immediate\\pdfxform";
     if (mode == 32 && LAYOUT.transparency) {  // transparency group for the altitude bar
       F << " attr{/Group \\the\\attrid\\space 0 R}";
@@ -1466,10 +1464,10 @@ void thgraphics2pdf() {
           res = " /Pattern << /" + tex_Gname(I.name) + " " + tex_get_ref(tex_Gname(I.name)) + "\\space 0 R >> ";
         }
       }
-      TEX << "\\setbox\\xxx=\\hbox to" << fmt::format("{}",thdouble(I.Ic.urx-I.Ic.llx,prec_xy)) << "bp{%\n";
+      TEX << "\\setbox\\xxx=\\hbox to" << std::format("{}",thdouble(I.Ic.urx-I.Ic.llx,prec_xy)) << "bp{%\n";
       TEX << "\\PL{" << s <<  "}%\n";
       TEX << "\\pdfrefxform" << tex_get_ref(tex_Xname("I" + I.name)) + "%\n";
-      TEX << "}\\ht\\xxx="  << fmt::format("{}",thdouble(I.Ic.ury-I.Ic.lly,prec_xy)) << "bp\\dp\\xxx=0bp%\n";
+      TEX << "}\\ht\\xxx="  << std::format("{}",thdouble(I.Ic.ury-I.Ic.lly,prec_xy)) << "bp\\dp\\xxx=0bp%\n";
       TEX << "\\immediate\\pdfxform";
       TEX << " resources { " + res;
       if (icc_used()) {
@@ -1491,7 +1489,7 @@ void thgraphics2pdf() {
 
   unsigned char c = 'a';
   for(const auto &I: GRIDLIST) {
-    I.print_pdf(TEX, fmt::format("grid{:c}",c));
+    I.print_pdf(TEX, std::format("grid{:c}",c));
     c++;
   }
 
@@ -1529,7 +1527,7 @@ void thgraphics2pdf() {
         s += c;
         if (c==92) s += " ";     // \ has to be followed by space
       } else {
-        s += "^^" + fmt::format("{:02x}", c);
+        s += "^^" + std::format("{:02x}", c);
       }
     }
     s += "\\endinclude";
@@ -1545,10 +1543,10 @@ void thgraphics2pdf() {
 
       F << "\\immediate\\pdfobj stream attr {/Type /Pattern\n";
       F << "/PaintType 2 /PatternType 1 /TilingType 1\n";
-      F << fmt::format("/Matrix [{} {} {} {} {} {}]\n", thdouble(patt.xx,prec_mp), thdouble(patt.xy,prec_mp), thdouble(patt.yx,prec_mp), thdouble(patt.yy,prec_mp), thdouble(patt.x,prec_mp), thdouble(patt.y,prec_mp));
-      F << fmt::format("/BBox [{} {} {} {}]\n", thdouble(patt.llx,prec_mp), thdouble(patt.lly,prec_mp), thdouble(patt.urx,prec_mp), thdouble(patt.ury,prec_mp));
-      F << fmt::format("/XStep {}\n", thdouble(patt.xstep,prec_mp));
-      F << fmt::format("/YStep {}\n", thdouble(patt.ystep,prec_mp));
+      F << std::format("/Matrix [{} {} {} {} {} {}]\n", thdouble(patt.xx,prec_mp), thdouble(patt.xy,prec_mp), thdouble(patt.yx,prec_mp), thdouble(patt.yy,prec_mp), thdouble(patt.x,prec_mp), thdouble(patt.y,prec_mp));
+      F << std::format("/BBox [{} {} {} {}]\n", thdouble(patt.llx,prec_mp), thdouble(patt.lly,prec_mp), thdouble(patt.urx,prec_mp), thdouble(patt.ury,prec_mp));
+      F << std::format("/XStep {}\n", thdouble(patt.xstep,prec_mp));
+      F << std::format("/YStep {}\n", thdouble(patt.ystep,prec_mp));
       F << "/Resources << /ProcSet [/PDF ] ";
       if (icc_used()) F << " /ColorSpace <<" << icc2pdfresources() << ">> ";
       F << ">>} {\n";
@@ -1558,15 +1556,15 @@ void thgraphics2pdf() {
   if (!GRADIENTS.empty()) F << "% GRADIENTS:\n";
   for (auto &g: GRADIENTS) {
       F << "\\immediate\\pdfobj {<< /Type /Pattern /PatternType 2 /Shading <<\n";
-      F << fmt::format("/ShadingType {:d} /ColorSpace /Device{:s}\n", g.second.type == gradient_lin ? 2 : 3, g.second.c0.model == colormodel::grey ? "Gray" : (g.second.c0.model == colormodel::cmyk ? "CMYK" : "RGB"));
+      F << std::format("/ShadingType {:d} /ColorSpace /Device{:s}\n", g.second.type == gradient_lin ? 2 : 3, g.second.c0.model == colormodel::grey ? "Gray" : (g.second.c0.model == colormodel::cmyk ? "CMYK" : "RGB"));
       if (g.second.type == gradient_lin) {
-        F << fmt::format("/Coords [{} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+        F << std::format("/Coords [{} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
       } else {
-        F << fmt::format("/Coords [{} {} {} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
+        F << std::format("/Coords [{} {} {} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
                                                          thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
       }
       F << "/Extend [true true]\n";
-      F << fmt::format("/Function << /FunctionType 2 /Domain [0 1] /C0 [{}] /C1 [{}] /N 1 >>\n", g.second.c0.to_elements(), g.second.c1.to_elements());
+      F << std::format("/Function << /FunctionType 2 /Domain [0 1] /C0 [{}] /C1 [{}] /N 1 >>\n", g.second.c0.to_elements(), g.second.c1.to_elements());
       F << ">> >>}" << tex_set_ref(tex_Pname(g.first), "\\pdflastobj") << "\n";
   }
   // gouraud shadings
@@ -1577,9 +1575,9 @@ void thgraphics2pdf() {
       F_g << i.gour_stream;
       F_g.close();
       F << "\\immediate\\pdfobj stream attr {";
-      F << fmt::format("/ShadingType 5 /ColorSpace /Device{:s}\n", LAYOUT.output_colormodel == colormodel::grey ? "Gray" : (LAYOUT.output_colormodel == colormodel::cmyk ? "CMYK" : "RGB"));
-      F << fmt::format("/BitsPerCoordinate 8 /BitsPerComponent 8 /VerticesPerRow {:d} ", i.gour_n);
-      F << fmt::format("/Decode [{} {} {} {} {:s}]", thdouble(i.gour_xmin-i.I1+i.S1,prec_matr), thdouble(i.gour_xmax-i.I1+i.S1,prec_matr),
+      F << std::format("/ShadingType 5 /ColorSpace /Device{:s}\n", LAYOUT.output_colormodel == colormodel::grey ? "Gray" : (LAYOUT.output_colormodel == colormodel::cmyk ? "CMYK" : "RGB"));
+      F << std::format("/BitsPerCoordinate 8 /BitsPerComponent 8 /VerticesPerRow {:d} ", i.gour_n);
+      F << std::format("/Decode [{} {} {} {} {:s}]", thdouble(i.gour_xmin-i.I1+i.S1,prec_matr), thdouble(i.gour_xmax-i.I1+i.S1,prec_matr),
                                                      thdouble(i.gour_ymin-i.I2+i.S2,prec_matr), thdouble(i.gour_ymax-i.I2+i.S2,prec_matr),
                                                      LAYOUT.output_colormodel == colormodel::grey ? "0 1" : (LAYOUT.output_colormodel == colormodel::cmyk ? "0 1 0 1 0 1 0 1" : "0 1 0 1 0 1"));
       F << "} file {th_gour_" << i.name << ".dat}\n";

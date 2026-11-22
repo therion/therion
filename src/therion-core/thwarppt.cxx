@@ -32,11 +32,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <numbers>
+#include <format>
 
 #include "thexception.h"
 #include "thwarppt.h"
-
-#include <fmt/format.h>
 
 typedef unsigned int warpp_t;
 const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
@@ -163,12 +162,12 @@ therion::warp::plaquette_algo::insert_zoom_point(
     if ( mPairs[k]->m_name == from ) break;
   }
   if ( k == sz ) {
-    thprint(fmt::format("warning insert_zoom_point() from point \"{}\" not found\n", from));
+    thprint(std::format("warning insert_zoom_point() from point \"{}\" not found\n", from));
     return NULL;
   }
   double x0 = mPairs[k]->x.m_x;
   double y0 = mPairs[k]->x.m_y;
-  thprint(fmt::format("insert_zoom_point() {} ({:.2f} {:.2f}) from {} ({:.2f} {:.2f}) distance {:.2f}\n",
+  thprint(std::format("insert_zoom_point() {} ({:.2f} {:.2f}) from {} ({:.2f} {:.2f}) distance {:.2f}\n",
     name, src.m_x, src.m_y, from, x0, y0, size ));
 
   double x1 = src.m_x - x0;
@@ -231,7 +230,7 @@ therion::warp::plaquette_algo::insert_zoom_point(
   x0 += ( x2*ca + y2*sa) * size;
   y0 += (-x2*sa + y2*ca) * size;
 
-  thprint(fmt::format("left {} ({:.2f} {:.2f})  right {} ({:.2f} {:.2f}) ==> {:.2f} {:.2f}\n",
+  thprint(std::format("left {} ({:.2f} {:.2f})  right {} ({:.2f} {:.2f}) ==> {:.2f} {:.2f}\n",
     p1->m_name, p1->u.m_x, p1->u.m_y, p2->m_name, p2->u.m_x, p2->u.m_y, x0, y0 ));
 
   auto pair = std::make_unique<point_pair>(t, name, src.m_x, src.m_y, x0, y0);
@@ -351,7 +350,7 @@ therion::warp::plaquette_algo::find_neighbors( therion::warp::basic_pair * me )
         me->m_ngbh[k] = find_plaquette( me->m_pair[k+1], me->m_pair[k] );
       break;
     default:
-      thprint(fmt::format("plaquette_algo::make_neighbors() wrong pair warp-type {}\n",
+      thprint(std::format("plaquette_algo::make_neighbors() wrong pair warp-type {}\n",
         static_cast<int>(me->type()) ));
   }
 }
@@ -532,10 +531,10 @@ therion::warp::plaquette_algo::add_triangle( point_pair * A, point_pair * B, poi
   // N.B. bad triangles are only warned; 
   // they are used anyways.
   if ( ((C->x - B->x) ^ (A->x - B->x)) >= 0.0 ) {
-    thprint(fmt::format("WARNING: bad triangle ({} {} {}) X-orientation\n",
+    thprint(std::format("WARNING: bad triangle ({} {} {}) X-orientation\n",
       C->m_name, B->m_name, A->m_name ));
   } else if ( ((C->u - B->u) ^ (A->u - B->u)) >= 0.0 ) {
-    thprint(fmt::format("WARNING: bad triangle ({} {} {}) U-orientation\n",
+    thprint(std::format("WARNING: bad triangle ({} {} {}) U-orientation\n",
       C->m_name, B->m_name, A->m_name ));
   } // else {
     auto tri = std::make_unique<therion::warp::triangle_pair>(B, C, A, this->m_bound3);
@@ -551,16 +550,16 @@ therion::warp::plaquette_algo::add_quadrilateral(
 {
   // check orientation
   if ( ((B->x - A->x) ^ (D->x - A->x)) >= 0.0 ) {
-    thprint(fmt::format("WARNING: bad plaquette ({} {} {}) X-orientation\n",
+    thprint(std::format("WARNING: bad plaquette ({} {} {}) X-orientation\n",
       B->m_name, A->m_name, D->m_name ));
   } else if ( ((C->x - B->x) ^ (A->x - B->x)) >= 0.0 ) {
-    thprint(fmt::format( "WARNING: bad plaquette ({} {} {}) X-orientation\n",
+    thprint(std::format( "WARNING: bad plaquette ({} {} {}) X-orientation\n",
       C->m_name, B->m_name, A->m_name ));
   } else if ( ((B->u - A->u) ^ (D->u - A->u)) >= 0.0 ) {
-    thprint(fmt::format("WARNING: bad plaquette ({} {} {}) U-orientation\n",
+    thprint(std::format("WARNING: bad plaquette ({} {} {}) U-orientation\n",
       B->m_name, A->m_name, D->m_name ));
   } else if ( ((C->u - B->u) ^ (A->u - B->u)) >= 0.0 ) {
-    thprint(fmt::format("WARNING: bad plaquette ({} {} {}) U-orientation\n",
+    thprint(std::format("WARNING: bad plaquette ({} {} {}) U-orientation\n",
       C->m_name, B->m_name, A->m_name ));
   } else {
     auto plaq = std::make_unique<therion::warp::plaquette_pair>(A, B, C, D, this->m_bound4);

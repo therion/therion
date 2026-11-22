@@ -37,7 +37,8 @@
 #include "thdatabase.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 thdataobject::thdataobject()
 {
@@ -159,7 +160,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
       if (th_is_extkeyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        throw thexception(fmt::format("invalid keyword -- {}", *args));
+        throw thexception(std::format("invalid keyword -- {}", *args));
       break;
 
     case TT_DATAOBJECT_CS:
@@ -172,13 +173,13 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_SCAN_CMD:
           break;
         default:
-          throw thexception(fmt::format("coordinate system specification not valid for {}", this->get_cmd_name()));
+          throw thexception(std::format("coordinate system specification not valid for {}", this->get_cmd_name()));
           break;  
       }
       {
         int id = thcs_parse(*args);
         if (id == TTCS_UNKNOWN) {
-          throw thexception(fmt::format("unknown coordinate system -- {}", *args));
+          throw thexception(std::format("unknown coordinate system -- {}", *args));
         }
         if (this->get_class_id() != TT_DATA_CMD) {
           this->cs = id;
@@ -200,7 +201,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_SCRAP_CMD:
           break;
         default:
-          throw thexception(fmt::format("station-names specification not valid for {}", this->get_cmd_name()));
+          throw thexception(std::format("station-names specification not valid for {}", this->get_cmd_name()));
           break;  
       }
       if (strlen(args[0]) == 0)
@@ -284,7 +285,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
       break;
         
     default:
-      throw thexception(fmt::format("unknown option -- {}", args[0]));
+      throw thexception(std::format("unknown option -- {}", args[0]));
 
   }
 }
@@ -316,7 +317,7 @@ const char * thdataobject::get_title()
 
 std::string thdataobject::throw_source() const
 {
-  return fmt::format("{} [{}]", source.name, source.line);
+  return std::format("{} [{}]", source.name, source.line);
 }
 
 void thdataobject::self_print(FILE * outf)
@@ -414,7 +415,7 @@ void thdataobject::read_cs(const char * src_x, const char * src_y, double & dst_
 	  if (thcfg.outcs_def.is_valid()) {
 	    if (((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL)) ||
 	      ((this->cs != TTCS_LOCAL) && (thcfg.outcs == TTCS_LOCAL)))
-	        throw thexception(fmt::format("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line));
+	        throw thexception(std::format("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line));
 	  };
 
 	  // 1. Conversion to numbers.
@@ -427,7 +428,7 @@ void thdataobject::read_cs(const char * src_x, const char * src_y, double & dst_
 	    thparse_double(sv, tx, src_x);
 	  }
 	  if (sv != TT_SV_NUMBER)
-	    throw thexception(fmt::format("invalid X coordinate -- {}", src_x));
+	    throw thexception(std::format("invalid X coordinate -- {}", src_x));
 
 	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
 	    thparse_double_dms(sv, ty, src_y);
@@ -436,7 +437,7 @@ void thdataobject::read_cs(const char * src_x, const char * src_y, double & dst_
 	    thparse_double(sv, ty, src_y);
 	  }
 	  if (sv != TT_SV_NUMBER)
-	    throw thexception(fmt::format("invalid Y coordinate -- {}", src_y));
+	    throw thexception(std::format("invalid Y coordinate -- {}", src_y));
 
 	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->swap) {
 	    tz = tx;
@@ -447,10 +448,10 @@ void thdataobject::read_cs(const char * src_x, const char * src_y, double & dst_
 
 	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
 	    if ((tx < - THPI) || (tx > THPI))
-	      throw thexception(fmt::format("longitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_y : src_x));
+	      throw thexception(std::format("longitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_y : src_x));
 
 	    if ((ty < (- THPI / 2)) || (ty > (THPI / 2)))
-	      throw thexception(fmt::format("latitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_x : src_y));
+	      throw thexception(std::format("latitude out of range -- {}", thcs_get_data(this->cs)->swap ? src_x : src_y));
 	  }
 
 	  dst_x = tx;
@@ -509,7 +510,7 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
     dst_z = tz;
   } else {
 	if (thcfg.outcs == TTCS_LOCAL)
-      throw thexception(fmt::format("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line));
+      throw thexception(std::format("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line));
     thcs2cs(src_cs, thcfg.outcs, tx, ty, tz, dst_x, dst_y, dst_z);
   }
 
@@ -538,7 +539,7 @@ void thdataobject::parse_attribute(const char * name, const char * value) {
   if (name[0] == '_')
     throw thexception("attribute name starting with '_' not allowed");
   if (!th_is_attr_name(name))
-    throw thexception(fmt::format("invalid characters in attribute name -- {}", name));
+    throw thexception(std::format("invalid characters in attribute name -- {}", name));
 
   this->db->attr.insert_attribute(name, value, long(this->id));
 }

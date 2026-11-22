@@ -577,7 +577,7 @@ namespace therion
           thprint("    ngbh: ");
           for (int k=0; k<THWARP_NGBH_DIM; ++k) {
             if ( ! m_ngbh[k] ) thprint(" 0 " );
-            else thprint(fmt::format(" {} ", m_ngbh[k]->nr() ));
+            else thprint(std::format(" {} ", m_ngbh[k]->nr() ));
           }
           thprint("\n");
         }

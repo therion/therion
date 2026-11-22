@@ -32,7 +32,8 @@
 #include "thsurvey.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <cstring>
+#include <format>
 
 thobjectname::thobjectname()
 {
@@ -73,10 +74,10 @@ void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, thdat
       break;
     }
   if (!th_is_extkeyword(ds.name))
-    throw thexception(fmt::format("invalid object name -- {}", ds.name));
+    throw thexception(std::format("invalid object name -- {}", ds.name));
   if (ds.survey != NULL)
     if (!th_is_keyword_list(ds.survey, '.'))
-      throw thexception(fmt::format("invalid survey name -- {}", ds.survey));
+      throw thexception(std::format("invalid survey name -- {}", ds.survey));
   ds.name = sstore->append(ds.name);
   if (ds.survey != NULL)
     ds.survey = sstore->append(ds.survey);
@@ -107,7 +108,7 @@ std::string thobjectname::print_name()
     survey_str = this->survey;
   }
   if (!name_str.empty() && !survey_str.empty()) {
-    return fmt::format("{}@{}", name_str, survey_str);
+    return std::format("{}@{}", name_str, survey_str);
   }
   if (!name_str.empty()) {
     return name_str;
@@ -131,7 +132,7 @@ std::string thobjectname_print_full_name(const char * oname_ptr, thsurvey * psrv
   size_t start = 0;
   if (!oname.empty() && !sname.empty() && (slevel != 0)) {
     const char sep = (oname.find('@') == oname.npos) ? '@' : '.';
-    rv = fmt::format("{}{}{}", oname, sep, sname);
+    rv = std::format("{}{}{}", oname, sep, sname);
     start = oname.size() + 1;
   } else if (!oname.empty()) {
     rv = oname;

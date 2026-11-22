@@ -26,7 +26,7 @@
  */
  
 #include <string>
-#include <fmt/format.h>
+#include <format>
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
@@ -67,7 +67,7 @@ std::string u2str(unsigned u) {
 }
 
 std::string rgb2svg(double r, double g, double b) {
-  return fmt::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
+  return std::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
                                            int(255*g) % 256,
                                            int(255*b) % 256);
 }

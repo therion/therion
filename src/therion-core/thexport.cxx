@@ -40,6 +40,7 @@
 #include <numeric>
 #include <fstream>
 #include <filesystem>
+#include <format>
 #include <fmt/ostream.h>
 
 
@@ -69,7 +70,7 @@ void thexport::parse(int nargs, char ** args)
     oax = ax;
     this->parse_options(ax, nargs, args);
     if (oax == ax)
-      throw thexception(fmt::format("unknown option -- \"{}\"", args[ax]));
+      throw thexception(std::format("unknown option -- \"{}\"", args[ax]));
   }
 }
 
@@ -87,26 +88,26 @@ void thexport::parse_options(int & argx, int nargs, char ** args)
     case TT_EXP_OPT_OUTPUT:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing output file name -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing output file name -- \"{}\"",args[optx]));
       if (strlen(args[argx]) > 0) {
         this->outpt = this->cfgptr->get_db()->strstore(args[argx]);
         outpt_def = true;
       }
       else
-        throw thexception(fmt::format("empty file name not allowed -- \"{}\"",args[optx]));
+        throw thexception(std::format("empty file name not allowed -- \"{}\"",args[optx]));
       argx++;
       break;
     case TT_EXP_OPT_CS:  
       argx++;
       if (argx >= nargs)
-        throw thexception(fmt::format("missing coordiate system -- \"{}\"",args[optx]));
+        throw thexception(std::format("missing coordiate system -- \"{}\"",args[optx]));
       {
         int id = thcs_parse(args[argx]);
         if (id == TTCS_UNKNOWN) {
-          throw thexception(fmt::format("unknown coordinate system -- {}", args[argx]));
+          throw thexception(std::format("unknown coordinate system -- {}", args[argx]));
         }
         if ((thcfg.outcs != id) && (id == TTCS_LOCAL))
-          throw thexception(fmt::format("mixing local and global coordinate system -- {}", args[argx]));
+          throw thexception(std::format("mixing local and global coordinate system -- {}", args[argx]));
         this->cs = id;
       }
       argx++;
@@ -214,7 +215,7 @@ bool thexport::check_crc() {
 		const auto actual_crc = crc(std::istreambuf_iterator<char>(of), {});
 
 		if (thcfg.crc_generate) {
-			std::ofstream crcof(fmt::format("{}.crc", file.fnm));
+			std::ofstream crcof(std::format("{}.crc", file.fnm));
       fmt::print(crcof, "{:08x}\n", actual_crc);
 			file.res = "OK";
       continue;
@@ -222,14 +223,14 @@ bool thexport::check_crc() {
 
 	  if (thcfg.crc_verify) {
 		  std::uint_fast32_t read_crc = 0;
-		  std::ifstream crcif(fmt::format("{}.crc", file.fnm));
+		  std::ifstream crcif(std::format("{}.crc", file.fnm));
 		  if (!crcif.is_open()) {
 			file.res = ".crc file not found -- use --generate-output-crc before";
 			ok = false;
 			continue;
 		  }
 
- 		  file.res = fmt::format("CRC32 error: was {:08x}, expected value not found", actual_crc);
+ 		  file.res = std::format("CRC32 error: was {:08x}, expected value not found", actual_crc);
  		  ok = false;
 		  while (crcif >> std::hex >> read_crc) {
 			  if (actual_crc == read_crc) {
@@ -237,7 +238,7 @@ bool thexport::check_crc() {
 				ok = true;
 				break;
 			  } else {
-				file.res = fmt::format("CRC32 error: was {:08x}, expected {:08x}", actual_crc, read_crc);
+				file.res = std::format("CRC32 error: was {:08x}, expected {:08x}", actual_crc, read_crc);
 				ok = false;
 			  }
 		  }

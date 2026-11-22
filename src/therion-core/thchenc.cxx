@@ -32,7 +32,7 @@
 #include "thexception.h"
 #include "thparse.h"
 
-#include <fmt/format.h>
+#include <format>
 
 void thencode(std::string * dest, const char * src, int srcenc)
 {
@@ -125,7 +125,7 @@ std::string thdecode(int destenc, std::string_view src)
         srcp++;
         srcx++;
         if ((srcx >= srcln) || (*srcp < 128))
-          therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
+          therror(std::format("invalid UTF-8 string -- \"{}\"",src));
         sch += *srcp % 64;
       }
       // three byte UTF-8 character
@@ -134,18 +134,18 @@ std::string thdecode(int destenc, std::string_view src)
         srcp++;
         srcx++;
         if ((srcx >= srcln) || (*srcp < 128))
-          therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
+          therror(std::format("invalid UTF-8 string -- \"{}\"",src));
         sch += 64 * (*srcp % 64);
         srcp++;
         srcx++;
         if ((srcx >= srcln) || (*srcp < 128))
-          therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
+          therror(std::format("invalid UTF-8 string -- \"{}\"",src));
         sch += *srcp % 64;
       } 
       
       // longer chars not supported
       else
-        therror(fmt::format("invalid UTF-8 string -- \"{}\"",src));
+        therror(std::format("invalid UTF-8 string -- \"{}\"",src));
         
       // now we have whchar_t value of UTF-8 character in sch
       if (sch < thchenc_fucc)
@@ -185,7 +185,7 @@ std::string thdecode(int destenc, std::string_view src)
 void thprint_encodings()
 {
   for(int i = 0; i <= TT_UTF_8; i++) {
-    thprint(fmt::format("{}\n", thtt_encoding[i].s));
+    thprint(std::format("{}\n", thtt_encoding[i].s));
   }
 }
 
@@ -194,6 +194,6 @@ int thparse_encoding(char * encstr)
 {
   int eid = thmatch_token(encstr, thtt_encoding);
   if (eid == TT_UNKNOWN_ENCODING)
-    throw thexception(fmt::format("invalid encoding -- {}", encstr));
+    throw thexception(std::format("invalid encoding -- {}", encstr));
   return eid;
 }
