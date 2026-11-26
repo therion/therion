@@ -32,6 +32,7 @@
 #include "thobjectid.h"
 #include "thdb3d.h"
 #include "thattr.h"
+#include "thdataleg.h"
 #include <map>
 #include <vector>
 #include <list>
@@ -421,6 +422,16 @@ class thdb1d {
     
 };
 
+/**
+ * Average consecutive legs that connect the same pair of stations.
+ *
+ * Repeated readings of the same shot (same or reversed station order) are
+ * collapsed into a single averaged leg using a running Cartesian mean, so
+ * that the shot is counted only once in the traverse. Merged legs are marked
+ * is_valid = false. Blank lines, comments, and unrelated legs break the run.
+ * Matches the behaviour of survex addlegbyname in netbits.c.
+ */
+void thdb1d_average_consecutive_legs(thdataleg_list & leg_list);
 
 #endif
 
