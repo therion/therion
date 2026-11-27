@@ -290,10 +290,11 @@ void thdecode_tcl(std::string * dest, const char * src);
 
 
 /**
- * Decode string into TeX format.
+ * @brief Decode string into TeX format.
+ * @param src Input string for escaping.
+ * @return New string with escaped special TeX characters. 
  */
- 
-void thdecode_tex(std::string * dest, const char * src);
+std::string thdecode_tex(std::string_view src);
 void thdecode_utf2tex(std::string * dest, const char * src);
 
 /**
